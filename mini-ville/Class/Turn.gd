@@ -2,6 +2,7 @@ extends Node
 class_name Turn
 
 enum GAMEPHASE {
+	INIT, # pas dans ULM
 	WAITING,
 	ROLL_DICE,
 	REROLL_DECISION,
@@ -23,7 +24,18 @@ var estTourBonus :bool
 var aConstruit :bool
 
 func demarrer(joueur:Player) ->void:
-	pass
+	joueurActif = joueur
+	
+	phaseLancerDes()
+	phaseActivationRouge()
+	phaseActivationBleuVert()
+	phaseActivationViolet()
+	
+	 # choix :
+	# rien faire -> areoport
+	# construire
+
+	
 func phaseLancerDes() ->void:
 	pass
 
@@ -47,3 +59,7 @@ func terminer() -> void:
 
 func peutRelancer() -> bool
 func doitRejouer() -> bool
+
+func _init(joueurActif : Player) -> void:
+	joueurActif = joueurActif
+	

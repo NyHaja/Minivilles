@@ -12,12 +12,21 @@ var phase:Turn.GAMEPHASE :
 	get:
 		return tour.phaseActuelle
 var tour :Turn
+var lesJoueurs : Array[Player]
 func demarrerPartie() ->void:
 	#Lance Dé
-	pass
+	var AunGagnant = false
+	
+	while not(AunGagnant):
+		var newtour = Turn.new(getJoueurActif())
+		newtour.demarrer(newtour.joueurActif)
+		AunGagnant = newtour.joueurActif.monument
+		
+		
 func tourSuivant() -> void:
 	pass
-@abstract func getJoueurActif() -> Player
+func getJoueurActif() -> Player:
+	return lesJoueurs[currentPlayerIndex % playerCount ]
 
 @abstract func getJoueursAdverses(joueur:Player) -> Array[Player]
 
