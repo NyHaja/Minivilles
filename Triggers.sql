@@ -2,293 +2,122 @@
 -- TRIGGERS — Base de données Minivilles Deluxe
 -- ============================================================================
 -- SGBD : MySQL
--- Tables concernées : PLAYER, STATISTICS, GAME, PARTICIPATES
+-- Tables concernées : 	REGISTERED_PLAYER, GUEST_PLAYER, GAME, PARTICIPATES_PLAYER,
+--          			PARTICIPATES_GUEST, PURCHASE_HISTORY, MONUMENT,
+--         				ARCHIVED_PLAYER, SYSTEM_LOG
 -- ============================================================================
 
-
 -- ############################################################################
--- TABLE PLAYER
+--  1. 	MISE À JOUR DE last_login_at QUAND UNE PARTICIPATION EST AJOUTÉE
+-- 		INCRÉMENTATION DE games_played_count QUAND UN JOUEUR REJOINT UNE PARTIE
 -- ############################################################################
 
--- --------------------------------------------------------------------------
--- 1. Mise à jour automatique de last_login_at à chaque connexion
--- --------------------------------------------------------------------------
--- Le serveur applicatif fait un UPDATE sur PLAYER lors de l'authentification.
--- Ce trigger garantit que last_login_at est toujours mis à jour,
--- même si le serveur oublie de le faire explicitement.
 
 DELIMITER //
 
-CREATE TRIGGER trg_player_update_last_login
-    BEFORE UPDATE ON PLAYER
+CREATE TRIGGER trg_participates_player_after_insert
+    AFTER INSERT ON PARTICIPATES_PLAYER
     FOR EACH ROW
 BEGIN
-    -- Si last_login_at n'a pas été modifié dans la requête,
-    -- on le met à jour automatiquement
-    IF NEW.last_login_at <=> OLD.last_login_at THEN
-        SET NEW.last_login_at = NOW();
-    END IF;
+	-- [Trigger 1] last_login_at + [Trigger 2] games_played_count
+    UPDATE REGISTERED_PLAYER
+    SET last_login_at = NOW(),
+        games_played_count = games_played_count + 1
+    WHERE player_id = NEW.player_id;
 END //
 
 DELIMITER ;
 
-
--- --------------------------------------------------------------------------
--- 2. Vérification du format du mot de passe (INSERT)
--- --------------------------------------------------------------------------
--- NOTE IMPORTANTE :
--- En production, la validation de la complexité du mot de passe
--- (longueur, majuscules, chiffres, caractères spéciaux) est normalement
--- gérée côté serveur applicatif AVANT le hashage.
---
--- Le trigger côté BDD sert de FILET DE SÉCURITÉ pour :
---   - Empêcher le stockage d'un mot de passe trop court (non hashé)
---   - Vérifier le format bcrypt si vous utilisez le hashage applicatif
---
--- Deux versions sont proposées ci-dessous : choisissez selon votre archi.
--- --------------------------------------------------------------------------
-
--- ==============================
--- VERSION A : Mot de passe stocké EN CLAIR (phase prototype)
--- ==============================
--- Utiliser cette version si le hashage n'est pas encore implémenté.
--- Vérifie la complexité du mot de passe directement.
-
 DELIMITER //
 
-CREATE TRIGGER trg_player_check_password_insert
-    BEFORE INSERT ON PLAYER
+CREATE TRIGGER trg_participates_player_update_winner
+    AFTER UPDATE ON PARTICIPATES_PLAYER
     FOR EACH ROW
 BEGIN
-    -- Minimum 8 caractères
-    IF CHAR_LENGTH(NEW.password) < 8 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins 8 caractères.';
-    END IF;
-
-    -- Au moins une lettre majuscule
-    IF NEW.password NOT REGEXP '[A-Z]' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins une lettre majuscule.';
-    END IF;
-
-    -- Au moins une lettre minuscule
-    IF NEW.password NOT REGEXP '[a-z]' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins une lettre minuscule.';
-    END IF;
-
-    -- Au moins un chiffre
-    IF NEW.password NOT REGEXP '[0-9]' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins un chiffre.';
-    END IF;
-
-    -- Au moins un caractère spécial
-    IF NEW.password NOT REGEXP '[^a-zA-Z0-9]' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins un caractère spécial (!@#$%...).';
-    END IF;
-END //
-
-DELIMITER ;
-
-
--- --------------------------------------------------------------------------
--- 3. Même vérification sur UPDATE du mot de passe
--- --------------------------------------------------------------------------
-
-DELIMITER //
-
-CREATE TRIGGER trg_player_check_password_update
-    BEFORE UPDATE ON PLAYER
-    FOR EACH ROW
-BEGIN
-    -- On ne vérifie que si le mot de passe a changé
-    IF NOT (NEW.password <=> OLD.password) THEN
-
-        IF CHAR_LENGTH(NEW.password) < 8 THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins 8 caractères.';
-        END IF;
-
-        IF NEW.password NOT REGEXP '[A-Z]' THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins une lettre majuscule.';
-        END IF;
-
-        IF NEW.password NOT REGEXP '[a-z]' THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins une lettre minuscule.';
-        END IF;
-
-        IF NEW.password NOT REGEXP '[0-9]' THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins un chiffre.';
-        END IF;
-
-        IF NEW.password NOT REGEXP '[^a-zA-Z0-9]' THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe doit contenir au moins un caractère spécial (!@#$%...).';
-        END IF;
-    END IF;
-END //
-
-DELIMITER ;
-
-
--- ==============================
--- VERSION B : Mot de passe stocké HASHÉ (production avec bcrypt)
--- ==============================
--- À utiliser quand le serveur applicatif hash le mot de passe avant
--- l'envoi en BDD. Le trigger vérifie seulement que c'est bien un hash.
--- → Décommentez cette version et commentez la Version A si vous passez
---   au hashage côté serveur.
-
-/*
-DELIMITER //
-
-CREATE TRIGGER trg_player_check_hash_insert
-    BEFORE INSERT ON PLAYER
-    FOR EACH ROW
-BEGIN
-    -- Un hash bcrypt fait toujours 60 caractères et commence par $2
-    IF CHAR_LENGTH(NEW.password) < 60 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le mot de passe ne semble pas hashé (longueur < 60). Hashez-le côté serveur.';
-    END IF;
-
-    IF NEW.password NOT REGEXP '^\\$2[aby]\\$' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le hash ne respecte pas le format bcrypt ($2a$/$2b$/$2y$).';
-    END IF;
-END //
-
-CREATE TRIGGER trg_player_check_hash_update
-    BEFORE UPDATE ON PLAYER
-    FOR EACH ROW
-BEGIN
-    IF NOT (NEW.password <=> OLD.password) THEN
-        IF CHAR_LENGTH(NEW.password) < 60 THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le mot de passe ne semble pas hashé (longueur < 60). Hashez-le côté serveur.';
-        END IF;
-
-        IF NEW.password NOT REGEXP '^\\$2[aby]\\$' THEN
-            SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le hash ne respecte pas le format bcrypt ($2a$/$2b$/$2y$).';
-        END IF;
-    END IF;
-END //
-
-DELIMITER ;
-*/
-
-
--- ############################################################################
--- TABLE STATISTICS — Création automatique à l'inscription d'un joueur
--- ############################################################################
-
--- --------------------------------------------------------------------------
--- 4. Créer une ligne STATISTICS quand un nouveau PLAYER est inséré
--- --------------------------------------------------------------------------
-
-DELIMITER //
-
-CREATE TRIGGER trg_player_create_statistics
-    AFTER INSERT ON PLAYER
-    FOR EACH ROW
-BEGIN
-    INSERT INTO STATISTICS (id_player, wins_count, games_played_count)
-    VALUES (NEW.player_id, 0, 0);
-END //
-
-DELIMITER ;
-
-
--- ############################################################################
--- TABLE PARTICIPATES — Mise à jour automatique des statistiques
--- ############################################################################
-
--- --------------------------------------------------------------------------
--- 5. Incrémenter games_played_count quand un joueur rejoint une partie
--- --------------------------------------------------------------------------
-
-DELIMITER //
-
-CREATE TRIGGER trg_participates_increment_games
-    AFTER INSERT ON PARTICIPATES
-    FOR EACH ROW
-BEGIN
-    UPDATE STATISTICS
-    SET games_played_count = games_played_count + 1
-    WHERE id_player = NEW.id_player;
-END //
-
-DELIMITER ;
-
-
--- ############################################################################
--- TABLE GAME — Mise à jour du compteur de victoires
--- ############################################################################
-
--- --------------------------------------------------------------------------
--- 6. Incrémenter wins_count quand un gagnant est déclaré
--- --------------------------------------------------------------------------
-
-DELIMITER //
-
-CREATE TRIGGER trg_game_update_winner_stats
-    AFTER UPDATE ON GAME
-    FOR EACH ROW
-BEGIN
-    -- Seulement si id_winner passe de NULL à une valeur (fin de partie)
-    IF OLD.id_winner IS NULL AND NEW.id_winner IS NOT NULL THEN
-        UPDATE STATISTICS
+    -- is_winner passe de 0 (ou NULL) à 1
+    IF (OLD.is_winner IS NULL OR OLD.is_winner = 0) AND NEW.is_winner = 1 THEN
+        UPDATE REGISTERED_PLAYER
         SET wins_count = wins_count + 1
-        WHERE id_player = NEW.id_winner;
+        WHERE player_id = NEW.player_id;
+    END IF;
+
+    -- is_winner passe de 1 à 0 (annulation) → décrémenter
+    IF OLD.is_winner = 1 AND (NEW.is_winner = 0 OR NEW.is_winner IS NULL) THEN
+        UPDATE REGISTERED_PLAYER
+        SET wins_count = GREATEST(wins_count - 1, 0)
+        WHERE player_id = NEW.player_id;
     END IF;
 END //
 
 DELIMITER ;
 
+-- ############################################################################
+--  2. LOG AUTOMATIQUE — INSCRIPTION D'UN JOUEUR
+-- ############################################################################
+DELIMITER //
+
+create trigger trg_registered_player_log_insert
+	after insert on registered_player
+	for each row
+begin
+	insert into system_log (action_type, target_id, details, executed_at)
+	values (
+		'PLAYER_REGISTERED',
+		new.player_id,
+		concat('Inscription du joueur "', new.nickname, '"(email: ', new.email, ')'),
+		now()
+	);
+end //
+
+DELIMITER ;
 
 -- ############################################################################
--- TABLE PLAYER — Vérification du format email (bonus)
+--  3. LOG AUTOMATIQUE — ARCHIVAGE D'UN JOUEUR
 -- ############################################################################
-
--- --------------------------------------------------------------------------
--- 7. Vérifier le format email à l'insertion
--- --------------------------------------------------------------------------
 
 DELIMITER //
 
-CREATE TRIGGER trg_player_check_email_insert
-    BEFORE INSERT ON PLAYER
+CREATE TRIGGER trg_archived_player_log_insert
+    AFTER INSERT ON ARCHIVED_PLAYER
     FOR EACH ROW
 BEGIN
-    IF NEW.email NOT REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le format de l\'adresse email est invalide.';
-    END IF;
+    INSERT INTO SYSTEM_LOG (action_type, target_id, details, executed_at)
+    VALUES (
+        'PLAYER_ARCHIVED',
+        NEW.player_id,
+        CONCAT('Archivage du joueur "', NEW.nickname, '" — Raison : ',
+               IFNULL(NEW.archive_reason, 'Non spécifiée')),
+        NOW()
+    );
 END //
 
 DELIMITER ;
 
--- --------------------------------------------------------------------------
--- 8. Vérifier le format email à la mise à jour
--- --------------------------------------------------------------------------
+-- ############################################################################
+--  4. UN SEUL GAGNANT PAR PARTIE — PARTICIPATES_PLAYER (UPDATE)
+-- ############################################################################
 
 DELIMITER //
 
-CREATE TRIGGER trg_player_check_email_update
-    BEFORE UPDATE ON PLAYER
+CREATE TRIGGER trg_participates_player_one_winner_update
+    BEFORE UPDATE ON PARTICIPATES_PLAYER
     FOR EACH ROW
 BEGIN
-    IF NOT (NEW.email <=> OLD.email) THEN
-        IF NEW.email NOT REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' THEN
+    DECLARE total_winners INT;
+
+    IF NEW.is_winner = 1 AND (OLD.is_winner IS NULL OR OLD.is_winner = 0) THEN
+        SELECT (
+            (SELECT COUNT(*) FROM PARTICIPATES_PLAYER
+             WHERE game_id = NEW.game_id AND is_winner = 1
+             AND player_id != NEW.player_id)
+            +
+            (SELECT COUNT(*) FROM PARTICIPATES_GUEST
+             WHERE game_id = NEW.game_id AND is_winner = 1)
+        ) INTO total_winners;
+
+        IF total_winners > 0 THEN
             SIGNAL SQLSTATE '45000'
-                SET MESSAGE_TEXT = 'Le format de l\'adresse email est invalide.';
+                SET MESSAGE_TEXT = 'Cette partie a déjà un gagnant. Un seul gagnant autorisé par partie.';
         END IF;
     END IF;
 END //
@@ -296,36 +125,118 @@ END //
 DELIMITER ;
 
 -- ############################################################################
--- TABLE STATISTICS — Contrôle de cohérence des données
+--  5. UN SEUL GAGNANT PAR PARTIE — PARTICIPATES_GUEST (INSERT)
 -- ############################################################################
 
--- --------------------------------------------------------------------------
--- 9. Vérification de cohérence à l'INSERT sur STATISTICS
--- --------------------------------------------------------------------------
--- Règles :
---   • wins_count >= 0                    (déjà couvert par CHECK, double sécurité)
---   • games_played_count >= 0            (idem)
---   • wins_count <= games_played_count   (on ne peut pas gagner plus qu'on a joué)
 
 DELIMITER //
 
-CREATE TRIGGER trg_statistics_check_coherence_insert
-    BEFORE INSERT ON STATISTICS
+CREATE TRIGGER trg_participates_guest_before_insert
+    BEFORE INSERT ON PARTICIPATES_GUEST
     FOR EACH ROW
 BEGIN
-    -- Nombre de victoires ne peut pas être négatif
+    DECLARE total_participants INT;
+    DECLARE total_winners INT;
+    DECLARE guest_expiry DATETIME;
+
+    -- Score >= 0
+    IF NEW.final_score IS NOT NULL AND NEW.final_score < 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Le score final ne peut pas être négatif.';
+    END IF;
+
+    -- Guest non expiré
+    SELECT expires_at INTO guest_expiry
+    FROM GUEST_PLAYER
+    WHERE guest_id = NEW.guest_id;
+
+    IF guest_expiry IS NOT NULL AND guest_expiry < NOW() THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ce joueur invité a expiré et ne peut plus rejoindre de partie.';
+    END IF;
+
+    -- Maximum 5 joueurs par partie
+    SELECT (
+        (SELECT COUNT(*) FROM PARTICIPATES_PLAYER WHERE game_id = NEW.game_id)
+        +
+        (SELECT COUNT(*) FROM PARTICIPATES_GUEST WHERE game_id = NEW.game_id)
+    ) INTO total_participants;
+
+    IF total_participants >= 5 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'La partie est pleine (maximum 5 joueurs).';
+    END IF;
+
+    -- Un seul gagnant par partie
+    IF NEW.is_winner = 1 THEN
+        SELECT (
+            (SELECT COUNT(*) FROM PARTICIPATES_PLAYER
+             WHERE game_id = NEW.game_id AND is_winner = 1)
+            +
+            (SELECT COUNT(*) FROM PARTICIPATES_GUEST
+             WHERE game_id = NEW.game_id AND is_winner = 1)
+        ) INTO total_winners;
+
+        IF total_winners > 0 THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Cette partie a déjà un gagnant.';
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- ############################################################################
+-- 6. UN SEUL GAGNANT PAR PARTIE — PARTICIPATES_GUEST (UPDATE)
+-- ############################################################################
+
+DELIMITER //
+
+CREATE TRIGGER trg_participates_guest_one_winner_update
+    BEFORE UPDATE ON PARTICIPATES_GUEST
+    FOR EACH ROW
+BEGIN
+    DECLARE total_winners INT;
+
+    IF NEW.is_winner = 1 AND (OLD.is_winner IS NULL OR OLD.is_winner = 0) THEN
+        SELECT (
+            (SELECT COUNT(*) FROM PARTICIPATES_PLAYER
+             WHERE game_id = NEW.game_id AND is_winner = 1)
+            +
+            (SELECT COUNT(*) FROM PARTICIPATES_GUEST
+             WHERE game_id = NEW.game_id AND is_winner = 1
+             AND guest_id != NEW.guest_id)
+        ) INTO total_winners;
+
+        IF total_winners > 0 THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Cette partie a déjà un gagnant. Un seul gagnant autorisé par partie.';
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- ############################################################################
+-- 7. COHÉRENCE wins_count <= games_played_count
+-- ############################################################################
+
+DELIMITER //
+
+CREATE TRIGGER trg_registered_player_check_stats_update
+    BEFORE UPDATE ON REGISTERED_PLAYER
+    FOR EACH ROW
+BEGIN
     IF NEW.wins_count < 0 THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Le nombre de victoires ne peut pas être négatif.';
     END IF;
 
-    -- Nombre de parties jouées ne peut pas être négatif
     IF NEW.games_played_count < 0 THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Le nombre de parties jouées ne peut pas être négatif.';
     END IF;
 
-    -- Cohérence croisée : on ne peut pas avoir plus de victoires que de parties
     IF NEW.wins_count > NEW.games_played_count THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Le nombre de victoires ne peut pas dépasser le nombre de parties jouées.';
@@ -334,93 +245,100 @@ END //
 
 DELIMITER ;
 
-
--- --------------------------------------------------------------------------
--- 10. Vérification de cohérence à l'UPDATE sur STATISTICS
--- --------------------------------------------------------------------------
+-- ############################################################################
+-- 8. L'ACHETEUR DOIT PARTICIPER À LA PARTIE — PURCHASE_HISTORY
+-- ############################################################################
 
 DELIMITER //
 
-CREATE TRIGGER trg_statistics_check_coherence_update
-    BEFORE UPDATE ON STATISTICS
+CREATE TRIGGER trg_purchase_history_check_participant
+    BEFORE INSERT ON PURCHASE_HISTORY
     FOR EACH ROW
 BEGIN
-    -- Nombre de victoires ne peut pas être négatif
-    IF NEW.wins_count < 0 THEN
+    DECLARE is_participant INT DEFAULT 0;
+
+    -- Vérifier qu'exactement un des deux (player_id ou guest_id) est renseigné
+    IF (NEW.player_id IS NULL AND NEW.guest_id IS NULL) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le nombre de victoires ne peut pas être négatif.';
+            SET MESSAGE_TEXT = 'Un achat doit être lié à un joueur inscrit OU un invité.';
     END IF;
 
-    -- Nombre de parties jouées ne peut pas être négatif
-    IF NEW.games_played_count < 0 THEN
+    IF (NEW.player_id IS NOT NULL AND NEW.guest_id IS NOT NULL) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le nombre de parties jouées ne peut pas être négatif.';
+            SET MESSAGE_TEXT = 'Un achat ne peut pas être lié à un joueur inscrit ET un invité en même temps.';
     END IF;
 
-    -- Cohérence croisée : victoires <= parties jouées
-    IF NEW.wins_count > NEW.games_played_count THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le nombre de victoires ne peut pas dépasser le nombre de parties jouées.';
+    -- Vérifier la participation
+    IF NEW.player_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO is_participant
+        FROM PARTICIPATES_PLAYER
+        WHERE player_id = NEW.player_id AND game_id = NEW.game_id;
+    ELSE
+        SELECT COUNT(*) INTO is_participant
+        FROM PARTICIPATES_GUEST
+        WHERE guest_id = NEW.guest_id AND game_id = NEW.game_id;
     END IF;
 
-    -- Cohérence avec la table PARTICIPATES :
-    -- games_played_count ne peut pas être inférieur au nombre réel de participations
-    -- (empêche une modification manuelle incohérente)
-    IF NEW.games_played_count < (
-        SELECT COUNT(*) FROM PARTICIPATES WHERE id_player = NEW.id_player
-    ) THEN
+    IF is_participant = 0 THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le nombre de parties ne peut pas être inférieur au nombre réel de participations enregistrées.';
-    END IF;
-
-    -- Cohérence avec la table GAME :
-    -- wins_count ne peut pas être inférieur au nombre réel de victoires
-    IF NEW.wins_count < (
-        SELECT COUNT(*) FROM GAME WHERE id_winner = NEW.id_player
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le nombre de victoires ne peut pas être inférieur au nombre réel de victoires enregistrées.';
+            SET MESSAGE_TEXT = 'L''acheteur ne participe pas à cette partie. Achat refusé.';
     END IF;
 END //
 
 DELIMITER ;
 
-
 -- ############################################################################
--- TABLE PARTICIPATES — Contrôle du score final
+-- 9. base_price > 0 SUR MONUMENT
 -- ############################################################################
-
--- --------------------------------------------------------------------------
--- 11. Le score final ne peut pas être négatif (INSERT)
--- --------------------------------------------------------------------------
 
 DELIMITER //
 
-CREATE TRIGGER trg_participates_check_score_insert
-    BEFORE INSERT ON PARTICIPATES
+CREATE TRIGGER trg_monument_check_price_insert
+    BEFORE INSERT ON MONUMENT
     FOR EACH ROW
 BEGIN
-    IF NEW.final_score < 0 THEN
+    IF NEW.base_price IS NULL OR NEW.base_price <= 0 THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le score final ne peut pas être négatif.';
+            SET MESSAGE_TEXT = 'Le prix de base d''un monument doit être strictement supérieur à 0.';
     END IF;
 END //
 
 DELIMITER ;
 
--- --------------------------------------------------------------------------
--- 12. Le score final ne peut pas être négatif (UPDATE)
--- --------------------------------------------------------------------------
+DELIMITER //
+
+CREATE TRIGGER trg_monument_check_price_update
+    BEFORE UPDATE ON MONUMENT
+    FOR EACH ROW
+BEGIN
+    IF NEW.base_price IS NULL OR NEW.base_price <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Le prix de base d''un monument doit être strictement supérieur à 0.';
+    END IF;
+END //
+
+DELIMITER ;
+
+-- ############################################################################
+-- 10. ARCHIVAGE AUTOMATIQUE — COPIE AVANT SUPPRESSION
+-- ############################################################################
+-- Quand un joueur inscrit est supprimé, ses données sont automatiquement
+-- sauvegardées dans ARCHIVED_PLAYER.
 
 DELIMITER //
 
-CREATE TRIGGER trg_participates_check_score_update
-    BEFORE UPDATE ON PARTICIPATES
+CREATE TRIGGER trg_registered_player_archive_on_delete
+    BEFORE DELETE ON REGISTERED_PLAYER
     FOR EACH ROW
 BEGIN
-    IF NEW.final_score < 0 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Le score final ne peut pas être négatif.';
+    IF NOT EXISTS (SELECT 1 FROM ARCHIVED_PLAYER WHERE player_id = OLD.player_id) THEN
+        INSERT INTO ARCHIVED_PLAYER (
+            player_id, nickname, email, created_at, last_login_at,
+            archived_at, archive_reason
+        ) VALUES (
+            OLD.player_id, OLD.nickname, OLD.email, OLD.created_at,
+            OLD.last_login_at, NOW(), 'Suppression automatique du compte'
+        );
     END IF;
 END //
 
