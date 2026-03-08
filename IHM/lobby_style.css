@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Exo+2:ital,wght@0,600;0,700;1,700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: url('assets/background/lobby_screen_background.png') no-repeat center / cover fixed;
+}
+
+/* --- Bouton Paramètres (Position identique aux autres écrans) --- */
+.btn-settings {
+    position: absolute;
+    top: 5vh;
+    right: 3vw;
+    width: 100px;
+    height: 100px;
+    background: transparent url('assets/basis/settings_button_basis.png') no-repeat center / contain;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.btn-settings:hover {
+    background-image: url('assets/hover/settings_button_basis.png');
+}
+
+/* --- Layout Principal --- */
+.lobby-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Répartition égale */
+    height: 85vh; /* On laisse de la place en haut et bas */
+    padding: 7vh 0;
+}
+
+/* --- Centrage parfait du Code et du Timer --- */
+.header-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.room-code {
+    font-family: 'Erica One', cursive;
+    font-size: 130px;
+    color: white;
+    margin: 0;
+    line-height: 0.85;
+    /* Bordure ultra-fine 0.5px */
+    -webkit-text-stroke: 0.5px #2B337C;
+    /* Ombre x:10px, y:20px exactement */
+    text-shadow: 10px 20px 0px #2B337C;
+}
+
+.timer {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600; /* Semibold */
+    font-size: 65px;
+    color: white;
+    margin: 15px 0 0 0;
+    -webkit-text-stroke: 3px #2B337C;
+    paint-order: stroke fill;
+}
+
+/* --- Info Section (Alignement dés + texte) --- */
+.info-section {
+    display: flex;
+    align-items: center; /* Aligne les milieux des images et du texte */
+    justify-content: center;
+    gap: 30px;
+}
+
+.info-text {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 45px;
+    color: white;
+    -webkit-text-stroke: 3px #2B337C;
+    paint-order: stroke fill;
+}
+
+.dice-icon {
+    width: 55px;
+    height: auto;
+}
+
+/* --- Joueurs --- */
+.players-row {
+    display: flex;
+    gap: 90px; /* Grand écart entre les socles */
+}
+
+.player-base {
+    width: 130px; /* Taille réduite */
+}
+
+/* --- Bouton Prêt (Taille harmonisée) --- */
+.btn-ready {
+    width: 380px; /* Taille augmentée */
+    height: 130px;
+    background: transparent url('assets/basis/ready_button_basis.png') no-repeat center / contain;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-ready:active {
+    background-image: url('assets/hover/ready_button_clicked.png');
+    transform: scale(0.95);
+}

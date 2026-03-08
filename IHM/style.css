@@ -1,0 +1,117 @@
+/* --- 1. Reset et Fond --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-family: sans-serif;
+    background: url('assets/background/title_screen_background.png') no-repeat center / cover fixed;
+}
+
+/* --- 2. Structure de Stabilisation du Titre --- */
+.menu-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: flex-start; 
+    padding-top: 6vh; /* Garde le titre à la même position sur chaque page */
+}
+
+.header-titre {
+    height: 50vh; /* Espace réservé identique sur toutes les pages */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titre-jeu {
+    width: 80vw;
+    max-width: 800px;
+    height: auto;
+    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.4));
+}
+
+.container-boutons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* --- 3. Gestion de l'Alignement en Colonne (Correctif) --- */
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.link-auth {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    text-decoration: none;
+}
+
+/* --- 4. Boutons d'Interface (Coins) --- */
+.btn-interface {
+    position: absolute;
+    top: 5vh;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
+}
+
+.btn-rules { left: 3vw; width: 120px; aspect-ratio: 160/110; background-image: url('assets/basis/rules_button_basis.png'); }
+.btn-settings { right: 3vw; width: 100px; aspect-ratio: 1/1; background-image: url('assets/basis/settings_button_basis.png'); }
+
+.btn-rules:hover { background-image: url('assets/hover/rules_button_hover.png'); }
+.btn-settings:hover { background-image: url('assets/hover/settings_button_hover.png'); }
+
+/* --- 5. Styles des Boutons Centraux --- */
+.btn-auth, .btn-play {
+    width: 35vw;
+    max-width: 450px;
+    min-width: 250px;
+    height: 100px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btn-login { background-image: url('assets/basis/login_button_basis.png'); }
+.btn-login:active { background-image: url('assets/clicked/login_button_clicked.png'); }
+
+.btn-guest { 
+    background-image: url('assets/basis/play_as_a_guest_button_basis.png'); 
+    margin-top: -15px; /* Rapprochement visuel selon vos images */
+}
+.btn-guest:active { background-image: url('assets/clicked/play_as_a_guest_button_clicked.png'); }
+
+.btn-play { background-image: url('assets/basis/play_button_basis.png'); }
+.btn-play:active { background-image: url('assets/clicked/play_button_clicked.png'); }
+
+/* Bouton Profil spécifique */
+.btn-profile {
+    width: 110px;
+    aspect-ratio: 1/1;
+    background: transparent url('assets/basis/profile_picture_button_basis.png') no-repeat center / contain;
+    border: none;
+    cursor: pointer;
+}
+.btn-profile:hover { background-image: url('assets/hover/profile_picture_button_hover.png'); }
+
+/* --- 6. Responsive Mobile --- */
+@media (max-width: 768px) {
+    .menu-principal { padding-top: 5vh; }
+    .header-titre { height: 25vh; }
+    .btn-auth, .btn-play { width: 70vw; height: 80px; }
+}

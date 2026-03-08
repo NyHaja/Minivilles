@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>IHM Minivilles</title>
-        <link rel="stylesheet" href="title_screen.css">
-    </head>
-    <body>
-        <button class="btn-interface btn-rules" id="rulesBtn"></button>
-        <button class="btn-interface btn-settings" id="settingsBtn"></button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minivilles - Accueil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="btn-interface btn-rules" id="rulesBtn"></button>
+    <button class="btn-interface btn-settings" id="settingsBtn"></button>
 
-        <div class="menu-principal">
-            <img src="assets/basis/title.png" alt="Miniville" class="titre-jeu">
-            <button class="btn-start" id="startBtn"></button>
+    <div class="menu-principal">
+        <div class="header-titre">
+            <img src="assets/basis/title.png" alt="Minivilles" class="titre-jeu">
         </div>
-    </body>
+
+        <div class="container-boutons">
+            <div class="auth-buttons">
+                <a href="home_screen_logged.html" class="link-auth">
+                    <button class="btn-auth btn-login" id="loginBtn"></button>
+                </a>
+                <a href="home_screen_guest.html" class="link-auth">
+                    <button class="btn-auth btn-guest" id="guestBtn"></button>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
