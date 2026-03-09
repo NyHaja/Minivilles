@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Exo+2:ital,wght@0,600;0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Exo:ital,wght@1,600&family=Exo+2:ital,wght@1,700&display=swap');
 
 html, body {
     margin: 0;
@@ -9,34 +9,46 @@ html, body {
     background: url('assets/background/lobby_screen_background.png') no-repeat center / cover fixed;
 }
 
-/* --- Bouton Paramètres (Position identique aux autres écrans) --- */
+:root {
+    --btn-size: clamp(60px, 8vw, 110px);
+    
+    /* --- RÉGLAGE FIN DE L'ÉCART --- */
+    /* 0.1 = très serré | 0.25 = équilibré | 0.5 = espacé */
+    --btn-gap-factor: 0.1; 
+    
+    --edge-margin-factor: 0.4;
+}
+
+/* --- Bouton Paramètres --- */
 .btn-settings {
     position: absolute;
     top: 5vh;
-    right: 3vw;
-    width: 100px;
-    height: 100px;
-    background: transparent url('assets/basis/settings_button_basis.png') no-repeat center / contain;
+    width: var(--btn-size);
+    background-color: transparent;
     border: none;
     cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
     z-index: 100;
+    right: calc(var(--btn-size) * var(--edge-margin-factor));
+    aspect-ratio: 1/1;
+    background-image: url('assets/basis/settings_button_basis.png');
 }
 
-.btn-settings:hover {
-    background-image: url('assets/hover/settings_button_basis.png');
-}
+.btn-settings:hover{background-image: url('assets/hover/settings_button_hover.png');}
 
 /* --- Layout Principal --- */
 .lobby-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* Répartition égale */
-    height: 85vh; /* On laisse de la place en haut et bas */
-    padding: 7vh 0;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    --gap-unit: clamp(25px, 6vh, 65px); 
 }
 
-/* --- Centrage parfait du Code et du Timer --- */
+/* --- Header --- */
 .header-group {
     display: flex;
     flex-direction: column;
@@ -46,69 +58,96 @@ html, body {
 
 .room-code {
     font-family: 'Erica One', cursive;
-    font-size: 130px;
+    font-size: clamp(75px, 12vw, 135px); 
     color: white;
     margin: 0;
     line-height: 0.85;
-    /* Bordure ultra-fine 0.5px */
-    -webkit-text-stroke: 0.5px #2B337C;
-    /* Ombre x:10px, y:20px exactement */
-    text-shadow: 10px 20px 0px #2B337C;
+    /* Sécurité : Bordure proportionnelle mais MINIMUM 3px */
+    -webkit-text-stroke: max(3px, 0.04em) #2B337C; 
+    paint-order: stroke fill;
+    text-shadow: 0.06em 0.08em 0px #2B337C;
 }
 
 .timer {
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 600; /* Semibold */
-    font-size: 65px;
+    font-family: 'Exo', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(32px, 4.5vw, 48px);
     color: white;
-    margin: 15px 0 0 0;
-    -webkit-text-stroke: 3px #2B337C;
+    margin: 1vh 0 0 0;
+    /* Sécurité : Bordure proportionnelle mais MINIMUM 2px */
+    -webkit-text-stroke: max(2.5px, 0.05em) #2B337C;
     paint-order: stroke fill;
 }
 
-/* --- Info Section (Alignement dés + texte) --- */
+/* --- SECTION INFO --- */
 .info-section {
     display: flex;
-    align-items: center; /* Aligne les milieux des images et du texte */
+    align-items: center;
     justify-content: center;
-    gap: 30px;
+    gap: 1.5vw;
+    margin-top: calc(var(--gap-unit) * 0.6);
 }
 
 .info-text {
     font-family: 'Exo 2', sans-serif;
     font-weight: 700;
     font-style: italic;
-    font-size: 45px;
+    font-size: clamp(22px, 3.5vw, 42px);
     color: white;
-    -webkit-text-stroke: 3px #2B337C;
+    /* Sécurité : Bordure proportionnelle mais MINIMUM 2.5px pour la lisibilité */
+    -webkit-text-stroke: max(2.5px, 0.06em) #2B337C;
     paint-order: stroke fill;
+    line-height: 1;
 }
 
 .dice-icon {
-    width: 55px;
+    width: clamp(35px, 4.5vw, 55px);
     height: auto;
 }
 
-/* --- Joueurs --- */
+/* --- SECTION JOUEURS (Ligne verte) --- */
 .players-row {
     display: flex;
-    gap: 90px; /* Grand écart entre les socles */
+    justify-content: center;
+    gap: 4vw;
+    margin-top: var(--gap-unit); 
 }
 
 .player-base {
-    width: 130px; /* Taille réduite */
+    width: clamp(90px, 13vw, 165px);
+    height: auto;
+    display: block;
 }
 
-/* --- Bouton Prêt (Taille harmonisée) --- */
+/* --- SECTION FOOTER (Ligne rose) --- */
+.footer-section {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--gap-unit); 
+}
+
 .btn-ready {
-    width: 380px; /* Taille augmentée */
-    height: 130px;
+    width: clamp(240px, 32vw, 380px);
+    aspect-ratio: 380 / 130;
     background: transparent url('assets/basis/ready_button_basis.png') no-repeat center / contain;
     border: none;
     cursor: pointer;
 }
 
 .btn-ready:active {
-    background-image: url('assets/hover/ready_button_clicked.png');
-    transform: scale(0.95);
+    background-image: url('assets/clicked/ready_button_clicked.png');
+    transform: scale(0.96);
+}
+
+/* --- Media Queries --- */
+@media (max-width: 500px) {
+    .players-row { gap: 15px; }
+    .room-code { font-size: 18vw; }
+}
+
+@media (max-height: 550px) {
+    .lobby-content { --gap-unit: 15px; }
+    .room-code { font-size: 15vh; }
+    .timer { font-size: 6vh; }
 }

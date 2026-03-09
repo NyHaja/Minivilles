@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Exo:ital,wght@1,600&family=Exo+2:ital,wght@1,700&display=swap');
+
 /* --- 1. Reset et Fond --- */
 html, body {
     margin: 0;
@@ -5,113 +7,128 @@ html, body {
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    font-family: sans-serif;
     background: url('assets/background/title_screen_background.png') no-repeat center / cover fixed;
 }
 
-/* --- 2. Structure de Stabilisation du Titre --- */
-.menu-principal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    justify-content: flex-start; 
-    padding-top: 6vh; /* Garde le titre à la même position sur chaque page */
+/* --- 2. Interface du Haut (Calculs Proportionnels) --- */
+:root {
+    --btn-size: clamp(60px, 8vw, 110px);
+    
+    /* --- RÉGLAGE FIN DE L'ÉCART --- */
+    /* 0.1 = très serré | 0.25 = équilibré | 0.5 = espacé */
+    --btn-gap-factor: 0.1; 
+    
+    --edge-margin-factor: 0.4;
 }
 
-.header-titre {
-    height: 50vh; /* Espace réservé identique sur toutes les pages */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.titre-jeu {
-    width: 80vw;
-    max-width: 800px;
-    height: auto;
-    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.4));
-}
-
-.container-boutons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-/* --- 3. Gestion de l'Alignement en Colonne (Correctif) --- */
-.auth-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.link-auth {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-decoration: none;
-}
-
-/* --- 4. Boutons d'Interface (Coins) --- */
 .btn-interface {
     position: absolute;
     top: 5vh;
+    width: var(--btn-size);
     background-color: transparent;
     border: none;
     cursor: pointer;
     background-size: contain;
     background-repeat: no-repeat;
-    z-index: 10;
+    z-index: 100;
 }
 
-.btn-rules { left: 3vw; width: 120px; aspect-ratio: 160/110; background-image: url('assets/basis/rules_button_basis.png'); }
-.btn-settings { right: 3vw; width: 100px; aspect-ratio: 1/1; background-image: url('assets/basis/settings_button_basis.png'); }
+/* Règles à gauche */
+.btn-rules {
+    left: calc(var(--btn-size) * var(--edge-margin-factor));
+    aspect-ratio: 160/110;
+    background-image: url('assets/basis/rules_button_basis.png');
+}
 
-.btn-rules:hover { background-image: url('assets/hover/rules_button_hover.png'); }
-.btn-settings:hover { background-image: url('assets/hover/settings_button_hover.png'); }
+.btn-settings {
+    right: calc(var(--btn-size) * var(--edge-margin-factor));
+    aspect-ratio: 1/1;
+    background-image: url('assets/basis/settings_button_basis.png');
+}
 
-/* --- 5. Styles des Boutons Centraux --- */
+.btn-profile {
+    /* Calcul verrouillé : Marge + Bouton Settings + (Taille Bouton * Facteur d'écart) */
+    right: calc(
+        (var(--btn-size) * 1.1)
+    );
+    aspect-ratio: 165/117;
+    background-image: url('assets/basis/profile_picture_button_basis.png');
+}
+
+.btn-settings:hover{background-image: url('assets/hover/settings_button_hover.png');}
+.btn-rules:hover {background-image: url('assets/hover/rules_button_hover.png');}
+.btn-profile:hover{background-image: url('assets/hover/profile_picture_button_hover.png');}
+
+/* --- 3. Layout Principal --- */
+.menu-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+
+/* --- 4. Section Titre (Logique Mot Long 7.8vw) --- */
+.header-group {
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    gap: 2vw;
+    width: 90%;
+}
+
+.titre-texte {
+    font-family: 'Erica One', cursive;
+    color: white;
+    margin: 0;
+    line-height: 0.85;
+    text-align: center;
+    white-space: nowrap;
+    font-size: clamp(38px, 7.8vw, 150px); 
+    -webkit-text-stroke: max(3px, 0.04em) #2B337C; 
+    paint-order: stroke fill;
+    text-shadow: 0.06em 0.08em 0px #2B337C;
+}
+
+.dice-icon {
+    width: clamp(30px, 5vw, 75px);
+    height: auto;
+}
+
+/* --- 5. Section Boutons Centraux --- */
+.container-boutons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: clamp(40px, 10vh, 100px); 
+}
+
 .btn-auth, .btn-play {
-    width: 35vw;
-    max-width: 450px;
-    min-width: 250px;
-    height: 100px;
+    width: clamp(240px, 32vw, 380px);
+    aspect-ratio: 380 / 130;
     background-color: transparent;
     border: none;
     cursor: pointer;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    display: block;
 }
 
-.btn-login { background-image: url('assets/basis/login_button_basis.png'); }
+.btn-login { background-image: url('assets/basis/login_button_basis.png'); position: relative; z-index: 2; }
+.btn-guest { background-image: url('assets/basis/play_as_a_guest_button_basis.png'); position: relative; z-index: 1; margin-top: -45px; }
+.btn-play  { background-image: url('assets/basis/play_button_basis.png'); position: relative; z-index: 1; margin-top: -45px; }
+
 .btn-login:active { background-image: url('assets/clicked/login_button_clicked.png'); }
-
-.btn-guest { 
-    background-image: url('assets/basis/play_as_a_guest_button_basis.png'); 
-    margin-top: -15px; /* Rapprochement visuel selon vos images */
-}
 .btn-guest:active { background-image: url('assets/clicked/play_as_a_guest_button_clicked.png'); }
+.btn-play:active  { background-image: url('assets/clicked/play_button_clicked.png'); }
 
-.btn-play { background-image: url('assets/basis/play_button_basis.png'); }
-.btn-play:active { background-image: url('assets/clicked/play_button_clicked.png'); }
+.link-auth { text-decoration: none; display: block; }
 
-/* Bouton Profil spécifique */
-.btn-profile {
-    width: 110px;
-    aspect-ratio: 1/1;
-    background: transparent url('assets/basis/profile_picture_button_basis.png') no-repeat center / contain;
-    border: none;
-    cursor: pointer;
-}
-.btn-profile:hover { background-image: url('assets/hover/profile_picture_button_hover.png'); }
-
-/* --- 6. Responsive Mobile --- */
-@media (max-width: 768px) {
-    .menu-principal { padding-top: 5vh; }
-    .header-titre { height: 25vh; }
-    .btn-auth, .btn-play { width: 70vw; height: 80px; }
+/* --- 6. Media Queries --- */
+@media (max-width: 600px) {
+    .titre-texte { font-size: clamp(38px, 12vw, 80px); }
+    .btn-guest, .btn-play { margin-top: -35px; }
 }
