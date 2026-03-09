@@ -1,45 +1,54 @@
--- 1. INSERTION DES JOUEURS
-INSERT INTO PLAYER (nickname, password, email, avatar_url) VALUES
-('GamerPro99', 'hash123', 'gamerpro@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=1'),
-('LuckyLucy', 'hash456', 'lucy@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=2'),
-('DarkKnight', 'hash789', 'knight@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=3'),
-('MiniVilloise', 'hashabc', 'villoise@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=4'),
-('ZeldaFan', 'hashdef', 'zelda@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=5'),
-('PixelArt', 'hashghi', 'pixel@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=6'),
-('SpeedRunner', 'hashjkl', 'speed@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=7'),
-('NoobMaster69', 'hashmno', 'noob@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=8'),
-('CyberPunk', 'hashpqr', 'cyber@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=9'),
-('AlphaJoueur', 'hashstu', 'alpha@mail.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=10');
+-- Quelques monuments emblématiques
+INSERT INTO MONUMENT (name, base_price, description) VALUES
+('Gare', 4.00, 'Vous pouvez choisir de lancer 2 dés au lieu d''un.'),
+('Centre commercial', 10.00, 'Vos établissements Tasse (rouge) et Pain (vert) rapportent +1 pièce chacun.'),
+('Parc d''attractions', 16.00, 'Si vous obtenez un double avec 2 dés, rejouez un tour supplémentaire (max 1 bonus).'),
+('Tour radio', 22.00, 'Une fois par tour, relancez vos dés (même nombre, seul le 2e résultat compte).'),
+('Port', 2.00, 'Si résultat dés >= 10, ajoutez +2. Active aussi Petit bateau et Chalutier.'),
+('Aéroport', 30.00, 'Si vous ne construisez rien ce tour, recevez 10 pièces de la banque.');
 
--- 2. INSERTION DES STATISTIQUES (Liées aux IDs 1 à 10)
-INSERT INTO STATISTICS (id_player, wins_count, games_played_count) VALUES
-(1, 5, 10), (2, 8, 12), (3, 2, 15), (4, 10, 20), (5, 0, 5),
-(6, 3, 8), (7, 12, 12), (8, 1, 30), (9, 4, 10), (10, 7, 14);
+-- Joueurs enregistrés (Mots de passe fictifs, à hacher en prod !)
+INSERT INTO REGISTERED_PLAYER (nickname, password, email, avatar_url) VALUES
+('Alex_Pro', 'hash_alex123', 'alex@example.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex'),
+('Elena_Strategy', 'hash_elena456', 'elena@example.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elena'),
+('Dark_Knight', 'hash_dk789', 'dk@example.com', NULL);
 
--- 3. INSERTION DES PARTIES (GAME)
--- id_host et id_winner font référence aux IDs de 1 à 10 créés plus haut
-INSERT INTO GAME (id_host, id_winner, played_at) VALUES
-(1, 2, '2026-02-01 14:00:00'),
-(3, 3, '2026-02-05 10:30:00'),
-(5, 1, '2026-02-10 18:45:00'),
-(2, NULL, '2026-02-12 21:00:00'), -- Partie sans gagnant (égalité ou abandon)
-(4, 4, '2026-02-15 15:00:00'),
-(6, 7, '2026-02-18 12:00:00'),
-(8, 9, '2026-02-20 19:30:00'),
-(10, 10, '2026-02-22 09:00:00'),
-(1, 4, '2026-02-24 23:15:00'),
-(7, 7, '2026-02-25 16:40:00');
+-- Invités (Expirations à 24h et 48h)
+INSERT INTO GUEST_PLAYER (nickname, expires_at) VALUES
+('Guest_42', DATE_ADD(NOW(), INTERVAL 1 DAY)),
+('Guest_99', DATE_ADD(NOW(), INTERVAL 2 DAY));
 
--- 4. INSERTION DES PARTICIPATIONS (PARTICIPATES)
--- On lie des joueurs à chaque partie (id_game, id_player)
-INSERT INTO PARTICIPATES (id_game, id_player, final_score) VALUES
-(1, 1, 45), (1, 2, 52), (1, 3, 30),
-(2, 3, 60), (2, 4, 12),
-(3, 5, 20), (3, 1, 85), (3, 2, 44),
-(4, 2, 10), (4, 6, 10),
-(5, 4, 100), (5, 8, 55),
-(6, 6, 30), (6, 7, 45), (6, 9, 12),
-(7, 8, 0), (7, 9, 25),
-(8, 10, 77), (8, 1, 50),
-(9, 1, 33), (9, 4, 89),
-(10, 7, 65), (10, 2, 40);
+
+-- Une partie terminée et une en cours
+INSERT INTO GAME (played_at, ended_at, Status) VALUES
+('2024-05-20 14:00:00', '2024-05-20 15:30:00', 'Finished'),
+(NOW(), NULL, 'In_Progress');
+
+-- Participation à la partie 1 (Finie)
+-- Alex était l'hôte et a gagné
+INSERT INTO PARTICIPATES_PLAYER (player_id, game_id, final_score, is_winner, is_host) VALUES
+(1, 1, 2500, 1, 1), 
+(2, 1, 1800, 0, 0);
+
+-- Participation du Guest à la partie 1
+INSERT INTO PARTICIPATES_GUEST (guest_id, game_id, final_score, is_winner) VALUES
+(1, 1, 1200, 0);
+
+-- Participation à la partie 2 (En cours)
+INSERT INTO PARTICIPATES_PLAYER (player_id, game_id, final_score, is_winner, is_host) VALUES
+(3, 2, 450, 0, 1);
+
+-- Historique des achats durant la partie 1
+INSERT INTO PURCHASE_HISTORY (player_id, guest_id, game_id, monument_id, purchase_price) VALUES
+(1, NULL, 1, 1, 4.00), 
+(NULL, 1, 1, 3, 16.00);
+
+-- Un joueur archivé (Ancien compte supprimé)
+INSERT INTO ARCHIVED_PLAYER (player_id, nickname, email, created_at, archive_reason) VALUES
+(99, 'Old_User', 'old@mail.com', '2023-01-01 10:00:00', 'Demande de suppression de compte');
+
+-- Logs système pour tracer l'activité
+INSERT INTO SYSTEM_LOG (action_type, target_id, details) VALUES
+('USER_REGISTER', 1, 'Nouvel utilisateur enregistré : Alex_Pro'),
+('GAME_START', 2, 'Partie lancée par Dark_Knight'),
+('PURCHASE', 1, 'Monument 1 acheté par joueur 1 pour 1500.00');

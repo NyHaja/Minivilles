@@ -48,7 +48,9 @@ CREATE TABLE GUEST_PLAYER (
 -- Table des Parties
 CREATE TABLE GAME (
     game_id INT PRIMARY KEY AUTO_INCREMENT,
-    played_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    played_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ended_at DATETIME, 
+    Status VARCHAR(255) 
 );
 
 -- Participation des joueurs enregistrés
@@ -57,9 +59,10 @@ CREATE TABLE PARTICIPATES_PLAYER (
     game_id INT,
     final_score INT,
     is_winner  INT CHECK (is_winner IN (0, 1)) ,
+    is_host  INT CHECK (is_host IN (0, 1)) ,
     PRIMARY KEY (player_id, game_id),
-    FOREIGN KEY (player_id) REFERENCES REGISTERED_PLAYER(player_id),
-    FOREIGN KEY (game_id) REFERENCES GAME(game_id)
+    FOREIGN KEY (player_id) REFERENCES REGISTERED_PLAYER(player_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES GAME(game_id) ON DELETE CASCADE
 );
 
 -- Participation des invités (Guest)
@@ -82,10 +85,10 @@ CREATE TABLE PURCHASE_HISTORY (
     monument_id INT NOT NULL,
     purchase_price DECIMAL(10, 2),
     purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (player_id) REFERENCES REGISTERED_PLAYER(player_id),
-    FOREIGN KEY (guest_id) REFERENCES GUEST_PLAYER(guest_id),
-    FOREIGN KEY (game_id) REFERENCES GAME(game_id),
-    FOREIGN KEY (monument_id) REFERENCES MONUMENT(monument_id)
+    FOREIGN KEY (player_id) REFERENCES REGISTERED_PLAYER(player_id) ON DELETE CASCADE,
+    FOREIGN KEY (guest_id) REFERENCES GUEST_PLAYER(guest_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES GAME(game_id) ON DELETE CASCADE ,
+    FOREIGN KEY (monument_id) REFERENCES MONUMENT(monument_id) ON DELETE CASCADE
 );
 
 
