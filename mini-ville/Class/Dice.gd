@@ -8,10 +8,10 @@ var aRelance : bool # ???
 
 func lancer(intnombreDe) -> Array[int]:
 	var res
-	res[0] = randi()%7
+	res[0] = (randi()%6) + 1
 	res[1] = 0 
 	if intnombreDe == 2:
-		res[1] == randi()%7
+		res[1] == (randi()%6) +1
 		
 	resultat = res
 	

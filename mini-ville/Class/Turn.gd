@@ -32,17 +32,43 @@ func demarrer(joueur:Player) ->void:
 	phaseActivationBleuVert()
 	phaseActivationViolet()
 	
-	 # choix :
-	# rien faire -> areoport
-	# construire
+	# choix :
+		# rien faire -> areoport
+		# acheter
+			
 
 	
 func phaseLancerDes() ->void:
+	phaseActuelle = GAMEPHASE.ROLL_DICE
 	
-	pass
+	var d = Dice.new()
+	var nbdice = 1
+	if joueurActif.dicecount == 2:
+		# INPUT : 1 ou 2
+		# nbdice = INPUT
+		pass
+	
+	d.lancer(nbdice)
+	if joueurActif.HasRadio():
+		if d.estDouble():
+			phaseDecisionRelance()
+
+
 
 func phaseDecisionRelance() ->void:
-	pass
+	phaseActuelle = GAMEPHASE.REROLL_DECISION
+	
+	var veutRelancer = false
+	#INPUT propose au joueur de relancer
+	# veutRelancer = INPUT
+	if veutRelancer:
+		var d2 = Dice.new()
+		var nbdice2 = 1
+		if joueurActif.dicecount == 2:
+			# INPUT : 1 ou 2
+			# nbdice = INPUT
+			pass
+
 func phaseActivationRouge() ->void:
 	pass
 func phaseActivationBleuVert() ->void:
