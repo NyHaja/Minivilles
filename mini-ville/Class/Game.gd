@@ -14,13 +14,16 @@ var phase:Turn.GAMEPHASE :
 var tour :Turn
 var lesJoueurs : Array[Player]
 func demarrerPartie() ->void:
-	#Lance Dé
+	# INIT
+		#Generer les 160 carte dans la pioche
+		#Donner champ blé et boulangerie a tout les joueur et 3 gold
+		
+	# LOOP de partie
 	var AunGagnant = false
-	
 	while not(AunGagnant):
 		var newtour = Turn.new(getJoueurActif())
 		newtour.demarrer(newtour.joueurActif)
-		AunGagnant = newtour.joueurActif.monument
+		AunGagnant = newtour.joueurActif.monumentCount == 5
 		
 		
 func tourSuivant() -> void:

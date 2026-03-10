@@ -27,6 +27,7 @@ func demarrer(joueur:Player) ->void:
 	joueurActif = joueur
 	
 	phaseLancerDes()
+	
 	phaseActivationRouge()
 	phaseActivationBleuVert()
 	phaseActivationViolet()
@@ -37,6 +38,7 @@ func demarrer(joueur:Player) ->void:
 
 	
 func phaseLancerDes() ->void:
+	
 	pass
 
 func phaseDecisionRelance() ->void:
@@ -57,8 +59,10 @@ func phaseVerificationTourBonus() ->void:
 func terminer() -> void:
 	pass
 
-func peutRelancer() -> bool
-func doitRejouer() -> bool
+func peutRelancer() -> bool:
+	return false
+func doitRejouer() -> bool:
+	return false
 
 func _init(joueurActif : Player) -> void:
 	joueurActif = joueurActif
