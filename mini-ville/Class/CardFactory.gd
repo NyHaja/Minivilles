@@ -134,6 +134,52 @@ static func creerVerger() -> Establishment:
 	return carte
 
 
+# === 🟢 VERTS ===
+ 
+# Boulangerie - Vert - Dé: 2-3 - Coût: 1
+# Icon: BREAD
+# Effect: Recevoir 1 pièce de la banque
+static func creerBoulangerie() -> Establishment:
+	var effet = EffectGainBanque.new(1, 1)  # id_effet=1, montant=1
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		7,                              # id card
+		"Boulangerie",
+		Icon.Type.BREAD,
+		CardColor.Type.GREEN,
+		1,                              # coût
+		"Recevez 1 pièce de la banque.",
+		[2, 3]                          # activation sur 2 ou 3
+	)
+	
+	return carte
+ 
+ 
+# Superette - Vert - Dé: 4 - Coût: 2
+# Icon: BREAD
+# Effect: Recevoir 3 pièces de la banque
+static func creerSuperette() -> Establishment:
+	var effet = EffectGainBanque.new(1, 3)  # id_effet=1, montant=3
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		8,                              # id card
+		"Superette",
+		Icon.Type.BREAD,
+		CardColor.Type.GREEN,
+		2,                              # coût
+		"Recevez 3 pièces de la banque.",
+		[4, 4]                          # activation
+	)
+	
+	return carte
+
+
 # === 🟣 VIOLETS ===
 
 # Chaîne de Télévision - Violet - Activation: 6
