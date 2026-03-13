@@ -10,8 +10,6 @@ func _init(p_id: int, p_description: String):
 	id = p_id
 	description = p_description
 
-
-
 # Méthode abstraite
 func appliquer(game: Game, owner: Player, roller: Player):
 	assert(false, "appliquer() must be implemented in child class")
@@ -19,8 +17,6 @@ func appliquer(game: Game, owner: Player, roller: Player):
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	return true
-
-
 
 func getDescription() -> String:
 	return description
