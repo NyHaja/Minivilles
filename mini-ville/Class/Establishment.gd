@@ -34,12 +34,11 @@ func NewCard(
 	activationNum = p_activationNum
 
 
-# vérifier si la carte s'active avec un res de dés
-func est_activee(resultat_des: int) -> bool:
-	return resultat_des >= activationNum[0] and resultat_des <= activationNum[1]
+func get_activation_num() -> Array:
+	return activationNum
 
+func get_color() -> CardColor.Type:
+	return color
 
-# Getter pour obtenir la description complète (Avec le num d'activation en plus que la méthode de card)
-func get_description_complete() -> String:
-	var activation = str(activationNum[0]) if activationNum[0] == activationNum[1] else str(activationNum[0]) + "-" + str(activationNum[1])
-	return "[" + activation + "] " + name + " (" + str(cost) + "💰) - " + description
+func get_icon() -> Icon.Type:
+	return icon

@@ -7,5 +7,19 @@ var cost : int
 var effect : Effect  # Référence vers un effet partagé
 
 
-func getDescription() -> String:
-	return name + " (" + type + ") - Cost: " + str(cost) + " - " + effect.getDescription()
+func get_id() -> int:
+	return id
+
+func get_name() -> String:
+	return name
+
+func get_type() -> String:
+	return type
+
+func get_cost() -> int:
+	return cost
+
+func get_effect_description() -> String:
+	if effect != null:
+		return effect.getDescription()
+	return "Aucun effet"
