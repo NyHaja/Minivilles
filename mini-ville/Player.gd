@@ -59,6 +59,24 @@ func demolishMonument(monumentToDemolish: Monument) -> void:
 	monumentArray[monumentToDemolish.id] = false
 	monumentCount -= 1
 	
+func monumentIsActive(monumentId: int) -> bool:
+	return monumentArray[monumentId]
+	
+
+func cardsWithIcon(icons: Array[String]) -> int:
+	var numberOfCards:int = 0
+	for instance in deck:
+		var cardId = instance[0]
+		var quantity = instance[1]
+		
+		var card = CardFactory.get_card_by_id(cardId)
+		
+		for iconToCount in icons:
+			if card.icon == iconToCount:
+				numberOfCards += quantity
+				
+	return numberOfCards
+
 func activateEffect(color: String, game: Game, roller: Player) -> void: # A REVOIR
 	
 	var dice_roll = game.current_roll_value
