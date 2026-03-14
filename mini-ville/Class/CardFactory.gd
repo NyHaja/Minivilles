@@ -134,6 +134,28 @@ static func creerVerger() -> Establishment:
 	return carte
 
 
+# Petit bateau de peche - Dé: 8 - Coût: 2
+# Icon: BOAT
+# Effect: Recevoir 3 pièces de la banque (Nécessite le Port)
+static func creerPetitBateauPeche() -> Establishment:
+	var effet = EffectGainBanquePortRequis.new(1, 3)  # id_effet=1, montant=3
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		10,                             # id card
+		"Petit bateau de pêche",
+		Icon.Type.BOAT,
+		CardColor.Type.BLUE,
+		2,                              # coût
+		"Recevez 3 pièces. (Nécessite le Port)",
+		[8, 8]                          # activation sur 8
+	)
+	
+	return carte
+
+	
 # === 🟢 VERTS ===
  
 # Boulangerie - Vert - Dé: 2-3 - Coût: 1
@@ -178,6 +200,138 @@ static func creerSuperette() -> Establishment:
 	)
 	
 	return carte
+
+
+# Fromagerie - Dé: 7 - Coût: 5
+# Icon: FACTORY
+# Effect: Recevoir 3 pièces par carte BÉTAIL possédée
+static func creerFromagerie() -> Establishment:
+	var effet = EffectGainBanqueParIcone.new(
+		2,              # id_effet
+		3,              # montant_par_carte
+		[Icon.Type.COW]      # icones_cibles
+	)
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		9,                              # id card
+		"Fromagerie",
+		Icon.Type.FACTORY,
+		CardColor.Type.GREEN,
+		5,                              # coût
+		"Recevez 3 pièces par carte Bétail possédée.",
+		[7, 7]                          # activation sur 7
+	)
+	
+	return carte
+ 
+ 
+# Fabrique de meubles - Dé: 8 - Coût: 3
+# Icon: FACTORY
+# Effect: Recevoir 3 pièces par carte ENGRENAGE possédée
+static func creerFabriqueMeubles() -> Establishment:
+
+	var effet = EffectGainBanqueParIcone.new(
+		2,              # id_effet
+		3,              # montant_par_carte
+		[Icon.Type.GEAR]     # icones_cibles
+	)
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		11,                             # id card
+		"Fabrique de meubles",
+		Icon.Type.FACTORY,
+		CardColor.Type.GREEN,
+		3,                              # coût
+		"Recevez 3 pièces par carte Engrenage possédée.",
+		[8, 8]                          # activation sur 8
+	)
+	
+	return carte
+ 
+ 
+# Moonster Soda - Dé: 11 - Coût: 5
+# Icon: FACTORY
+# Effect: Recevoir 1 pièce par carte TASSE possédée
+static func creerMoonsterSoda() -> Establishment:
+	var effet = EffectGainBanqueParIcone.new(
+		2,              # id_effet
+		1,              # montant_par_carte
+		[Icon.Type.CUP]      # icones_cibles
+	)
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		12,                             # id card
+		"Moonster Soda",
+		Icon.Type.FACTORY,
+		CardColor.Type.GREEN,
+		5,                              # coût
+		"Recevez 1 pièce par carte Tasse possédée.",
+		[11, 11]                        # activation sur 11
+	)
+	
+	return carte
+ 
+ 
+# Halle du marché -Dé: 11-12 - Coût: 2
+# Icon: FRUIT
+# Effect: Recevoir 2 pièces par carte BLÉ possédée
+static func creerHalleMarche() -> Establishment:
+	var effet = EffectGainBanqueParIcone.new(
+		2,              # id_effet
+		2,              # montant_par_carte
+		[Icon.Type.WHEAT]    # icones_cibles
+	)
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		13,                             # id card
+		"Halle du marché",
+		Icon.Type.FRUIT,
+		CardColor.Type.GREEN,
+		2,                              # coût
+		"Recevez 2 pièces par carte Blé possédée.",
+		[11, 12]                        # activation 11-12
+	)
+	
+	return carte
+ 
+ 
+# Marché fruits/légumes - Dé: 11-12 - Coût: 2
+# Icon: FRUIT
+# Effect: Recevoir 2 pièces par carte BLÉ possédée
+static func creerMarcheFL() -> Establishment:
+	var effet = EffectGainBanqueParIcone.new(
+		2,              # id_effet
+		2,              # montant_par_carte
+		[Icon.Type.WHEAT]    # icones_cibles
+	)
+	
+	# créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		14,                             # id card
+		"Marché fruits/légumes",
+		Icon.Type.FRUIT,
+		CardColor.Type.GREEN,
+		2,                              # coût
+		"Recevez 2 pièces par carte Blé possédée.",
+		[11, 12]                        # activation 11-12
+	)
+	
+	return carte
+
 
 
 # === 🟣 VIOLETS ===
