@@ -3,8 +3,8 @@
 -- ============================================================================
 -- SGBD : MySQL
 -- Tables concernées : 	REGISTERED_PLAYER, GUEST_PLAYER, GAME, PARTICIPATES_PLAYER,
---          			PARTICIPATES_GUEST, PURCHASE_HISTORY, MONUMENT,
---         				ARCHIVED_PLAYER, SYSTEM_LOG
+--          			PARTICIPATES_GUEST, MONUMENT, GAME_HISTORY, CARD
+--                      SYSTEM_LOG
 -- ============================================================================
 
 -- ############################################################################
@@ -56,42 +56,23 @@ DELIMITER ;
 -- ############################################################################
 DELIMITER //
 
-create trigger trg_registered_player_log_insert
-	after insert on registered_player
-	for each row
-begin
-	insert into system_log (action_type, target_id, details, executed_at)
-	values (
-		'PLAYER_REGISTERED',
-		new.player_id,
-		concat('Inscription du joueur "', new.nickname, '"(email: ', new.email, ')'),
-		now()
-	);
-end //
+DROP TRIGGER IF EXISTS trg_registered_player_log_insert //
 
-DELIMITER ;
-
--- ############################################################################
---  3. LOG AUTOMATIQUE — ARCHIVAGE D'UN JOUEUR
--- ############################################################################
-
-DELIMITER //
-
-CREATE TRIGGER trg_archived_player_log_insert
-    AFTER INSERT ON ARCHIVED_PLAYER
+CREATE TRIGGER trg_registered_player_log_insert
+    AFTER INSERT ON REGISTERED_PLAYER
     FOR EACH ROW
 BEGIN
     INSERT INTO SYSTEM_LOG (action_type, target_id, details, executed_at)
     VALUES (
-        'PLAYER_ARCHIVED',
+        'PLAYER_REGISTERED',
         NEW.player_id,
-        CONCAT('Archivage du joueur "', NEW.nickname, '" — Raison : ',
-               IFNULL(NEW.archive_reason, 'Non spécifiée')),
+        CONCAT('Inscription du joueur "', NEW.nickname, '" (email: ', NEW.email, ')'),
         NOW()
     );
 END //
 
 DELIMITER ;
+
 
 -- ############################################################################
 --  4. UN SEUL GAGNANT PAR PARTIE — PARTICIPATES_PLAYER (UPDATE)
@@ -246,48 +227,6 @@ END //
 DELIMITER ;
 
 -- ############################################################################
--- 8. L'ACHETEUR DOIT PARTICIPER À LA PARTIE — PURCHASE_HISTORY
--- ############################################################################
-
-DELIMITER //
-
-CREATE TRIGGER trg_purchase_history_check_participant
-    BEFORE INSERT ON PURCHASE_HISTORY
-    FOR EACH ROW
-BEGIN
-    DECLARE is_participant INT DEFAULT 0;
-
-    -- Vérifier qu'exactement un des deux (player_id ou guest_id) est renseigné
-    IF (NEW.player_id IS NULL AND NEW.guest_id IS NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Un achat doit être lié à un joueur inscrit OU un invité.';
-    END IF;
-
-    IF (NEW.player_id IS NOT NULL AND NEW.guest_id IS NOT NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Un achat ne peut pas être lié à un joueur inscrit ET un invité en même temps.';
-    END IF;
-
-    -- Vérifier la participation
-    IF NEW.player_id IS NOT NULL THEN
-        SELECT COUNT(*) INTO is_participant
-        FROM PARTICIPATES_PLAYER
-        WHERE player_id = NEW.player_id AND game_id = NEW.game_id;
-    ELSE
-        SELECT COUNT(*) INTO is_participant
-        FROM PARTICIPATES_GUEST
-        WHERE guest_id = NEW.guest_id AND game_id = NEW.game_id;
-    END IF;
-
-    IF is_participant = 0 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'L''acheteur ne participe pas à cette partie. Achat refusé.';
-    END IF;
-END //
-
-DELIMITER ;
-
--- ############################################################################
 -- 9. base_price > 0 SUR MONUMENT
 -- ############################################################################
 
@@ -311,7 +250,7 @@ CREATE TRIGGER trg_monument_check_price_update
     BEFORE UPDATE ON MONUMENT
     FOR EACH ROW
 BEGIN
-    IF NEW.base_price IS NULL OR NEW.base_price <= 0 THEN
+    IF NEW.cost IS NULL OR NEW.cost <= 0 THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Le prix de base d''un monument doit être strictement supérieur à 0.';
     END IF;
@@ -320,26 +259,88 @@ END //
 DELIMITER ;
 
 -- ############################################################################
--- 10. ARCHIVAGE AUTOMATIQUE — COPIE AVANT SUPPRESSION
+-- 10. Trigger sur GUEST_ID ET PLAYER_ID 
 -- ############################################################################
--- Quand un joueur inscrit est supprimé, ses données sont automatiquement
--- sauvegardées dans ARCHIVED_PLAYER.
+-- le triggers permet d'éviter le fais d'avoir le guest_id et player_id rempli sur la même donnée
+
 
 DELIMITER //
 
-CREATE TRIGGER trg_registered_player_archive_on_delete
-    BEFORE DELETE ON REGISTERED_PLAYER
-    FOR EACH ROW
+CREATE TRIGGER tg_check_player_guest_before_insert
+BEFORE INSERT ON GAME_HISTORY
+FOR EACH ROW
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM ARCHIVED_PLAYER WHERE player_id = OLD.player_id) THEN
-        INSERT INTO ARCHIVED_PLAYER (
-            player_id, nickname, email, created_at, last_login_at,
-            archived_at, archive_reason
-        ) VALUES (
-            OLD.player_id, OLD.nickname, OLD.email, OLD.created_at,
-            OLD.last_login_at, NOW(), 'Suppression automatique du compte'
-        );
+    -- Cas 1 : Les deux sont remplis (Interdit)
+    IF (NEW.player_id IS NOT NULL AND NEW.guest_id IS NOT NULL) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erreur : Impossible d''avoir player_id ET guest_id. Choisissez-en un seul.';
+    END IF;
+
+    -- Cas 2 : Aucun n'est rempli (Interdit)
+    IF (NEW.player_id IS NULL AND NEW.guest_id IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erreur : Vous devez spécifier soit un player_id, soit un guest_id.';
     END IF;
 END //
 
 DELIMITER ;
+
+
+-- ############################################################################
+-- 11. Trigger update Monument_built 
+-- ############################################################################
+-- ici on doit avoir un trigger qui augmente le nombre de monument construis à partir de l'historique 
+DELIMITER //
+
+DELIMITER //
+
+DROP TRIGGER IF EXISTS update_monument_built //
+
+CREATE TRIGGER update_monument_built 
+AFTER INSERT ON GAME_HISTORY
+FOR EACH ROW
+BEGIN
+    -- On vérifie que c'est un joueur enregistré ET qu'un monument est impliqué
+    IF (NEW.player_id IS NOT NULL 
+        AND NEW.monument_id IS NOT NULL) THEN 
+        
+        UPDATE REGISTERED_PLAYER
+        SET total_monuments_built = total_monuments_built + 1
+        WHERE player_id = NEW.player_id; 
+
+        -- AJOUT DU POINT-VIRGULE À LA FIN DE CETTE LIGNE :
+        INSERT INTO SYSTEM_LOG (action_type, target_id, details, executed_at)
+        VALUES ('BUILT MONUMENT', NEW.player_id, 'Incrémentation du nombre de monuments construits', NOW());
+        
+    END IF; 
+END //
+
+DELIMITER ;
+
+-- ############################################################################
+-- 12. Décrémenter les stats si on quitte la partie 
+-- ############################################################################
+
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_participates_player_after_delete //
+CREATE TRIGGER trg_participates_player_after_delete
+    AFTER DELETE ON PARTICIPATES_PLAYER
+    FOR EACH ROW
+BEGIN
+    -- On décrémente le nombre de parties jouées (sans descendre sous 0)
+    UPDATE REGISTERED_PLAYER
+    SET games_played_count = GREATEST(games_played_count - 1, 0)
+    WHERE player_id = OLD.player_id;
+
+    -- S'il était marqué comme gagnant (peu probable s'il quitte, mais par sécurité), on annule la victoire
+    IF OLD.is_winner = 1 THEN
+        UPDATE REGISTERED_PLAYER
+        SET wins_count = GREATEST(wins_count - 1, 0)
+        WHERE player_id = OLD.player_id;
+    END IF;
+END //
+DELIMITER ;
+
+
+

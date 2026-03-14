@@ -12,7 +12,7 @@ CREATE PROCEDURE insertPlayer(
     IN p_nickname   VARCHAR(50),
     IN p_password   VARCHAR(255),
     IN p_mail       VARCHAR(100), 
-    IN p_avatar        VARCHAR(255),
+    IN p_avatar        VARCHAR(255)
 )
 BEGIN 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -31,7 +31,8 @@ BEGIN
         created_at, 
         last_login_at, 
         wins_count, 
-        games_played_count
+        games_played_count, 
+        total_monuments_built
     ) VALUES (
         p_nickname, 
         p_password, 
@@ -40,12 +41,70 @@ BEGIN
         NOW(),
         NOW(),
         0,
+        0,
         0
     );
     COMMIT;
 END //
 
 DELIMITER ;
+
+
+-- ############################################################################
+-- . INSERT GAME_HISTORY
+-- ############################################################################
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS insertHistory //
+DELIMITER //
+
+CREATE PROCEDURE insertHistory(
+    IN p_game_id INT,
+    IN p_player_id INT,
+    IN p_guest_id INT,
+    IN p_card_id INT,
+    IN p_monument_id INT,
+    IN p_turn_number INT,
+    IN p_action_type VARCHAR(50),
+    IN p_dice_result INT,
+    IN p_amount_exchanged INT,
+    IN p_action_details TEXT,
+    IN p_execute_at DATETIME
+)
+BEGIN
+    INSERT INTO GAME_HISTORY (
+        game_id, 
+        player_id, 
+        guest_id, 
+        card_id, 
+        monument_id, 
+        turn_number, 
+        action_type, 
+        dice_result, 
+        amount_exchanged, 
+        action_details,
+        executed_at
+    ) 
+    VALUES (
+        p_game_id, 
+        p_player_id, 
+        p_guest_id, 
+        p_card_id, 
+        p_monument_id, 
+        p_turn_number, 
+        p_action_type, 
+        p_dice_result, 
+        p_amount_exchanged, 
+        p_action_details,
+        COALESCE(p_execute_at, NOW()) -- Si p_execute_at est NULL
+    );
+END //
+
+DELIMITER ;
+
+
+
 
 -- ############################################################################
 -- P2. CRÉATION D'UN COMPTE INVITÉ
@@ -98,13 +157,19 @@ END //
 
 DELIMITER ;
  
---- supprimer le guest des que ca date expires 
+DELIMITER //
+-- L'activation du scheduler peut se faire hors delimiter
+SET GLOBAL event_scheduler = ON; //
 
-SET GLOBAL event_scheduler = ON; -- activer le event_scheduler 
+DROP EVENT IF EXISTS purge_expired_guests //
 CREATE EVENT purge_expired_guests
 ON SCHEDULE EVERY 100 MINUTE
 DO
+BEGIN
   DELETE FROM GUEST_PLAYER WHERE expires_at <= NOW();
+END //
+
+DELIMITER ;
 
 -- ############################################################################
 -- P3. CRÉATION D'UNE PARTIE
@@ -409,6 +474,16 @@ END //
 
 DELIMITER ;
 
+-- ############################################################################
+-- P7. Mise à jour des statistics du joueur 
+-- ############################################################################
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS updateStatPlayer //
+
+CREATE PROCEDURE updateStatPlayer(
+    IN p_new_
+
 
 -- ############################################################################
 --                           FONCTIONS
@@ -522,24 +597,31 @@ DELIMITER ;
 -- ############################################################################
 -- Retourne le pourcentage de victoires (0-100).
 -- Gère la division par zéro si le joueur n'a aucune partie.
-
 DELIMITER //
-CREATE OR REPLACE FUNCTION tauxVictoire(email_in IN VARCHAR(100)) 
-RETURN INT 
+
+DROP FUNCTION IF EXISTS tauxVictoire //
+
+CREATE FUNCTION tauxVictoire(p_email VARCHAR(100)) 
+RETURNS INT -- <-- RETURNS avec un S
 DETERMINISTIC 
 READS SQL DATA
 BEGIN 
-    DECLARE nb_win INT;
-    DECLARE nb_games INT;
+    DECLARE nb_win INT DEFAULT 0;
+    DECLARE nb_games INT DEFAULT 0;
 
-    SELECT
-    wins_count into nb_win,
-    games_played_count into nb_games 
+    SELECT wins_count, games_played_count 
+    INTO nb_win, nb_games 
     FROM REGISTERED_PLAYER 
-    WHERE email = email_in ;
+    WHERE email = p_email;
 
-    RETURN nb_win / nb_games * 100 
+    -- <-- Protection contre la division par zéro
+    IF nb_games IS NULL OR nb_games = 0 THEN
+        RETURN 0;
+    ELSE
+        RETURN (nb_win / nb_games) * 100; -- <-- Point-virgule ajouté
+    END IF;
 END // 
+
 DELIMITER ;
 
 -- ############################################################################
@@ -648,13 +730,13 @@ DROP FUNCTION IF EXISTS getMonumentPrice //
 CREATE FUNCTION getMonumentPrice(
     p_monument_id INT
 )
-RETURNS DECIMAL(10,2)
+RETURNS INT
 NOT DETERMINISTIC
 READS SQL DATA
 BEGIN
-    DECLARE v_price DECIMAL(10,2);
+    DECLARE v_price INT;
 
-    SELECT base_price INTO v_price
+    SELECT cost INTO v_price
     FROM MONUMENT
     WHERE monument_id = p_monument_id;
 
@@ -663,8 +745,6 @@ END //
 
 DELIMITER ;
 
-
-    
 
 
 
