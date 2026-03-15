@@ -1,4 +1,4 @@
-@abstract  class_name Game
+class_name Game
 extends Node
 
 
@@ -14,20 +14,24 @@ enum CHOIX {
 	Build_ETABLISHMENT
 }
 
+var ecranDeGameplay:Control
+
 func demarrerPartie() ->void:
 	# INIT
 		#Generer les 160 (a voir) carte dans la pioche
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
 		
-	# LOOP de partie
+	
 	var AunGagnant = false
 	var aConstruit = false
 	var TourBonus = false
+	# LOOP de partie
 	while not(AunGagnant):
 		aConstruit = false
 		TourBonus = false
 		
-		var resDice:int = DicePhase()
+		print("tour de :" + getJoueurActif().pseudo)
+		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
 		var choix
@@ -52,10 +56,11 @@ func demarrerPartie() ->void:
 func getJoueurActif() -> Player:
 	return playerArray[currentPlayerIndex % playerCount ]
 
-@abstract func getJoueursAdverses(joueur:Player) -> Array[Player]
-@abstract func getJoueursOrdreAntihoraire(reference:Player) -> Array[Player]
+#@abstract func getJoueursAdverses(joueur:Player) -> Array[Player]
+func getJoueursOrdreAntihoraire(reference:Player) -> Array[Player]:
+	return playerArray
 
-@abstract func getEffectById(id:int) -> Effect
+#@abstract func getEffectById(id:int) -> Effect
 
 func verifierVictoire(joueur:Player) -> bool:
 	return joueur.monumentCount == 5
@@ -69,16 +74,17 @@ func echangerCarte(j1:Player,c1:Establishment,j2:Player,c2:Establishment)-> void
 	pass
 	
 # Constructeur
-func _init(gameId:int,timer:int,players:Array[Player]) -> void:
-	timer = timer
-	playerCount = players.size()
-	playerArray = players
-	gameId = gameId
+func _init(gameId:int,timer:int,players:Array[Player],eg) -> void:
+	self.timer = timer
+	self.playerCount = players.size()
+	self.playerArray = players
+	self.gameId = gameId
+	self.ecranDeGameplay = eg
 	
 
 #+Effect getEffectById(id)
 func DicePhase() -> int:
-	var resArray = lanceDe()
+	var resArray = await lanceDe()
 	
 	# Monument Radio : pouvoir de relancer
 	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Radio]:
@@ -86,7 +92,7 @@ func DicePhase() -> int:
 		var relancer
 		#relancer = INPUT
 		if relancer:
-			resArray = lanceDe()
+			resArray = await lanceDe()
 			
 	# Monument Parc Arctraction : douvle -> tour bonus
 	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Parc]:
@@ -103,18 +109,19 @@ func DicePhase() -> int:
 	return somme
 
 func lanceDe() -> Array[int]:
-	var res
-	res[0] = (randi()%6) + 1
-	res[1] = 0 
+	var res:Array[int]
+	res.insert(0,(randi()%6) + 1)
+	res.insert(1,(randi()%6) + 1)
+
 	
 	var intnombreDe = 1
 	
 	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Gare]:
-		# intnombreDe = INPUT (1 ou 2)
-		pass
+		intnombreDe = await ecranDeGameplay.prompt() #INPUT
 	if intnombreDe == 2:
 		res[1] == (randi()%6) +1
 		
+	ecranDeGameplay.affiche_resultat(res[0],res[1])
 	return res
 
 func EffectPhase(resDice) -> void:
