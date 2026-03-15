@@ -8,3 +8,6 @@ func _init() -> void:
 
 func draw() -> int:
 	return pioche.front()
+
+func est_vide() -> bool:
+	return pioche.size() == 0

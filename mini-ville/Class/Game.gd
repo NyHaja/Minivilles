@@ -63,6 +63,7 @@ func verifierVictoire(joueur:Player) -> bool:
 func terminerPartie(gagnant:Player) -> void:
 	# mise à jour des stat à envoie pour le BDD
 	pass
+
 func echangerCarte(j1:Player,c1:Establishment,j2:Player,c2:Establishment)-> void:
 	
 	pass
