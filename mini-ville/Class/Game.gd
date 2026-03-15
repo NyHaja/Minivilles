@@ -8,6 +8,12 @@ var playerCount:int
 var currentPlayerIndex:int
 var playerArray : Array[Player]
 
+enum CHOIX {
+	SKIP,
+	Build_MONUMENT,
+	Build_ETABLISHMENT
+}
+
 func demarrerPartie() ->void:
 	# INIT
 		#Generer les 160 (a voir) carte dans la pioche
@@ -15,12 +21,32 @@ func demarrerPartie() ->void:
 		
 	# LOOP de partie
 	var AunGagnant = false
+	var aConstruit = false
+	var TourBonus = false
 	while not(AunGagnant):
+		aConstruit = false
+		TourBonus = false
 		
 		var resDice:int = DicePhase()
 		EffectPhase(resDice)
 		
+		var choix
+		# choix = INPUT
+		
+		match  choix:
+			CHOIX.Build_MONUMENT : 
+				buildPhase(0)
+			CHOIX.Build_MONUMENT : 
+				buyPhase(0)
+			CHOIX.SKIP : 
+				skipPhase(aConstruit)
+			
+		skipPhase(aConstruit)
+		
 		AunGagnant = verifierVictoire(getJoueurActif())
+		
+		if not(TourBonus):
+			currentPlayerIndex = (currentPlayerIndex + 1) % playerArray.size()
 		
 		
 func getJoueurActif() -> Player:
@@ -105,8 +131,15 @@ func EffectPhase(resDice) -> void:
 	
 		
 #func lance
-func skipPhase() -> void:
-	pass
+func skipPhase(aConstruit) -> void:
+	var joueur = getJoueurActif()
+	if not(aConstruit):
+		if joueur.balance <=2:
+			joueur.balance = joueur.balance + 2
+		# Monument Radio : pouvoir de relancer
+		if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Aeroport]:
+			joueur.balance = joueur.balance + 10
+	
 func buyPhase(card_id:int):
 	pass
 func buildPhase(Monument_id):
