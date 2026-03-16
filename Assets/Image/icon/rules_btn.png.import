@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7pa5yduv78wg"
-path="res://.godot/imported/rulesbtn.png-4c6ee5d4038367b5f65e99121a43590b.ctex"
+uid="uid://b4qn5rnbypb5e"
+path="res://.godot/imported/rules_btn.png-a2b34c7b85c5ba92c7e0b984faada78e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Image/icon/rulesbtn.png"
-dest_files=["res://.godot/imported/rulesbtn.png-4c6ee5d4038367b5f65e99121a43590b.ctex"]
+source_file="res://Assets/Image/icon/rules_btn.png"
+dest_files=["res://.godot/imported/rules_btn.png-a2b34c7b85c5ba92c7e0b984faada78e.ctex"]
 
 [params]
 
