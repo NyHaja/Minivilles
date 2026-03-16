@@ -14,7 +14,8 @@ var monumentArray: Array = []
 func _init(_username: String, _id: int, _balance: int) -> void:
 	self.username = _username
 	self.id = _id
-	self.balance = balance
+	self.balance = _balance
+	self.monumentArray = [false, false, false ,false]
 
 func getBalance() -> int:
 	return balance
