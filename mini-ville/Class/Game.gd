@@ -40,7 +40,7 @@ func demarrerPartie() ->void:
 		match  choix:
 			CHOIX.Build_MONUMENT : 
 				buildPhase(0)
-			CHOIX.Build_MONUMENT : 
+			CHOIX.Build_ETABLISHMENT : 
 				buyPhase(0)
 			CHOIX.SKIP : 
 				skipPhase(aConstruit)
@@ -56,11 +56,9 @@ func demarrerPartie() ->void:
 func getJoueurActif() -> Player:
 	return playerArray[currentPlayerIndex % playerCount ]
 
-#@abstract func getJoueursAdverses(joueur:Player) -> Array[Player]
 func getJoueursOrdreAntihoraire(reference:Player) -> Array[Player]:
 	return playerArray
 
-#@abstract func getEffectById(id:int) -> Effect
 
 func verifierVictoire(joueur:Player) -> bool:
 	return joueur.monumentCount == 5
@@ -82,7 +80,7 @@ func _init(gameId:int,timer:int,players:Array[Player],eg) -> void:
 	self.ecranDeGameplay = eg
 	
 
-#+Effect getEffectById(id)
+
 func DicePhase() -> int:
 	var resArray = await lanceDe()
 	
@@ -111,15 +109,15 @@ func DicePhase() -> int:
 func lanceDe() -> Array[int]:
 	var res:Array[int]
 	res.insert(0,(randi()%6) + 1)
-	res.insert(1,(randi()%6) + 1)
+	res.insert(1,0)
 
 	
 	var intnombreDe = 1
 	
 	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Gare]:
-		intnombreDe = await ecranDeGameplay.prompt() #INPUT
+		intnombreDe = await ecranDeGameplay.lancer_de() #INPUT
 	if intnombreDe == 2:
-		res[1] == (randi()%6) +1
+		res.insert(1,(randi()%6) + 1)
 		
 	ecranDeGameplay.affiche_resultat(res[0],res[1])
 	return res

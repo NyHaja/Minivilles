@@ -6,6 +6,7 @@ var pioche : Pioche
 
 const SIZESHOP = 9
 
+# TO DO
 func _init() -> void:
 	pass
 
