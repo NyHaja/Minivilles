@@ -158,7 +158,7 @@ static func creerPetitBateauPeche() -> Establishment:
 	
 # === 🟢 VERTS ===
  
-# Boulangerie - Vert - Dé: 2-3 - Coût: 1
+# Boulangerie - Dé: 2-3 - Coût: 1
 # Icon: BREAD
 # Effect: Recevoir 1 pièce de la banque
 static func creerBoulangerie() -> Establishment:
@@ -179,6 +179,26 @@ static func creerBoulangerie() -> Establishment:
 	
 	return carte
  
+# Epicerie - Dé: 2 - Coût: 0
+# Icon: BREAD
+# Effect: Recevoir 2 pièces si le joeuru possède - de 2 monuments
+static func creerEpicerie() -> Establishment:
+	var effet = EffectGainBanqueMonumentsInferieur.new(7, 2, 2)  # id_effet=7, montant=2, seuil_monuments
+	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		21,                              # id card
+		"Épicerie",
+		Icon.Type.BREAD,
+		CardColor.Type.GREEN,
+		0,                              # coût
+		"Recevez 2 pièces si vous possedez moins de 2 monuments",
+		[2, 2]                          # activation sur 2
+	)
+	
+	return carte
+
  
 # Superette - Vert - Dé: 4 - Coût: 2
 # Icon: BREAD
@@ -337,7 +357,7 @@ static func creerMarcheFL() -> Establishment:
 # === 🟣 VIOLETS ===
 
 # Satde - Activation: 6 - Coût: 6
-# Effect: Choisir 1 joueur → 5 pièces
+# Effect: Vol a tous les joueurs 2 pièces
 static func creerStade() -> Establishment:
 	var effet = EffectVolTous.new(3, 2)  # ID effect, montant
 	
@@ -379,6 +399,7 @@ static func creerChaineTele() -> Establishment:
 
 
 # Maison d'édition - Activation: 7 - Coût: 5
+# Effect: Vol a tous les joueurs 1 pièce / carte Tasse ou Pain
 static func creerMaisonEdition() -> Establishment:
 	var effet = EffectVolTousParIconeAdverse.new(4, 1, [Icon.Type.CUP, Icon.Type.BREAD] )  # ID effect, montant/carte, icones cibles
 	
@@ -393,6 +414,26 @@ static func creerMaisonEdition() -> Establishment:
 		5,                                        # cost
 		"Chaque autre joueur vous donne 1 pièce par carte Tasse ou Pain qu'il possède",
 		[7, 7]                                    # activationNum [min, max]
+	)
+	
+	return carte
+
+
+# Centre des Impôts - Activation: 8-9 - Coût: 4
+# Effect: Chaque joueur avec 10+ pièces vous donne la moitié (arrondi inférieur)
+static func creerCentreImpots() -> Establishment:
+	var effet = EffectImpot.new(6, 10)  # id_effet=6, seuil=10
+	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		20,                             # id card
+		"Centre des Impôts",
+		Icon.Type.MAJOR,
+		CardColor.Type.PURPLE,
+		4,                              # coût
+		"Chaque joueur avec 10+ pièces vous donne la moitié (arrondi inférieur).",
+		[8, 9]                          # activation sur 8-9
 	)
 	
 	return carte

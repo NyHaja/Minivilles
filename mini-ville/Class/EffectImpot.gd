@@ -1,0 +1,37 @@
+class_name EffectImpot
+extends Effect
+
+var seuil : int # nb d'argent à partir duquel l'impot s'applique
+
+func _init(p_id: int, p_seuil: int):
+	# Générer la description dynamiquement selon le seuil
+	var desc = "Chaque joueur avec " + str(p_seuil) + "+ pièces vous donne la moitié (arrondi inférieur)"
+	super._init(p_id, desc)
+	seuil = p_seuil
+
+func appliquer(game: Game, owner: Player, roller: Player):
+	# chaque joueur avec >= seuil pièces donne la moitié à owner
+	# moitié arrondie à l'inférieur
+	
+	# parcourir joueurs
+	for joueur in game.joueurs:
+		# ignorer le owner 
+		if joueur == owner:
+			continue
+		
+		# verif >= seuil pièces
+		if joueur.argent >= seuil:
+			# moitié (arrondi inférieur)
+			var montant_impot = int(joueur.argent / 2)
+			
+			# transfert
+			joueur.argent -= montant_impot
+			owner.argent += montant_impot
+			
+			print(joueur.nom, " avait ", joueur.argent + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
+		else:
+			print(joueur.nom, " a seulement ", joueur.argent, " pièces → pas d'impôt")
+			
+
+func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
+	return true
