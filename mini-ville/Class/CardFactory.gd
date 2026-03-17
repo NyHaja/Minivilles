@@ -396,3 +396,70 @@ static func creerMaisonEdition() -> Establishment:
 	)
 	
 	return carte
+
+# === 🔴 ROUGES  ===
+
+# Café - vActivation: 3 - Coût: 2
+# Icon: CUP
+# Effect: Le lanceur vous donne 1 pièce
+static func creerCafe() -> Establishment:
+	var effet = EffectVolLanceur.new(5, 1)  # id_effet=5, montant=1
+	
+
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		17,                             # id card
+		"Café",
+		Icon.Type.CUP,
+		CardColor.Type.RED,
+		2,                              # coût
+		"Le lanceur vous donne 1 pièce.",
+		[3, 3]                          # activation sur 3
+	)
+	
+	return carte
+
+
+# Moonster Burger - Activation: 8 - Coût: 1
+# Icon: CUP
+# Effect: Le lanceur vous donne 1 pièce
+static func creerMoonsterBurger() -> Establishment:
+	var effet = EffectVolLanceur.new(5, 1)  # id_effet=5, montant=1
+	
+	# Créer carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		18,                             # id card
+		"Moonster Burger",
+		Icon.Type.CUP,
+		CardColor.Type.RED,
+		1,                              # coût
+		"Le lanceur vous donne 1 pièce.",
+		[8, 8]                          # activation sur 8
+	)
+	
+	return carte
+ 
+ 
+# Restaurant familial - Activation: 9-10 - Coût: 3
+# Icon: CUP
+# Effect: Le lanceur vous donne 2 pièces
+static func creerRestaurantFamilial() -> Establishment:
+	var effet = EffectVolLanceur.new(5, 2)  # id_effet=5, montant=2
+	
+	# Créer carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		19,                             # id card
+		"Restaurant familial",
+		Icon.Type.CUP,
+		CardColor.Type.RED,
+		3,                              # coût
+		"Le lanceur vous donne 2 pièces.",
+		[9, 10]                         # activation sur 9-10
+	)
+	
+	return carte
