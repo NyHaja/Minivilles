@@ -49,7 +49,7 @@ func _nom_icone(icone: int) -> String:
 # méthode abstraite
 func appliquer(game: Game, owner: Player, roller: Player):
 	# nbr de cartes avec les icones cibles
-	var nombre_cartes = owner.compter_cartes_avec_icones(icones_cibles)
+	var nombre_cartes = owner.cardsWithIcon(icones_cibles)
 	
 	# gain total
 	var gain_total = nombre_cartes * montant_par_carte

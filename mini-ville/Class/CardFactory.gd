@@ -336,7 +336,28 @@ static func creerMarcheFL() -> Establishment:
 
 # === 🟣 VIOLETS ===
 
-# Chaîne de Télévision - Violet - Activation: 6
+# Satde - Activation: 6 - Coût: 6
+# Effect: Choisir 1 joueur → 5 pièces
+static func creerStade() -> Establishment:
+	var effet = EffectVolTous.new(3, 2)  # ID effect, montant
+	
+	# Créer Establishment
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		15,                                        # id card
+		"Stade",
+		Icon.Type.MAJOR,
+		CardColor.Type.PURPLE,
+		6,                                        # cost
+		"Chaque autre joueur vous donne 2 pièces",
+		[6, 6]                                    # activationNum [min, max]
+	)
+	
+	return carte
+
+
+# Chaîne de Télévision - Activation: 6 - Coût: 7
 # Effect: Choisir 1 joueur → 5 pièces
 static func creerChaineTele() -> Establishment:
 	var effet = EffectVolChoix.new(1)  # ID effect
@@ -352,6 +373,26 @@ static func creerChaineTele() -> Establishment:
 		7,                                        # cost
 		"Choisir 1 joueur → 5 pièces",
 		[6, 6]                                    # activationNum [min, max]
+	)
+	
+	return carte
+
+
+# Maison d'édition - Activation: 7 - Coût: 5
+static func creerMaisonEdition() -> Establishment:
+	var effet = EffectVolTousParIconeAdverse.new(4, 1, [Icon.Type.CUP, Icon.Type.BREAD] )  # ID effect, montant/carte, icones cibles
+	
+	# Créer Establishment
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		16,                                        # id card
+		"Maison d'édition",
+		Icon.Type.MAJOR,
+		CardColor.Type.PURPLE,
+		5,                                        # cost
+		"Chaque autre joueur vous donne 1 pièce par carte Tasse ou Pain qu'il possède",
+		[7, 7]                                    # activationNum [min, max]
 	)
 	
 	return carte

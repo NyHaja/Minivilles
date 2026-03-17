@@ -4,15 +4,16 @@ extends Effect
 var montant : int
 
 
-func _init(p_id: int):
+func _init(p_id: int, p_montant: int):
 	# Description de l'effet Vol à Tous
-	super._init(p_id, "Stade : chaque adversaire paie 2 pièces - Paiement dans l'ordre antihoraire")
-	montant = 2
+	var desc ="Chaque adversaire vous donne "+ str(p_montant) +" pièces"
+	super._init(p_id, desc)
+	montant = p_montant
 
 
 
 func appliquer(game: Game, owner: Player, roller: Player):
-	# Logique : chaque adversaire (sauf owner) paie 2 pièces
+	# Logique : chaque adversaire (sauf owner) paie x pièces
 	# Paiement dans l'ordre antihoraire
 	
 	# Trouver index owner dans liste joueurs
