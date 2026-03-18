@@ -10,7 +10,7 @@
 [ext_resource type="FontFile" uid="uid://b8rhdspwo18yo" path="res://Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="7_rsws6"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="8_1ewyy"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="9_2u76m"]
-[ext_resource type="PackedScene" uid="uid://cuqnt2jtbxqm3" path="res://login.tscn" id="11_1ewyy"]
+[ext_resource type="PackedScene" uid="uid://cuqnt2jtbxqm3" path="res://scenes/login.tscn" id="11_1ewyy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6taj"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -505,7 +505,12 @@ theme_override_styles/hover_mirrored = ExtResource("9_2u76m")
 text = "Connexion"
 
 [node name="login" parent="." unique_id=1660556393 instance=ExtResource("11_1ewyy")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [connection signal="button_down" from="Panellogin/connexionbtn" to="." method="_on_connexionbtn_button_down"]
