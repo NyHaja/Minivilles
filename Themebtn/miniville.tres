@@ -8,7 +8,7 @@ base_font = ExtResource("1_16tha")
 [resource]
 line_spacing = 4.0
 font = SubResource("FontVariation_ul6ys")
-font_size = 120
+font_size = 200
 outline_size = 8
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 0
