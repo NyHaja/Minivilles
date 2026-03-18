@@ -4,7 +4,7 @@ class_name  Slot
 var id : int
 var quantity : int
 
-func _init(id,qt) -> void:
-	id = id
+func _init(s_id,qt) -> void:
+	id = s_id
 	quantity = qt
 	

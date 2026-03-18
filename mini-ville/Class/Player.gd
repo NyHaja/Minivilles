@@ -6,9 +6,13 @@ var dicecount: int
 var pseudo:String
 var balance :int = 0 
 var  monumentArray : Array[bool] = []
+var deck : Array[int]
 
 func activateEffect(color:Establishment.COULEUR)->void:
 	pass
+
+func recieveGold(amount: int) -> void:
+	balance += amount
 
 func _init(pseudo) -> void:
 	self.pseudo = pseudo

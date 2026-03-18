@@ -3,14 +3,17 @@ class_name Game_Play extends Control
 signal choix(input : int)
 signal lancer
 # Joueur
-@onready var pseudo: Label = $ColorRect/Dé/VBoxContainer/JOUEUR/Pseudo
+@onready var pseudo: Label = $"PRINCIPAL/MAIN/INFO BASE/JOUEUR/Pseudo"
+@onready var balance: Label = $"PRINCIPAL/MAIN/INFO BASE/Gold/BALANCE"
+
 # Dé
 @onready var button: Button = %one
 @onready var button_2: Button = %two
-@onready var resultat: Label = $"ColorRect/Dé/VBoxContainer/Dé/Resultat/Resultat"
-@onready var d_2: Label =$"ColorRect/PRINCIPAL/VBoxContainer/Dé/Resultat/D2"
-@onready var d_1: Label = $"ColorRect/PRINCIPAL/VBoxContainer/Dé/Resultat/D1"
-@onready var button_lancer: Button = $ColorRect/PRINCIPAL/VBoxContainer/Dé/LANCER
+@onready var resultat: Label = $"PRINCIPAL/MAIN/Dé/Resultat/Resultat"
+@onready var d_2: Label =$"PRINCIPAL/MAIN/Dé/Resultat/D2"
+@onready var d_1: Label = $"PRINCIPAL/MAIN/Dé/Resultat/D1"
+@onready var button_lancer: Button = $"PRINCIPAL/MAIN/Dé/LANCER"
+@onready var window_dee: VBoxContainer = $PRINCIPAL/MAIN/Dé
 
 var nbde:int = 1
 
@@ -24,45 +27,47 @@ func _ready() -> void:
 		button_2.pressed.connect(_button_2_press)
 	if button_lancer:
 		button_lancer.pressed.connect(lancer_modal)
-	hide()
 	
+
+func RafraichirBasicInfo(game:Game) -> void:
+	set_process_unhandled_key_input(true)
+	window_dee.hide()
+	afficher_basic_info_principal_joueur(game.getJoueurActif())
+	await get_tree().create_timer(1).timeout
+	
+func afficher_basic_info_principal_joueur(j:Player):
+	self.pseudo.text = j.pseudo
+	self.balance.text = String.num(j.balance,0)
+
+#Dée
+
 func _button_1_press() -> void:
-	_close_modal("1")
+	choix_modal("1")
 	button_2.add_theme_color_override("font_color",Color.WHITE)
 	button.add_theme_color_override("font_color",Color.RED)
 	
 
 func _button_2_press() -> void:
-	_close_modal("2")
+	choix_modal("2")
 	button.add_theme_color_override("font_color",Color.WHITE)
 	button_2.add_theme_color_override("font_color",Color.RED)
-	
-func prompt() -> void:
-	show()
-	window_open = true
-	set_process_unhandled_key_input(true)
-	#var choixattendu:String = await choix
-	#return int(choixattendu)
-	
+
 func lancer_de() -> int:
-	show()
-	window_open = true
+	window_dee.show()
 	set_process_unhandled_key_input(true)
 	await lancer
+	window_dee.hide()
 	return nbde
 	
-func _close_modal(input:String) -> void:
+func choix_modal(input:String) -> void:
 	set_process_unhandled_key_input(false)
 	choix.emit(input)
 	set_deferred("window_open", false)
 	set_deferred("nbde", int(input))
-	
-	#hide()
 
 func lancer_modal():
 	lancer.emit()
 	
-
 func affiche_resultat(res1:int,res2:int):
 	d_1.text = String.num(res1,0)
 	d_2.text = String.num(res2,0)

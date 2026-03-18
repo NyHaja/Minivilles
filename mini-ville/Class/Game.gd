@@ -3,10 +3,17 @@ extends Node
 
 
 var gameId:int
+
 var timer:int
+var goldinitamount :int
+
 var playerCount:int
 var currentPlayerIndex:int
 var playerArray : Array[Player]
+
+var shop:Shop
+
+var ecranDeGameplay:Game_Play # OBJET (ECRAN) où possède les function d'affichage et d'input
 
 enum CHOIX {
 	SKIP,
@@ -14,13 +21,24 @@ enum CHOIX {
 	Build_ETABLISHMENT
 }
 
-var ecranDeGameplay:Control
-
+# Constructeur
+func _init(gameId:int,timer:int,players:Array[Player],eg:Game_Play,goldinitamount:int = 3) -> void:
+	self.timer = timer
+	self.playerCount = players.size()
+	self.playerArray = players
+	self.gameId = gameId
+	self.ecranDeGameplay = eg
+	self.goldinitamount = goldinitamount
+	shop = Shop.new() #Generer les xxx (a voir) carte dans la pioche
+	
 func demarrerPartie() ->void:
 	# INIT
-		#Generer les 160 (a voir) carte dans la pioche
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
-		
+	for joueur:Player in playerArray:
+		joueur.recieveGold(goldinitamount)
+		joueur.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		joueur.deck.push_back(0) # A REVOIR
+	
 	
 	var AunGagnant = false
 	var aConstruit = false
@@ -30,7 +48,7 @@ func demarrerPartie() ->void:
 		aConstruit = false
 		TourBonus = false
 		
-		print("tour de :" + getJoueurActif().pseudo)
+		await ecranDeGameplay.RafraichirBasicInfo(self)
 		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
@@ -66,19 +84,6 @@ func verifierVictoire(joueur:Player) -> bool:
 func terminerPartie(gagnant:Player) -> void:
 	# mise à jour des stat à envoie pour le BDD
 	pass
-
-func echangerCarte(j1:Player,c1:Establishment,j2:Player,c2:Establishment)-> void:
-	
-	pass
-	
-# Constructeur
-func _init(gameId:int,timer:int,players:Array[Player],eg) -> void:
-	self.timer = timer
-	self.playerCount = players.size()
-	self.playerArray = players
-	self.gameId = gameId
-	self.ecranDeGameplay = eg
-	
 
 
 func DicePhase() -> int:
