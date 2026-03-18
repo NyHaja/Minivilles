@@ -2,20 +2,20 @@ extends Node
 class_name  Player
 
 var monumentCount: int
-var dicecount: int
-var pseudo:String
+var diceCount: int
+var username:String
 var balance :int = 0 
-var  monumentArray : Array[bool] = []
+var monumentArray : Array[bool] = []
 var deck : Array[int]
 
-func activateEffect(color:Establishment.COULEUR)->void:
+func activateEffect(color:Establishment.COLOR)->void:
 	pass
 
 func recieveGold(amount: int) -> void:
 	balance += amount
 
-func _init(pseudo) -> void:
-	self.pseudo = pseudo
+func _init(username) -> void:
+	self.username = username
 	monumentArray.resize(6)
 	monumentArray.fill(false)
 	monumentArray.insert(Monument.MONUMENT_ID.Gare,true)

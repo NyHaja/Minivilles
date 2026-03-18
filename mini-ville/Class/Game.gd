@@ -5,7 +5,7 @@ extends Node
 var gameId:int
 
 var timer:int
-var goldinitamount :int
+var goldInitAmount :int
 
 var playerCount:int
 var currentPlayerIndex:int
@@ -13,143 +13,143 @@ var playerArray : Array[Player]
 
 var shop:Shop
 
-var ecranDeGameplay:Game_Play # OBJET (ECRAN) où possède les function d'affichage et d'input
+var gameplayScreen:Game_Play # OBJET (ECRAN) où possède les function d'affichage et d'input
 
-enum CHOIX {
+enum CHOICE {
 	SKIP,
 	Build_MONUMENT,
 	Build_ETABLISHMENT
 }
 
 # Constructeur
-func _init(gameId:int,timer:int,players:Array[Player],eg:Game_Play,goldinitamount:int = 3) -> void:
+func _init(gameId:int,timer:int,players:Array[Player],eg:Game_Play,goldInitAmount:int = 3) -> void:
 	self.timer = timer
 	self.playerCount = players.size()
 	self.playerArray = players
 	self.gameId = gameId
-	self.ecranDeGameplay = eg
-	self.goldinitamount = goldinitamount
+	self.gameplayScreen = eg
+	self.goldInitAmount = goldInitAmount
 	shop = Shop.new() #Generer les xxx (a voir) carte dans la pioche
 	
-func demarrerPartie() ->void:
+func startGame() ->void:
 	# INIT
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
-	for joueur:Player in playerArray:
-		joueur.recieveGold(goldinitamount)
-		joueur.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
-		joueur.deck.push_back(0) # A REVOIR
+	for player:Player in playerArray:
+		player.recieveGold(goldInitAmount)
+		player.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back(0) # A REVOIR
 	
 	
-	var AunGagnant = false
-	var aConstruit = false
-	var TourBonus = false
+	var winner = false
+	var hasConstructed = false
+	var bonusTurn = false
 	# LOOP de partie
-	while not(AunGagnant):
-		aConstruit = false
-		TourBonus = false
+	while not(winner):
+		hasConstructed = false
+		bonusTurn = false
 		
-		await ecranDeGameplay.RafraichirBasicInfo(self)
+		await gameplayScreen.RefreshBasicInfo(self)
 		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
-		var choix
+		var choice
 		# choix = INPUT
 		
-		match  choix:
-			CHOIX.Build_MONUMENT : 
+		match  choice:
+			CHOICE.Build_MONUMENT : 
 				buildPhase(0)
-			CHOIX.Build_ETABLISHMENT : 
+			CHOICE.Build_ETABLISHMENT : 
 				buyPhase(0)
-			CHOIX.SKIP : 
-				skipPhase(aConstruit)
+			CHOICE.SKIP : 
+				skipPhase(hasConstructed)
 			
-		skipPhase(aConstruit)
+		skipPhase(hasConstructed)
 		
-		AunGagnant = verifierVictoire(getJoueurActif())
+		winner = verifyVictory(getActivePlayer())
 		
-		if not(TourBonus):
+		if not(bonusTurn):
 			currentPlayerIndex = (currentPlayerIndex + 1) % playerArray.size()
 		
 		
-func getJoueurActif() -> Player:
+func getActivePlayer() -> Player:
 	return playerArray[currentPlayerIndex % playerCount ]
 
-func getJoueursOrdreAntihoraire(reference:Player) -> Array[Player]:
+func getPlayerCounterClockwise(reference:Player) -> Array[Player]:
 	return playerArray
 
 
-func verifierVictoire(joueur:Player) -> bool:
-	return joueur.monumentCount == 5
+func verifyVictory(player:Player) -> bool:
+	return player.monumentCount == 5
 
-func terminerPartie(gagnant:Player) -> void:
+func finishGame(winner:Player) -> void:
 	# mise à jour des stat à envoie pour le BDD
 	pass
 
 
 func DicePhase() -> int:
-	var resArray = await lanceDe()
+	var resArray = await rollDice()
 	
 	# Monument Radio : pouvoir de relancer
-	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Radio]:
+	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Radio]:
 		#RELANCER ?
-		var relancer
+		var reroll
 		#relancer = INPUT
-		if relancer:
-			resArray = await lanceDe()
+		if reroll:
+			resArray = await rollDice()
 			
 	# Monument Parc Arctraction : douvle -> tour bonus
-	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Parc]:
+	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Parc]:
 		if resArray[0] == resArray[1]:
 			# TOUR BONUS
 			pass
 		pass
 	
-	var somme = resArray[0] + resArray[1]
+	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
-	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Radio]:
-		somme = somme + 2
+	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Radio]:
+		sum = sum + 2
 		pass
-	return somme
+	return sum
 
-func lanceDe() -> Array[int]:
+func rollDice() -> Array[int]:
 	var res:Array[int]
 	res.insert(0,(randi()%6) + 1)
 	res.insert(1,0)
 
 	
-	var intnombreDe = 1
+	var numberDice = 1
 	
-	if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Gare]:
-		intnombreDe = await ecranDeGameplay.lancer_de() #INPUT
-	if intnombreDe == 2:
+	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Gare]:
+		numberDice = await gameplayScreen.rollDice() #INPUT
+	if numberDice == 2:
 		res.insert(1,(randi()%6) + 1)
 		
-	ecranDeGameplay.affiche_resultat(res[0],res[1])
+	gameplayScreen.showResult(res[0],res[1])
 	return res
 
 func EffectPhase(resDice) -> void:
 	# ROUGE
-	for joueur:Player in getJoueursOrdreAntihoraire(getJoueurActif()):
-		joueur.activateEffect(Establishment.COULEUR.RED)
+	for player:Player in getPlayerCounterClockwise(getActivePlayer()):
+		player.activateEffect(Establishment.COLOR.RED)
 	# Bleu
-	for joueur:Player in playerArray:
-		joueur.activateEffect(Establishment.COULEUR.BLUE)
+	for player:Player in playerArray:
+		player.activateEffect(Establishment.COLOR.BLUE)
 	#VERT
-	getJoueurActif().activateEffect(Establishment.COULEUR.GREEN)
+	getActivePlayer().activateEffect(Establishment.COLOR.GREEN)
 	#Violet
-	getJoueurActif().activateEffect(Establishment.COULEUR.PURPLE)
+	getActivePlayer().activateEffect(Establishment.COLOR.PURPLE)
 	
 	
 		
 #func lance
-func skipPhase(aConstruit) -> void:
-	var joueur = getJoueurActif()
-	if not(aConstruit):
-		if joueur.balance <=2:
-			joueur.balance = joueur.balance + 2
+func skipPhase(hasConstructed) -> void:
+	var player = getActivePlayer()
+	if not(hasConstructed):
+		if player.balance <=2:
+			player.balance = player.balance + 2
 		# Monument Radio : pouvoir de relancer
-		if getJoueurActif().monumentArray[Monument.MONUMENT_ID.Aeroport]:
-			joueur.balance = joueur.balance + 10
+		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
+			player.balance = player.balance + 10
 	
 func buyPhase(card_id:int):
 	pass

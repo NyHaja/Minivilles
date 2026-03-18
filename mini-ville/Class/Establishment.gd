@@ -1,7 +1,7 @@
 extends Node
 class_name  Establishment
 
-enum COULEUR{
+enum COLOR{
 	BLUE,
 	GREEN,
 	RED,

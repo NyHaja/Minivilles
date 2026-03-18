@@ -2,18 +2,18 @@ extends Node
 class_name  Shop
 
 var shop : Array[Slot]
-var pioche : Pioche #125 carte de "reserve" (sans compter les monument et les carte de départ)
+var drawPile : DrawPile #125 carte de "reserve" (sans compter les monument et les carte de départ)
 
 const SIZESHOP = 9
 
 # TO DO
 func _init() -> void:
-	pioche = Pioche.new()
+	drawPile = DrawPile.new()
 	fill()
 	print_shop()
 
-func achette(joueur:Player,IDcard:int):
-	if dispo(IDcard):
+func bought(joueur:Player,IDcard:int):
+	if available(IDcard):
 		# ajoute carte dans joueur
 		fill()
 
@@ -24,24 +24,24 @@ func slotID(IDcard:int)->Slot:
 	
 	return null
 		
-func dispo(IDcard:int)->bool:
+func available(IDcard:int)->bool:
 	return not(slotID(IDcard) == null)
 	
-func libererSlotVide():
+func freeEmptySlot():
 	for i in shop.size():
 		if shop[i].quantity == 0:
 			shop.remove_at(i)
 
 func fill()->void:
-	libererSlotVide()
-	while shop.size() < 9 and not(pioche.est_vide()):
-		var new = pioche.draw()
-		var slotexitant = slotID(new)
-		if slotexitant == null:
+	freeEmptySlot()
+	while shop.size() < 9 and not(drawPile.is_empty()):
+		var new = drawPile.draw()
+		var existantSlot = slotID(new)
+		if existantSlot == null:
 			var newslot = Slot.new(new,1)
 			shop.append(newslot)
 		else:
-			slotexitant.quantity += 1
+			existantSlot.quantity += 1
 		
 	
 func print_shop()->void:
