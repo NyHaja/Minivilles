@@ -8,7 +8,7 @@ var balance :int = 0
 var monumentArray : Array[bool] = []
 var deck : Array[int]
 
-func activateEffect(color:Establishment.COLOR)->void:
+func activateEffect(color:Establishment.COLOR, activePlayer: Player)->void:
 	pass
 
 func recieveGold(amount: int) -> void:

@@ -18,7 +18,7 @@ var gameplayScreen:Game_Play # OBJET (ECRAN) où possède les function d'afficha
 enum CHOICE {
 	SKIP,
 	Build_MONUMENT,
-	Build_ETABLISHMENT
+	Build_ESTABLISHMENT
 }
 
 # Constructeur
@@ -36,8 +36,8 @@ func startGame() ->void:
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
 	for player:Player in playerArray:
 		player.recieveGold(goldInitAmount)
-		player.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
-		player.deck.push_back(0) # A REVOIR
+		player.deck.push_back([0,1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back([0,1]) # A REVOIR
 	
 	
 	var winner = false
@@ -58,12 +58,10 @@ func startGame() ->void:
 		match  choice:
 			CHOICE.Build_MONUMENT : 
 				buildPhase(0)
-			CHOICE.Build_ETABLISHMENT : 
+			CHOICE.Build_ESTABLISHMENT : 
 				buyPhase(0)
 			CHOICE.SKIP : 
 				skipPhase(hasConstructed)
-			
-		skipPhase(hasConstructed)
 		
 		winner = verifyVictory(getActivePlayer())
 		
@@ -75,7 +73,14 @@ func getActivePlayer() -> Player:
 	return playerArray[currentPlayerIndex % playerCount ]
 
 func getPlayerCounterClockwise(reference:Player) -> Array[Player]:
-	return playerArray
+	var counter_clockwise_array: Array[Player] = []
+	var start_index = playerArray.find(reference)
+	
+	for i in range(playerCount):
+		var current_index = (start_index - i + playerCount) % playerCount
+		counter_clockwise_array.append(playerArray[current_index])
+		
+	return counter_clockwise_array
 
 
 func verifyVictory(player:Player) -> bool:
@@ -106,8 +111,9 @@ func DicePhase() -> int:
 	
 	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
-	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Radio]:
-		sum = sum + 2
+	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Port]:
+		if sum >= 10:
+			sum = sum + 2
 		pass
 	return sum
 
@@ -128,16 +134,17 @@ func rollDice() -> Array[int]:
 	return res
 
 func EffectPhase(resDice) -> void:
+	var currentPlayer = getActivePlayer()
 	# ROUGE
 	for player:Player in getPlayerCounterClockwise(getActivePlayer()):
-		player.activateEffect(Establishment.COLOR.RED)
+		player.activateEffect(Establishment.COLOR.RED, currentPlayer)
 	# Bleu
 	for player:Player in playerArray:
-		player.activateEffect(Establishment.COLOR.BLUE)
+		player.activateEffect(Establishment.COLOR.BLUE, currentPlayer)
 	#VERT
-	getActivePlayer().activateEffect(Establishment.COLOR.GREEN)
+	currentPlayer.activateEffect(Establishment.COLOR.GREEN, currentPlayer)
 	#Violet
-	getActivePlayer().activateEffect(Establishment.COLOR.PURPLE)
+	currentPlayer.activateEffect(Establishment.COLOR.PURPLE, currentPlayer)
 	
 	
 		
@@ -146,7 +153,7 @@ func skipPhase(hasConstructed) -> void:
 	var player = getActivePlayer()
 	if not(hasConstructed):
 		if player.balance <=2:
-			player.balance = player.balance + 2
+			player.balance =  2
 		# Monument Radio : pouvoir de relancer
 		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
 			player.balance = player.balance + 10
