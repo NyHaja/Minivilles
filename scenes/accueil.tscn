@@ -12,8 +12,7 @@
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="8_nrxky"]
 [ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://Assets/Image/icon/iconeparamètre.png" id="10_ayf35"]
 [ext_resource type="Texture2D" uid="uid://cjs8w6uwfd47y" path="res://Assets/Image/icon/settingicon.png" id="11_p74dm"]
-[ext_resource type="PackedScene" uid="uid://dl2wa48txlfy1" path="res://scenes/panel.tscn" id="12_uv6rx"]
-[ext_resource type="PackedScene" uid="uid://c0kph3t4yxfjo" path="res://scenes/guest_screen.tscn" id="14_q7dny"]
+[ext_resource type="PackedScene" uid="uid://dl2wa48txlfy1" path="res://scenes/popup_login.tscn" id="13_wvwwm"]
 
 [node name="Accueil" type="Control" unique_id=1580754874]
 layout_mode = 3
@@ -175,13 +174,10 @@ theme_override_styles/pressed = ExtResource("6_2063g")
 theme_override_styles/hover = ExtResource("6_2063g")
 text = "Play as a Guest"
 
-[node name="Panel" parent="." unique_id=1900099017 instance=ExtResource("12_uv6rx")]
+[node name="Popup_login" parent="." unique_id=180227008 instance=ExtResource("13_wvwwm")]
 visible = false
 layout_mode = 1
-
-[node name="guest_screen" parent="." unique_id=1123465006 instance=ExtResource("14_q7dny")]
-visible = false
-layout_mode = 1
+offset_bottom = 0.0
 
 [connection signal="button_down" from="gameMode/loginbtn" to="." method="_on_loginbtn_button_down"]
 [connection signal="button_down" from="gameMode/guestbtn" to="." method="_on_guestbtn_button_down"]
