@@ -5,6 +5,10 @@ signal lancer
 # Joueur
 @onready var pseudo: Label = $"PRINCIPAL/MAIN/INFO BASE/JOUEUR/Pseudo"
 @onready var balance: Label = $"PRINCIPAL/MAIN/INFO BASE/Gold/BALANCE"
+#Shop
+@onready var Listshop: HBoxContainer = $PRINCIPAL/MAIN/SHOP/Liste
+var card_selec : Button = null
+@onready var acheter: Button = $PRINCIPAL/MAIN/SHOP/acheter
 
 # Dé
 @onready var button: Button = %one
@@ -29,18 +33,36 @@ func _ready() -> void:
 		button_lancer.pressed.connect(lancer_modal)
 	
 
-func RafraichirBasicInfo(game:Game) -> void:
+func RefreshBasicInfo(game:Game) -> void:
 	set_process_unhandled_key_input(true)
-	window_dee.hide()
-	afficher_basic_info_principal_joueur(game.getJoueurActif())
-	await get_tree().create_timer(1).timeout
+	resetshowdice()
+	afficher_basic_info_principal_joueur(game.getActivePlayer())
+	showShop(game.shop)
 	
 func afficher_basic_info_principal_joueur(j:Player):
-	self.pseudo.text = j.pseudo
+	self.pseudo.text = j.username
 	self.balance.text = String.num(j.balance,0)
 
-#Dée
+# SHOP
 
+func showShop(shop:Shop):
+	for child in Listshop.get_children():
+		child.queue_free()
+	for slot in shop.shop:
+		var newb:Button = Button.new()
+		newb.text = String.num(slot.id,0)
+		Listshop.add_child(newb)
+		newb.pressed.connect(func():printqt(slot))
+		
+func printqt(slot:Slot):
+	print(slot.quantity)
+###Dée
+
+func resetshowdice():
+	window_dee.hide()
+	showResult(0,0)
+	
+	
 func _button_1_press() -> void:
 	choix_modal("1")
 	button_2.add_theme_color_override("font_color",Color.WHITE)
@@ -52,7 +74,7 @@ func _button_2_press() -> void:
 	button.add_theme_color_override("font_color",Color.WHITE)
 	button_2.add_theme_color_override("font_color",Color.RED)
 
-func lancer_de() -> int:
+func rollDice() -> int:
 	window_dee.show()
 	set_process_unhandled_key_input(true)
 	await lancer
@@ -68,6 +90,6 @@ func choix_modal(input:String) -> void:
 func lancer_modal():
 	lancer.emit()
 	
-func affiche_resultat(res1:int,res2:int):
+func showResult(res1:int,res2:int):
 	d_1.text = String.num(res1,0)
 	d_2.text = String.num(res2,0)

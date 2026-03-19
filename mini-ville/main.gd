@@ -7,10 +7,9 @@ func _ready() -> void:
 	var j1 = Player.new("j1")
 	var j2 = Player.new("j2")
 	
-	print(j1.pseudo)
 	var lesJouers : Array[Player] = []
 	lesJouers.insert(0,j1)
 	lesJouers.insert(1,j2)
 	
 	var game = Game.new(1,10,lesJouers,game_play)
-	game.demarrerPartie()
+	game.startGame()

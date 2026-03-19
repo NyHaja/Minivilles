@@ -10,7 +10,6 @@ const SIZESHOP = 9
 func _init() -> void:
 	drawPile = DrawPile.new()
 	fill()
-	print_shop()
 
 func removeCardFromStock(card_id: int) -> void:
 	var target_slot = slotID(card_id)

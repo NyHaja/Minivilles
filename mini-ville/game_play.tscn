@@ -62,6 +62,27 @@ text = "Gold :"
 [node name="BALANCE" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/Gold" unique_id=533684718]
 layout_mode = 2
 
+[node name="SHOP" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=451988624]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PRINCIPAL/MAIN/SHOP" unique_id=2064112494]
+layout_mode = 2
+text = "SHOP"
+horizontal_alignment = 1
+
+[node name="Liste" type="HBoxContainer" parent="PRINCIPAL/MAIN/SHOP" unique_id=1653696150]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PRINCIPAL/MAIN/SHOP/Liste" unique_id=1401496390]
+layout_mode = 2
+text = "1
+"
+
+[node name="acheter" type="Button" parent="PRINCIPAL/MAIN/SHOP" unique_id=1966683050]
+layout_mode = 2
+text = "ACHETER
+"
+
 [node name="Dé" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=439147969]
 layout_mode = 2
 
@@ -104,19 +125,3 @@ text = "0"
 [node name="D2" type="Label" parent="PRINCIPAL/MAIN/Dé/Resultat" unique_id=1850226502]
 layout_mode = 2
 text = "0"
-
-[node name="SHOP" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=451988624]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PRINCIPAL/MAIN/SHOP" unique_id=2064112494]
-layout_mode = 2
-text = "SHOP"
-horizontal_alignment = 1
-
-[node name="Liste" type="HBoxContainer" parent="PRINCIPAL/MAIN/SHOP" unique_id=1653696150]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="PRINCIPAL/MAIN/SHOP/Liste" unique_id=1401496390]
-layout_mode = 2
-text = "1
-"
