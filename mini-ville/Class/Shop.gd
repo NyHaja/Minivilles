@@ -12,9 +12,12 @@ func _init() -> void:
 	fill()
 	print_shop()
 
-func bought(joueur:Player,IDcard:int):
-	if available(IDcard):
-		# ajoute carte dans joueur
+func removeCardFromStock(card_id: int) -> void:
+	var target_slot = slotID(card_id)
+	
+	if target_slot != null:
+		target_slot.quantity -= 1
+		
 		fill()
 
 func slotID(IDcard:int)->Slot:
@@ -28,8 +31,8 @@ func available(IDcard:int)->bool:
 	return not(slotID(IDcard) == null)
 	
 func freeEmptySlot():
-	for i in shop.size():
-		if shop[i].quantity == 0:
+	for i in range(shop.size() -1, -1, -1):
+		if shop[i].quantity <= 0:
 			shop.remove_at(i)
 
 func fill()->void:

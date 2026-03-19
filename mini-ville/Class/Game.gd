@@ -157,8 +157,102 @@ func skipPhase(hasConstructed) -> void:
 		# Monument Radio : pouvoir de relancer
 		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
 			player.balance = player.balance + 10
+
+func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER 
+	match card_id:
+		1: return CardFactory.creerChampsBlé()
+		2: return CardFactory.creerFerme()
+		3: return CardFactory.creerForet()
+		4: return CardFactory.creerVignoble()
+		5: return CardFactory.creerMine()
+		6: return CardFactory.creerVerger()
+		7: return CardFactory.creerBoulangerie()
+		8: return CardFactory.creerSuperette()
+		9: return CardFactory.creerFromagerie()
+		10: return CardFactory.creerPetitBateauPeche()
+		11: return CardFactory.creerFabriqueMeubles()
+		12: return CardFactory.creerMoonsterSoda()
+		13: return CardFactory.creerHalleMarche()
+		14: return CardFactory.creerMarcheFL()
+		15: return CardFactory.creerStade()
+		16: return CardFactory.creerMaisonEdition()
+		17: return CardFactory.creerCafe()
+		18: return CardFactory.creerMoonsterBurger()
+		19: return CardFactory.creerRestaurantFamilial()
+		20: return CardFactory.creerCentreImpots()
+		21: return CardFactory.creerEpicerie()
+		_:
+			print("Error: Unknown card ID ", card_id)
+			return null
+
+
+func buyPhase(card_id:int) -> void:
+	var active_player = getActivePlayer()
+	var card_to_buy = get_card_from_factory(card_id)
 	
-func buyPhase(card_id:int):
-	pass
-func buildPhase(Monument_id):
-	pass
+	if not shop.available(card_id):
+		print("Card not in stock!")
+	
+	if active_player.buyCard(card_to_buy):
+		shop.bought(active_player, card_id)
+		print(active_player, " successfully bought ", card_to_buy.name)
+	else:
+		print("transaction failed")
+	
+	
+func buildPhase(monument_id: int) -> void:
+	var active_player = getActivePlayer()
+	
+	if active_player.monumentArray[monument_id] == true:
+		print("Monument already build")
+		return
+		
+	var monument_data = getMonumentData(monument_id)
+	
+	var monument_to_build = Monument.new()
+	monument_to_build.id = monument_id
+	monument_to_build.cost = monument_data.cost
+	
+	if active_player.constructMonument(monument_id):
+		print(active_player, " successfully constructed ", monument_data.name) # AFFICHER LE NOM DU MONUNMENT
+	else:
+		print("Not enough gold!")
+	
+	
+func getMonumentData(monument_id: int) -> Dictionary: # VALEURS A REVOIR
+	match monument_id:
+		Monument.MONUMENT_ID.Gare: 
+			return {"name": "Gare", "cost": 4}
+		Monument.MONUMENT_ID.Centre_Commercial: 
+			return {"name": "Centre Commercial", "cost": 10}
+		Monument.MONUMENT_ID.Parc: 
+			return {"name": "Parc d'Attractions", "cost": 16}
+		Monument.MONUMENT_ID.Radio: 
+			return {"name": "Tour Radio", "cost": 22}
+		Monument.MONUMENT_ID.Port: 
+			return {"name": "Port", "cost": 2} 
+		Monument.MONUMENT_ID.Aeroport: 
+			return {"name": "Aéroport", "cost": 30} 
+		_: 
+			return {"name": "Unknown Monument", "cost": 999}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
