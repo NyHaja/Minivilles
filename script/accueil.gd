@@ -4,6 +4,9 @@ extends Control
 var popup_login_scene = preload("res://scenes/popup_login.tscn")
 var popup_login
 
+var pop_rule_scene = preload("res://scenes/rules_panel.tscn")
+var popup_rule
+
 #Mode as Guest
 var asGuest = preload("res://scenes/guest_screen.tscn")
 
@@ -16,6 +19,14 @@ func _ready() -> void:
 	popup_login.on_back.connect(_on_popup_back)
 	
 	$gameMode/loginbtn.pressed.connect(affiche_popup_login)
+	
+	popup_rule = pop_rule_scene.instantiate()
+	add_child(popup_rule)
+	popup_rule.hide()
+	
+	popup_rule.on_back.connect(_on_popup_back)
+	
+	$Header/header/rulebtn/TextureButton.pressed.connect(affiche_popup_rule)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -26,6 +37,12 @@ func affiche_popup_login() -> void:
 	$gameMode.hide()
 	popup_login.show()
 
+# bouton pour afficher les règles
+func affiche_popup_rule():
+	$gameMode.hide()
+	popup_rule.show()
+	
+#bouton pour jouer en mode invité
 func guest_mode() -> void:
 	get_tree().change_scene_to_packed(asGuest)
 	

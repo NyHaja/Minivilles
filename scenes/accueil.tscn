@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://Assets/Image/icon/iconeparamètre.png" id="10_ayf35"]
 [ext_resource type="Texture2D" uid="uid://cjs8w6uwfd47y" path="res://Assets/Image/icon/settingicon.png" id="11_p74dm"]
 [ext_resource type="PackedScene" uid="uid://dl2wa48txlfy1" path="res://scenes/popup_login.tscn" id="13_wvwwm"]
+[ext_resource type="PackedScene" uid="uid://dpmmcwfqqufi6" path="res://scenes/rules_panel.tscn" id="14_6k2sw"]
 
 [node name="Accueil" type="Control" unique_id=1580754874]
 layout_mode = 3
@@ -179,5 +180,10 @@ visible = false
 layout_mode = 1
 offset_bottom = 0.0
 
+[node name="RulesPanel" parent="." unique_id=1392428517 instance=ExtResource("14_6k2sw")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="Header/header/rulebtn/TextureButton" to="." method="affiche_popup_rule"]
 [connection signal="button_down" from="gameMode/loginbtn" to="." method="_on_loginbtn_button_down"]
 [connection signal="button_down" from="gameMode/guestbtn" to="." method="_on_guestbtn_button_down"]

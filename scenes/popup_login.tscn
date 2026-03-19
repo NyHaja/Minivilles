@@ -12,13 +12,13 @@
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="11_4otwt"]
 
 [sub_resource type="GDScript" id="GDScript_ivxpu"]
-script/source = "extends Panel
+script/source = "extends Control
 
 signal on_back
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
+	$Panel/VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
 
 func _on_back_pressed() -> void:
 	on_back.emit()
@@ -144,7 +144,8 @@ border_width_bottom = 3
 expand_margin_left = 30.0
 expand_margin_right = 30.0
 
-[node name="Popup_login" type="Panel" unique_id=180227008]
+[node name="Popup_login" type="Control" unique_id=1775637839]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -154,7 +155,15 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = SubResource("GDScript_ivxpu")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2100389420]
+[node name="Panel" type="Panel" parent="." unique_id=1031325328]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=2100389420]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 14.0
@@ -162,7 +171,7 @@ offset_right = 115.0
 offset_bottom = 134.0
 theme_override_constants/separation = -17
 
-[node name="backbtn" type="TextureButton" parent="VBoxContainer" unique_id=1123434118]
+[node name="backbtn" type="TextureButton" parent="Panel/VBoxContainer" unique_id=1123434118]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -173,65 +182,65 @@ texture_hover = ExtResource("3_aaky7")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=2045653350]
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=2045653350]
 layout_mode = 2
 text = "Back"
 label_settings = ExtResource("4_1hqms")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panellogin" type="PanelContainer" parent="." unique_id=1359601266]
+[node name="Panellogin" type="PanelContainer" parent="Panel" unique_id=1359601266]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.319
-anchor_top = 0.11400001
-anchor_right = 0.68100005
-anchor_bottom = 0.88600004
-offset_left = 0.52001953
-offset_top = -0.37400818
-offset_right = 5.4798584
-offset_bottom = 7.3739624
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -349.0
+offset_top = -378.5
+offset_right = 351.0
+offset_bottom = 471.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_s6taj")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panellogin" unique_id=1218376457]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Panellogin" unique_id=1218376457]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 40
 
-[node name="Boxconnexion" type="VBoxContainer" parent="Panellogin/MarginContainer" unique_id=1131306786]
+[node name="Boxconnexion" type="VBoxContainer" parent="Panel/Panellogin/MarginContainer" unique_id=1131306786]
 layout_mode = 2
 theme_override_constants/separation = 29
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=596212010]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=596212010]
 layout_mode = 2
 theme_override_constants/separation = -7
 
-[node name="Label" type="Label" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=812357889]
+[node name="Label" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=812357889]
 layout_mode = 2
 text = "Minivilles"
 label_settings = SubResource("LabelSettings_w3hqj")
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=2010364485]
+[node name="Label2" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=2010364485]
 layout_mode = 2
 text = "connexion"
 label_settings = SubResource("LabelSettings_ou6fo")
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1111556163]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1111556163]
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=843950349]
+[node name="HSeparator" type="HSeparator" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=843950349]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 5
 theme_override_styles/separator = SubResource("StyleBoxLine_rsws6")
 
-[node name="TextureRect" type="TextureRect" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=1799920338]
+[node name="TextureRect" type="TextureRect" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=1799920338]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
@@ -239,22 +248,22 @@ size_flags_stretch_ratio = 20.0
 texture = ExtResource("7_arvrg")
 stretch_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=115459705]
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer" unique_id=115459705]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 theme_override_styles/separator = SubResource("StyleBoxLine_1ewyy")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1182150372]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1182150372]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="pseudo" type="Label" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1730702786]
+[node name="pseudo" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1730702786]
 layout_mode = 2
 text = "pseudo/email"
 label_settings = SubResource("LabelSettings_hxsvn")
 
-[node name="LineEdit" type="LineEdit" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=204938136]
+[node name="LineEdit" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=204938136]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
@@ -263,12 +272,12 @@ theme_override_fonts/font = ExtResource("9_xvepj")
 theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
 
-[node name="pseudo2" type="Label" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=813865913]
+[node name="pseudo2" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=813865913]
 layout_mode = 2
 text = "Password"
 label_settings = SubResource("LabelSettings_hxsvn")
 
-[node name="LineEdit2" type="LineEdit" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
+[node name="LineEdit2" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
@@ -277,9 +286,9 @@ theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 
 theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
 secret = true
-secret_character = "*"
+secret_character = "."
 
-[node name="Label" type="Label" parent="Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1934262966]
+[node name="Label" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1934262966]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 20
@@ -287,7 +296,7 @@ text = "Forgot password?"
 label_settings = SubResource("LabelSettings_dc6bf")
 horizontal_alignment = 2
 
-[node name="connexionbtn" type="Button" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1313044634]
+[node name="connexionbtn" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1313044634]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -306,17 +315,17 @@ theme_override_styles/pressed = ExtResource("11_4otwt")
 theme_override_styles/hover = ExtResource("11_4otwt")
 text = "Connexion"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1354851934]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1354851934]
 layout_mode = 2
 alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=150464962]
+[node name="HSeparator" type="HSeparator" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=150464962]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 5
 theme_override_styles/separator = SubResource("StyleBoxLine_rsws6")
 
-[node name="TextureRect" type="TextureRect" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=1232630514]
+[node name="TextureRect" type="TextureRect" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=1232630514]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
@@ -324,14 +333,14 @@ size_flags_stretch_ratio = 1.1
 texture = ExtResource("7_arvrg")
 stretch_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=517364661]
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panellogin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=517364661]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_override_constants/separation = 5
 theme_override_styles/separator = SubResource("StyleBoxLine_1ewyy")
 
-[node name="Label" type="Label" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1849363245]
+[node name="Label" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1849363245]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
@@ -339,7 +348,7 @@ text = "already registered?"
 label_settings = SubResource("LabelSettings_rsws6")
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
+[node name="Button" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -353,4 +362,4 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_21yao")
 theme_override_styles/hover = SubResource("StyleBoxFlat_m4w4u")
 text = "Sign in"
 
-[connection signal="pressed" from="VBoxContainer/backbtn" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
