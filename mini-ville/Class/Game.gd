@@ -36,8 +36,8 @@ func startGame() ->void:
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
 	for player:Player in playerArray:
 		player.recieveGold(goldInitAmount)
-		player.deck.push_back([0,1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
-		player.deck.push_back([0,1]) # A REVOIR
+		player.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back(1) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
 	
 	
 	var winner = false
@@ -52,10 +52,11 @@ func startGame() ->void:
 		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
-		var choice
+		var choice = await  gameplayScreen.buy()
+		print(choice)
 		# choix = INPUT
 		
-		match  choice:
+		match  choice[0]:
 			CHOICE.Build_MONUMENT : 
 				buildPhase(0)
 			CHOICE.Build_ESTABLISHMENT : 
@@ -122,7 +123,6 @@ func rollDice() -> Array[int]:
 	res.insert(0,(randi()%6) + 1)
 	res.insert(1,0)
 
-	
 	var numberDice = 1
 	
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Gare]:
@@ -187,7 +187,7 @@ func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER
 
 
 func buyPhase(card_id:int) -> void:
-	var active_player = getActivePlayer()
+	var active_player:Player = getActivePlayer()
 	var card_to_buy = get_card_from_factory(card_id)
 	
 	if not shop.available(card_id):

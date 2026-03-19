@@ -62,6 +62,14 @@ text = "Gold :"
 [node name="BALANCE" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/Gold" unique_id=533684718]
 layout_mode = 2
 
+[node name="Label" type="Label" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=1156075965]
+layout_mode = 2
+text = "DECK"
+horizontal_alignment = 1
+
+[node name="DECK" type="HBoxContainer" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=582188676]
+layout_mode = 2
+
 [node name="SHOP" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=451988624]
 layout_mode = 2
 

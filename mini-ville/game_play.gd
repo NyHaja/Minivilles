@@ -2,12 +2,17 @@ class_name Game_Play extends Control
 
 signal choix(input : int)
 signal lancer
+signal purchase
 # Joueur
 @onready var pseudo: Label = $"PRINCIPAL/MAIN/INFO BASE/JOUEUR/Pseudo"
 @onready var balance: Label = $"PRINCIPAL/MAIN/INFO BASE/Gold/BALANCE"
+@onready var deck: HBoxContainer = $"PRINCIPAL/MAIN/INFO BASE/DECK"
+
+
 #Shop
 @onready var Listshop: HBoxContainer = $PRINCIPAL/MAIN/SHOP/Liste
 var card_selec : Button = null
+var card_selec_id :int = -1
 @onready var acheter: Button = $PRINCIPAL/MAIN/SHOP/acheter
 
 # Dé
@@ -31,18 +36,31 @@ func _ready() -> void:
 		button_2.pressed.connect(_button_2_press)
 	if button_lancer:
 		button_lancer.pressed.connect(lancer_modal)
-	
-
-func RefreshBasicInfo(game:Game) -> void:
-	set_process_unhandled_key_input(true)
-	resetshowdice()
-	afficher_basic_info_principal_joueur(game.getActivePlayer())
-	showShop(game.shop)
+	if acheter:
+		acheter.pressed.connect(purchase_modal)
 	
 func afficher_basic_info_principal_joueur(j:Player):
 	self.pseudo.text = j.username
 	self.balance.text = String.num(j.balance,0)
+	showdeck(j.deck)
 
+func RefreshBasicInfo(game:Game) -> void:
+	set_process_unhandled_key_input(true)
+	await get_tree().create_timer(1).timeout
+	resetshowdice()
+	afficher_basic_info_principal_joueur(game.getActivePlayer())
+	reset_select_card()
+	showShop(game.shop)
+	
+
+func showdeck(deck:Array[int]):
+	for child in self.deck.get_children():
+		child.queue_free()
+	for id in deck:
+		var newl :Label = Label.new()
+		newl.text = String.num(id,0)
+		self.deck.add_child(newl)
+	
 # SHOP
 
 func showShop(shop:Shop):
@@ -52,23 +70,40 @@ func showShop(shop:Shop):
 		var newb:Button = Button.new()
 		newb.text = String.num(slot.id,0)
 		Listshop.add_child(newb)
-		newb.pressed.connect(func():printqt(slot))
+		newb.pressed.connect(func():card_select_shop(newb,slot.id))
 		
-func printqt(slot:Slot):
-	print(slot.quantity)
+func card_select_shop(b:Button,id:int):
+	if card_selec:
+		card_selec.add_theme_color_override("font_color",Color.WHITE)
+	card_selec = b
+	card_selec_id = id
+	b.add_theme_color_override("font_color",Color.RED)
+	
+func reset_select_card():
+	if card_selec == null:
+		return
+	card_selec.add_theme_color_override("font_color",Color.WHITE)
+	card_selec = null
+	card_selec_id = -1
+
+func buy():
+	await purchase
+	return [Game.CHOICE.Build_ESTABLISHMENT,card_selec_id]
+
+func purchase_modal():
+	if card_selec :
+		purchase.emit()
 ###Dée
 
 func resetshowdice():
 	window_dee.hide()
 	showResult(0,0)
-	
-	
+		
 func _button_1_press() -> void:
 	choix_modal("1")
 	button_2.add_theme_color_override("font_color",Color.WHITE)
 	button.add_theme_color_override("font_color",Color.RED)
 	
-
 func _button_2_press() -> void:
 	choix_modal("2")
 	button.add_theme_color_override("font_color",Color.WHITE)
@@ -78,7 +113,6 @@ func rollDice() -> int:
 	window_dee.show()
 	set_process_unhandled_key_input(true)
 	await lancer
-	window_dee.hide()
 	return nbde
 	
 func choix_modal(input:String) -> void:
