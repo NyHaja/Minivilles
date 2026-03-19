@@ -27,10 +27,10 @@ func loseGold(amount: int) -> void:
 	var amountToPay = min(amount, balance)
 	balance -= amountToPay
 
-func buyCard(establishment: Establishment) -> void:
+func buyCard(establishment: Establishment) -> bool:
 	
 	if balance < establishment.cost:
-		return
+		return false
 	balance -= establishment.cost
 	
 	var hasEstablishment = false
@@ -44,16 +44,20 @@ func buyCard(establishment: Establishment) -> void:
 		deck.append([establishment.id, 1])
 		
 	establishmentCount += 1
+	
+	return true
 
 
-func constructMonument(monument: Monument) -> void:
+func constructMonument(monument: Monument) -> bool:
 	if balance < monument.cost:
-		return
+		return false
 	
 	balance -= monument.cost
 	
 	monumentArray[monument.id] = true
 	monumentCount += 1
+	
+	return true
 
 func demolishMonument(monumentToDemolish: Monument) -> void:
 	
