@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dl2wa48txlfy1"]
 
+[ext_resource type="Script" uid="uid://cal60a45rnbck" path="res://script/popup_login.gd" id="1_jxo3r"]
 [ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://Assets/Image/icon/backArrow.png" id="2_jxo3r"]
 [ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://Assets/Image/icon/backArrowPress.png" id="3_aaky7"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="4_1hqms"]
@@ -10,20 +11,6 @@
 [ext_resource type="FontFile" uid="uid://c16hfaau3y518" path="res://Fonts/Exo_2/static/Exo2-Medium.ttf" id="9_xvepj"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="10_s5moy"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="11_4otwt"]
-
-[sub_resource type="GDScript" id="GDScript_ivxpu"]
-script/source = "extends Control
-
-signal on_back
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	$Panel/VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
-
-func _on_back_pressed() -> void:
-	on_back.emit()
-	hide()
-"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6taj"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -153,7 +140,7 @@ offset_bottom = 11.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-script = SubResource("GDScript_ivxpu")
+script = ExtResource("1_jxo3r")
 
 [node name="Panel" type="Panel" parent="." unique_id=1031325328]
 layout_mode = 1
@@ -348,7 +335,7 @@ text = "already registered?"
 label_settings = SubResource("LabelSettings_rsws6")
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
+[node name="inscription" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -363,3 +350,5 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_m4w4u")
 text = "Sign in"
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
+[connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="bouton_connexion"]
+[connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/inscription" to="." method="bouton_inscription"]

@@ -28,22 +28,37 @@ func _ready() -> void:
 	
 	$Header/header/rulebtn/TextureButton.pressed.connect(affiche_popup_rule)
 
+# Musique de fond du jeu
+	SoundManager.music_player
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-	
-# bouton login pour s'authentifier
-func affiche_popup_login() -> void:
-	$gameMode.hide()
-	popup_login.show()
+
+#------------- HEADER --------------
 
 # bouton pour afficher les règles
 func affiche_popup_rule():
+	SoundManager.play_click()
 	$gameMode.hide()
 	popup_rule.show()
 	
+func affiche_parametre() -> void:
+	SoundManager.play_click()
+	
+	
+#------------ BODY ----------------
+
+# bouton login pour s'authentifier
+func affiche_popup_login() -> void:
+	SoundManager.play_click()
+	$gameMode.hide()
+	popup_login.show()
+	
+	
 #bouton pour jouer en mode invité
 func guest_mode() -> void:
+	SoundManager.play_click()
 	get_tree().change_scene_to_packed(asGuest)
 	
 func _on_popup_back():

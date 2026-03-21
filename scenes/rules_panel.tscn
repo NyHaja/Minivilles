@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dpmmcwfqqufi6"]
 
-[ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://scenes/rules_panel.gd" id="1_07o7p"]
+[ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://script/rules_panel.gd" id="1_07o7p"]
 [ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://Assets/Image/icon/backArrow.png" id="1_o4co6"]
 [ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://Assets/Image/icon/backArrowPress.png" id="2_bwkas"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="3_541gp"]

@@ -185,5 +185,6 @@ visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="Header/header/rulebtn/TextureButton" to="." method="affiche_popup_rule"]
-[connection signal="button_down" from="gameMode/loginbtn" to="." method="_on_loginbtn_button_down"]
-[connection signal="button_down" from="gameMode/guestbtn" to="." method="_on_guestbtn_button_down"]
+[connection signal="button_down" from="Header/header/settingbtn/TextureButton" to="." method="affiche_parametre"]
+[connection signal="button_down" from="gameMode/loginbtn" to="." method="affiche_popup_login"]
+[connection signal="button_down" from="gameMode/guestbtn" to="." method="guest_mode"]

@@ -11,8 +11,17 @@ config_version=5
 [application]
 
 config/name="Miniville_Deluxe"
+run/main_scene="uid://xg6ijxmum5pm"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://cjihtogdq8orn"
+
+[autoload]
+
+SoundManager="*uid://bu5ukwdc2m6d"
 
 [display]
 
