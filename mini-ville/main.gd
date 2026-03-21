@@ -4,8 +4,8 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var j1 = Player.new("j1")
-	var j2 = Player.new("j2")
+	var j1 = Player.new("j1", 0, 5)
+	var j2 = Player.new("j2", 1, 5)
 	
 	var lesJouers : Array[Player] = []
 	lesJouers.insert(0,j1)

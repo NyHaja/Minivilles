@@ -1,21 +1,136 @@
 extends Node
-class_name  Player
+class_name Player
 
+@export var username: String = ""
+
+var id: int
+var balance: int
 var monumentCount: int
-var diceCount: int
-var username:String
-var balance :int = 0 
-var monumentArray : Array[bool] = []
-var deck : Array[int]
+var establishmentCount: int
+var deck: Array = []
+var monumentArray: Array = []
 
-func activateEffect(color:Establishment.COLOR, activePlayer: Player)->void:
-	pass
+
+func _init(_username: String, _id: int, _balance: int) -> void:
+	self.username = _username
+	self.id = _id
+	self.balance = _balance
+	self.monumentArray = [false, false, false ,false, false, false]
+
+func getBalance() -> int:
+	return balance
 
 func recieveGold(amount: int) -> void:
 	balance += amount
+	
+func loseGold(amount: int) -> void:
+	var amountToPay = min(amount, balance)
+	balance -= amountToPay
 
-func _init(username) -> void:
-	self.username = username
-	monumentArray.resize(6)
-	monumentArray.fill(false)
-	monumentArray.insert(Monument.MONUMENT_ID.Gare,true)
+func buyCard(establishment: Establishment) -> bool:
+	
+	if balance < establishment.cost:
+		return false
+	balance -= establishment.cost
+	
+	var hasEstablishment = false
+	
+	for instance in deck:
+		if instance[0] == establishment.id:
+			instance[1] += 1
+			hasEstablishment = true
+			break
+	if not hasEstablishment:
+		deck.append([establishment.id, 1])
+		
+	establishmentCount += 1
+	
+	return true
+
+
+func constructMonument(monument: Monument) -> bool:
+	if balance < monument.cost:
+		return false
+	
+	balance -= monument.cost
+	
+	monumentArray[monument.id] = true
+	monumentCount += 1
+	
+	return true
+
+func demolishMonument(monumentToDemolish: Monument) -> void:
+	
+	monumentArray[monumentToDemolish.id] = false
+	monumentCount -= 1
+	
+func monumentIsActive(monumentId: int) -> bool:
+	return monumentArray[monumentId]
+	
+
+func cardsWithIcon(icons: Array[String]) -> int:
+	var numberOfCards:int = 0
+	for instance in deck:
+		var cardId = instance[0]
+		var quantity = instance[1]
+		
+		var card = get_card_from_factory(cardId)
+		
+		for iconToCount in icons:
+			if card.icon == iconToCount:
+				numberOfCards += quantity
+				
+	return numberOfCards
+
+func activateEffect(color: int, game: Game, roller: Player) -> void: 
+	var dice_roll = game.current_roll_value
+	
+	for instance in deck:
+		# Safety check just in case the deck has flat numbers from old code!
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+			
+		var cardId = instance[0]
+		var quantity = instance[1]
+		
+		# Fetch the card using your local adapter
+		var card = get_card_from_factory(cardId)
+		
+		# THE FAILSAFE: If the card is null (like ID 0), skip it immediately!
+		if card == null:
+			continue
+		
+		# 1. Check if the colors match
+		if card.color == color:
+			# 2. Check if the dice roll falls inside the teammate's [min, max] array!
+			if dice_roll >= card.activation[0] and dice_roll <= card.activation[1]:
+				# 3. Apply the effect for as many copies as the player owns
+				for i in range(quantity):
+					card.effect.apply(self, roller)
+
+
+func get_card_from_factory(card_id: int) -> Establishment:
+	match card_id:
+		1: return CardFactory.creerChampsBlé()
+		2: return CardFactory.creerFerme()
+		3: return CardFactory.creerForet()
+		4: return CardFactory.creerVignoble()
+		5: return CardFactory.creerMine()
+		6: return CardFactory.creerVerger()
+		7: return CardFactory.creerBoulangerie()
+		8: return CardFactory.creerSuperette()
+		9: return CardFactory.creerFromagerie()
+		10: return CardFactory.creerPetitBateauPeche()
+		11: return CardFactory.creerFabriqueMeubles()
+		12: return CardFactory.creerMoonsterSoda()
+		13: return CardFactory.creerHalleMarche()
+		14: return CardFactory.creerMarcheFL()
+		15: return CardFactory.creerStade()
+		16: return CardFactory.creerMaisonEdition()
+		17: return CardFactory.creerCafe()
+		18: return CardFactory.creerMoonsterBurger()
+		19: return CardFactory.creerRestaurantFamilial()
+		20: return CardFactory.creerCentreImpots()
+		21: return CardFactory.creerEpicerie()
+		_:
+			return null

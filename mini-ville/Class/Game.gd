@@ -10,6 +10,7 @@ var goldInitAmount :int
 var playerCount:int
 var currentPlayerIndex:int
 var playerArray : Array[Player]
+var current_roll_value = 0
 
 var shop:Shop
 
@@ -36,8 +37,8 @@ func startGame() ->void:
 		#Donner champ blé et boulangerie a tout les joueur et 3 gold
 	for player:Player in playerArray:
 		player.recieveGold(goldInitAmount)
-		player.deck.push_back(0) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
-		player.deck.push_back(1) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back([0, 1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back([1, 1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
 	
 	
 	var winner = false
@@ -116,6 +117,7 @@ func DicePhase() -> int:
 		if sum >= 10:
 			sum = sum + 2
 		pass
+	current_roll_value = sum
 	return sum
 
 func rollDice() -> Array[int]:
@@ -137,14 +139,14 @@ func EffectPhase(resDice) -> void:
 	var currentPlayer = getActivePlayer()
 	# ROUGE
 	for player:Player in getPlayerCounterClockwise(getActivePlayer()):
-		player.activateEffect(Establishment.COLOR.RED, currentPlayer)
+		player.activateEffect(Establishment.COLOR.RED, self, currentPlayer)
 	# Bleu
 	for player:Player in playerArray:
-		player.activateEffect(Establishment.COLOR.BLUE, currentPlayer)
+		player.activateEffect(Establishment.COLOR.BLUE, self, currentPlayer)
 	#VERT
-	currentPlayer.activateEffect(Establishment.COLOR.GREEN, currentPlayer)
+	currentPlayer.activateEffect(Establishment.COLOR.GREEN, self, currentPlayer)
 	#Violet
-	currentPlayer.activateEffect(Establishment.COLOR.PURPLE, currentPlayer)
+	currentPlayer.activateEffect(Establishment.COLOR.PURPLE, self, currentPlayer)
 	
 	
 		
@@ -182,7 +184,6 @@ func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER
 		20: return CardFactory.creerCentreImpots()
 		21: return CardFactory.creerEpicerie()
 		_:
-			print("Error: Unknown card ID ", card_id)
 			return null
 
 
@@ -213,7 +214,7 @@ func buildPhase(monument_id: int) -> void:
 	monument_to_build.id = monument_id
 	monument_to_build.cost = monument_data.cost
 	
-	if active_player.constructMonument(monument_id):
+	if active_player.constructMonument(monument_to_build):
 		print(active_player, " successfully constructed ", monument_data.name) # AFFICHER LE NOM DU MONUNMENT
 	else:
 		print("Not enough gold!")

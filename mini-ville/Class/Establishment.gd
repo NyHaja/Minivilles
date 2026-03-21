@@ -7,3 +7,9 @@ enum COLOR{
 	RED,
 	PURPLE
 }
+
+var id: int
+var cost: int
+var color: int
+var activation: Array
+var icon: String

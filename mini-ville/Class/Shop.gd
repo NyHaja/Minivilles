@@ -28,23 +28,24 @@ func slotID(IDcard:int)->Slot:
 		
 func available(IDcard:int)->bool:
 	return not(slotID(IDcard) == null)
-	
-func freeEmptySlot():
+
+func fill()->void:
+	for i in range(SIZESHOP):
+		if i >= shop.size():
+			shop.append(Slot.new(-1, 0))
+			
+		while shop[i].quantity <= 0 and not drawPile.is_empty():
+			var new_card_id = drawPile.draw()
+			var existantSlot = slotID(new_card_id)
+			
+			if existantSlot != null and existantSlot != shop[i]:
+				existantSlot.quantity += 1
+			else:
+				shop[i].id = new_card_id
+				shop[i].quantity = 1
 	for i in range(shop.size() -1, -1, -1):
 		if shop[i].quantity <= 0:
 			shop.remove_at(i)
-
-func fill()->void:
-	freeEmptySlot()
-	while shop.size() < 9 and not(drawPile.is_empty()):
-		var new = drawPile.draw()
-		var existantSlot = slotID(new)
-		if existantSlot == null:
-			var newslot = Slot.new(new,1)
-			shop.append(newslot)
-		else:
-			existantSlot.quantity += 1
-		
 	
 func print_shop()->void:
 	for slot:Slot in self.shop:
