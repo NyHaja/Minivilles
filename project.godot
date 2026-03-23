@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Miniville_Deluxe"
-run/main_scene="uid://xg6ijxmum5pm"
+run/main_scene="res://scenes/ui/mode_de_jeu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -27,6 +27,8 @@ SoundManager="*uid://bu5ukwdc2m6d"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
+window/stretch/mode="canvas_items"
 
 [dotnet]
 
