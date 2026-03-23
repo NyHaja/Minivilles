@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://bntbferfc67eh"]
+
+[ext_resource type="Texture2D" path="res://assets/backgrounds/bg_mode_de_jeu_new.png" id="1_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/mode_de_jeu/logo_minivilles.png" id="2_logo"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/icone_de.png" id="3_de1"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/icone_de2.png" id="4_de2"]
+[ext_resource type="Texture2D" path="res://assets/ui/mode_de_jeu/btn_solo.png" id="5_solo"]
+[ext_resource type="Texture2D" path="res://assets/ui/mode_de_jeu/btn_multi.png" id="6_multi"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/icone_regles.png" id="7_ico_regles"]
+[ext_resource type="Texture2D" path="res://assets/ui/mode_de_jeu/texte_regles.png" id="8_txt_regles"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/icone_parametres.png" id="9_ico_params"]
+[ext_resource type="Texture2D" path="res://assets/ui/mode_de_jeu/texte_parametres.png" id="10_txt_params"]
+[ext_resource type="Script" uid="uid://bnd1nn86amgdg" path="res://scripts/ui/btn_solo.gd" id="11_sc_solo"]
+[ext_resource type="Script" uid="uid://1jdhm04axmh1" path="res://scripts/ui/btn_multi.gd" id="12_sc_multi"]
+[ext_resource type="Script" uid="uid://bq0tdq8lvp6co" path="res://scripts/ui/btn_regles.gd" id="13_sc_regles"]
+[ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://scripts/ui/btn_parametres.gd" id="14_sc_params"]
+[ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://scripts/ui/de.gd" id="15_sc_de"]
+
+[node name="Control" type="Control" unique_id=1166678645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="." unique_id=1825588920]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 6
+texture = ExtResource("1_bg")
+
+[node name="Logo" type="TextureRect" parent="." unique_id=1847709166]
+layout_mode = 0
+offset_left = 434.0
+offset_top = 243.0
+offset_right = 1485.0
+offset_bottom = 430.0
+texture = ExtResource("2_logo")
+
+[node name="Dé" type="TextureRect" parent="." unique_id=1557635892]
+layout_mode = 0
+offset_left = 259.0
+offset_top = 310.0
+offset_right = 369.0
+offset_bottom = 417.0
+texture = ExtResource("3_de1")
+script = ExtResource("15_sc_de")
+
+[node name="Dé2" type="TextureRect" parent="." unique_id=1288394340]
+layout_mode = 0
+offset_left = 1530.0
+offset_top = 310.0
+offset_right = 1640.0
+offset_bottom = 417.0
+texture = ExtResource("4_de2")
+script = ExtResource("15_sc_de")
+
+[node name="BtnSolo" type="TextureButton" parent="." unique_id=759913985]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 595.0
+offset_right = 1319.0
+offset_bottom = 704.0
+texture_normal = ExtResource("5_solo")
+script = ExtResource("11_sc_solo")
+
+[node name="BtnMulti" type="TextureButton" parent="." unique_id=1989472916]
+layout_mode = 0
+offset_left = 590.0
+offset_top = 740.0
+offset_right = 1309.0
+offset_bottom = 849.0
+texture_normal = ExtResource("6_multi")
+script = ExtResource("12_sc_multi")
+
+[node name="BtnRegles" type="TextureButton" parent="." unique_id=1621742470]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 45.0
+offset_right = 205.0
+offset_bottom = 184.0
+texture_normal = ExtResource("7_ico_regles")
+script = ExtResource("13_sc_regles")
+
+[node name="TexteRegles" type="TextureRect" parent="." unique_id=853611786]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 176.0
+offset_right = 211.0
+offset_bottom = 223.0
+texture = ExtResource("8_txt_regles")
+
+[node name="BtnParametres" type="TextureButton" parent="." unique_id=382097206]
+layout_mode = 0
+offset_left = 1699.0
+offset_top = 45.0
+offset_right = 1815.0
+offset_bottom = 161.0
+texture_normal = ExtResource("9_ico_params")
+script = ExtResource("14_sc_params")
+
+[node name="TexteParametres" type="TextureRect" parent="." unique_id=1191556903]
+layout_mode = 0
+offset_left = 1640.0
+offset_top = 163.0
+offset_right = 1879.0
+offset_bottom = 202.0
+texture = ExtResource("10_txt_params")

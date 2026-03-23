@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Cartes Minivilles Deluxe</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 30px;
+  }
+
+  h1 {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+  }
+
+  .section-title {
+    color: #aaa;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 30px 0 15px;
+  }
+
+  .cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  /* CARTE */
+  .card {
+    width: 160px;
+    height: 240px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    position: relative;
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-6px) scale(1.03); }
+
+  /* Couleurs par type */
+  .blue   { background: linear-gradient(160deg, #1565C0, #0D47A1); border: 2px solid #42A5F5; }
+  .green  { background: linear-gradient(160deg, #2E7D32, #1B5E20); border: 2px solid #66BB6A; }
+  .red    { background: linear-gradient(160deg, #B71C1C, #7F0000); border: 2px solid #EF5350; }
+  .purple { background: linear-gradient(160deg, #4A148C, #311B92); border: 2px solid #CE93D8; }
+  .monument { background: linear-gradient(160deg, #E65100, #BF360C); border: 2px solid #FFB74D; }
+
+  /* Numéro de dés */
+  .dice-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: white;
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #222;
+    min-width: 28px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  /* Icône centrale */
+  .card-icon {
+    font-size: 48px;
+    text-align: center;
+    margin: 36px 0 8px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+
+  /* Nom */
+  .card-name {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 0 8px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    letter-spacing: 0.5px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Effet */
+  .card-effect {
+    color: rgba(255,255,255,0.85);
+    font-size: 9.5px;
+    text-align: center;
+    padding: 6px 10px;
+    line-height: 1.4;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-style: italic;
+  }
+
+  /* Coût */
+  .card-cost {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: #F1C40F;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  /* Tour d'activation */
+  .turn-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  /* Monument : pas de coût en cercle mais badge spécial */
+  .monument-cost {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: #FFB74D;
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #222;
+  }
+
+  .monument-tag {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 10px;
+    color: #FFB74D;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🎲 MINIVILLES DELUXE 🎲</h1>
+
+<!-- ===== BLEUS ===== -->
+<div class="section-title">🔵 Établissements Bleus — N'importe quel tour</div>
+<div class="cards-grid">
+
+  <div class="card blue">
+    <div class="dice-badge">1</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🌾</div>
+    <div class="card-name">Champs de blé</div>
+    <div class="card-effect">Recevez 1 pièce de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">1</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">2</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🐄</div>
+    <div class="card-name">Ferme</div>
+    <div class="card-effect">Recevez 1 pièce de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">1</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">5</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🌲</div>
+    <div class="card-name">Forêt</div>
+    <div class="card-effect">Recevez 1 pièce de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">3</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">9</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">⛏️</div>
+    <div class="card-name">Mine</div>
+    <div class="card-effect">Recevez 5 pièces de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">6</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">10</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🍎</div>
+    <div class="card-name">Verger</div>
+    <div class="card-effect">Recevez 3 pièces de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">3</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">7</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🍇</div>
+    <div class="card-name">Vignoble</div>
+    <div class="card-effect">Recevez 3 pièces de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">8</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🚤</div>
+    <div class="card-name">Petit bateau de pêche</div>
+    <div class="card-effect">Recevez 3 pièces de la banque pendant le tour de n'importe quel joueur.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card blue">
+    <div class="dice-badge">12-14</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🛥️</div>
+    <div class="card-name">Chalutier</div>
+    <div class="card-effect">Lance 2 dés supplémentaires. Recevez la somme en pièces. Nécessite le Port.</div>
+    <div class="card-cost">5</div>
+  </div>
+
+</div>
+
+<!-- ===== VERTS ===== -->
+<div class="section-title">🟢 Établissements Verts — Votre tour uniquement</div>
+<div class="cards-grid">
+
+  <div class="card green">
+    <div class="dice-badge">2-3</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🍞</div>
+    <div class="card-name">Boulangerie</div>
+    <div class="card-effect">Recevez 1 pièce de la banque pendant votre tour uniquement.</div>
+    <div class="card-cost">1</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">2</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🛒</div>
+    <div class="card-name">Épicerie</div>
+    <div class="card-effect">Si vous possédez moins de 2 monuments, recevez 2 pièces de la banque.</div>
+    <div class="card-cost">0</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">4</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🏪</div>
+    <div class="card-name">Supérette</div>
+    <div class="card-effect">Recevez 3 pièces de la banque pendant votre tour uniquement.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">7</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🧀</div>
+    <div class="card-name">Fromagerie</div>
+    <div class="card-effect">Recevez 3 pièces par carte COW 🐄 que vous possédez.</div>
+    <div class="card-cost">5</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">8</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🪑</div>
+    <div class="card-name">Fabrique de meubles</div>
+    <div class="card-effect">Recevez 3 pièces par carte GEAR ⚙️ que vous possédez.</div>
+    <div class="card-cost">3</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">6</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🏬</div>
+    <div class="card-name">Halle du marché</div>
+    <div class="card-effect">Recevez 2 pièces par carte WHEAT 🌾 que vous possédez.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">11-12</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🥦</div>
+    <div class="card-name">Marché de fruits et légumes</div>
+    <div class="card-effect">Recevez 2 pièces par carte WHEAT 🌾 que vous possédez.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">11</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🥤</div>
+    <div class="card-name">Moonster Soda</div>
+    <div class="card-effect">Recevez 1 pièce par carte CUP ☕ que vous possédez.</div>
+    <div class="card-cost">3</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">9-10</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🚚</div>
+    <div class="card-name">Entreprise de déménagement</div>
+    <div class="card-effect">Donnez 1 établissement non-violet à un adversaire. Recevez 4 pièces.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card green">
+    <div class="dice-badge">4</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🏗️</div>
+    <div class="card-name">Entreprise de travaux publics</div>
+    <div class="card-effect">Retournez un de vos monuments en construction. Recevez 8 pièces.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+</div>
+
+<!-- ===== ROUGES ===== -->
+<div class="section-title">🔴 Établissements Rouges — Vol sur le lanceur</div>
+<div class="cards-grid">
+
+  <div class="card red">
+    <div class="dice-badge">3</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">☕</div>
+    <div class="card-name">Café</div>
+    <div class="card-effect">Recevez 1 pièce du joueur qui a lancé les dés.</div>
+    <div class="card-cost">2</div>
+  </div>
+
+  <div class="card red">
+    <div class="dice-badge">2-3</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🍔</div>
+    <div class="card-name">Moonster Burger</div>
+    <div class="card-effect">Recevez 1 pièce du joueur qui a lancé les dés.</div>
+    <div class="card-cost">1</div>
+  </div>
+
+  <div class="card red">
+    <div class="dice-badge">9-10</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🍕</div>
+    <div class="card-name">Restaurant familial</div>
+    <div class="card-effect">Recevez 2 pièces du joueur qui a lancé les dés.</div>
+    <div class="card-cost">3</div>
+  </div>
+
+  <div class="card red">
+    <div class="dice-badge">12-14</div>
+    <div class="turn-badge">🌐</div>
+    <div class="card-icon">🎰</div>
+    <div class="card-name">Club privé</div>
+    <div class="card-effect">Recevez TOUTES les pièces du lanceur s'il possède ≥ 3 monuments construits.</div>
+    <div class="card-cost">4</div>
+  </div>
+
+</div>
+
+<!-- ===== VIOLETS ===== -->
+<div class="section-title">🟣 Établissements Violets — Uniques, votre tour</div>
+<div class="cards-grid">
+
+  <div class="card purple">
+    <div class="dice-badge">6</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🏟️</div>
+    <div class="card-name">Stade</div>
+    <div class="card-effect">Recevez 2 pièces de la part de chaque autre joueur.</div>
+    <div class="card-cost">6</div>
+  </div>
+
+  <div class="card purple">
+    <div class="dice-badge">6</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">📺</div>
+    <div class="card-name">Chaîne de télévision</div>
+    <div class="card-effect">Recevez 5 pièces du joueur de votre choix.</div>
+    <div class="card-cost">7</div>
+  </div>
+
+  <div class="card purple">
+    <div class="dice-badge">6</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🤝</div>
+    <div class="card-name">Centre d'affaires</div>
+    <div class="card-effect">Échangez un établissement non-violet avec le joueur de votre choix.</div>
+    <div class="card-cost">8</div>
+  </div>
+
+  <div class="card purple">
+    <div class="dice-badge">8-9</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">🏛️</div>
+    <div class="card-name">Centre des impôts</div>
+    <div class="card-effect">Les joueurs avec ≥ 10 pièces donnent la moitié (arrondi inf).</div>
+    <div class="card-cost">4</div>
+  </div>
+
+  <div class="card purple">
+    <div class="dice-badge">7-8</div>
+    <div class="turn-badge">👤</div>
+    <div class="card-icon">📚</div>
+    <div class="card-name">Maison d'édition</div>
+    <div class="card-effect">Chaque adversaire vous paie 1 pièce par carte CUP ☕ et BREAD 🍞 qu'il possède.</div>
+    <div class="card-cost">5</div>
+  </div>
+
+</div>
+
+<!-- ===== MONUMENTS ===== -->
+<div class="section-title">🏆 Monuments — Construire pour gagner</div>
+<div class="cards-grid">
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">🚂</div>
+    <div class="card-name">Gare</div>
+    <div class="card-effect">Vous pouvez lancer deux dés au lieu d'un.</div>
+    <div class="monument-cost">💰 4</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">🛍️</div>
+    <div class="card-name">Centre commercial</div>
+    <div class="card-effect">Vos cartes CUP ☕ et BREAD 🍞 rapportent 1 pièce de plus.</div>
+    <div class="monument-cost">💰 10</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">🎡</div>
+    <div class="card-name">Parc d'attractions</div>
+    <div class="card-effect">Si votre jet est un double, rejouez un tour après celui-ci.</div>
+    <div class="monument-cost">💰 16</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">📡</div>
+    <div class="card-name">Tour radio</div>
+    <div class="card-effect">Une fois par tour, vous pouvez choisir de relancer vos dés.</div>
+    <div class="monument-cost">💰 22</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">⚓</div>
+    <div class="card-name">Port</div>
+    <div class="card-effect">Si votre jet est ≥ 10, vous pouvez ajouter 2 au résultat.</div>
+    <div class="monument-cost">💰 2</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+  <div class="card monument">
+    <div class="turn-badge">🏆</div>
+    <div class="card-icon" style="margin-top:44px">✈️</div>
+    <div class="card-name">Aéroport</div>
+    <div class="card-effect">Si vous ne construisez rien ce tour, recevez 10 pièces de la banque.</div>
+    <div class="monument-cost">💰 30</div>
+    <div class="monument-tag">MONUMENT</div>
+  </div>
+
+</div>
+
+</body>
+</html>
