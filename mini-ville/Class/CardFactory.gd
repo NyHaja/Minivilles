@@ -1,6 +1,125 @@
 class_name CardFactory
 
 
+static func creerTousMonuments() -> Array[Monument]:
+	var monuments : Array[Monument] = []
+	
+	monuments.append(creerGare())
+	monuments.append(creerCentreCommercial())
+	monuments.append(creerParcAttractions())
+	monuments.append(creerTourRadio())
+	monuments.append(creerPort())
+	monuments.append(creerAeroport())
+	
+	return monuments
+
+
+# === MONUMENTS  ===
+ 
+# Gare - Coût: 4
+# Effet: Vous pouvez choisir de lancer 2 dés au lieu d'1
+static func creerGare() -> Monument:
+	var effet = EffectGare.new(8)  # id_effet=8
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		22,                             # id monument
+		"Gare",
+		4,                              # coût
+		"Vous pouvez choisir de lancer 2 dés au lieu d'1."
+	)
+	
+	return monument
+ 
+ 
+# Centre Commercial - Coût: 10
+# Effet: Vos établissements Tasse et Pain rapportent +1 pièce chacun
+static func creerCentreCommercial() -> Monument:
+	var effet = EffectCentreCommercial.new(9)  # id_effet=9
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		23,                             # id monument
+		"Centre Commercial",
+		10,                             # coût
+		"Vos établissements Tasse (rouge) et Pain (vert) rapportent +1 pièce chacun."
+	)
+	
+	return monument
+ 
+ 
+# Parc d'Attractions - Coût: 16
+# Effet: Si vous obtenez un double avec 2 dés, rejouez un tour supplémentaire (max 1 bonus)
+static func creerParcAttractions() -> Monument:
+	var effet = EffectParcAttractions.new(10)  # id_effet=10
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		24,                             # id monument
+		"Parc d'Attractions",
+		16,                             # coût
+		"Si vous obtenez un double avec 2 dés, rejouez un tour supplémentaire (max 1 bonus)."
+	)
+	
+	return monument
+ 
+ 
+# Tour Radio - Coût: 22
+# Effet: Une fois par tour, relancez vos dés (même nombre, seul le 2e résultat compte)
+static func creerTourRadio() -> Monument:
+	var effet = EffectTourRadio.new(11)  # id_effet=11
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		25,                             # id monument
+		"Tour Radio",
+		22,                             # cout
+		"Une fois par tour, relancez vos dés (même nombre, seul le 2e résultat compte)."
+	)
+	
+	return monument
+ 
+ 
+# Port - Coût: 2
+# Effet: Si résultat des dés >= 10, ajoutez +2. Active aussi Petit bateau et Chalutier
+static func creerPort() -> Monument:
+	var effet = EffectPort.new(12)  # id_effet=12
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		26,                             # id monument
+		"Port",
+		2,                              # coût
+		"Si résultat des dés >= 10, ajoutez +2. Active aussi Petit bateau et Chalutier."
+	)
+	
+	return monument
+ 
+ 
+# Aéroport - Coût: 30
+# Effet: Si vous ne construisez rien ce tour, recevez 10 pièces de la banque
+static func creerAeroport() -> Monument:
+	var effet = EffectAeroport.new(13)  # id_effet=13
+	
+	var monument = Monument.new()
+	monument.NewMonument(
+		effet,
+		27,                             # id monument
+		"Aéroport",
+		30,                             # coût
+		"Si vous ne construisez rien ce tour, recevez 10 pièces de la banque."
+	)
+	
+	return monument
+ 
+ 
+
+
 # === 🔵 BLEUS  ===
 # Cartes bleues : s'activent sur n'importe quel tour (quand le dé tombe sur leur numéro)
 

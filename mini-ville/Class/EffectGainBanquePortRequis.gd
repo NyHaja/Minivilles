@@ -6,4 +6,4 @@ extends EffectGainBanque
 # Surcharge peutActiver
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	# Vverif owner possède Port
-	return owner.monumentIsActive("1")
+	return owner.monumentIsActive(26)
