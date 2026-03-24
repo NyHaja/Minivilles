@@ -1,5 +1,5 @@
 extends Node
-@onready var game_play: Game_Play = $GamePlay
+@onready var game_play: Jeu = $Jeu
 
 
 # Called when the node enters the scene tree for the first time.

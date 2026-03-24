@@ -30,15 +30,16 @@ func _init(gameId:int,timer:int,players:Array[Player],eg:Game_Play,goldInitAmoun
 	self.gameId = gameId
 	self.gameplayScreen = eg
 	self.goldInitAmount = goldInitAmount
+	self.currentPlayerIndex = 0 # RANDOM
 	shop = Shop.new() #Generer les xxx (a voir) carte dans la pioche
 	
 func startGame() ->void:
 	# INIT
-		#Donner champ blé et boulangerie a tout les joueur et 3 gold
+	#Donner champ blé et boulangerie a tout les joueur et 3 gold
 	for player:Player in playerArray:
 		player.recieveGold(goldInitAmount)
-		player.deck.push_back([0, 1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
-		player.deck.push_back([1, 1]) # A REVOIR METTRE LE VRAI ID DE LA CARTE !!!!!
+		player.deck.push_back([1, 1])
+		player.deck.push_back([7, 1])
 	
 	
 	var winner = false
@@ -53,15 +54,15 @@ func startGame() ->void:
 		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
-		var choice = await  gameplayScreen.buy()
+		var choice = await gameplayScreen.buy()
 		print(choice)
 		# choix = INPUT
 		
 		match  choice[0]:
 			CHOICE.Build_MONUMENT : 
-				buildPhase(0)
+				buildPhase(choice[1])
 			CHOICE.Build_ESTABLISHMENT : 
-				buyPhase(0)
+				buyPhase(choice[1])
 			CHOICE.SKIP : 
 				skipPhase(hasConstructed)
 		
@@ -104,7 +105,7 @@ func DicePhase() -> int:
 		if reroll:
 			resArray = await rollDice()
 			
-	# Monument Parc Arctraction : douvle -> tour bonus
+	# Monument Parc Arctraction : double -> tour bonus
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Parc]:
 		if resArray[0] == resArray[1]:
 			# TOUR BONUS
@@ -114,9 +115,11 @@ func DicePhase() -> int:
 	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Port]:
-		if sum >= 10:
-			sum = sum + 2
-		pass
+		var add2
+		if add2:
+			if sum >= 10:
+				sum = sum + 2
+			pass
 	current_roll_value = sum
 	return sum
 
@@ -128,7 +131,7 @@ func rollDice() -> Array[int]:
 	var numberDice = 1
 	
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Gare]:
-		numberDice = await gameplayScreen.rollDice() #INPUT
+		numberDice = await gameplayScreen.howManyDice() #INPUT
 	if numberDice == 2:
 		res.insert(1,(randi()%6) + 1)
 		

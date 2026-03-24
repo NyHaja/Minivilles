@@ -107,6 +107,13 @@ func activateEffect(color: int, game: Game, roller: Player) -> void:
 				# 3. Apply the effect for as many copies as the player owns
 				for i in range(quantity):
 					card.effect.apply(self, roller)
+					# Check if Centre Commercial is active
+					if monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
+						# Check if Icon is BREAD
+						if card.icon == "BREAD":
+							self.recieveGold(1)
+							print("1 extra gold from Commercial Center!")
+					
 
 
 func get_card_from_factory(card_id: int) -> Establishment:

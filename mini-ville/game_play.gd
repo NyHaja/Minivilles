@@ -90,7 +90,7 @@ func reset_select_card():
 	selected_card_id = -1
 
 func buy():
-	await purchase_signal
+	await purchase_signal # Not selected loop
 	return [Game.CHOICE.Build_ESTABLISHMENT,selected_card_id]
 
 func purchase_modal():
@@ -112,7 +112,7 @@ func _button_2_press() -> void:
 	button.add_theme_color_override("font_color",Color.WHITE)
 	button_2.add_theme_color_override("font_color",Color.RED)
 
-func rollDice() -> int:
+func howManyDice() -> int:
 	dice_window.show()
 	set_process_unhandled_key_input(true)
 	await roll_dice_siganl
