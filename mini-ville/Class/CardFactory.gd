@@ -274,7 +274,28 @@ static func creerPetitBateauPeche() -> Establishment:
 	
 	return carte
 
+# Chalutier - Dé: 12-14 - Coût: 5
+# Icon: BOAT
+# Effect: Lancez 2 dés, recevez la somme (Port Requis)
+static func creerChalutier() -> Establishment:
+	var effet = EffectChalutier.new(15)  # id_effet=15
 	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		29,                             # id card
+		"Chalutier",
+		Icon.Type.BOAT,
+		CardColor.Type.BLUE,
+		5,                              # coût
+		"Lancez 2 dés, recevez la somme. (Nécessite le Port)",
+		[12, 14]                        # activation sur 12-14
+	)
+	
+	return carte
+
+
+
 # === 🟢 VERTS ===
  
 # Boulangerie - Dé: 2-3 - Coût: 1
@@ -472,6 +493,48 @@ static func creerMarcheFL() -> Establishment:
 	return carte
 
 
+# Entreprise de travaux publics - Dé: 4 - Coût: 2
+# Icon: SUITCASE
+# Effect: Démolissez 1 de vos monuments. Recevez 8 pièces.
+static func creerEntrepriseTravauxPublics() -> Establishment:
+	var effet = EffectDemolition.new(16, 8)  # id_effet=16, montant=8
+	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		30,                             # id card
+		"Entreprise de travaux publics",
+		Icon.Type.SUITCASE,
+		CardColor.Type.GREEN,
+		2,                              # coût
+		"Démolissez 1 de vos monuments. Recevez 8 pièces.",
+		[4, 4]                          # activation sur 4
+	)
+	
+	return carte
+ 
+ 
+# Entreprise de déménagement - Dé: 9-10 - Coût: 2
+# Icon: SUITCASE
+# Effect: Donnez 1 établissement non-violet à un adversaire. Recevez 4 pièces.
+static func creerEntrepriseDemenagement() -> Establishment:
+	var effet = EffectDemenagement.new(17, 4)  # id_effet=17, montant=4
+	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		31,                             # id card
+		"Entreprise de déménagement",
+		Icon.Type.SUITCASE,
+		CardColor.Type.GREEN,
+		2,                              # coût
+		"Donnez 1 établissement non-violet à un adversaire. Recevez 4 pièces.",
+		[9, 10]                         # activation sur 9-10
+	)
+	
+	return carte
+
+
 
 # === 🟣 VIOLETS ===
 
@@ -620,6 +683,31 @@ static func creerRestaurantFamilial() -> Establishment:
 		3,                              # coût
 		"Le lanceur vous donne 2 pièces.",
 		[9, 10]                         # activation sur 9-10
+	)
+	
+	return carte
+
+
+# Club Privé - Dé: 12-14 - Coût: 4
+# Icon: CUP
+# Effect: lanceur vous donne TOUTES ses pièces (s'il a 3+ monuments construits)
+static func creerClubPrive() -> Establishment:
+	var effet = EffectClubPrive.new(
+		14,     # id_effet
+		3       # seuil_monuments = 3
+	)
+	
+	# Créer la carte
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		28,                             # id card
+		"Club Privé",
+		Icon.Type.CUP,
+		CardColor.Type.RED,
+		4,                              # coût
+		"S'active si le lanceur a 3+ monuments. Il vous donne ses pièces.",
+		[12, 14]                        # activation sur 12-14
 	)
 	
 	return carte
