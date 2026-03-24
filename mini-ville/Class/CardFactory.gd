@@ -580,6 +580,28 @@ static func creerChaineTele() -> Establishment:
 	return carte
 
 
+# Centre d'affaires - Dé: 6 - Coût: 8
+# Icon: MAJOR
+# Effect: Échangez un de vos établissements (non-violet) avec celui d'un adversaire.
+static func creerCentreAffaires() -> Establishment:
+	var effet = EffectEchange.new(18)  # id_effet=18
+	
+	var carte = Establishment.new()
+	carte.NewCard(
+		effet,
+		32,                             # id card
+		"Centre d'affaires",
+		Icon.Type.MAJOR,
+		CardColor.Type.PURPLE,
+		8,                              # coût
+		"Échangez un de vos établissements (non-violet) avec celui d'un adversaire.",
+		[6, 6]                          # activation sur 6
+	)
+	
+	return carte
+
+
+
 # Maison d'édition - Activation: 7 - Coût: 5
 # Effect: Vol a tous les joueurs 1 pièce / carte Tasse ou Pain
 static func creerMaisonEdition() -> Establishment:
