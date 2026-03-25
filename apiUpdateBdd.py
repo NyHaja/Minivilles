@@ -8,13 +8,14 @@ app = Flask(__name__)
 # ============================================================================
 # 0. CONFIGURATION ET CONNEXION À LA BASE DE DONNÉES
 # ============================================================================
-
 DB_CONFIG = {
     'host': '127.0.0.1',       # localhost car l'API tourne sur la même VM que MySQL
-    'database': 'miville_bd',  # Le nom de ta base de données
-    'user': 'root',        # Ton utilisateur MySQL
-    'password': '' # Ton mot de passe MySQL
+    'database': 'miniville_bd',  # 
+    'user': 'acces_bdd',        #
+    'password': 'miniville2026' # 
 }
+
+
 
 def get_db_connection():
     """Génère et retourne une connexion à la base de données MySQL."""
