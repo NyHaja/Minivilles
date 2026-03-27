@@ -1,0 +1,187 @@
+[gd_scene format=3 uid="uid://creation_lobby_mv"]
+
+[ext_resource type="Script" path="res://scripts/ui/creation_lobby.gd" id="1_sc"]
+[ext_resource type="Script" path="res://scripts/ui/btn_creer.gd" id="13_btn_creer"]
+[ext_resource type="Script" path="res://scripts/ui/btn_fleche.gd" id="14_btn_fleche"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/minivilles.png" id="3_titre"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/icone_de.png" id="4_de"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/duree_tour.png" id="5_duree"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/fleche_gauche.png" id="6_fg"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/fleche_droite.png" id="7_fd"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/nombre_joueurs.png" id="8_nb"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/joueur.png" id="9_j"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/btn_creer.png" id="10_creer"]
+[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://Fonts/EricaOne-Regular.ttf" id="11_font"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/chronometre.png" id="12_chrono"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_duree"]
+font = ExtResource("11_font")
+font_size = 80
+font_color = Color(1, 1, 1, 1)
+outline_size = 6
+outline_color = Color(0.16862745, 0.2, 0.48627451, 1)
+
+[node name="CreationLobby" type="Control" unique_id=918273645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sc")
+
+[node name="Background" type="TextureRect" parent="." unique_id=827364519]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("2_bg")
+stretch_mode = 6
+
+[node name="Minivilles" type="TextureRect" parent="." unique_id=736451928]
+layout_mode = 0
+offset_left = 564.0
+offset_top = 40.0
+offset_right = 1356.0
+offset_bottom = 187.0
+texture = ExtResource("3_titre")
+stretch_mode = 5
+
+[node name="DiceGauche" type="TextureRect" parent="." unique_id=645392817]
+layout_mode = 0
+offset_left = 455.0
+offset_top = 60.0
+offset_right = 545.0
+offset_bottom = 148.0
+texture = ExtResource("4_de")
+stretch_mode = 5
+
+[node name="DiceDroite" type="TextureRect" parent="." unique_id=554283716]
+layout_mode = 0
+offset_left = 1375.0
+offset_top = 60.0
+offset_right = 1465.0
+offset_bottom = 148.0
+texture = ExtResource("4_de")
+stretch_mode = 5
+
+[node name="DureeDunTour" type="TextureRect" parent="." unique_id=463174625]
+layout_mode = 0
+offset_left = 739.0
+offset_top = 290.0
+offset_right = 1181.0
+offset_bottom = 348.0
+texture = ExtResource("5_duree")
+stretch_mode = 5
+
+[node name="Chronometre" type="TextureRect" parent="." unique_id=100293847]
+layout_mode = 0
+offset_left = 876.0
+offset_top = 382.0
+offset_right = 1043.0
+offset_bottom = 549.0
+texture = ExtResource("12_chrono")
+stretch_mode = 5
+
+[node name="ArrowGaucheDuree" type="TextureButton" parent="." unique_id=372065534]
+layout_mode = 0
+offset_left = 586.0
+offset_top = 437.0
+offset_right = 694.0
+offset_bottom = 518.0
+texture_normal = ExtResource("6_fg")
+script = ExtResource("14_btn_fleche")
+
+[node name="LabelDuree" type="Label" parent="." unique_id=281956443]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 436.0
+offset_right = 1160.0
+offset_bottom = 528.0
+label_settings = SubResource("LabelSettings_duree")
+text = "1 min"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArrowDroiteDuree" type="TextureButton" parent="." unique_id=190847352]
+layout_mode = 0
+offset_left = 1226.0
+offset_top = 437.0
+offset_right = 1334.0
+offset_bottom = 518.0
+texture_normal = ExtResource("7_fd")
+script = ExtResource("14_btn_fleche")
+
+[node name="NombreJoueurs" type="TextureRect" parent="." unique_id=109738261]
+layout_mode = 0
+offset_left = 674.0
+offset_top = 600.0
+offset_right = 1246.0
+offset_bottom = 673.0
+texture = ExtResource("8_nb")
+stretch_mode = 5
+
+[node name="ArrowGaucheJoueurs" type="TextureButton" parent="." unique_id=918273644]
+layout_mode = 0
+offset_left = 586.0
+offset_top = 722.0
+offset_right = 694.0
+offset_bottom = 803.0
+texture_normal = ExtResource("6_fg")
+script = ExtResource("14_btn_fleche")
+
+[node name="Joueur1" type="TextureRect" parent="." unique_id=827364518]
+layout_mode = 0
+offset_left = 726.0
+offset_top = 688.0
+offset_right = 817.0
+offset_bottom = 813.0
+texture = ExtResource("9_j")
+stretch_mode = 5
+
+[node name="Joueur2" type="TextureRect" parent="." unique_id=736451927]
+layout_mode = 0
+offset_left = 856.0
+offset_top = 688.0
+offset_right = 947.0
+offset_bottom = 813.0
+texture = ExtResource("9_j")
+stretch_mode = 5
+
+[node name="Joueur3" type="TextureRect" parent="." unique_id=645392816]
+layout_mode = 0
+offset_left = 985.0
+offset_top = 688.0
+offset_right = 1076.0
+offset_bottom = 813.0
+texture = ExtResource("9_j")
+stretch_mode = 5
+
+[node name="Joueur4" type="TextureRect" parent="." unique_id=554283715]
+layout_mode = 0
+offset_left = 1114.0
+offset_top = 688.0
+offset_right = 1205.0
+offset_bottom = 813.0
+texture = ExtResource("9_j")
+stretch_mode = 5
+
+[node name="ArrowDroiteJoueurs" type="TextureButton" parent="." unique_id=463174624]
+layout_mode = 0
+offset_left = 1226.0
+offset_top = 722.0
+offset_right = 1334.0
+offset_bottom = 803.0
+texture_normal = ExtResource("7_fd")
+script = ExtResource("14_btn_fleche")
+
+[node name="BtnCreer" type="TextureButton" parent="." unique_id=372065533]
+layout_mode = 0
+offset_left = 601.0
+offset_top = 875.0
+offset_right = 1320.0
+offset_bottom = 984.0
+texture_normal = ExtResource("10_creer")
+script = ExtResource("13_btn_creer")
