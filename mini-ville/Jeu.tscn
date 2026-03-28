@@ -5,128 +5,354 @@
 [node name="Jeu" type="Node" unique_id=1592581662]
 script = ExtResource("1_pm7t7")
 
-[node name="AddGold" type="Button" parent="." unique_id=2001308356]
-offset_left = 18.0
-offset_top = 214.0
-offset_right = 147.0
-offset_bottom = 260.0
+[node name="MainUI" type="VBoxContainer" parent="." unique_id=1468551468]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerTopArea" type="HBoxContainer" parent="MainUI" unique_id=1528484801]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="Player2Stats" type="VBoxContainer" parent="MainUI/PlayerTopArea" unique_id=2138522530]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Player2Name" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=1810641958]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Player 2 Name"
+horizontal_alignment = 1
+
+[node name="LblP2Gold" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=2033321195]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="LblP2Stats" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=1814125237]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Player2DeckContainer" type="HFlowContainer" parent="MainUI/PlayerTopArea" unique_id=710912525]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MiddleArea" type="HBoxContainer" parent="MainUI" unique_id=2126635692]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="GoldSkip" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=1667196113]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="AddGold" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=2001308356]
+unique_name_in_owner = true
+layout_mode = 2
 text = "+ 5 Gold"
 
-[node name="RemoveGold" type="Button" parent="." unique_id=38618146]
-offset_left = 18.0
-offset_top = 267.0
-offset_right = 147.0
-offset_bottom = 313.0
+[node name="RemoveGold" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=38618146]
+unique_name_in_owner = true
+layout_mode = 2
 text = "- 2 Gold"
 
-[node name="BuildPort" type="Button" parent="." unique_id=662767255]
-offset_left = 977.0
-offset_top = 437.0
-offset_right = 1134.0
-offset_bottom = 483.0
-text = "Port"
-
-[node name="BuildGare" type="Button" parent="." unique_id=1526636648]
-offset_left = 977.0
-offset_top = 388.0
-offset_right = 1134.0
-offset_bottom = 434.0
-text = "Gare"
-
-[node name="BuildCentreCommercial" type="Button" parent="." unique_id=1874711702]
-offset_left = 977.0
-offset_top = 339.0
-offset_right = 1134.0
-offset_bottom = 385.0
-text = "Centre Commercial"
-
-[node name="BuildParcAttraction" type="Button" parent="." unique_id=1136149165]
-offset_left = 977.0
-offset_top = 585.0
-offset_right = 1134.0
-offset_bottom = 631.0
-text = "Parc d'Attraction"
-
-[node name="BuildRadio" type="Button" parent="." unique_id=1048285729]
-offset_left = 977.0
-offset_top = 536.0
-offset_right = 1134.0
-offset_bottom = 582.0
-text = "Tour de Radio"
-
-[node name="BuildAeroport" type="Button" parent="." unique_id=74189158]
-offset_left = 977.0
-offset_top = 487.0
-offset_right = 1134.0
-offset_bottom = 533.0
-text = "Aeroport"
-
-[node name="LblGold" type="Label" parent="." unique_id=936391913]
+[node name="Skip" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=152502219]
 unique_name_in_owner = true
-offset_left = 1019.0
-offset_top = 306.0
-offset_right = 1078.0
-offset_bottom = 329.0
+layout_mode = 2
+text = "Skip Turn"
 
-[node name="LblStats" type="Label" parent="." unique_id=1310969396]
+[node name="ShopContainer" type="GridContainer" parent="MainUI/MiddleArea" unique_id=1391810629]
 unique_name_in_owner = true
-offset_left = 27.0
-offset_top = 38.0
-offset_right = 199.0
-offset_bottom = 117.0
-
-[node name="ShopContainer" type="GridContainer" parent="." unique_id=1391810629]
-unique_name_in_owner = true
-offset_left = 422.0
-offset_top = 151.0
-offset_right = 777.0
-offset_bottom = 468.0
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
 columns = 3
 
-[node name="BtnRoll1" type="Button" parent="." unique_id=553782980]
+[node name="DiceContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=61961936]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Dice" type="HBoxContainer" parent="MainUI/MiddleArea/DiceContainer" unique_id=1670836831]
+layout_mode = 2
+
+[node name="BtnRoll1" type="Button" parent="MainUI/MiddleArea/DiceContainer/Dice" unique_id=553782980]
 unique_name_in_owner = true
-offset_left = 993.0
-offset_top = 34.0
-offset_right = 1053.0
-offset_bottom = 94.0
+custom_minimum_size = Vector2(55, 55)
+layout_mode = 2
 text = "1 Die"
 
-[node name="BtnRoll2" type="Button" parent="." unique_id=955709809]
+[node name="BtnRoll2" type="Button" parent="MainUI/MiddleArea/DiceContainer/Dice" unique_id=955709809]
 unique_name_in_owner = true
-offset_left = 1058.0
-offset_top = 34.0
-offset_right = 1118.0
-offset_bottom = 94.0
+custom_minimum_size = Vector2(55, 55)
+layout_mode = 2
 text = "2 Dice"
 
-[node name="LblDice" type="Label" parent="." unique_id=336477209]
+[node name="LblDice" type="Label" parent="MainUI/MiddleArea/DiceContainer" unique_id=336477209]
 unique_name_in_owner = true
-offset_left = 993.0
-offset_top = 100.0
-offset_right = 1115.0
-offset_bottom = 123.0
+layout_mode = 2
 text = "Waiting..."
 
-[node name="DeckContainer" type="HFlowContainer" parent="." unique_id=274073151]
-unique_name_in_owner = true
-offset_left = 225.0
-offset_top = 458.0
-offset_right = 945.0
-offset_bottom = 628.0
+[node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1408029711]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
 
-[connection signal="pressed" from="AddGold" to="." method="_on_add_gold_pressed"]
-[connection signal="pressed" from="RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="BuildPort" to="." method="_on_build_port_pressed"]
-[connection signal="pressed" from="BuildPort" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildGare" to="." method="_on_build_gare_pressed"]
-[connection signal="pressed" from="BuildGare" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
-[connection signal="pressed" from="BuildCentreCommercial" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildParcAttraction" to="." method="_on_build_parc_attraction_pressed"]
-[connection signal="pressed" from="BuildParcAttraction" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildRadio" to="." method="_on_build_radio_pressed"]
-[connection signal="pressed" from="BuildRadio" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildAeroport" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildAeroport" to="." method="_on_build_aeroport_pressed"]
-[connection signal="pressed" from="BtnRoll1" to="." method="_on_roll_1_pressed"]
-[connection signal="pressed" from="BtnRoll2" to="." method="_on_roll_2_pressed"]
+[node name="ActivePlayerStats" type="VBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1520586336]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ActiveName" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=1906984545]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Player 1 Name"
+horizontal_alignment = 1
+
+[node name="LblActiveGold" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=936391913]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="LblActiveStats" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=1310969396]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ActiveDeckContainer" type="HFlowContainer" parent="MainUI/PlayerBottomArea" unique_id=274073151]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OpenMonuMenu" type="Button" parent="MainUI/PlayerBottomArea" unique_id=1984504989]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Monuments"
+
+[node name="MonumentMenu" type="ColorRect" parent="." unique_id=1857296200]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -404.0
+offset_top = -237.0
+offset_right = 404.0
+offset_bottom = 237.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.23753911, 0.23753914, 0.23753911, 1)
+
+[node name="BuildPort" type="Button" parent="MonumentMenu" unique_id=662767255]
+layout_mode = 0
+offset_left = 322.0
+offset_top = 69.0
+offset_right = 482.0
+offset_bottom = 229.0
+text = "Port"
+
+[node name="BuildGare" type="Button" parent="MonumentMenu" unique_id=1526636648]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 69.0
+offset_right = 290.0
+offset_bottom = 229.0
+text = "Gare"
+
+[node name="BuildCentreCommercial" type="Button" parent="MonumentMenu" unique_id=1874711702]
+layout_mode = 0
+offset_left = 521.0
+offset_top = 68.0
+offset_right = 681.0
+offset_bottom = 228.0
+text = "Centre Commercial"
+
+[node name="BuildParcAttraction" type="Button" parent="MonumentMenu" unique_id=1136149165]
+layout_mode = 0
+offset_left = 521.0
+offset_top = 252.0
+offset_right = 681.0
+offset_bottom = 412.0
+text = "Parc d'Attraction"
+
+[node name="BuildRadio" type="Button" parent="MonumentMenu" unique_id=1048285729]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 251.0
+offset_right = 290.0
+offset_bottom = 411.0
+text = "Tour de Radio"
+
+[node name="BuildAeroport" type="Button" parent="MonumentMenu" unique_id=74189158]
+layout_mode = 0
+offset_left = 323.0
+offset_top = 252.0
+offset_right = 483.0
+offset_bottom = 412.0
+text = "Aeroport"
+
+[node name="MonuInfo" type="Label" parent="MonumentMenu" unique_id=1347746914]
+layout_mode = 0
+offset_left = 326.0
+offset_top = 33.0
+offset_right = 476.0
+offset_bottom = 56.0
+text = "Select a Monument"
+
+[node name="Close" type="Button" parent="MonumentMenu" unique_id=1698517968]
+layout_mode = 0
+offset_left = 737.0
+offset_top = 33.0
+offset_right = 761.0
+offset_bottom = 57.0
+text = "Close"
+
+[node name="BuySelected" type="Button" parent="MonumentMenu" unique_id=1255149321]
+layout_mode = 0
+offset_left = 354.0
+offset_top = 425.0
+offset_right = 461.0
+offset_bottom = 456.0
+text = "Buy Selected"
+
+[node name="VictoryScreen" type="ColorRect" parent="." unique_id=1800803325]
+visible = false
+light_mask = 193
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.13725491, 0.13725491, 0.13725491, 0.78431374)
+
+[node name="LblWinnerName" type="Label" parent="VictoryScreen" unique_id=2062272349]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -77.0
+offset_right = 60.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+text = "WINNER"
+
+[node name="ReturnToMenu" type="Button" parent="VictoryScreen" unique_id=1670802333]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = 112.0
+offset_right = 78.0
+offset_bottom = 168.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Return to Menu"
+
+[node name="Player3DeckContainer" type="HFlowContainer" parent="." unique_id=469679048]
+unique_name_in_owner = true
+offset_left = -222.0
+offset_top = 274.0
+offset_right = 218.47058
+offset_bottom = 378.0
+
+[node name="Player4DeckContainer" type="HFlowContainer" parent="." unique_id=325387652]
+unique_name_in_owner = true
+offset_left = 1043.0
+offset_top = 270.0
+offset_right = 1517.353
+offset_bottom = 382.0
+
+[node name="YesNoPanel" type="ColorRect" parent="." unique_id=1988240217]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(400, 200)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -143.5
+offset_top = -120.0
+offset_right = 143.5
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2231029, 0.2231029, 0.22310284, 0.78431374)
+
+[node name="LblQuestion" type="Label" parent="YesNoPanel" unique_id=2043625387]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -112.0
+offset_right = 200.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Question"
+horizontal_alignment = 1
+
+[node name="YesNoButtons" type="HBoxContainer" parent="YesNoPanel" unique_id=970060462]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -122.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="BtnYes" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=774269821]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Yes"
+
+[node name="BtnNo" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=1465109800]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "No
+"
+
+[connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
+[connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
+[connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
+[connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_parc_attraction_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_radio_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_aeroport_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_monu_pressed"]

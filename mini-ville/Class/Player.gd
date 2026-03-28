@@ -106,7 +106,7 @@ func activateEffect(color: int, game: Game, roller: Player) -> void:
 			if dice_roll >= card.activation[0] and dice_roll <= card.activation[1]:
 				# 3. Apply the effect for as many copies as the player owns
 				for i in range(quantity):
-					card.effect.apply(self, roller)
+					card.effect.call(self, roller)
 					# Check if Centre Commercial is active
 					if monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
 						# Check if Icon is BREAD

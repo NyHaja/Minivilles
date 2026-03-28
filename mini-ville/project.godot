@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="MiniVille"
-run/main_scene="uid://du6do45n4i0td"
+run/main_scene="uid://dteg5cm4blsjl"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameData="*uid://43kqotfp2uyk"
 
 [physics]
 

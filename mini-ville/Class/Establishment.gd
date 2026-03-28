@@ -13,3 +13,4 @@ var cost: int
 var color: int
 var activation: Array
 var icon: String
+var effect: Callable

@@ -1,77 +1,188 @@
 extends Node
 class_name Jeu
 
-signal roll_dice_siganl
-signal purchase_signal
+signal action_selected(choide_data:Array)
+signal dice_amount_chosen(amount: int)
+signal yes_no_answered(result: bool)
 
 var current_player: Player
 var test_shop: Shop
 var game:Game
-@onready var lbl_gold: Label = %LblGold
-@onready var lbl_stats: Label = %LblStats
+
 @onready var shop_container: GridContainer = %ShopContainer
+
 @onready var btn_roll_1: Button = %BtnRoll1
 @onready var btn_roll_2: Button = %BtnRoll2
 @onready var lbl_dice: Label = %LblDice
-@onready var deck_container: HFlowContainer = %DeckContainer
+
+@onready var acrtive_deck_container: HFlowContainer = %ActiveDeckContainer
+@onready var active_name: Label = %ActiveName
+@onready var lbl_active_gold: Label = %LblActiveGold
+@onready var lbl_active_stats: Label = %LblActiveStats
+
+@onready var player2_deck_container: HFlowContainer = %Player2DeckContainer
+@onready var lbl_p2_name: Label = %Player2Name
+@onready var lbl_p2_gold: Label = %LblP2Gold
+@onready var lbl_p2_stats: Label = %LblP2Stats
+
+@onready var open_monuments: Button = %OpenMonuMenu
+@onready var monument_menu: ColorRect = $MonumentMenu
+@onready var confirm_buy: Button = $MonumentMenu/BuySelected
+@onready var close_menu: Button = $MonumentMenu/Close
+@onready var monument_info: Label = $MonumentMenu/MonuInfo
+
+@onready var victory_screen: ColorRect = $VictoryScreen
+@onready var lbl_winner_name: Label = $VictoryScreen/LblWinnerName
+@onready var btn_quit: Button = $VictoryScreen/ReturnToMenu
+
+@onready var yes_no_panel: ColorRect = %YesNoPanel
+@onready var lbl_question: Label = %LblQuestion
+@onready var btn_yes: Button = %BtnYes
+@onready var btn_no: Button = %BtnNo
+
+var selected_monument_id: int = -1
 
 #Dé
 var  DiceNUmber :int = 1
 
 
 func _ready() -> void:
-	$AddGold.pressed.connect(_on_add_gold_pressed)
-	$RemoveGold.pressed.connect(_on_remove_gold_pressed)
+	%Skip.pressed.connect(_on_skip_pressed)
+	open_monuments.pressed.connect(_on_open_monuments_pressed)
+	close_menu.pressed.connect(_on_close_menu_pressed)
+	confirm_buy.pressed.connect(_on_confirm_buy_pressed)
+	btn_quit.pressed.connect(_on_quit_pressed)
+	btn_yes.pressed.connect(_on_yes_pressed)
+	btn_no.pressed.connect(_on_no_pressed)
 	
-	setup_monument_button($BuildGare, Monument.MONUMENT_ID.Gare)
-	setup_monument_button($BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
-	setup_monument_button($BuildParcAttraction, Monument.MONUMENT_ID.Parc)
-	setup_monument_button($BuildRadio, Monument.MONUMENT_ID.Radio)
-	setup_monument_button($BuildAeroport, Monument.MONUMENT_ID.Aeroport)
-	setup_monument_button($BuildPort, Monument.MONUMENT_ID.Port)
+	setup_monument_button($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
+	setup_monument_button($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
+	setup_monument_button($MonumentMenu/BuildParcAttraction, Monument.MONUMENT_ID.Parc)
+	setup_monument_button($MonumentMenu/BuildRadio, Monument.MONUMENT_ID.Radio)
+	setup_monument_button($MonumentMenu/BuildAeroport, Monument.MONUMENT_ID.Aeroport)
+	setup_monument_button($MonumentMenu/BuildPort, Monument.MONUMENT_ID.Port)
 	
 	btn_roll_2.disabled = true
 	
 	print("\n=== GAME STARTED ===")
+
+	
+func RefreshBasicInfo(current_game: Game) -> void:
+	self.game = current_game
+	self.current_player = game.getActivePlayer()
+	self.test_shop = game.shop
+	
+	print("It is now ", current_player.username, "'s turn! \n")
+	
 	update_shop_ui()
 	update_deck_ui()
+	update_opponent_ui()
+	updateMonumentColors()
+	print_player_stats()
+	update_names()
+	
+	set_actions_enabled(false) 
+	set_dice_buttons_enabled(true)
 
-func _init(game:Game) -> void:
-	self.game = game
-	test_shop = game.shop
+
+
+
+func ask_yes_no(question: String) -> bool:
+	lbl_question.text = question
+	yes_no_panel.show()
+	
+	var result = await yes_no_answered
+	
+	yes_no_panel.hide()
+	return result
+
+func _on_yes_pressed() -> void:
+	yes_no_answered.emit(true)
+
+func _on_no_pressed() -> void:
+	yes_no_answered.emit(false)
+
+
+
+
+
+
+func howManyDice() -> int:
+	print("Waiting for ", current_player.username ," to choose dice amount...")
+	btn_roll_1.disabled = false
+	
+	btn_roll_2.disabled = not current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
+	
+	var amount = await dice_amount_chosen
+	
+	btn_roll_1.disabled = true
+	btn_roll_2.disabled = true
+	
+	return amount
+
+func showResult(d1: int, d2: int) -> void:
+	if d2 == 0:
+		lbl_dice.text = "Rolled: " + str(d1)
+	else:
+		lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(d1 + d2)
+		
+func pause() -> Array:
+	print("Waiting for ", current_player.username, "to take an action...")
+	print_player_stats() 
+	update_opponent_ui()
+	set_actions_enabled(true)
+	var choice = await action_selected
+	set_actions_enabled(false)
+	return choice
 
 func next_round(): #Init les variables
 	current_player = game.getActivePlayer()
 	update_deck_ui()
-	DiceNUmber = 1 # BONTON 1 DOIT ETRE SELECTONER PAR DEFAUT
+	DiceNUmber = 1 # BOUTON 1 DOIT ETRE SELECTIONNER PAR DEFAUT
+	
+
+
+
+
+func waitForDiceRoll() -> int:
+	set_actions_enabled(false)
+	set_dice_buttons_enabled(true)
+	
+	var amount = await dice_amount_chosen
+	
+	set_dice_buttons_enabled(false)
+	return amount
+	
+func set_actions_enabled(can_act: bool) -> void:
+	%Skip.disabled = !can_act
+	open_monuments.disabled = !can_act
+	
+	for btn in shop_container.get_children():
+		btn.disabled = !can_act
+	
+func set_dice_buttons_enabled(can_roll: bool) -> void:
+	btn_roll_1.disabled = !can_roll
+	
+	if can_roll and current_player.monumentIsActive(Monument.MONUMENT_ID.Gare):
+		btn_roll_2.disabled = false
+	else:
+		btn_roll_2.disabled = true
 	
 
 func _on_roll_1_pressed() -> void:
-	
-	# REWORK ON DICE, BUTTON "ROLL", SELECT HOW MANY DICE TO ROLL
-	
-	var d1 = randi_range(1, 6)
-	
-	lbl_dice.text = "Rolled: " + str(d1)
-	print("\nRolled 1 Die: ", d1)
+	dice_amount_chosen.emit(1)
 	
 	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
 	
 func _on_roll_2_pressed() -> void:
-	var d1 = randi_range(1, 6)
-	var d2 = randi_range(1, 6)
-	var total = d1 + d2
-	
-	lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(total)
-	print("\nRolled 2 Dice: ", d1, " + ", d2, " = ", total)
+	dice_amount_chosen.emit(2)
 	
 	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
 	
+	
+	
+	
 func setup_monument_button(btn: Button, monu_id: int) -> void:
-	
-	# REFRESH MONUMENTS BASED ON PLAYER
-	
-	btn.toggle_mode = true
 	
 	# Red (Not Bought)
 	var red_style = StyleBoxFlat.new()
@@ -87,50 +198,40 @@ func setup_monument_button(btn: Button, monu_id: int) -> void:
 	
 	btn.button_pressed = false
 	
-	btn.pressed.connect(_on_any_monument_pressed.bind(monu_id, btn))
+	btn.pressed.connect(_on_monument_selected.bind(monu_id))
 
-func _on_any_monument_pressed(monu_id: int, clicked_btn: Button):
-	var monu_data = _get_monument_data(monu_id)
-	print("\n[?] Attempting to build: ", monu_data.name, " (Cost: ", monu_data.cost, ")...")
-	
-	var monu = Monument.new()
-	monu.id = monu_id
-	monu.cost = monu_data.cost
-	
-	if current_player.monumentArray[monu_id] == true:
-		print("FAILED: Monument already built!")
-		clicked_btn.button_pressed = true
-		return
-	
-	if current_player.constructMonument(monu):
-		print("SUCCESS: Built the ", monu_data.name, "!")
-		clicked_btn.button_pressed = true
-		clicked_btn.text = monu_data.name + " (Owned)"
-		
-		if monu_id == Monument.MONUMENT_ID.Gare:
-			btn_roll_2.disabled = false
-			print("Unlocked 2 Dice!")
-	else:
-		print("FAILED: Not enough gold!")
-		clicked_btn.button_pressed = false
-		
-	print_player_stats()
-	
-	return [game.CHOICE.Build_MONUMENT,monu_id]
 
-func _get_monument_data(m_id: int) -> Dictionary:
-	match m_id:
-		Monument.MONUMENT_ID.Gare: return {"name": "Gare", "cost": 4}
-		Monument.MONUMENT_ID.Centre_Commercial: return {"name": "Centre Commercial", "cost": 10}
-		Monument.MONUMENT_ID.Parc: return {"name": "Parc d'Attractions", "cost": 16}
-		Monument.MONUMENT_ID.Radio: return {"name": "Tour Radio", "cost": 22}
-		Monument.MONUMENT_ID.Port: return {"name": "Port", "cost": 2}
-		Monument.MONUMENT_ID.Aeroport: return {"name": "Aéroport", "cost": 30}
-		_: return {"name": "Unknown", "cost": 999}
 
-# -----------------------------------------
-# GOLD BUTTONS
-# -----------------------------------------
+
+func _on_open_monuments_pressed() -> void:
+	selected_monument_id = -1
+	confirm_buy.disabled = true
+	monument_info.text = "Select a monument to view details."
+	monument_menu.show()
+
+func _on_close_menu_pressed() -> void:
+	monument_menu.hide()
+
+func _on_monument_selected(monu_id: int) -> void:
+	selected_monument_id = monu_id
+	confirm_buy.disabled = false
+	
+	var data = game.getMonumentData(monu_id)
+	monument_info.text = data["name"] + "\nCost: " + str(data["cost"]) + " Gold"
+
+func _on_confirm_buy_pressed() -> void:
+	monument_menu.hide()
+	action_selected.emit([Game.CHOICE.Build_MONUMENT, selected_monument_id])
+
+func _on_buy_pressed(card_id: int) -> void:
+	action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, card_id])
+	
+func _on_skip_pressed() -> void:
+	action_selected.emit([game.CHOICE.SKIP, 0])
+
+
+
+
 func _on_add_gold_pressed() -> void:
 	current_player.recieveGold(5)
 	print("\n[+] Added 5 Gold.")
@@ -141,35 +242,9 @@ func _on_remove_gold_pressed() -> void:
 	print("\n[-] Lost 2 Gold.")
 	print_player_stats()
 
-# -----------------------------------------
-# SHOP BUTTON
-# -----------------------------------------
-func _on_buy_pressed(card_id: int) :
-	return [game.CHOICE.Build_ESTABLISHMENT,card_id]
-	
-	# REGLER SHOP ET TOUT
-	
-	print("\n[?] Attempting to buy Card ID: ", card_id, "...")
-	
-	var card = current_player.get_card_from_factory(card_id)
-	
-	if card == null:
-		print("CRITICAL ERROR: The Factory returned null for ID ", card_id, "! Check your adapter function.")
-		return 
-	
-	if test_shop.available(card_id):
-		if current_player.buyCard(card):
-			test_shop.removeCardFromStock(card_id)
-			print("SUCCESS: Bought ", card.name)
-			update_shop_ui()
-			update_deck_ui()
-		else:
-			print("FAILED: Not enough gold!")
-	else:
-		print("FAILED: Card not in the shop right now.")
-		
-	print_player_stats()
-	
+
+
+
 func update_shop_ui() -> void:
 	for child in shop_container.get_children():
 		child.queue_free()
@@ -185,8 +260,8 @@ func update_shop_ui() -> void:
 		shop_container.add_child(btn)
 		
 func update_deck_ui() -> void:
-	for child in deck_container.get_children():
-		deck_container.remove_child(child)
+	for child in acrtive_deck_container.get_children():
+		acrtive_deck_container.remove_child(child)
 		child.queue_free()
 		
 	for instance in current_player.deck:
@@ -217,16 +292,93 @@ func update_deck_ui() -> void:
 					Establishment.COLOR.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 					
 				card_visual.add_theme_stylebox_override("disabled", style)
-				card_visual.add_theme_color_override("front_disabled_color", Color.WHITE)
+				card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
 				
-				deck_container.add_child(card_visual)
+				acrtive_deck_container.add_child(card_visual)
 				
+	
+func update_names() -> void:
+	active_name.text = current_player.username
+	
+	
+func updateMonumentColors() -> void:
+	check_and_color_monument($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
+	check_and_color_monument($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
+	check_and_color_monument($MonumentMenu/BuildParcAttraction, Monument.MONUMENT_ID.Parc)
+	check_and_color_monument($MonumentMenu/BuildRadio, Monument.MONUMENT_ID.Radio)
+	check_and_color_monument($MonumentMenu/BuildAeroport, Monument.MONUMENT_ID.Aeroport)
+	check_and_color_monument($MonumentMenu/BuildPort, Monument.MONUMENT_ID.Port)
+
+	
+func check_and_color_monument(btn: Button, monu_id: int) -> void:
+	var style = StyleBoxFlat.new()
+	
+	if current_player.monumentArray[monu_id] == true:
+		style.bg_color = Color(0.1, 0.6, 0.1)
+	else:
+		style.bg_color = Color(0.6, 0.1, 0.1)
+		
+	btn.add_theme_stylebox_override("normal", style)
+	btn.add_theme_stylebox_override("hover", style)
+	btn.add_theme_stylebox_override("pressed", style)
+
+func update_opponent_ui() -> void:
+	for child in player2_deck_container.get_children():
+		child.queue_free()
+	
+	for player in game.playerArray:
+		if player == current_player:
+			continue
+			
+		lbl_p2_name.text = player.username
+		lbl_p2_gold.text = "Gold: " + str(player.balance)
+		lbl_p2_stats.text = "Establishments: " + str(player.establishmentCount) + "\nMonuments: " + str(player.monumentCount)
+		
+		for instance in player.deck:
+			var card_id = instance[0]
+			var quantity = instance[1]
+			var card_data = player.get_card_from_factory(card_id)
+			
+			if card_data != null:
+				for i in range(quantity):
+					var card_visual = Button.new()
+					card_visual.text = str(card_data.activation) + "\n" + card_data.name
+					
+					card_visual.custom_minimum_size = Vector2(60, 90)
+					card_visual.add_theme_font_size_override("font_size", 10) 
+					card_visual.disabled = true
+					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					
+					var style = StyleBoxFlat.new()
+					match card_data.color:
+						Establishment.COLOR.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+						Establishment.COLOR.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+						Establishment.COLOR.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+						Establishment.COLOR.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					
+					card_visual.add_theme_stylebox_override("disabled", style)
+					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
+					
+					player2_deck_container.add_child(card_visual)
+
+
+func show_victory_screen(winner_name: String) -> void:
+	set_actions_enabled(false)
+	set_dice_buttons_enabled(false)
+	
+	lbl_winner_name.text = "🏆 " + winner_name + " WINS! 🏆\nAll 5 Monuments Built!"
+	victory_screen.show()
+	
+func _on_quit_pressed() -> void:
+	get_tree().change_scene_to_file("res://MainMenu.tscn")
+
 
 func print_player_stats() -> void:
-	lbl_gold.text = "Gold: " + str(current_player.balance)
-	lbl_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
+	lbl_active_gold.text = "Gold: " + str(current_player.balance)
+	lbl_active_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
 	
 	print("--- PLAYER STATS ---")
+	print("Current Player: ", current_player.username)
 	print("Gold: ", current_player.balance)
 	print("Establishments: ", current_player.establishmentCount)
 	print("Monuments: ", current_player.monumentCount)

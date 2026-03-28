@@ -11,10 +11,11 @@ var playerCount:int
 var currentPlayerIndex:int
 var playerArray : Array[Player]
 var current_roll_value = 0
+var takes_bonus_turn: bool = false
 
 var shop:Shop
 
-var gameplayScreen:Game_Play # OBJET (ECRAN) où possède les function d'affichage et d'input
+var gameplayScreen:Jeu # OBJET (ECRAN) où possède les function d'affichage et d'input
 
 enum CHOICE {
 	SKIP,
@@ -23,7 +24,7 @@ enum CHOICE {
 }
 
 # Constructeur
-func _init(gameId:int,timer:int,players:Array[Player],eg:Game_Play,goldInitAmount:int = 3) -> void:
+func _init(gameId:int,timer:int,players:Array[Player],eg:Jeu,goldInitAmount:int = 3) -> void:
 	self.timer = timer
 	self.playerCount = players.size()
 	self.playerArray = players
@@ -45,30 +46,45 @@ func startGame() ->void:
 	var winner = false
 	var hasConstructed = false
 	var bonusTurn = false
+	var action_successful = false
 	# LOOP de partie
 	while not(winner):
 		hasConstructed = false
 		bonusTurn = false
+		action_successful = false
 		
 		await gameplayScreen.RefreshBasicInfo(self)
 		var resDice:int = await DicePhase()
 		EffectPhase(resDice)
 		
-		var choice = await gameplayScreen.buy()
-		print(choice)
-		# choix = INPUT
+		while not action_successful:
 		
-		match  choice[0]:
-			CHOICE.Build_MONUMENT : 
-				buildPhase(choice[1])
-			CHOICE.Build_ESTABLISHMENT : 
-				buyPhase(choice[1])
-			CHOICE.SKIP : 
-				skipPhase(hasConstructed)
-		
+			var choice = await gameplayScreen.pause()
+			print(choice)
+			# choix = INPUT
+			
+			match  choice[0]:
+				CHOICE.Build_MONUMENT : 
+					action_successful = buildPhase(choice[1])
+				CHOICE.Build_ESTABLISHMENT : 
+					action_successful = buyPhase(choice[1])
+				CHOICE.SKIP : 
+					skipPhase(hasConstructed)
+					action_successful = true
+					
+			if not action_successful:
+				print("Action failed. Try something else!")
+			
 		winner = verifyVictory(getActivePlayer())
 		
-		if not(bonusTurn):
+		if winner == true:
+			print(getActivePlayer().username, " has won the game!")
+			gameplayScreen.show_victory_screen(getActivePlayer().username)
+			break
+			
+		if takes_bonus_turn == true:
+			print("Extra turn for ", getActivePlayer().username)
+		else:
 			currentPlayerIndex = (currentPlayerIndex + 1) % playerArray.size()
 		
 		
@@ -95,22 +111,26 @@ func finishGame(winner:Player) -> void:
 
 
 func DicePhase() -> int:
-	var resArray = await rollDice()
+	var numberDice = await gameplayScreen.waitForDiceRoll()
+	
+	var resArray = rollDice(numberDice)
 	
 	# Monument Radio : pouvoir de relancer
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Radio]:
 		#RELANCER ?
-		var reroll
-		#relancer = INPUT
-		if reroll:
-			resArray = await rollDice()
+		var wants_reroll = await gameplayScreen.ask_yes_no("Use Radio Tower to reroll?")
+		if wants_reroll:
+			numberDice = await gameplayScreen.waitForDiceRoll()
 			
+			resArray = rollDice(numberDice)
+		
+		takes_bonus_turn = false
+		
 	# Monument Parc Arctraction : double -> tour bonus
 	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Parc]:
-		if resArray[0] == resArray[1]:
-			# TOUR BONUS
-			pass
-		pass
+		if numberDice == 2 && resArray[0] == resArray[1]:
+			print("Bonus turn earned!")
+			takes_bonus_turn = true
 	
 	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
@@ -118,22 +138,18 @@ func DicePhase() -> int:
 		var add2
 		if add2:
 			if sum >= 10:
-				sum = sum + 2
-			pass
+				var wants_add2 = await gameplayScreen.ask_yes_no("Add 2 to roll?")
+				if wants_add2:
+					sum = sum + 2
+	
 	current_roll_value = sum
 	return sum
 
-func rollDice() -> Array[int]:
-	var res:Array[int]
-	res.insert(0,(randi()%6) + 1)
-	res.insert(1,0)
-
-	var numberDice = 1
-	
-	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Gare]:
-		numberDice = await gameplayScreen.howManyDice() #INPUT
+func rollDice(numberDice: int) -> Array[int]:
+	var res:Array[int] = [0, 0]
+	res[0] = (randi() %6) + 1
 	if numberDice == 2:
-		res.insert(1,(randi()%6) + 1)
+		res[1] = (randi() %6) + 1
 		
 	gameplayScreen.showResult(res[0],res[1])
 	return res
@@ -152,16 +168,6 @@ func EffectPhase(resDice) -> void:
 	currentPlayer.activateEffect(Establishment.COLOR.PURPLE, self, currentPlayer)
 	
 	
-		
-#func lance
-func skipPhase(hasConstructed) -> void:
-	var player = getActivePlayer()
-	if not(hasConstructed):
-		if player.balance <=2:
-			player.balance =  2
-		# Monument Radio : pouvoir de relancer
-		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
-			player.balance = player.balance + 10
 
 func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER 
 	match card_id:
@@ -189,27 +195,45 @@ func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER
 		_:
 			return null
 
+		
+#func lance
+func skipPhase(hasConstructed) -> void:
+	var player = getActivePlayer()
+	if not(hasConstructed):
+		if player.balance <=2:
+			player.balance =  2
+		# Monument Radio : pouvoir de relancer
+		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
+			player.balance = player.balance + 10
 
-func buyPhase(card_id:int) -> void:
+func buyPhase(card_id:int) -> bool:
 	var active_player:Player = getActivePlayer()
 	var card_to_buy = get_card_from_factory(card_id)
 	
+	if card_to_buy == null:
+		print("cart_to_but = null!")
+		return false
+		
 	if not shop.available(card_id):
 		print("Card not in stock!")
+		return false
 	
 	if active_player.buyCard(card_to_buy):
-		shop.bought(active_player, card_id)
-		print(active_player, " successfully bought ", card_to_buy.name)
+		shop.removeCardFromStock(card_id)
+		print(active_player.username, " successfully bought ", card_to_buy.name)
+		return true
 	else:
 		print("transaction failed")
+		return false
 	
 	
-func buildPhase(monument_id: int) -> void:
+	
+func buildPhase(monument_id: int) -> bool:
 	var active_player = getActivePlayer()
 	
 	if active_player.monumentArray[monument_id] == true:
 		print("Monument already build")
-		return
+		return false
 		
 	var monument_data = getMonumentData(monument_id)
 	
@@ -218,9 +242,11 @@ func buildPhase(monument_id: int) -> void:
 	monument_to_build.cost = monument_data.cost
 	
 	if active_player.constructMonument(monument_to_build):
-		print(active_player, " successfully constructed ", monument_data.name) # AFFICHER LE NOM DU MONUNMENT
+		print(active_player.username, " successfully constructed ", monument_data.name) # AFFICHER LE NOM DU MONUNMENT
+		return true
 	else:
 		print("Not enough gold!")
+		return false
 	
 	
 func getMonumentData(monument_id: int) -> Dictionary: # VALEURS A REVOIR

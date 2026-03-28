@@ -10,6 +10,12 @@ static func creerChampsBlé() -> Establishment:
 	card.cost = 1
 	card.color = Establishment.COLOR.BLUE
 	card.activation = [1, 1]
+	card.icon = "WHEAT"
+	
+	card.effect = func(owner: Player, roller: Player):
+		owner.recieveGold(1)
+		print(owner.username, " harvested 1 gold from Champs de Blé!")
+		
 	return card
 
 static func creerBoulangerie() -> Establishment:
@@ -19,6 +25,12 @@ static func creerBoulangerie() -> Establishment:
 	card.cost = 1
 	card.color = Establishment.COLOR.GREEN
 	card.activation = [2, 3]
+	card.icon = "BREAD"
+	
+	card.effect = func(owner: Player, roller: Player):
+		owner.recieveGold(1)
+		print(owner.username, " baked 1 gold from Boulangerie!")
+		
 	return card
 
 static func creerFerme():
