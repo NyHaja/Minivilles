@@ -57,8 +57,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# incrémenter argent
 	owner.argent += gain_total
 	
-	print(owner.nom, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
-	print(owner.nom, " gagne ", gain_total, " pièce(s) (", nombre_cartes, " × ", montant_par_carte, ")")
+	print(owner.username, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
+	print(owner.username, " gagne ", gain_total, " pièce(s) (", nombre_cartes, " × ", montant_par_carte, ")")
 
 
 # Pas de condition

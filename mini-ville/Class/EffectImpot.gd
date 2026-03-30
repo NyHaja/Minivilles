@@ -14,7 +14,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# moitié arrondie à l'inférieur
 	
 	# parcourir joueurs
-	for joueur in game.joueurs:
+	for joueur in game.playerArray:
 		# ignorer le owner 
 		if joueur == owner:
 			continue
@@ -28,9 +28,9 @@ func appliquer(game: Game, owner: Player, roller: Player):
 			joueur.argent -= montant_impot
 			owner.argent += montant_impot
 			
-			print(joueur.nom, " avait ", joueur.argent + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
+			print(joueur.username, " avait ", joueur.argent + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
 		else:
-			print(joueur.nom, " a seulement ", joueur.argent, " pièces → pas d'impôt")
+			print(joueur.username, " a seulement ", joueur.argent, " pièces → pas d'impôt")
 			
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

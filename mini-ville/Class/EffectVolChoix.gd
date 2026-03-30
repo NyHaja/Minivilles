@@ -20,7 +20,7 @@ func choisir_cible(cible: Player):
 # Récupérer la liste des adversaires possibles
 func get_adversaires_disponibles(game: Game, owner: Player) -> Array[Player]:
 	var adversaires : Array[Player] = []
-	for joueur in game.joueurs:
+	for joueur in game.playerArray:
 		if joueur != owner:
 			adversaires.append(joueur)
 	return adversaires
@@ -41,7 +41,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		return
 	
 	# Verif joueur choisi est dans la partie
-	if not game.joueurs.has(joueur_choisi):
+	if not game.playerArray.has(joueur_choisi):
 		push_error("Le joueur choisi n'est pas dans la partie")
 		joueur_choisi = null
 		return
@@ -53,7 +53,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	joueur_choisi.argent -= montant_paye
 	owner.argent += montant_paye
 	
-	print(owner.nom, " a choisi ", joueur_choisi.nom, " qui paie ", montant_paye, " pièce(s)")
+	print(owner.username, " a choisi ", joueur_choisi.username, " qui paie ", montant_paye, " pièce(s)")
 	
 	# Réinit le choix pour la prochaine utilisation
 	joueur_choisi = null
@@ -62,7 +62,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	var nb_adversaires = 0
-	for joueur in game.joueurs:
+	for joueur in game.playerArray:
 		if joueur != owner:
 			nb_adversaires += 1
 	

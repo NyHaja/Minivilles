@@ -49,8 +49,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# Recevoir argent banque
 	owner.argent += montant_recu
 	
-	print(owner.nom, " donne ", carte_a_donner.get_name(), " à ", adversaire_cible.nom)
-	print(owner.nom, " reçoit ", montant_recu, " pièces de la banque")
+	print(owner.username, " donne ", carte_a_donner.get_name(), " à ", adversaire_cible.username)
+	print(owner.username, " reçoit ", montant_recu, " pièces de la banque")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

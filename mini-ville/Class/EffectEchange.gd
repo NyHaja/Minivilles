@@ -52,7 +52,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	owner.deck.append(carte_adversaire)
 	adversaire_cible.deck.append(carte_owner)
 	
-	print(owner.nom, " échange ", carte_owner.get_name(), " contre ", carte_adversaire.get_name(), " de ", adversaire_cible.nom)
+	print(owner.username, " échange ", carte_owner.get_name(), " contre ", carte_adversaire.get_name(), " de ", adversaire_cible.username)
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

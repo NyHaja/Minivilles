@@ -17,8 +17,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# owner reçoit pièces en banque
 	owner.argent += somme
 	
-	print(owner.nom, " lance 2 dés avec le Chalutier : ", de1, " + ", de2, " = ", somme)
-	print(owner.nom, " reçoit ", somme, " pièce(s) de la banque")
+	print(owner.username, " lance 2 dés avec le Chalutier : ", de1, " + ", de2, " = ", somme)
+	print(owner.username, " reçoit ", somme, " pièce(s) de la banque")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

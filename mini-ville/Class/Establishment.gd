@@ -8,7 +8,7 @@ var cost : int
 var description : String
 
 # Attributs Establishment
-var activationNum : Array  # [min, max]
+var activation : Array  # [min, max]
 var color : CardColor.Type
 var icon : Icon.Type
 
@@ -31,11 +31,11 @@ func NewCard(
 	color = p_color
 	cost = p_cost
 	description = p_description
-	activationNum = p_activationNum
+	activation = p_activationNum
 
 
 func get_activation_num() -> Array:
-	return activationNum
+	return activation
 
 func get_color() -> CardColor.Type:
 	return color

@@ -21,7 +21,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	roller.argent = 0
 	owner.argent += montant_total
 	
-	print(roller.nom, " (lanceur) donne TOUTES ses pièces (", montant_total, ") à ", owner.nom)
+	print(roller.username, " (lanceur) donne TOUTES ses pièces (", montant_total, ") à ", owner.username)
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

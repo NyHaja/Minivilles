@@ -12,7 +12,7 @@ func _init(p_id: int):
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Game doit vérifier si joueur possède Port
 	# et add +2 si resultat >= 10
-	print(owner.nom, " possède le Port (+2 si résultat >= 10)")
+	print(owner.username, " possède le Port (+2 si résultat >= 10)")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

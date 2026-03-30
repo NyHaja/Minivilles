@@ -47,8 +47,8 @@ func _nom_icone(icone: int) -> String:
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Trouver l'index du owner
 	var index_owner = -1
-	for i in range(game.joueurs.size()):
-		if game.joueurs[i] == owner:
+	for i in range(game.playerArray.size()):
+		if game.playerArray[i] == owner:
 			index_owner = i
 			break
 	
@@ -57,11 +57,11 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		return
 	
 	# parcourir  adversaires ordre antihoraire
-	var nb_joueurs = game.joueurs.size()
+	var nb_joueurs = game.playerArray.size()
 	
 	for i in range(1, nb_joueurs):
 		var index = (index_owner - i + nb_joueurs) % nb_joueurs
-		var adversaire = game.joueurs[index]
+		var adversaire = game.playerArray[index]
 		
 		
 		var nombre_cartes = _compter_cartes_avec_icones(adversaire)
@@ -76,8 +76,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		adversaire.argent -= montant_paye
 		owner.argent += montant_paye
 		
-		print(adversaire.nom, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
-		print(adversaire.nom, " paie ", montant_paye, " pièce(s) à ", owner.nom, " (", nombre_cartes, " × ", montant_par_icone, ")")
+		print(adversaire.username, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
+		print(adversaire.username, " paie ", montant_paye, " pièce(s) à ", owner.username, " (", nombre_cartes, " × ", montant_par_icone, ")")
  
  
 

@@ -21,7 +21,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	roller.argent -= montant_paye
 	owner.argent += montant_paye
 	
-	print(roller.nom, " (lanceur) paie ", montant_paye, " pièce(s) à ", owner.nom)
+	print(roller.username, " (lanceur) paie ", montant_paye, " pièce(s) à ", owner.username)
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

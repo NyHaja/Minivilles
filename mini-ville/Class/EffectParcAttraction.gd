@@ -11,7 +11,7 @@ func _init(p_id: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Il faut verif dans Game si joueur possède Parc Attraction et relancer apres un double !!!
-	print(owner.nom, " possède le Parc d'Attractions et peut rejouer en cas de double")
+	print(owner.username, " possède le Parc d'Attractions et peut rejouer en cas de double")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

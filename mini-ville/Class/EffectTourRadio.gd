@@ -11,7 +11,7 @@ func _init(p_id: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Game doit gérer cette relance et ne garder que le 2e résultat
-	print(owner.nom, " utilise la Tour Radio pour relancer les dés")
+	print(owner.username, " utilise la Tour Radio pour relancer les dés")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

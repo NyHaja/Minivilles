@@ -18,8 +18,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	
 	# Trouver index owner dans liste joueurs
 	var index_owner = -1
-	for i in range(game.joueurs.size()):
-		if game.joueurs[i] == owner:
+	for i in range(game.playerArray.size()):
+		if game.playerArray[i] == owner:
 			index_owner = i
 			break
 	
@@ -28,11 +28,11 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		return
 	
 	# Parcourir adversaires dans l'ordre antihoraire
-	var nb_joueurs = game.joueurs.size()
+	var nb_joueurs = game.playerArray.size()
 	
 	for i in range(1, nb_joueurs):
 		var index = (index_owner - i + nb_joueurs) % nb_joueurs
-		var adversaire = game.joueurs[index]
+		var adversaire = game.playerArray[index]
 		
 		# Calculer montant que l'adversaire peut payer
 		var montant_paye = min(montant, adversaire.argent)
@@ -41,10 +41,9 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		adversaire.argent -= montant_paye
 		owner.argent += montant_paye
 		
-		print(adversaire.nom, " paie ", montant_paye, " pièce(s) à ", owner.nom)
+		print(adversaire.username, " paie ", montant_paye, " pièce(s) à ", owner.username)
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 
 	return true
-	

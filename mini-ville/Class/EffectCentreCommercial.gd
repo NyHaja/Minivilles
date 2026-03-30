@@ -10,7 +10,7 @@ func _init(p_id: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Il faut verif dans Game si joueur possède Centre Commercial et add +1 aux cartes concernés !!!
-	print(owner.nom, " possède le Centre Commercial (+1 pièce aux cartes Tasse et Pain)")
+	print(owner.username, " possède le Centre Commercial (+1 pièce aux cartes Tasse et Pain)")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

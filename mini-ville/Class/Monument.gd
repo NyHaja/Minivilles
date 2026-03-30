@@ -9,7 +9,7 @@ var description : String
  
  
 # Constructeur pour Monument (pas d'activation, couleur, ou icône)
-func NewCard(
+func NewMonument(
 	p_effect: Effect,
 	p_id: int,
 	p_name: String,

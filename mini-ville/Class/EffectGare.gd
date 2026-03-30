@@ -11,7 +11,7 @@ func _init(p_id: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Il faut verif dans Game si joueur possède Gare !!!
-	print(owner.nom, " possède la Gare et peut lancer 2 dés")
+	print(owner.username, " possède la Gare et peut lancer 2 dés")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

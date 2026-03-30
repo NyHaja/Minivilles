@@ -12,8 +12,6 @@ func _init(p_id: int, p_montant_recu: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Le owner doit choisir un de ses monuments construits à démolir
-	
-	# Impl dans Joueur : owner.demolition_monument(id)
 	var monument_id = game.monument_choisi_pour_demolition
 	
 	if monument_id == null or monument_id == "":
@@ -26,12 +24,14 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		return
 	
 	# Démolir monument
-	owner.demolition_monument(monument_id)
+	var _m = Monument.new()
+	_m.id = monument_id
+	owner.demolishMonument(_m)
 	
 	# Recevoir argent banque
 	owner.argent += montant_recu
 	
-	print(owner.nom, " démolît son monument ", monument_id, " et reçoit ", montant_recu, " pièces")
+	print(owner.username, " démolît son monument ", monument_id, " et reçoit ", montant_recu, " pièces")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
