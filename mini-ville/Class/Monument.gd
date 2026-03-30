@@ -1,5 +1,7 @@
 class_name Monument
  
+enum MONUMENT_ID { Gare=22, Centre_Commercial=23, Parc=24, Radio=25, Port=26, Aeroport=27 }
+
 # Attributs de Card (interface)
 var effect : Effect
 var id : int
