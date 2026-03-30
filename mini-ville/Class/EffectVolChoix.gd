@@ -47,11 +47,11 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		return
 	
 	# calc le montant max que joueur choisi peut payer
-	var montant_paye = min(montant, joueur_choisi.argent)
+	var montant_paye = min(montant, joueur_choisi.balance)
 	
 	# Transfert d'argent
-	joueur_choisi.argent -= montant_paye
-	owner.argent += montant_paye
+	joueur_choisi.loseGold(montant_paye)
+	owner.recieveGold(montant_paye)
 	
 	print(owner.username, " a choisi ", joueur_choisi.username, " qui paie ", montant_paye, " pièce(s)")
 	

@@ -11,57 +11,72 @@ func _init(p_id: int, p_montant_recu: int):
 
 
 func appliquer(game: Game, owner: Player, roller: Player):
-	# owner choisit :
-	# 1. etablissement non-violet à donner
-	# 2. adversaire à qui le donner
-	
-	
-	# Les choix sont stockés ici
-	var carte_a_donner = game.carte_choisie_pour_don
-	var adversaire_cible = game.adversaire_choisi_pour_don
-	
-	if carte_a_donner == null:
+	# Les choix sont stockés dans game
+	var carte_a_donner_id = game.carte_choisie_pour_don   # int (card_id)
+	var adversaire_cible = game.adversaire_choisi_pour_don  # Player
+
+	if carte_a_donner_id == null or carte_a_donner_id == -1:
 		push_error("Aucune carte choisie pour le don")
 		return
-	
+
 	if adversaire_cible == null:
 		push_error("Aucun adversaire choisi")
 		return
-	
-	# verif que carte est non-violette
-	if carte_a_donner is Establishment:
-		var etab = carte_a_donner as Establishment
-		if etab.get_color() == CardColor.Type.PURPLE:
-			push_error("Impossible de donner une carte violette")
-			return
-	
-	# verif que owner possède bien cette carte
-	if not owner.deck.has(carte_a_donner):
+
+	# Vérifier que la carte existe et n'est pas violette
+	var card = game.get_card_from_factory(carte_a_donner_id)
+	if card == null:
+		push_error("Carte introuvable en factory")
+		return
+	if card.color == CardColor.Type.PURPLE:
+		push_error("Impossible de donner une carte violette")
+		return
+
+	# Trouver l'instance dans le deck de owner (format [card_id, quantity])
+	var instance_trouvee = null
+	for instance in owner.deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		if instance[0] == carte_a_donner_id:
+			instance_trouvee = instance
+			break
+
+	if instance_trouvee == null:
 		push_error("Le owner ne possède pas cette carte")
 		return
-	
-	# transferer carte
-	owner.deck.erase(carte_a_donner)
-	adversaire_cible.deck.append(carte_a_donner)
+
+	# Retirer 1 exemplaire du deck owner
+	instance_trouvee[1] -= 1
+	if instance_trouvee[1] <= 0:
+		owner.deck.erase(instance_trouvee)
 	owner.establishmentCount -= 1
+
+	# Ajouter au deck adversaire
+	var existe = false
+	for inst in adversaire_cible.deck:
+		if typeof(inst) != TYPE_ARRAY:
+			continue
+		if inst[0] == carte_a_donner_id:
+			inst[1] += 1
+			existe = true
+			break
+	if not existe:
+		adversaire_cible.deck.append([carte_a_donner_id, 1])
 	adversaire_cible.establishmentCount += 1
-	
+
 	# Recevoir argent banque
-	owner.argent += montant_recu
-	
-	print(owner.username, " donne ", carte_a_donner.get_name(), " à ", adversaire_cible.username)
+	owner.recieveGold(montant_recu)
+
+	print(owner.username, " donne ", card.name, " à ", adversaire_cible.username)
 	print(owner.username, " reçoit ", montant_recu, " pièces de la banque")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
-	# joueur doit avoir >= 1 établissement non-violet
-	if owner.deck == null:
-		return false
-	
-	for carte in owner.deck:
-		if carte is Establishment:
-			var etab = carte as Establishment
-			if etab.get_color() != CardColor.Type.PURPLE:
-				return true  # > 0 carte non-violette
-	
+	# Le joueur doit avoir au moins 1 établissement non-violet à donner
+	for instance in owner.deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		var card = game.get_card_from_factory(instance[0])
+		if card != null and card.color != CardColor.Type.PURPLE:
+			return true
 	return false

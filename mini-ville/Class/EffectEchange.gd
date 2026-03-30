@@ -8,62 +8,86 @@ func _init(p_id: int):
 
 
 func appliquer(game: Game, owner: Player, roller: Player):
-	# owner choisit :
-	# 1. 1 établissements non-violets à échanger
-	# 2. 1 adversaire
-	# 3. 1 établissement non-violet de cet adversaire
-	
-	
-	# choix stockés temporairement
-	var carte_owner = game.carte_owner_pour_echange
-	var adversaire_cible = game.adversaire_choisi_pour_echange
-	var carte_adversaire = game.carte_adversaire_pour_echange
-	
-	if carte_owner == null or adversaire_cible == null or carte_adversaire == null:
+	# Les choix sont stockés dans game
+	var id_owner = game.carte_owner_pour_echange          # int (card_id)
+	var adversaire_cible = game.adversaire_choisi_pour_echange  # Player
+	var id_adversaire = game.carte_adversaire_pour_echange  # int (card_id)
+
+	if id_owner == null or adversaire_cible == null or id_adversaire == null:
 		push_error("Choix incomplets pour l'échange")
 		return
-	
-	# verif que deux cartes sont non-violettes
-	if carte_owner is Establishment:
-		var etab_owner = carte_owner as Establishment
-		if etab_owner.get_color() == CardColor.Type.PURPLE:
-			push_error("Impossible d'échanger une carte violette (owner)")
-			return
-	
-	if carte_adversaire is Establishment:
-		var etab_adv = carte_adversaire as Establishment
-		if etab_adv.get_color() == CardColor.Type.PURPLE:
-			push_error("Impossible d'échanger une carte violette (adversaire)")
-			return
-	
-	# verif possession des cartes
-	if not owner.deck.has(carte_owner):
+
+	# Vérifier que les deux cartes existent et sont non-violettes
+	var card_owner = game.get_card_from_factory(id_owner)
+	var card_adv = game.get_card_from_factory(id_adversaire)
+
+	if card_owner == null or card_adv == null:
+		push_error("Carte introuvable en factory")
+		return
+	if card_owner.color == CardColor.Type.PURPLE:
+		push_error("Impossible d'échanger une carte violette (owner)")
+		return
+	if card_adv.color == CardColor.Type.PURPLE:
+		push_error("Impossible d'échanger une carte violette (adversaire)")
+		return
+
+	# Trouver les instances dans les decks (format [card_id, quantity])
+	var inst_owner = _trouver_instance(owner.deck, id_owner)
+	var inst_adv = _trouver_instance(adversaire_cible.deck, id_adversaire)
+
+	if inst_owner == null:
 		push_error("Le owner ne possède pas cette carte")
 		return
-	
-	if not adversaire_cible.deck.has(carte_adversaire):
+	if inst_adv == null:
 		push_error("L'adversaire ne possède pas cette carte")
 		return
-	
-	# transfert cartes
-	owner.deck.erase(carte_owner)
-	adversaire_cible.deck.erase(carte_adversaire)
-	
-	owner.deck.append(carte_adversaire)
-	adversaire_cible.deck.append(carte_owner)
-	
-	print(owner.username, " échange ", carte_owner.get_name(), " contre ", carte_adversaire.get_name(), " de ", adversaire_cible.username)
+
+	# Retirer 1 exemplaire de chaque côté
+	_retirer_un(owner.deck, inst_owner)
+	owner.establishmentCount -= 1
+	_retirer_un(adversaire_cible.deck, inst_adv)
+	adversaire_cible.establishmentCount -= 1
+
+	# Ajouter de l'autre côté
+	_ajouter_un(owner.deck, id_adversaire)
+	owner.establishmentCount += 1
+	_ajouter_un(adversaire_cible.deck, id_owner)
+	adversaire_cible.establishmentCount += 1
+
+	print(owner.username, " échange ", card_owner.name, " contre ", card_adv.name, " de ", adversaire_cible.username)
+
+
+func _trouver_instance(deck: Array, card_id: int):
+	for instance in deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		if instance[0] == card_id:
+			return instance
+	return null
+
+
+func _retirer_un(deck: Array, instance) -> void:
+	instance[1] -= 1
+	if instance[1] <= 0:
+		deck.erase(instance)
+
+
+func _ajouter_un(deck: Array, card_id: int) -> void:
+	for instance in deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		if instance[0] == card_id:
+			instance[1] += 1
+			return
+	deck.append([card_id, 1])
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
-	# joueur doit avoir >= 1 etablissement non-violet
-	if owner.deck == null:
-		return false
-	
-	for carte in owner.deck:
-		if carte is Establishment:
-			var etab = carte as Establishment
-			if etab.get_color() != CardColor.Type.PURPLE:
-				return true  # >= 1 une carte non-violette
-	
+	# Le joueur doit avoir au moins 1 établissement non-violet à échanger
+	for instance in owner.deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		var card = game.get_card_from_factory(instance[0])
+		if card != null and card.color != CardColor.Type.PURPLE:
+			return true
 	return false
