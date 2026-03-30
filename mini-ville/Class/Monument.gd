@@ -9,7 +9,7 @@ var description : String
  
  
 # Constructeur pour Monument (pas d'activation, couleur, ou icône)
-func NewMonument(
+func NewCard(
 	p_effect: Effect,
 	p_id: int,
 	p_name: String,
@@ -21,19 +21,3 @@ func NewMonument(
 	name = p_name
 	cost = p_cost
 	description = p_description
- 
- 
-func get_name() -> String:
-	return name
- 
-func get_id() -> int:
-	return id
- 
-func get_cost() -> int:
-	return cost
- 
-func get_description() -> String:
-	return description
- 
-func get_effect() -> Effect:
-	return effect

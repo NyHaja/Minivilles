@@ -4,7 +4,6 @@ extends Effect
 # Effet Chalutier : Lancez 2 dés supplémentaires, recevez la somme en pièces
 # Necessite Port
 
-
 func _init(p_id: int):
 	super._init(p_id, "Lancez 2 dés, recevez la somme. (Nécessite le Port)")
 

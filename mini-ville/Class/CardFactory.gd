@@ -188,7 +188,7 @@ static func creerForet() -> Establishment:
 	
 	return carte
 
-# Vignoble - Bleu - Dé: 7 - Coût: 3
+# Vignoble - Dé: 7 - Coût: 3
 # Icon: WHEAT
 # Effect: Recevoir 3 pièces de la banque
 static func creerVignoble() -> Establishment:

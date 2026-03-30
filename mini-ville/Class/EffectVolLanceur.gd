@@ -13,6 +13,8 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# owner = propriétaire de la carte rouge
 	# roller = celui qui a lancé les dés (adversaire)
 	# montant que le roller peut payer
+	if(owner.monumentIsActive(23)):
+		montant += 1
 	var montant_paye = min(montant, roller.argent)
 	
 	# transfert argent 

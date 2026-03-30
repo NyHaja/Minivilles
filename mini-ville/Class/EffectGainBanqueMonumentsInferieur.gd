@@ -15,8 +15,6 @@ func _init(p_id: int, p_montant: int, p_seuil_monuments: int):
 # SURCHARGE de peutActiver pour ajouter la condition des monuments
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	# verif que owner a STRICTEMENT MOINS de seuil_monuments construits
-	
-	
 
 	var nb_monuments_construits = owner.monumentCount
 	

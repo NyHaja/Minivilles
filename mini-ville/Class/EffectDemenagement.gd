@@ -31,7 +31,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# verif que carte est non-violette
 	if carte_a_donner is Establishment:
 		var etab = carte_a_donner as Establishment
-		if etab.get_color() == CardColor.PURPLE:
+		if etab.get_color() == CardColor.Type.PURPLE:
 			push_error("Impossible de donner une carte violette")
 			return
 	
@@ -61,7 +61,7 @@ func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	for carte in owner.deck:
 		if carte is Establishment:
 			var etab = carte as Establishment
-			if etab.get_color() != CardColor.PURPLE:
+			if etab.get_color() != CardColor.Type.PURPLE:
 				return true  # > 0 carte non-violette
 	
 	return false

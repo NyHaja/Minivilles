@@ -26,13 +26,13 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# verif que deux cartes sont non-violettes
 	if carte_owner is Establishment:
 		var etab_owner = carte_owner as Establishment
-		if etab_owner.get_color() == CardColor.PURPLE:
+		if etab_owner.get_color() == CardColor.Type.PURPLE:
 			push_error("Impossible d'échanger une carte violette (owner)")
 			return
 	
 	if carte_adversaire is Establishment:
 		var etab_adv = carte_adversaire as Establishment
-		if etab_adv.get_color() == CardColor.PURPLE:
+		if etab_adv.get_color() == CardColor.Type.PURPLE:
 			push_error("Impossible d'échanger une carte violette (adversaire)")
 			return
 	
@@ -63,7 +63,7 @@ func peutActiver(game: Game, owner: Player, roller: Player) -> bool:
 	for carte in owner.deck:
 		if carte is Establishment:
 			var etab = carte as Establishment
-			if etab.get_color() != CardColor.PURPLE:
+			if etab.get_color() != CardColor.Type.PURPLE:
 				return true  # >= 1 une carte non-violette
 	
 	return false
