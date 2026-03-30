@@ -5,6 +5,7 @@ var name : String
 var type : String
 var cost : int
 var effect : Effect  # Référence vers un effet partagé
+var description : String
 
 
 func get_id() -> int:

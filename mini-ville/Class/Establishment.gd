@@ -1,11 +1,11 @@
-class_name Establishment
+class_name Establishment extends Card
 
 # Attributs Card
-var effect : Effect
-var id : int
-var name : String
-var cost : int
-var description : String
+#var effect : Effect
+#var id : int
+#var name : String
+#var cost : int
+#var description : String
 
 # Attributs Establishment
 var activation : Array  # [min, max]
