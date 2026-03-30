@@ -8,14 +8,14 @@ var balance: int
 var monumentCount: int
 var establishmentCount: int
 var deck: Array = []
-var monumentArray: Array = []
+var monumentArray: Dictionary = {}
 
 
 func _init(_username: String, _id: int, _balance: int) -> void:
 	self.username = _username
 	self.id = _id
 	self.balance = _balance
-	self.monumentArray = [false, false, false ,false, false, false]
+	self.monumentArray = {22: false, 23: false, 24: false, 25: false, 26: false, 27: false}
 
 func getBalance() -> int:
 	return balance
@@ -68,18 +68,20 @@ func monumentIsActive(monumentId: int) -> bool:
 	return monumentArray[monumentId]
 	
 
-func cardsWithIcon(icons: Array[String]) -> int:
-	var numberOfCards:int = 0
+func cardsWithIcon(icons: Array) -> int:
+	var numberOfCards: int = 0
 	for instance in deck:
 		var cardId = instance[0]
 		var quantity = instance[1]
 		
 		var card = get_card_from_factory(cardId)
 		
-		for iconToCount in icons:
-			if card.icon == iconToCount:
-				numberOfCards += quantity
-				
+		if card == null:
+			continue
+		
+		if icons.has(card.icon):
+			numberOfCards += quantity
+			
 	return numberOfCards
 
 func activateEffect(color: int, game: Game, roller: Player) -> void: 
@@ -106,11 +108,11 @@ func activateEffect(color: int, game: Game, roller: Player) -> void:
 			if dice_roll >= card.activation[0] and dice_roll <= card.activation[1]:
 				# 3. Apply the effect for as many copies as the player owns
 				for i in range(quantity):
-					card.effect.call(self, roller)
+					card.effect.appliquer(game, self, roller)
 					# Check if Centre Commercial is active
 					if monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
 						# Check if Icon is BREAD
-						if card.icon == "BREAD":
+						if card.icon == Icon.Type.BREAD:
 							self.recieveGold(1)
 							print("1 extra gold from Commercial Center!")
 					

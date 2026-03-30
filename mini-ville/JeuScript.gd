@@ -286,10 +286,10 @@ func update_deck_ui() -> void:
 				var style = StyleBoxFlat.new()
 				
 				match card_data.color:
-					Establishment.COLOR.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-					Establishment.COLOR.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-					Establishment.COLOR.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-					Establishment.COLOR.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 					
 				card_visual.add_theme_stylebox_override("disabled", style)
 				card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
@@ -313,7 +313,7 @@ func updateMonumentColors() -> void:
 func check_and_color_monument(btn: Button, monu_id: int) -> void:
 	var style = StyleBoxFlat.new()
 	
-	if current_player.monumentArray[monu_id] == true:
+	if current_player.monumentIsActive(monu_id):
 		style.bg_color = Color(0.1, 0.6, 0.1)
 	else:
 		style.bg_color = Color(0.6, 0.1, 0.1)
@@ -351,10 +351,10 @@ func update_opponent_ui() -> void:
 					
 					var style = StyleBoxFlat.new()
 					match card_data.color:
-						Establishment.COLOR.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-						Establishment.COLOR.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-						Establishment.COLOR.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-						Establishment.COLOR.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+						CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+						CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+						CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+						CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 					
 					card_visual.add_theme_stylebox_override("disabled", style)
 					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)

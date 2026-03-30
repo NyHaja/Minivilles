@@ -76,7 +76,7 @@ func _on_any_monument_pressed(monu_id: int, clicked_btn: Button) -> void:
 	monu.id = monu_id
 	monu.cost = monu_data.cost
 	
-	if test_player.monumentArray[monu_id] == true:
+	if test_player.monumentIsActive(monu_id):
 		print("FAILED: Monument already built!")
 		clicked_btn.button_pressed = true
 		return
@@ -184,10 +184,10 @@ func update_deck_ui() -> void:
 				var style = StyleBoxFlat.new()
 				
 				match card_data.color:
-					Establishment.COLOR.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-					Establishment.COLOR.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-					Establishment.COLOR.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-					Establishment.COLOR.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 					
 				card_visual.add_theme_stylebox_override("disabled", style)
 				card_visual.add_theme_color_override("front_disabled_color", Color.WHITE)

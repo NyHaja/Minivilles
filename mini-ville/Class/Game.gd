@@ -116,7 +116,7 @@ func DicePhase() -> int:
 	var resArray = rollDice(numberDice)
 	
 	# Monument Radio : pouvoir de relancer
-	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Radio]:
+	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Radio):
 		#RELANCER ?
 		var wants_reroll = await gameplayScreen.ask_yes_no("Use Radio Tower to reroll?")
 		if wants_reroll:
@@ -127,14 +127,14 @@ func DicePhase() -> int:
 		takes_bonus_turn = false
 		
 	# Monument Parc Arctraction : double -> tour bonus
-	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Parc]:
+	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
 		if numberDice == 2 && resArray[0] == resArray[1]:
 			print("Bonus turn earned!")
 			takes_bonus_turn = true
 	
 	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
-	if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Port]:
+	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Port):
 		var add2
 		if add2:
 			if sum >= 10:
@@ -158,14 +158,14 @@ func EffectPhase(resDice) -> void:
 	var currentPlayer = getActivePlayer()
 	# ROUGE
 	for player:Player in getPlayerCounterClockwise(getActivePlayer()):
-		player.activateEffect(Establishment.COLOR.RED, self, currentPlayer)
+		player.activateEffect(CardColor.Type.RED, self, currentPlayer)
 	# Bleu
 	for player:Player in playerArray:
-		player.activateEffect(Establishment.COLOR.BLUE, self, currentPlayer)
+		player.activateEffect(CardColor.Type.BLUE, self, currentPlayer)
 	#VERT
-	currentPlayer.activateEffect(Establishment.COLOR.GREEN, self, currentPlayer)
+	currentPlayer.activateEffect(CardColor.Type.GREEN, self, currentPlayer)
 	#Violet
-	currentPlayer.activateEffect(Establishment.COLOR.PURPLE, self, currentPlayer)
+	currentPlayer.activateEffect(CardColor.Type.PURPLE, self, currentPlayer)
 	
 	
 
@@ -203,7 +203,7 @@ func skipPhase(hasConstructed) -> void:
 		if player.balance <=2:
 			player.balance =  2
 		# Monument Radio : pouvoir de relancer
-		if getActivePlayer().monumentArray[Monument.MONUMENT_ID.Aeroport]:
+		if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Aeroport):
 			player.balance = player.balance + 10
 
 func buyPhase(card_id:int) -> bool:
@@ -231,7 +231,7 @@ func buyPhase(card_id:int) -> bool:
 func buildPhase(monument_id: int) -> bool:
 	var active_player = getActivePlayer()
 	
-	if active_player.monumentArray[monument_id] == true:
+	if active_player.monumentIsActive(monument_id):
 		print("Monument already build")
 		return false
 		
@@ -265,15 +265,6 @@ func getMonumentData(monument_id: int) -> Dictionary: # VALEURS A REVOIR
 			return {"name": "Aéroport", "cost": 30} 
 		_: 
 			return {"name": "Unknown Monument", "cost": 999}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
