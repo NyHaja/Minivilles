@@ -568,7 +568,7 @@ static func creerChaineTele() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		5,                                        # id card
+		33,                                        # id card (ancien 5 était un doublon avec creerMine)
 		"Chaîne de Télévision",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,

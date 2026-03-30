@@ -55,7 +55,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	var gain_total = nombre_cartes * montant_par_carte
 	
 	# incrémenter argent
-	owner.argent += gain_total
+	owner.recieveGold(gain_total)
 	
 	print(owner.username, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
 	print(owner.username, " gagne ", gain_total, " pièce(s) (", nombre_cartes, " × ", montant_par_carte, ")")

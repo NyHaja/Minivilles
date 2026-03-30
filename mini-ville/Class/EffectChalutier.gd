@@ -15,7 +15,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	var somme = de1 + de2
 	
 	# owner reçoit pièces en banque
-	owner.argent += somme
+	owner.recieveGold(somme)
 	
 	print(owner.username, " lance 2 dés avec le Chalutier : ", de1, " + ", de2, " = ", somme)
 	print(owner.username, " reçoit ", somme, " pièce(s) de la banque")

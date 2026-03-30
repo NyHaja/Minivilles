@@ -20,17 +20,17 @@ func appliquer(game: Game, owner: Player, roller: Player):
 			continue
 		
 		# verif >= seuil pièces
-		if joueur.argent >= seuil:
+		if joueur.balance >= seuil:
 			# moitié (arrondi inférieur)
-			var montant_impot = int(joueur.argent / 2)
+			var montant_impot = int(joueur.balance / 2)
 			
 			# transfert
-			joueur.argent -= montant_impot
-			owner.argent += montant_impot
+			joueur.loseGold(montant_impot)
+			owner.recieveGold(montant_impot)
 			
-			print(joueur.username, " avait ", joueur.argent + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
+			print(joueur.username, " avait ", joueur.balance + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
 		else:
-			print(joueur.username, " a seulement ", joueur.argent, " pièces → pas d'impôt")
+			print(joueur.username, " a seulement ", joueur.balance, " pièces → pas d'impôt")
 			
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

@@ -35,11 +35,11 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		var adversaire = game.playerArray[index]
 		
 		# Calculer montant que l'adversaire peut payer
-		var montant_paye = min(montant, adversaire.argent)
+		var montant_paye = min(montant, adversaire.balance)
 		
 		# Transfert d'argent
-		adversaire.argent -= montant_paye
-		owner.argent += montant_paye
+		adversaire.loseGold(montant_paye)
+		owner.recieveGold(montant_paye)
 		
 		print(adversaire.username, " paie ", montant_paye, " pièce(s) à ", owner.username)
 

@@ -10,7 +10,7 @@ func _init(p_id: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# Le joueur reçoit 10 pièces de la banque
-	owner.argent += 10
+	owner.recieveGold(10)
 	print(owner.username, " n'a rien construit et reçoit 10 pièces grâce à l'Aéroport")
 
 

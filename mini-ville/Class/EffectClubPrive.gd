@@ -15,11 +15,11 @@ func _init(p_id: int, p_seuil_monuments: int):
 
 func appliquer(game: Game, owner: Player, roller: Player):
 	# lanceur donne TOUTES ses pièces au OWNER
-	var montant_total = roller.argent
+	var montant_total = roller.balance
 	
 	# Transfert TOUTES les pièces
-	roller.argent = 0
-	owner.argent += montant_total
+	roller.loseGold(montant_total)
+	owner.recieveGold(montant_total)
 	
 	print(roller.username, " (lanceur) donne TOUTES ses pièces (", montant_total, ") à ", owner.username)
 
