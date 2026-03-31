@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://hcmd2gig0ht2"]
 
-[ext_resource type="Script" uid="uid://cghhy3ti0trae" path="res://game_play.gd" id="1_uxx58"]
+[ext_resource type="Script" uid="uid://cghhy3ti0trae" path="res://script/scene/prototype/v1/game_play.gd" id="1_wge0y"]
 
 [node name="GamePlay" type="Control" unique_id=1098871159]
 process_mode = 3
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_uxx58")
+script = ExtResource("1_wge0y")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=81015746]
 layout_mode = 1

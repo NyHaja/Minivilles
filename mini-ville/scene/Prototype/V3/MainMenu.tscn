@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dteg5cm4blsjl"]
 
-[ext_resource type="Script" uid="uid://b5thopec0t1m5" path="res://MainMenu.gd" id="1_i26rj"]
+[ext_resource type="Script" uid="uid://b5thopec0t1m5" path="res://script/scene/prototype/v3/MainMenu.gd" id="1_x21j7"]
 
 [node name="MainMenu" type="Control" unique_id=1638205809]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_i26rj")
+script = ExtResource("1_x21j7")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=534407363]
 layout_mode = 1

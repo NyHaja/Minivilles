@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://d0swg3vptn4g2"]
 
-[ext_resource type="Script" uid="uid://c3rbv1b4asaru" path="res://sandbox_test.gd" id="1_arwip"]
+[ext_resource type="Script" uid="uid://c3rbv1b4asaru" path="res://script/scene/prototype/v2/sandbox_test.gd" id="1_njf68"]
 
 [node name="SandboxTest" type="Node" unique_id=1592581662]
-script = ExtResource("1_arwip")
+script = ExtResource("1_njf68")
 
 [node name="AddGold" type="Button" parent="." unique_id=2001308356]
 offset_left = 18.0
@@ -116,8 +116,8 @@ offset_bottom = 628.0
 
 [connection signal="pressed" from="AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="BuildPort" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
@@ -126,7 +126,7 @@ offset_bottom = 628.0
 [connection signal="pressed" from="BuildParcAttraction" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildRadio" to="." method="_on_build_radio_pressed"]
 [connection signal="pressed" from="BuildRadio" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="BuildAeroport" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildAeroport" to="." method="_on_build_aeroport_pressed"]
+[connection signal="pressed" from="BuildAeroport" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BtnRoll1" to="." method="_on_roll_1_pressed"]
 [connection signal="pressed" from="BtnRoll2" to="." method="_on_roll_2_pressed"]
