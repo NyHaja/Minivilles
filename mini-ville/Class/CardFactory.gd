@@ -1,8 +1,15 @@
 extends Node
 class_name CardFactory
 
-# PLACEHOLDER
-
+static func get_card_texture_path(card_id: int) -> String:
+	match card_id:
+		1:
+			return "res://assets/cards/champs_ble.png"
+		7:
+			return "res://assets/cards/boulangerie.png"
+		_:
+			return "res://assets/cards/placeholder.png"
+ 
 static func creerChampsBlé() -> Establishment:
 	var card = Establishment.new()
 	card.name = "Champs de Blé"
@@ -11,12 +18,13 @@ static func creerChampsBlé() -> Establishment:
 	card.color = Establishment.COLOR.BLUE
 	card.activation = [1, 1]
 	card.icon = "WHEAT"
-	
+
 	card.effect = func(owner: Player, roller: Player):
 		owner.recieveGold(1)
 		print(owner.username, " harvested 1 gold from Champs de Blé!")
-		
+
 	return card
+
 
 static func creerBoulangerie() -> Establishment:
 	var card = Establishment.new()
@@ -26,69 +34,80 @@ static func creerBoulangerie() -> Establishment:
 	card.color = Establishment.COLOR.GREEN
 	card.activation = [2, 3]
 	card.icon = "BREAD"
-	
+
 	card.effect = func(owner: Player, roller: Player):
 		owner.recieveGold(1)
 		print(owner.username, " baked 1 gold from Boulangerie!")
-		
+
 	return card
 
+
 static func creerFerme():
-	return
-	
+	return null
+
 static func creerForet():
-	return
+	return null
 
 static func creerVignoble():
-	return
-	
+	return null
+
 static func creerMine():
-	return
+	return null
 
 static func creerVerger():
-	return
-	
+	return null
+
 static func creerPetitBateauPeche():
-	return
-	
+	return null
+
 static func creerEpicerie():
-	return
+	return null
 
 static func creerSuperette():
-	return
-		
+	return null
+
 static func creerFromagerie():
-	return
+	return null
 
 static func creerFabriqueMeubles():
-	return
-		
+	return null
+
 static func creerMoonsterSoda():
-	return
+	return null
 
 static func creerHalleMarche():
-	return
-		
+	return null
+
 static func creerMarcheFL():
-	return
+	return null
 
 static func creerStade():
-	return
-		
+	return null
+
 static func creerChaineTele():
-	return
+	return null
 
 static func creerMaisonEdition():
-	return
-		
+	return null
+
 static func creerCentreImpots():
-	return
+	return null
 
 static func creerCafe():
-	return
-		
+	return null
+
 static func creerMoonsterBurger():
-	return
+	return null
 
 static func creerRestaurantFamilial():
-	return
+	return null
+
+
+static func get_card_by_id(card_id: int) -> Establishment:
+	match card_id:
+		1:
+			return creerChampsBlé()
+		7:
+			return creerBoulangerie()
+		_:
+			return null
