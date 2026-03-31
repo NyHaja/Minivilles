@@ -57,6 +57,7 @@ DELIMITER ;
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS insertHistory //
+
 DELIMITER //
 
 CREATE PROCEDURE insertHistory(
@@ -69,7 +70,6 @@ CREATE PROCEDURE insertHistory(
     IN p_action_type VARCHAR(50),
     IN p_dice_result INT,
     IN p_amount_exchanged INT,
-    IN p_action_details TEXT,
     IN p_execute_at DATETIME
 )
 BEGIN
@@ -83,7 +83,6 @@ BEGIN
         action_type, 
         dice_result, 
         amount_exchanged, 
-        action_details,
         executed_at
     ) 
     VALUES (
@@ -96,7 +95,6 @@ BEGIN
         p_action_type, 
         p_dice_result, 
         p_amount_exchanged, 
-        p_action_details,
         COALESCE(p_execute_at, NOW()) -- Si p_execute_at est NULL
     );
 END //
