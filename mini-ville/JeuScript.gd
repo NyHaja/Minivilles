@@ -4,6 +4,10 @@ class_name Jeu
 signal action_selected(choide_data:Array)
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
+signal player_chosen(target: Player)
+signal trade_completed(trade_data: Array)
+signal give_card_completed(give_data: Array)
+signal demolish_completed(monu_id: int)
 
 var current_player: Player
 var test_shop: Shop
@@ -40,6 +44,28 @@ var game:Game
 @onready var btn_yes: Button = %BtnYes
 @onready var btn_no: Button = %BtnNo
 
+@onready var choose_player_panel: ColorRect = $ChoosePlayerPanel
+@onready var player_buttons_container: VBoxContainer = $ChoosePlayerPanel/PlayerButtonsContainer
+@onready var trade_panel: ColorRect = $TradePanel
+@onready var trade_opponents: HBoxContainer = %TradeOpponents
+@onready var trade_their_cards: HFlowContainer = %TradeTheirCards
+@onready var trade_my_cards: HFlowContainer = %TradeMyCards
+@onready var btn_confirm_trade: Button = %ConfirmTrade
+@onready var give_panel: ColorRect = $GiveCardPanel
+@onready var give_my_cards: HFlowContainer = %GiveMyCards
+@onready var give_opponents: HBoxContainer = %GiveOpponents
+@onready var btn_confirm_give: Button = %ConfirmGive
+@onready var demolish_panel: ColorRect = $DemolishPanel
+@onready var demolish_monuments: HBoxContainer = %DemolishMonuments
+@onready var btn_confirm_demolish: Button = %ConfirmDemolish
+
+var trade_target: Player = null
+var trade_their_card_id: int = -1
+var trade_my_card_id: int = -1
+var give_target: Player = null
+var give_card_id: int = -1
+var demolish_monu_id: int = -1
+
 var selected_monument_id: int = -1
 
 #Dé
@@ -54,6 +80,9 @@ func _ready() -> void:
 	btn_quit.pressed.connect(_on_quit_pressed)
 	btn_yes.pressed.connect(_on_yes_pressed)
 	btn_no.pressed.connect(_on_no_pressed)
+	%ConfirmTrade.pressed.connect(_on_confirm_trade_pressed)
+	%ConfirmGive.pressed.connect(_on_confirm_give_pressed)
+	%ConfirmDemolish.pressed.connect(_on_confirm_demolish_pressed)
 	
 	setup_monument_button($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
 	setup_monument_button($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
@@ -252,10 +281,41 @@ func update_shop_ui() -> void:
 	for slot in test_shop.shop:
 		var btn = Button.new()
 		
-		btn.text = "ID: " + str(slot.id) + "\nQty: " + str(slot.quantity)
-		btn.custom_minimum_size = Vector2(80, 80)
-		
+		# MATCH THE DECK CARD SIZE
+		btn.custom_minimum_size = Vector2(100, 140)
+		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		btn.pressed.connect(_on_buy_pressed.bind(slot.id))
+		
+		var card_data = CardFactory.get_card(slot.id)
+		
+		if card_data != null:
+			btn.text = str(card_data.activation) + "\n" + card_data.name + "\nQty: " + str(slot.quantity) + "\n" + str(card_data.cost)
+			
+			var base_color: Color
+			match card_data.color:
+				CardColor.Type.BLUE: base_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: base_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: base_color = Color(0.8, 0.2, 0.2)
+				CardColor.Type.PURPLE: base_color = Color(0.6, 0.2, 0.8)
+				
+			var style_normal = StyleBoxFlat.new()
+			style_normal.bg_color = base_color
+			
+			var style_hover = StyleBoxFlat.new()
+			style_hover.bg_color = base_color.lightened(0.2)
+			
+			var style_pressed = StyleBoxFlat.new()
+			style_pressed.bg_color = base_color.darkened(0.2)
+			
+			btn.add_theme_stylebox_override("normal", style_normal)
+			btn.add_theme_stylebox_override("hover", style_hover)
+			btn.add_theme_stylebox_override("pressed", style_pressed)
+			btn.add_theme_stylebox_override("focus", style_normal)
+			
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			btn.add_theme_color_override("font_hover_color", Color.WHITE)
+			btn.add_theme_color_override("font_pressed_color", Color.WHITE)
+			btn.add_theme_color_override("font_focus_color", Color.WHITE)
 		
 		shop_container.add_child(btn)
 		
@@ -271,7 +331,7 @@ func update_deck_ui() -> void:
 		var card_id = instance[0]
 		var quantity = instance[1]
 		
-		var card_data = current_player.get_card_from_factory(card_id)
+		var card_data = CardFactory.get_card(card_id)
 		
 		if card_data != null:
 			for i in range(quantity):
@@ -337,7 +397,7 @@ func update_opponent_ui() -> void:
 		for instance in player.deck:
 			var card_id = instance[0]
 			var quantity = instance[1]
-			var card_data = player.get_card_from_factory(card_id)
+			var card_data = CardFactory.get_card(card_id)
 			
 			if card_data != null:
 				for i in range(quantity):
@@ -360,6 +420,221 @@ func update_opponent_ui() -> void:
 					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
 					
 					player2_deck_container.add_child(card_visual)
+
+
+
+
+func ask_choose_player(owner: Player, all_players: Array) -> Player:
+	choose_player_panel.show()
+	
+	for child in player_buttons_container.get_children():
+		child.queue_free()
+
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username + " (" + str(p.balance) + " Gold)"
+			btn.custom_minimum_size = Vector2(200, 60)
+			
+			btn.pressed.connect(func(): _on_player_chosen(p))
+			
+			player_buttons_container.add_child(btn)
+			
+	var chosen_target = await player_chosen
+	
+	choose_player_panel.hide()
+	return chosen_target
+
+func _on_player_chosen(target: Player) -> void:
+	player_chosen.emit(target)
+
+func ask_trade_cards(owner: Player, all_players: Array) -> Array:
+	trade_panel.show()
+	btn_confirm_trade.disabled = true
+	btn_confirm_trade.text = "Select cards to trade..."
+	trade_target = null
+	trade_their_card_id = -1
+	trade_my_card_id = -1
+	
+	for c in trade_opponents.get_children(): c.queue_free()
+	for c in trade_their_cards.get_children(): c.queue_free()
+	for c in trade_my_cards.get_children(): c.queue_free()
+	
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username
+			btn.custom_minimum_size = Vector2(120, 40)
+			btn.pressed.connect(func(): _on_trade_opponent_selected(p))
+			trade_opponents.add_child(btn)
+			
+	_populate_trade_deck(owner, trade_my_cards, true)
+	
+	var result = await trade_completed
+	trade_panel.hide()
+	return result
+
+func _on_trade_opponent_selected(target: Player) -> void:
+	trade_target = target
+	for c in trade_their_cards.get_children(): c.queue_free()
+	_populate_trade_deck(target, trade_their_cards, false)
+	_check_trade_valid()
+
+func _populate_trade_deck(player: Player, container: Container, is_mine: bool) -> void:
+	for instance in player.deck:
+		if typeof(instance) != TYPE_ARRAY: continue
+		var card_id = instance[0]
+		var card = CardFactory.get_card(card_id)
+		
+		if card != null and card.color != CardColor.Type.PURPLE:
+			var btn = Button.new()
+			btn.text = card.name
+			btn.custom_minimum_size = Vector2(80, 110)
+			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			
+			var style = StyleBoxFlat.new()
+			match card.color:
+				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", style)
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			
+			btn.pressed.connect(func():
+				if is_mine: trade_my_card_id = card_id
+				else: trade_their_card_id = card_id
+				_check_trade_valid()
+				for child in container.get_children():
+					if child == btn:
+						child.modulate = Color(1.0, 1.0, 1.0)
+					else:
+						child.modulate = Color(0.4, 0.4, 0.4)
+			)
+			container.add_child(btn)
+
+func _check_trade_valid() -> void:
+	# Only unlock the confirm button if all 3 choices are made!
+	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
+		btn_confirm_trade.disabled = false
+		btn_confirm_trade.text = "Confirm Trade!"
+
+func _on_confirm_trade_pressed() -> void:
+	trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
+
+func ask_give_card(owner: Player, all_players: Array) -> Array:
+	give_panel.show()
+	btn_confirm_give.disabled = true
+	btn_confirm_give.text = "Select a card and an opponent..."
+	give_target = null
+	give_card_id = -1
+	
+	for c in give_my_cards.get_children(): c.queue_free()
+	for c in give_opponents.get_children(): c.queue_free()
+	
+	for instance in owner.deck:
+		if typeof(instance) != TYPE_ARRAY: continue
+		var card_id = instance[0]
+		var card = CardFactory.get_card(card_id)
+		
+		if card != null and card.color != CardColor.Type.PURPLE:
+			var btn = Button.new()
+			btn.text = card.name
+			btn.custom_minimum_size = Vector2(80, 110)
+			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			
+			var style = StyleBoxFlat.new()
+			match card.color:
+				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", style)
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			
+			btn.pressed.connect(func():
+				give_card_id = card_id
+				_check_give_valid()
+				for child in give_my_cards.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			give_my_cards.add_child(btn)
+
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username
+			btn.custom_minimum_size = Vector2(120, 40)
+			
+			btn.pressed.connect(func():
+				give_target = p
+				_check_give_valid()
+				for child in give_opponents.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			give_opponents.add_child(btn)
+
+	var result = await give_card_completed
+	give_panel.hide()
+	return result
+
+func _check_give_valid() -> void:
+	if give_target != null and give_card_id != -1:
+		btn_confirm_give.disabled = false
+		btn_confirm_give.text = "Confirm Gift!"
+
+func _on_confirm_give_pressed() -> void:
+	give_card_completed.emit([give_card_id, give_target])
+
+func ask_demolish_monument(owner: Player) -> int:
+	demolish_panel.show()
+	btn_confirm_demolish.disabled = true
+	btn_confirm_demolish.text = "Select a monument..."
+	demolish_monu_id = -1
+	
+	for c in demolish_monuments.get_children(): c.queue_free()
+	
+	var has_built_monuments = false
+	
+	for monu_id in owner.monumentArray:
+		if owner.monumentArray[monu_id] == true:
+			has_built_monuments = true
+			
+			var btn = Button.new()
+			var monu_data = game.getMonumentData(monu_id)
+			btn.text = monu_data["name"]
+			btn.custom_minimum_size = Vector2(120, 80)
+			
+			var style_normal = StyleBoxFlat.new()
+			style_normal.bg_color = Color(0.8, 0.2, 0.2)
+			var style_hover = StyleBoxFlat.new()
+			style_hover.bg_color = Color(0.8, 0.2, 0.2).lightened(0.2)
+			btn.add_theme_stylebox_override("normal", style_normal)
+			btn.add_theme_stylebox_override("hover", style_hover)
+			
+			btn.pressed.connect(func():
+				demolish_monu_id = monu_id
+				btn_confirm_demolish.disabled = false
+				btn_confirm_demolish.text = "Demolish " + monu_data["name"] + "!"
+				
+				for child in demolish_monuments.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			demolish_monuments.add_child(btn)
+			
+	if not has_built_monuments:
+		print("No monuments built to demolish! Skipping effect.")
+		demolish_panel.hide()
+		return -1
+
+	var result = await demolish_completed
+	demolish_panel.hide()
+	return result
+
+func _on_confirm_demolish_pressed() -> void:
+	demolish_completed.emit(demolish_monu_id)
+
+
 
 
 func show_victory_screen(winner_name: String) -> void:

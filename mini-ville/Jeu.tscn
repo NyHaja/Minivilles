@@ -340,19 +340,212 @@ size_flags_vertical = 4
 text = "No
 "
 
+[node name="ChoosePlayerPanel" type="ColorRect" parent="." unique_id=69624330]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -162.0
+offset_top = -92.0
+offset_right = 162.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4896223, 0.48962218, 0.4896223, 1)
+
+[node name="Label" type="Label" parent="ChoosePlayerPanel" unique_id=2100041505]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -63.0
+offset_right = 63.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Choose a target:"
+
+[node name="PlayerButtonsContainer" type="VBoxContainer" parent="ChoosePlayerPanel" unique_id=1848192974]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -56.5
+offset_right = 80.0
+offset_bottom = 56.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TradePanel" type="ColorRect" parent="." unique_id=1940098199]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -353.0
+offset_top = -201.0
+offset_right = 353.0
+offset_bottom = 201.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6706895, 0.6706895, 0.6706895, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TradePanel" unique_id=385553588]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -263.0
+offset_top = -150.0
+offset_right = 263.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="TradePanel/VBoxContainer" unique_id=232707057]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Choose an opponent:"
+
+[node name="TradeOpponents" type="HBoxContainer" parent="TradePanel/VBoxContainer" unique_id=1286681068]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="TradePanel/VBoxContainer" unique_id=608750445]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Choose their card to steal:"
+
+[node name="TradeTheirCards" type="HFlowContainer" parent="TradePanel/VBoxContainer" unique_id=1168463806]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="TradePanel/VBoxContainer" unique_id=1981388932]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Choose your card to give:"
+
+[node name="TradeMyCards" type="HFlowContainer" parent="TradePanel/VBoxContainer" unique_id=252649643]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ConfirmTrade" type="Button" parent="TradePanel/VBoxContainer" unique_id=2145443840]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select cards to trade"
+
+[node name="GiveCardPanel" type="ColorRect" parent="." unique_id=758882003]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -365.5
+offset_top = -197.5
+offset_right = 365.5
+offset_bottom = 197.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6052743, 0.6052743, 0.6052743, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GiveCardPanel" unique_id=752854755]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.25
+offset_top = -103.5
+offset_right = 185.25
+offset_bottom = 103.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label4" type="Label" parent="GiveCardPanel/VBoxContainer" unique_id=469159696]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Choose your card to give:"
+
+[node name="GiveMyCards" type="HFlowContainer" parent="GiveCardPanel/VBoxContainer" unique_id=282221251]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="GiveCardPanel/VBoxContainer" unique_id=1980309618]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Choose an opponent"
+
+[node name="GiveOpponents" type="HBoxContainer" parent="GiveCardPanel/VBoxContainer" unique_id=2119665173]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ConfirmGive" type="Button" parent="GiveCardPanel/VBoxContainer" unique_id=1700475877]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DemolishPanel" type="ColorRect" parent="." unique_id=1485235932]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -419.5
+offset_top = -229.5
+offset_right = 419.5
+offset_bottom = 229.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.7162962, 0.7162962, 0.7162962, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DemolishPanel" unique_id=1872022245]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -397.25
+offset_top = -216.25
+offset_right = 397.25
+offset_bottom = 216.25
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label6" type="Label" parent="DemolishPanel/VBoxContainer" unique_id=1104632634]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DemolishMonuments" type="HBoxContainer" parent="DemolishPanel/VBoxContainer" unique_id=1045023117]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ConfirmDemolish" type="Button" parent="DemolishPanel/VBoxContainer" unique_id=430924262]
+unique_name_in_owner = true
+layout_mode = 2
+
 [connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
 [connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
 [connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_parc_attraction_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_radio_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_aeroport_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_aeroport_pressed"]

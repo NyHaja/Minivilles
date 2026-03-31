@@ -17,6 +17,15 @@ var shop:Shop
 
 var gameplayScreen:Jeu # OBJET (ECRAN) où possède les function d'affichage et d'input
 
+var carte_owner_pour_echange: int = -1
+var adversaire_choisi_pour_echange: Player = null
+var carte_adversaire_pour_echange: int = -1
+
+var carte_choisie_pour_don: int = -1
+var adversaire_choisi_pour_don: Player = null
+
+var monument_choisi_pour_demolition: int = -1
+
 enum CHOICE {
 	SKIP,
 	Build_MONUMENT,
@@ -42,7 +51,6 @@ func startGame() ->void:
 		player.deck.push_back([1, 1])
 		player.deck.push_back([7, 1])
 	
-	
 	var winner = false
 	var hasConstructed = false
 	var bonusTurn = false
@@ -55,7 +63,7 @@ func startGame() ->void:
 		
 		await gameplayScreen.RefreshBasicInfo(self)
 		var resDice:int = await DicePhase()
-		EffectPhase(resDice)
+		await EffectPhase(resDice)
 		
 		while not action_successful:
 		
@@ -95,7 +103,7 @@ func getPlayerCounterClockwise(reference:Player) -> Array[Player]:
 	var counter_clockwise_array: Array[Player] = []
 	var start_index = playerArray.find(reference)
 	
-	for i in range(playerCount):
+	for i in range(1, playerCount):
 		var current_index = (start_index - i + playerCount) % playerCount
 		counter_clockwise_array.append(playerArray[current_index])
 		
@@ -158,42 +166,15 @@ func EffectPhase(resDice) -> void:
 	var currentPlayer = getActivePlayer()
 	# ROUGE
 	for player:Player in getPlayerCounterClockwise(getActivePlayer()):
-		player.activateEffect(CardColor.Type.RED, self, currentPlayer)
+		await player.activateEffect(CardColor.Type.RED, self, currentPlayer)
 	# Bleu
 	for player:Player in playerArray:
-		player.activateEffect(CardColor.Type.BLUE, self, currentPlayer)
+		await player.activateEffect(CardColor.Type.BLUE, self, currentPlayer)
 	#VERT
-	currentPlayer.activateEffect(CardColor.Type.GREEN, self, currentPlayer)
+	await currentPlayer.activateEffect(CardColor.Type.GREEN, self, currentPlayer)
 	#Violet
-	currentPlayer.activateEffect(CardColor.Type.PURPLE, self, currentPlayer)
-	
-	
+	await currentPlayer.activateEffect(CardColor.Type.PURPLE, self, currentPlayer)
 
-func get_card_from_factory(card_id: int) -> Establishment: # PLACEHOLDER 
-	match card_id:
-		1: return CardFactory.creerChampsBlé()
-		2: return CardFactory.creerFerme()
-		3: return CardFactory.creerForet()
-		4: return CardFactory.creerVignoble()
-		5: return CardFactory.creerMine()
-		6: return CardFactory.creerVerger()
-		7: return CardFactory.creerBoulangerie()
-		8: return CardFactory.creerSuperette()
-		9: return CardFactory.creerFromagerie()
-		10: return CardFactory.creerPetitBateauPeche()
-		11: return CardFactory.creerFabriqueMeubles()
-		12: return CardFactory.creerMoonsterSoda()
-		13: return CardFactory.creerHalleMarche()
-		14: return CardFactory.creerMarcheFL()
-		15: return CardFactory.creerStade()
-		16: return CardFactory.creerMaisonEdition()
-		17: return CardFactory.creerCafe()
-		18: return CardFactory.creerMoonsterBurger()
-		19: return CardFactory.creerRestaurantFamilial()
-		20: return CardFactory.creerCentreImpots()
-		21: return CardFactory.creerEpicerie()
-		_:
-			return null
 
 		
 #func lance
@@ -208,7 +189,7 @@ func skipPhase(hasConstructed) -> void:
 
 func buyPhase(card_id:int) -> bool:
 	var active_player:Player = getActivePlayer()
-	var card_to_buy = get_card_from_factory(card_id)
+	var card_to_buy = CardFactory.get_card(card_id)
 	
 	if card_to_buy == null:
 		print("cart_to_but = null!")

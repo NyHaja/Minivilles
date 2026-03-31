@@ -74,7 +74,7 @@ func cardsWithIcon(icons: Array) -> int:
 		var cardId = instance[0]
 		var quantity = instance[1]
 		
-		var card = get_card_from_factory(cardId)
+		var card = CardFactory.get_card(cardId)
 		
 		if card == null:
 			continue
@@ -88,58 +88,42 @@ func activateEffect(color: int, game: Game, roller: Player) -> void:
 	var dice_roll = game.current_roll_value
 	
 	for instance in deck:
-		# Safety check just in case the deck has flat numbers from old code!
 		if typeof(instance) != TYPE_ARRAY:
 			continue
 			
 		var cardId = instance[0]
 		var quantity = instance[1]
 		
-		# Fetch the card using your local adapter
-		var card = get_card_from_factory(cardId)
+		var card = CardFactory.get_card(cardId)
 		
-		# THE FAILSAFE: If the card is null (like ID 0), skip it immediately!
 		if card == null:
 			continue
 		
-		# 1. Check if the colors match
 		if card.color == color:
-			# 2. Check if the dice roll falls inside the teammate's [min, max] array!
 			if dice_roll >= card.activation[0] and dice_roll <= card.activation[1]:
-				# 3. Apply the effect for as many copies as the player owns
-				for i in range(quantity):
-					card.effect.appliquer(game, self, roller)
-					# Check if Centre Commercial is active
-					if monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
-						# Check if Icon is BREAD
-						if card.icon == Icon.Type.BREAD:
+				if card.effect.peutActiver(game, self, roller):
+					for i in range(quantity):
+						if card.effect is EffectVolChoix:
+							var cible = await game.gameplayScreen.ask_choose_player(self, game.playerArray)
+							card.effect.choisir_cible(cible)
+							
+						elif card.effect is EffectEchange:
+							var trade_data = await game.gameplayScreen.ask_trade_cards(self, game.playerArray)
+							game.carte_owner_pour_echange = trade_data[0]
+							game.adversaire_choisi_pour_echange = trade_data[1]
+							game.carte_adversaire_pour_echange = trade_data[2]
+							
+						elif card.effect is EffectDemenagement:
+							var move_data = await game.gameplayScreen.ask_give_card(self, game.playerArray)
+							game.carte_choisie_pour_don = move_data[0]
+							game.adversaire_choisi_pour_don = move_data[1]
+							
+						elif card.effect is EffectDemolition:
+							var monu_id = await game.gameplayScreen.ask_demolish_monument(self)
+							game.monument_choisi_pour_demolition = monu_id
+						
+						card.effect.appliquer(game, self, roller)
+						
+						if card.icon == Icon.Type.BREAD and monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
 							self.recieveGold(1)
-							print("1 extra gold from Commercial Center!")
-					
-
-
-func get_card_from_factory(card_id: int) -> Establishment:
-	match card_id:
-		1: return CardFactory.creerChampsBlé()
-		2: return CardFactory.creerFerme()
-		3: return CardFactory.creerForet()
-		4: return CardFactory.creerVignoble()
-		5: return CardFactory.creerMine()
-		6: return CardFactory.creerVerger()
-		7: return CardFactory.creerBoulangerie()
-		8: return CardFactory.creerSuperette()
-		9: return CardFactory.creerFromagerie()
-		10: return CardFactory.creerPetitBateauPeche()
-		11: return CardFactory.creerFabriqueMeubles()
-		12: return CardFactory.creerMoonsterSoda()
-		13: return CardFactory.creerHalleMarche()
-		14: return CardFactory.creerMarcheFL()
-		15: return CardFactory.creerStade()
-		16: return CardFactory.creerMaisonEdition()
-		17: return CardFactory.creerCafe()
-		18: return CardFactory.creerMoonsterBurger()
-		19: return CardFactory.creerRestaurantFamilial()
-		20: return CardFactory.creerCentreImpots()
-		21: return CardFactory.creerEpicerie()
-		_:
-			return null
+							print(username, " gagne 1 pièce bonus (Centre Commercial) !")
