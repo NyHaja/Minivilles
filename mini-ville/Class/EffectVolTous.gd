@@ -39,7 +39,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		
 		# Transfert d'argent
 		adversaire.loseGold(montant_paye)
-		owner.recieveGold(montant_paye)
+		owner.receiveGold(montant_paye)
 		
 		print(adversaire.username, " paie ", montant_paye, " pièce(s) à ", owner.username)
 

@@ -19,7 +19,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	
 	# Transfert TOUTES les pièces
 	roller.loseGold(montant_total)
-	owner.recieveGold(montant_total)
+	owner.receiveGold(montant_total)
 	
 	print(roller.username, " (lanceur) donne TOUTES ses pièces (", montant_total, ") à ", owner.username)
 

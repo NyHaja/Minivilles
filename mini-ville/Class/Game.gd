@@ -47,7 +47,7 @@ func startGame() ->void:
 	# INIT
 	#Donner champ blé et boulangerie a tout les joueur et 3 gold
 	for player:Player in playerArray:
-		player.recieveGold(goldInitAmount)
+		player.receiveGold(goldInitAmount)
 		player.deck.push_back([1, 1])
 		player.deck.push_back([7, 1])
 	

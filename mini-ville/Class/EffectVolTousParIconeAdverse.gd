@@ -61,7 +61,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 		var montant_paye = min(montant_du, adversaire.balance)
 
 		adversaire.loseGold(montant_paye)
-		owner.recieveGold(montant_paye)
+		owner.receiveGold(montant_paye)
 
 		print(adversaire.username, " possède ", nombre_cartes, " carte(s) avec icône(s) cible(s)")
 		print(adversaire.username, " paie ", montant_paye, " pièce(s) à ", owner.username, " (", nombre_cartes, " × ", montant_par_icone, ")")

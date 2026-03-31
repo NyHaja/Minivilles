@@ -20,7 +20,7 @@ func _init(_username: String, _id: int, _balance: int) -> void:
 func getBalance() -> int:
 	return balance
 
-func recieveGold(amount: int) -> void:
+func receiveGold(amount: int) -> void:
 	balance += amount
 	
 func loseGold(amount: int) -> void:
@@ -125,5 +125,5 @@ func activateEffect(color: int, game: Game, roller: Player) -> void:
 						card.effect.appliquer(game, self, roller)
 						
 						if card.icon == Icon.Type.BREAD and monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
-							self.recieveGold(1)
+							self.receiveGold(1)
 							print(username, " gagne 1 pièce bonus (Centre Commercial) !")

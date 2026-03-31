@@ -42,4 +42,4 @@ func _on_start_pressed() -> void:
 	
 	print("Starting game with: ", GameData.player_names)
 	
-	get_tree().change_scene_to_file("res://Main.tscn")
+	get_tree().change_scene_to_file("res://main.tscn")

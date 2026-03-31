@@ -65,7 +65,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	adversaire_cible.establishmentCount += 1
 
 	# Recevoir argent banque
-	owner.recieveGold(montant_recu)
+	owner.receiveGold(montant_recu)
 
 	print(owner.username, " donne ", card.name, " à ", adversaire_cible.username)
 	print(owner.username, " reçoit ", montant_recu, " pièces de la banque")

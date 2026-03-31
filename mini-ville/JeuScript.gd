@@ -262,7 +262,7 @@ func _on_skip_pressed() -> void:
 
 
 func _on_add_gold_pressed() -> void:
-	current_player.recieveGold(5)
+	current_player.receiveGold(5)
 	print("\n[+] Added 5 Gold.")
 	print_player_stats()
 

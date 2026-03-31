@@ -31,7 +31,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	owner.demolishMonument(_m)
 	
 	# Recevoir argent banque
-	owner.recieveGold(montant_recu)
+	owner.receiveGold(montant_recu)
 	
 	print(owner.username, " démolît son monument ", monument_id, " et reçoit ", montant_recu, " pièces")
 

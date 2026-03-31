@@ -14,7 +14,7 @@ func _ready() -> void:
 	for i in range(GameData.player_names.size()):
 		var p_name = GameData.player_names[i]
 		
-		var new_player = Player.new(p_name, i, 0) 
+		var new_player = Player.new(p_name, i, 0)
 		lesJouers.append(new_player)
 	
 	var game = Game.new(1, 10, lesJouers, jeu)

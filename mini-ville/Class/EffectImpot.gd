@@ -26,7 +26,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 			
 			# transfert
 			joueur.loseGold(montant_impot)
-			owner.recieveGold(montant_impot)
+			owner.receiveGold(montant_impot)
 			
 			print(joueur.username, " avait ", joueur.balance + montant_impot, " pièces → paie ", montant_impot, " pièces d'impôt")
 		else:

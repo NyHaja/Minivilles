@@ -11,7 +11,7 @@ func _init(p_id: int, p_montant: int):
 
 
 func appliquer(game: Game, owner: Player, roller: Player):
-	owner.recieveGold(montant)
+	owner.receiveGold(montant)
 	print(owner.username, " gagne ", montant, " pièce(s)")
 
 
