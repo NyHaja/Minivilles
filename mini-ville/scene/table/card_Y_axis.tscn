@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cd2sh1b6hfen5"]
 
-[ext_resource type="Script" uid="uid://5emh1c82pabl" path="res://Scripts/card_Y_axis.gd" id="1_tslg0"]
-[ext_resource type="Texture2D" uid="uid://kgufh3a4t6wa" path="res://Assets/Tooltips/tooltip_marché_fruit_et_légume_right.png" id="2_wf8id"]
+[ext_resource type="Script" uid="uid://5brxf40ioo38" path="res://script/scene/table/card_Y_axis.gd" id="1_tslg0"]
+[ext_resource type="Texture2D" uid="uid://kgufh3a4t6wa" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_right.png" id="2_wf8id"]
 
 [node name="Card_Y_axis" type="Control" unique_id=1098696589]
 custom_minimum_size = Vector2(156, 200)
