@@ -12,13 +12,11 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# Lancer 2 dés supplémentaires
 	var de1 = randi() % 6 + 1  # Dé 1 : 1-6
 	var de2 = randi() % 6 + 1  # Dé 2 : 1-6
-	var somme = de1 + de2
+	var somme = await game.gameplayScreen.ask_chalutier_roll()
 	
-	# owner reçoit pièces en banque
-	owner.receiveGold(somme)
+	owner.receiveGold(somme) 
 	
-	print(owner.username, " lance 2 dés avec le Chalutier : ", de1, " + ", de2, " = ", somme)
-	print(owner.username, " reçoit ", somme, " pièce(s) de la banque")
+	print(owner.username, " finishes Chalutier harvest for ", somme, " gold.")
 
 
 func peutActiver(game: Game, owner: Player, roller: Player) -> bool:

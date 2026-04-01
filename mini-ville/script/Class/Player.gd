@@ -31,6 +31,13 @@ func buyCard(establishment: Establishment) -> bool:
 	
 	if balance < establishment.cost:
 		return false
+		
+	if establishment.color == CardColor.Type.PURPLE:
+		for instance in deck:
+			if instance[0] == establishment.id:
+				print(username, " tried to buy a duplicate Purple card!")
+				return false
+	
 	balance -= establishment.cost
 	
 	var hasEstablishment = false

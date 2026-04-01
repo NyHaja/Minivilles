@@ -11,98 +11,307 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="PlayerTopArea" type="HBoxContainer" parent="MainUI" unique_id=1528484801]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 2
 
-[node name="Player2Stats" type="VBoxContainer" parent="MainUI/PlayerTopArea" unique_id=2138522530]
+[node name="PlayerTopStats" type="VBoxContainer" parent="MainUI/PlayerTopArea" unique_id=2138522530]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Player2Name" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=1810641958]
+[node name="LblPlayerTopName" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=1810641958]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Player 2 Name"
 horizontal_alignment = 1
 
-[node name="LblP2Gold" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=2033321195]
+[node name="LblPlayerTopGold" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=2033321195]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="LblP2Stats" type="Label" parent="MainUI/PlayerTopArea/Player2Stats" unique_id=1814125237]
+[node name="LblPlayerTopStats" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=1814125237]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="Player2DeckContainer" type="HFlowContainer" parent="MainUI/PlayerTopArea" unique_id=710912525]
+[node name="PlayerTopDeckContainer" type="HBoxContainer" parent="MainUI/PlayerTopArea" unique_id=185466759]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MiddleArea" type="HBoxContainer" parent="MainUI" unique_id=2126635692]
+[node name="BlueMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=2128767076]
+clip_contents = true
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_constants/margin_right = 20
+
+[node name="BluePileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/BlueMargin" unique_id=1793673571]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GreenMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1783766102]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="GreenPileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/GreenMargin" unique_id=2067669785]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RedMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1462035668]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="RedPileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/RedMargin" unique_id=142133056]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurpleMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=857943724]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurplePileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/PurpleMargin" unique_id=411783083]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HorizontalContainer" type="HBoxContainer" parent="MainUI" unique_id=1798727798]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftWrapper" type="Control" parent="MainUI/HorizontalContainer" unique_id=931236967]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+
+[node name="PlayerLeftArea" type="VBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper" unique_id=969269845]
+layout_mode = 0
+offset_left = 200.0
+offset_top = -146.0
+offset_right = 872.0
+offset_bottom = 211.0
+rotation = 1.5707964
+size_flags_horizontal = 0
+
+[node name="LeftStats" type="VBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea" unique_id=1732315646]
+layout_mode = 2
+
+[node name="LblLeftName" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=2017706965]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblLeftGold" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=2131172721]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblLeftStats" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=993380011]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LeftDeckContainer" type="HBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea" unique_id=2080361472]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=490164756]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="BluePileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/BlueMargin" unique_id=608413384]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=2013622111]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="GreenPileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/GreenMargin" unique_id=2072367782]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=1566956518]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="RedPileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/RedMargin" unique_id=1353963166]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=49595285]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurplePileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/PurpleMargin" unique_id=1486210493]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MiddleArea" type="HBoxContainer" parent="MainUI/HorizontalContainer" unique_id=2126635692]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="GoldSkip" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=1667196113]
+[node name="GoldSkip" type="VBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=1667196113]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="AddGold" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=2001308356]
+[node name="AddGold" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=2001308356]
 unique_name_in_owner = true
 layout_mode = 2
 text = "+ 5 Gold"
 
-[node name="RemoveGold" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=38618146]
+[node name="RemoveGold" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=38618146]
 unique_name_in_owner = true
 layout_mode = 2
 text = "- 2 Gold"
 
-[node name="Skip" type="Button" parent="MainUI/MiddleArea/GoldSkip" unique_id=152502219]
+[node name="Skip" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=152502219]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Skip Turn"
 
-[node name="ShopContainer" type="GridContainer" parent="MainUI/MiddleArea" unique_id=1391810629]
+[node name="ShopContainer" type="GridContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=1391810629]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 columns = 3
 
-[node name="DiceContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=61961936]
+[node name="DiceContainer" type="VBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=61961936]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Dice" type="HBoxContainer" parent="MainUI/MiddleArea/DiceContainer" unique_id=1670836831]
+[node name="Dice" type="HBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=1670836831]
 layout_mode = 2
 
-[node name="BtnRoll1" type="Button" parent="MainUI/MiddleArea/DiceContainer/Dice" unique_id=553782980]
+[node name="BtnRoll1" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice" unique_id=553782980]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(55, 55)
 layout_mode = 2
 text = "1 Die"
 
-[node name="BtnRoll2" type="Button" parent="MainUI/MiddleArea/DiceContainer/Dice" unique_id=955709809]
+[node name="BtnRoll2" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice" unique_id=955709809]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(55, 55)
 layout_mode = 2
 text = "2 Dice"
 
-[node name="LblDice" type="Label" parent="MainUI/MiddleArea/DiceContainer" unique_id=336477209]
+[node name="LblDice" type="Label" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=336477209]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Waiting..."
 
+[node name="RightWrapper" type="Control" parent="MainUI/HorizontalContainer" unique_id=1920188137]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+
+[node name="PlayerRightArea" type="VBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper" unique_id=39581801]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -203.0
+offset_top = 342.5
+offset_right = 469.0
+offset_bottom = 699.5
+grow_horizontal = 0
+grow_vertical = 2
+rotation = -1.5707964
+size_flags_horizontal = 8
+
+[node name="RightStats" type="VBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea" unique_id=1480541070]
+layout_mode = 2
+
+[node name="LblRightName" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=1626783841]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblRightGold" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=412842137]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblRightStats" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=611546176]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RightDeckContainer" type="HBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea" unique_id=512935730]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1105987736]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="BluePileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/BlueMargin" unique_id=1580836461]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1176307536]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="GreenPileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/GreenMargin" unique_id=454469038]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1933661796]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="RedPileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/RedMargin" unique_id=1019185869]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=972748979]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurplePileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/PurpleMargin" unique_id=1411620135]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1408029711]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 10
 
 [node name="ActivePlayerStats" type="VBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1520586336]
 layout_mode = 2
@@ -125,9 +334,53 @@ unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="ActiveDeckContainer" type="HFlowContainer" parent="MainUI/PlayerBottomArea" unique_id=274073151]
+[node name="ActiveDeckContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1811438683]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BlueMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=1741113173]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="BluePileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/BlueMargin" unique_id=1678029284]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GreenMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=1164571395]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="GreenPileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/GreenMargin" unique_id=1193423327]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RedMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=101093988]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_right = 20
+
+[node name="RedPileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/RedMargin" unique_id=1370049028]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurpleMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=207906989]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PurplePileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/PurpleMargin" unique_id=2006504553]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -229,8 +482,11 @@ text = "Buy Selected"
 [node name="VictoryScreen" type="ColorRect" parent="." unique_id=1800803325]
 visible = false
 light_mask = 193
-offset_right = 1152.0
-offset_bottom = 648.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.13725491, 0.13725491, 0.13725491, 0.78431374)
 
 [node name="LblWinnerName" type="Label" parent="VictoryScreen" unique_id=2062272349]
@@ -263,20 +519,6 @@ offset_bottom = 168.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Return to Menu"
-
-[node name="Player3DeckContainer" type="HFlowContainer" parent="." unique_id=469679048]
-unique_name_in_owner = true
-offset_left = -222.0
-offset_top = 274.0
-offset_right = 218.47058
-offset_bottom = 378.0
-
-[node name="Player4DeckContainer" type="HFlowContainer" parent="." unique_id=325387652]
-unique_name_in_owner = true
-offset_left = 1043.0
-offset_top = 270.0
-offset_right = 1517.353
-offset_bottom = 382.0
 
 [node name="YesNoPanel" type="ColorRect" parent="." unique_id=1988240217]
 unique_name_in_owner = true
@@ -533,10 +775,113 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
-[connection signal="pressed" from="MainUI/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
-[connection signal="pressed" from="MainUI/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
+[node name="ConfirmCardBuyPanel" type="ColorRect" parent="." unique_id=1820969768]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5254902, 0.5254902, 0.5254902, 0.5254902)
+
+[node name="PanelContainer" type="PanelContainer" parent="ConfirmCardBuyPanel" unique_id=70023887]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -208.0
+offset_top = -179.5
+offset_right = 208.0
+offset_bottom = 179.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmCardBuyPanel/PanelContainer" unique_id=1217947664]
+layout_mode = 2
+alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer" unique_id=358164571]
+layout_mode = 2
+
+[node name="CardPreview" type="Control" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/CenterContainer" unique_id=492289452]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 140)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer" unique_id=938163775]
+layout_mode = 2
+alignment = 1
+
+[node name="CancelCardBuy" type="Button" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/HBoxContainer" unique_id=807234987]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cancel"
+
+[node name="ConfirmCardBuy" type="Button" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/HBoxContainer" unique_id=855074204]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Buy Card"
+
+[node name="ChalutierPanel" type="ColorRect" parent="." unique_id=1592227133]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -533.5
+offset_top = -408.0
+offset_right = 533.5
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6392157, 0.6392157, 0.6392157, 0.73333335)
+
+[node name="PanelContainer" type="PanelContainer" parent="ChalutierPanel" unique_id=1223214819]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -275.5
+offset_top = -200.0
+offset_right = 275.5
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChalutierPanel/PanelContainer" unique_id=1666402989]
+layout_mode = 2
+
+[node name="LblChalutierTitle" type="Label" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=481334422]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Chalutier:"
+horizontal_alignment = 1
+
+[node name="LblChalutierResult" type="Label" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=1407734728]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Roll to see how much you get!"
+horizontal_alignment = 1
+
+[node name="ChalutierRoll" type="Button" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=573133875]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Roll Dice"
+
+[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
+[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
+[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
+[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]

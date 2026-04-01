@@ -143,12 +143,10 @@ func DicePhase() -> int:
 	var sum = resArray[0] + resArray[1]
 	# Monument Port : resultat des >= 10, ajoutez +2.
 	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Port):
-		var add2
-		if add2:
-			if sum >= 10:
-				var wants_add2 = await gameplayScreen.ask_yes_no("Add 2 to roll?")
-				if wants_add2:
-					sum = sum + 2
+		if sum >= 10:
+			var wants_add2 = await gameplayScreen.ask_yes_no("Add 2 to roll?")
+			if wants_add2:
+				sum = sum + 2
 	
 	current_roll_value = sum
 	return sum

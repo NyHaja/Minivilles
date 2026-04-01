@@ -8,6 +8,7 @@ signal player_chosen(target: Player)
 signal trade_completed(trade_data: Array)
 signal give_card_completed(give_data: Array)
 signal demolish_completed(monu_id: int)
+signal chalutier_roll_pressed()
 
 var current_player: Player
 var test_shop: Shop
@@ -19,15 +20,35 @@ var game:Game
 @onready var btn_roll_2: Button = %BtnRoll2
 @onready var lbl_dice: Label = %LblDice
 
-@onready var acrtive_deck_container: HFlowContainer = %ActiveDeckContainer
+
+#Active Player (Bottom)
+
+@onready var acrtive_deck_container: HBoxContainer = %ActiveDeckContainer
 @onready var active_name: Label = %ActiveName
 @onready var lbl_active_gold: Label = %LblActiveGold
 @onready var lbl_active_stats: Label = %LblActiveStats
 
-@onready var player2_deck_container: HFlowContainer = %Player2DeckContainer
-@onready var lbl_p2_name: Label = %Player2Name
-@onready var lbl_p2_gold: Label = %LblP2Gold
-@onready var lbl_p2_stats: Label = %LblP2Stats
+#Top Player
+
+@onready var top_deck_container: HBoxContainer = %PlayerTopDeckContainer
+@onready var lbl_top_name: Label = %LblPlayerTopName
+@onready var lbl_top_gold: Label = %LblPlayerTopGold
+@onready var lbl_top_stats: Label = %LblPlayerTopStats
+
+#Left Player
+
+@onready var left_deck_container: HBoxContainer = %LeftDeckContainer
+@onready var lbl_left_name: Label = %LblLeftName
+@onready var lbl_left_gold: Label = %LblLeftGold
+@onready var lbl_left_stats: Label = %LblLeftStats
+
+#Right Playee
+
+@onready var right_deck_container: HBoxContainer = %RightDeckContainer
+@onready var lbl_right_name: Label = %LblRightName
+@onready var lbl_right_gold: Label = %LblRightGold
+@onready var lbl_right_stats: Label = %LblRightStats
+
 
 @onready var open_monuments: Button = %OpenMonuMenu
 @onready var monument_menu: ColorRect = $MonumentMenu
@@ -59,6 +80,16 @@ var game:Game
 @onready var demolish_monuments: HBoxContainer = %DemolishMonuments
 @onready var btn_confirm_demolish: Button = %ConfirmDemolish
 
+@onready var buy_confirm_panel: ColorRect = $ConfirmCardBuyPanel
+@onready var card_preview: Control = %CardPreview
+@onready var confirm_card_buy: Button = %ConfirmCardBuy
+@onready var cancel_card_buy: Button = %CancelCardBuy
+
+
+@onready var chalutier_panel: ColorRect = %ChalutierPanel
+@onready var lbl_chalutier_result: Label = %LblChalutierResult
+@onready var chalutier_roll: Button = %ChalutierRoll
+
 var trade_target: Player = null
 var trade_their_card_id: int = -1
 var trade_my_card_id: int = -1
@@ -67,6 +98,8 @@ var give_card_id: int = -1
 var demolish_monu_id: int = -1
 
 var selected_monument_id: int = -1
+
+var selected_shop_card_id: int = -1
 
 #Dé
 var  DiceNUmber :int = 1
@@ -83,6 +116,9 @@ func _ready() -> void:
 	%ConfirmTrade.pressed.connect(_on_confirm_trade_pressed)
 	%ConfirmGive.pressed.connect(_on_confirm_give_pressed)
 	%ConfirmDemolish.pressed.connect(_on_confirm_demolish_pressed)
+	%ConfirmCardBuy.pressed.connect(_on_confirm_buy_shop_pressed)
+	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
+	chalutier_roll.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
 	setup_monument_button($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
 	setup_monument_button($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
@@ -281,10 +317,9 @@ func update_shop_ui() -> void:
 	for slot in test_shop.shop:
 		var btn = Button.new()
 		
-		# MATCH THE DECK CARD SIZE
 		btn.custom_minimum_size = Vector2(100, 140)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		btn.pressed.connect(_on_buy_pressed.bind(slot.id))
+		btn.pressed.connect(_on_shop_card_clicked.bind(slot.id))
 		
 		var card_data = CardFactory.get_card(slot.id)
 		
@@ -320,41 +355,59 @@ func update_shop_ui() -> void:
 		shop_container.add_child(btn)
 		
 func update_deck_ui() -> void:
-	for child in acrtive_deck_container.get_children():
-		acrtive_deck_container.remove_child(child)
-		child.queue_free()
-		
+	var piles = {
+		CardColor.Type.BLUE: %BluePileBottom,
+		CardColor.Type.GREEN: %GreenPileBottom,
+		CardColor.Type.RED: %RedPileBottom,
+		CardColor.Type.PURPLE: %PurplePileBottom
+	}
+	
+	for pile in piles.values():
+		for child in pile.get_children():
+			child.queue_free()
+
+	var pile_counts = {
+		CardColor.Type.BLUE: 0,
+		CardColor.Type.GREEN: 0,
+		CardColor.Type.RED: 0,
+		CardColor.Type.PURPLE: 0
+	}
+
 	for instance in current_player.deck:
-		if typeof(instance) != TYPE_ARRAY:
-			continue
+		if typeof(instance) != TYPE_ARRAY: continue
 		
 		var card_id = instance[0]
 		var quantity = instance[1]
-		
 		var card_data = CardFactory.get_card(card_id)
 		
 		if card_data != null:
+			var color = card_data.get_color()
+			var target_pile = piles[color]
+			
 			for i in range(quantity):
 				var card_visual = Button.new()
-				card_visual.text = str(card_data.activation) + "\n" + card_data.name
-				
+				card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name()
 				card_visual.custom_minimum_size = Vector2(100, 140)
-				
 				card_visual.disabled = true
 				card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				var offset_x = pile_counts[color] * 15 
+				card_visual.position = Vector2(offset_x, 0)
 				
 				var style = StyleBoxFlat.new()
-				
-				match card_data.color:
+				match color:
 					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
 					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
 					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
 					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
-					
+				
+				style.set_border_width_all(1)
+				style.border_color = Color(0, 0, 0, 0.3)
+				
 				card_visual.add_theme_stylebox_override("disabled", style)
 				card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
 				
-				acrtive_deck_container.add_child(card_visual)
+				target_pile.add_child(card_visual)
+				pile_counts[color] += 1
 				
 	
 func update_names() -> void:
@@ -383,43 +436,85 @@ func check_and_color_monument(btn: Button, monu_id: int) -> void:
 	btn.add_theme_stylebox_override("pressed", style)
 
 func update_opponent_ui() -> void:
-	for child in player2_deck_container.get_children():
-		child.queue_free()
+	var opponent_slots = [
+		{ 
+			"name": lbl_right_name, "gold": lbl_right_gold, "stats": lbl_right_stats, "parent": right_deck_container,
+			"piles": { CardColor.Type.BLUE: %BluePileRight, CardColor.Type.GREEN: %GreenPileRight, CardColor.Type.RED: %RedPileRight, CardColor.Type.PURPLE: %PurplePileRight}
+		},
+		{ 
+			"name": lbl_top_name, "gold": lbl_top_gold, "stats": lbl_top_stats, "parent": top_deck_container,
+			"piles": { CardColor.Type.BLUE: %BluePileTop, CardColor.Type.GREEN: %GreenPileTop, CardColor.Type.RED: %RedPileTop, CardColor.Type.PURPLE: %PurplePileTop}
+		},
+		{ 
+			"name": lbl_left_name, "gold": lbl_left_gold, "stats": lbl_left_stats, "parent": left_deck_container,
+			"piles": { CardColor.Type.BLUE: %BluePileLeft, CardColor.Type.GREEN: %GreenPileLeft, CardColor.Type.RED: %RedPileLeft, CardColor.Type.PURPLE: %PurplePileLeft}
+		}
+	]
 	
-	for player in game.playerArray:
-		if player == current_player:
-			continue
-			
-		lbl_p2_name.text = player.username
-		lbl_p2_gold.text = "Gold: " + str(player.balance)
-		lbl_p2_stats.text = "Establishments: " + str(player.establishmentCount) + "\nMonuments: " + str(player.monumentCount)
+	for slot in opponent_slots:
+		slot["name"].text = ""
+		slot["gold"].text = ""
+		slot["stats"].text = ""
+		slot["parent"].get_parent().hide() 
+		for pile in slot["piles"].values():
+			for child in pile.get_children():
+				child.queue_free()
+	
+	var current_index = game.playerArray.find(current_player)
+	
+	for i in range(1, game.playerCount):
+		var target_index = (current_index + i) % game.playerCount
+		var opponent = game.playerArray[target_index]
 		
-		for instance in player.deck:
-			var card_id = instance[0]
-			var quantity = instance[1]
-			var card_data = CardFactory.get_card(card_id)
+		var active_slot = opponent_slots[1] if game.playerCount == 2 else opponent_slots[i - 1] 
+		active_slot["parent"].get_parent().show() 
+		
+		active_slot["name"].text = opponent.username 
+		active_slot["gold"].text = "Gold: " + str(opponent.balance) 
+		active_slot["stats"].text = "Est: " + str(opponent.establishmentCount) + "\nMonu: " + str(opponent.monumentCount) 
+		
+		var pile_counts = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
+
+		for instance in opponent.deck: 
+			if typeof(instance) != TYPE_ARRAY: continue 
+			
+			var card_id = instance[0] 
+			var quantity = instance[1] 
+			var card_data = CardFactory.get_card(card_id) 
 			
 			if card_data != null:
-				for i in range(quantity):
+				var color = card_data.get_color()
+				var target_pile = active_slot["piles"][color]
+				
+				var lane_width = 80.0 
+				var default_offset = 10.0
+				var current_offset = default_offset
+				
+				if (quantity * default_offset) > lane_width:
+					current_offset = lane_width / quantity
+
+				for j in range(quantity):
 					var card_visual = Button.new()
-					card_visual.text = str(card_data.activation) + "\n" + card_data.name
+					card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name() 
+					card_visual.custom_minimum_size = Vector2(60, 90) 
+					card_visual.add_theme_font_size_override("font_size", 8) 
+					card_visual.disabled = true 
+					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART 
 					
-					card_visual.custom_minimum_size = Vector2(60, 90)
-					card_visual.add_theme_font_size_override("font_size", 10) 
-					card_visual.disabled = true
-					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					card_visual.position = Vector2(pile_counts[color] * current_offset, 0)
 					
 					var style = StyleBoxFlat.new()
-					match card_data.color:
+					match color: 
 						CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
 						CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
 						CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
 						CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 					
-					card_visual.add_theme_stylebox_override("disabled", style)
-					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
+					card_visual.add_theme_stylebox_override("disabled", style) 
+					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE) 
 					
-					player2_deck_container.add_child(card_visual)
+					target_pile.add_child(card_visual)
+					pile_counts[color] += 1
 
 
 
@@ -514,7 +609,6 @@ func _populate_trade_deck(player: Player, container: Container, is_mine: bool) -
 			container.add_child(btn)
 
 func _check_trade_valid() -> void:
-	# Only unlock the confirm button if all 3 choices are made!
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
 		btn_confirm_trade.text = "Confirm Trade!"
@@ -637,6 +731,68 @@ func _on_confirm_demolish_pressed() -> void:
 
 
 
+
+func _on_shop_card_clicked(card_id: int) -> void:
+	selected_shop_card_id = card_id
+	var card_data = CardFactory.get_card(card_id)
+	
+	for child in %CardPreview.get_children():
+		child.queue_free()
+	
+	if card_data != null:
+		var preview_card = Button.new()
+		preview_card.custom_minimum_size = Vector2(100, 140) 
+		preview_card.text = str(card_data.activation) + "\n" + card_data.name + "\nCost: " + str(card_data.cost)
+		preview_card.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART 
+		preview_card.disabled = true
+		
+		var style = StyleBoxFlat.new()
+		match card_data.color:
+			CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+			CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+			CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+			CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+			
+		preview_card.add_theme_stylebox_override("disabled", style)
+		preview_card.add_theme_color_override("font_disabled_color", Color.WHITE)
+		
+		%CardPreview.add_child(preview_card)
+		
+		buy_confirm_panel.show()
+
+func _on_confirm_buy_shop_pressed() -> void:
+	buy_confirm_panel.hide()
+	action_selected.emit([Game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+
+func _on_cancel_buy_shop_pressed() -> void:
+	selected_shop_card_id = -1
+	buy_confirm_panel.hide()
+
+
+
+
+func ask_chalutier_roll() -> int:
+	chalutier_panel.show()
+	chalutier_roll.disabled = false
+	lbl_chalutier_result.text = "Roll to see how much gold you catch."
+	
+	await chalutier_roll_pressed
+	
+	var d1 = (randi() % 6) + 1
+	var d2 = (randi() % 6) + 1
+	var total = d1 + d2
+	
+	lbl_chalutier_result.text = "You caught " + str(total) + " Gold!"
+	chalutier_roll.disabled = true
+	
+	await get_tree().create_timer(2.0).timeout
+	
+	chalutier_panel.hide()
+	return total
+
+
+
+
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
 	set_dice_buttons_enabled(false)
@@ -645,7 +801,7 @@ func show_victory_screen(winner_name: String) -> void:
 	victory_screen.show()
 	
 func _on_quit_pressed() -> void:
-	get_tree().change_scene_to_file("res://MainMenu.tscn")
+	get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")
 
 
 func print_player_stats() -> void:
