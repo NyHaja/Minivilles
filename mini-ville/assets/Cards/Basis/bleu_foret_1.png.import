@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://de7mabmipcgx4"
-path="res://.godot/imported/vert_fromagerie 1.png-a8d1730398ed52f3adb0f5f0f55d70fc.ctex"
+uid="uid://dkon31aqdm26p"
+path="res://.godot/imported/bleu_foret_1.png-945a973f97ef69f0caa5351d7922404c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/vert_fromagerie 1.png"
-dest_files=["res://.godot/imported/vert_fromagerie 1.png-a8d1730398ed52f3adb0f5f0f55d70fc.ctex"]
+source_file="res://assets/Cards/Basis/bleu_foret_1.png"
+dest_files=["res://.godot/imported/bleu_foret_1.png-945a973f97ef69f0caa5351d7922404c.ctex"]
 
 [params]
 

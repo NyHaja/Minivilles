@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dj774vh00bf5o"
-path="res://.godot/imported/Vert_Boulangerie 1.png-e95cee2bf2320a2916327d493e6f2683.ctex"
+uid="uid://brrwy3lucvkm3"
+path="res://.godot/imported/Bleu_champs_de_ble_2.png-062026b5c7d42e00a397d4e0e5063798.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/Vert_Boulangerie 1.png"
-dest_files=["res://.godot/imported/Vert_Boulangerie 1.png-e95cee2bf2320a2916327d493e6f2683.ctex"]
+source_file="res://assets/Cards/Hover/Bleu_champs_de_ble_2.png"
+dest_files=["res://.godot/imported/Bleu_champs_de_ble_2.png-062026b5c7d42e00a397d4e0e5063798.ctex"]
 
 [params]
 

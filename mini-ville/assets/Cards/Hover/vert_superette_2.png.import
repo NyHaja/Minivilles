@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7iwbojmxwv7r"
-path="res://.godot/imported/vert_fromagerie 1.png-c84a3658d5906b1686d84e1baebb3d7d.ctex"
+uid="uid://dfcq0b4ui752o"
+path="res://.godot/imported/vert_superette_2.png-78036f1d2cb50a1b89a90585454749c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/vert_fromagerie 1.png"
-dest_files=["res://.godot/imported/vert_fromagerie 1.png-c84a3658d5906b1686d84e1baebb3d7d.ctex"]
+source_file="res://assets/Cards/Hover/vert_superette_2.png"
+dest_files=["res://.godot/imported/vert_superette_2.png-78036f1d2cb50a1b89a90585454749c3.ctex"]
 
 [params]
 

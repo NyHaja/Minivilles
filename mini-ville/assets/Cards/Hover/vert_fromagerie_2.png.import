@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6p77cclojgys"
-path="res://.godot/imported/Rouge_restaurant 1.png-1cbf137e914bb6976ba9761cdde09b0a.ctex"
+uid="uid://c7iwbojmxwv7r"
+path="res://.godot/imported/vert_fromagerie_2.png-3f4ce6829c9c85b97be5198f95084702.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/Rouge_restaurant 1.png"
-dest_files=["res://.godot/imported/Rouge_restaurant 1.png-1cbf137e914bb6976ba9761cdde09b0a.ctex"]
+source_file="res://assets/Cards/Hover/vert_fromagerie_2.png"
+dest_files=["res://.godot/imported/vert_fromagerie_2.png-3f4ce6829c9c85b97be5198f95084702.ctex"]
 
 [params]
 

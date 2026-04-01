@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blkpvpx30sx8f"
-path="res://.godot/imported/vert_superette 1.png-2ea62f7d6482240cee991fdfa6feddbc.ctex"
+uid="uid://bhfin5nooe1je"
+path="res://.godot/imported/bleu_mine_2.png-acbb89251e7d696e530cdcea47297780.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/vert_superette 1.png"
-dest_files=["res://.godot/imported/vert_superette 1.png-2ea62f7d6482240cee991fdfa6feddbc.ctex"]
+source_file="res://assets/Cards/Hover/bleu_mine_2.png"
+dest_files=["res://.godot/imported/bleu_mine_2.png-acbb89251e7d696e530cdcea47297780.ctex"]
 
 [params]
 

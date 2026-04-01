@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://daptylvdfs3ss"]
 
-[ext_resource type="Script" uid="uid://cipvv24ib8gf3" path="res://Scripts/card_X_axis.gd" id="1_3qrd2"]
+[ext_resource type="Script" uid="uid://cipvv24ib8gf3" path="res://script/scene/table/card_X_axis.gd" id="1_3qrd2"]
 
 [node name="Card_X_axis" type="Control" unique_id=1098696589]
 custom_minimum_size = Vector2(156, 200)
@@ -12,6 +12,7 @@ rotation = -1.5707964
 script = ExtResource("1_3qrd2")
 
 [node name="Visual" type="TextureButton" parent="." unique_id=1252935335]
+custom_minimum_size = Vector2(200, 156)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

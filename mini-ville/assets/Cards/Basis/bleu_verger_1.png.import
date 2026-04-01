@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://colgos0uayxnl"
-path="res://.godot/imported/violet_chaine_de_tele 2.png-54489d34c47043eca0528cbfa829f0bc.ctex"
+uid="uid://tnw0ytdmex34"
+path="res://.godot/imported/bleu_verger_1.png-2f48949b1d637f46dd648c5550dc60d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/violet_chaine_de_tele 2.png"
-dest_files=["res://.godot/imported/violet_chaine_de_tele 2.png-54489d34c47043eca0528cbfa829f0bc.ctex"]
+source_file="res://assets/Cards/Basis/bleu_verger_1.png"
+dest_files=["res://.godot/imported/bleu_verger_1.png-2f48949b1d637f46dd648c5550dc60d4.ctex"]
 
 [params]
 

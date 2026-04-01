@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tnw0ytdmex34"
-path="res://.godot/imported/bleu_verger 2.png-ad68bcc166f0683870354bf971b08008.ctex"
+uid="uid://dwd42fy2il2sw"
+path="res://.godot/imported/vert_marche_de_fruit_et_legumes_1.png-4cfe82203ff4bedb9ba4fed414477080.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/bleu_verger 2.png"
-dest_files=["res://.godot/imported/bleu_verger 2.png-ad68bcc166f0683870354bf971b08008.ctex"]
+source_file="res://assets/Cards/Basis/vert_marche_de_fruit_et_legumes_1.png"
+dest_files=["res://.godot/imported/vert_marche_de_fruit_et_legumes_1.png-4cfe82203ff4bedb9ba4fed414477080.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qn5pli88iicl"
-path="res://.godot/imported/bleu_mine 2.png-8b46663c091d037b93506e3e90c014f3.ctex"
+uid="uid://de7mabmipcgx4"
+path="res://.godot/imported/vert_fromagerie_1.png-11804fbc896374fd52f77bfa27b7949d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/bleu_mine 2.png"
-dest_files=["res://.godot/imported/bleu_mine 2.png-8b46663c091d037b93506e3e90c014f3.ctex"]
+source_file="res://assets/Cards/Basis/vert_fromagerie_1.png"
+dest_files=["res://.godot/imported/vert_fromagerie_1.png-11804fbc896374fd52f77bfa27b7949d.ctex"]
 
 [params]
 

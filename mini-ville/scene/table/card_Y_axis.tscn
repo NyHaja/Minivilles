@@ -22,6 +22,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Tooltip" type="TextureRect" parent="Visual" unique_id=1731105118]
+visible = false
 z_index = 10
 layout_mode = 0
 offset_left = -28.0

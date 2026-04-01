@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5idp58ejd7l0"
-path="res://.godot/imported/vert_fabrique_de_meubles 1.png-15273110f58068f3691c24ff2a55defa.ctex"
+uid="uid://dr4a46jnd3gex"
+path="res://.godot/imported/bleu_ferme_1.png-65232b66cf235a0a9eeeac5c87b77563.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/vert_fabrique_de_meubles 1.png"
-dest_files=["res://.godot/imported/vert_fabrique_de_meubles 1.png-15273110f58068f3691c24ff2a55defa.ctex"]
+source_file="res://assets/Cards/Basis/bleu_ferme_1.png"
+dest_files=["res://.godot/imported/bleu_ferme_1.png-65232b66cf235a0a9eeeac5c87b77563.ctex"]
 
 [params]
 

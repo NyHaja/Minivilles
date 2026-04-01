@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ccdorpqcawktp"
-path="res://.godot/imported/bleu_verger 1.png-1d623878b2a1c0b1e0083610bf1bcbc6.ctex"
+path="res://.godot/imported/bleu_verger_2.png-c4f858c8af30e1b0a1f027ed83aca813.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/bleu_verger 1.png"
-dest_files=["res://.godot/imported/bleu_verger 1.png-1d623878b2a1c0b1e0083610bf1bcbc6.ctex"]
+source_file="res://assets/Cards/Hover/bleu_verger_2.png"
+dest_files=["res://.godot/imported/bleu_verger_2.png-c4f858c8af30e1b0a1f027ed83aca813.ctex"]
 
 [params]
 

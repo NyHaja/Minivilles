@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhfin5nooe1je"
-path="res://.godot/imported/bleu_mine 1.png-4cbf8449c0a47ec999d7b0be4d89b77a.ctex"
+uid="uid://qn5pli88iicl"
+path="res://.godot/imported/bleu_mine_1.png-f4ae9f5b498c32b757d63853206412c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/bleu_mine 1.png"
-dest_files=["res://.godot/imported/bleu_mine 1.png-4cbf8449c0a47ec999d7b0be4d89b77a.ctex"]
+source_file="res://assets/Cards/Basis/bleu_mine_1.png"
+dest_files=["res://.godot/imported/bleu_mine_1.png-f4ae9f5b498c32b757d63853206412c7.ctex"]
 
 [params]
 

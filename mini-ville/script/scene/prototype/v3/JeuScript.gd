@@ -354,6 +354,23 @@ func update_shop_ui() -> void:
 		
 		shop_container.add_child(btn)
 		
+		
+
+func get_clean_file_name(card_name: String, color: int) -> String:
+	var prefix = ""
+	match color:
+		CardColor.Type.BLUE: prefix = "bleu_"
+		CardColor.Type.GREEN: prefix = "vert_"
+		CardColor.Type.RED: prefix = "rouge_"
+		CardColor.Type.PURPLE: prefix = "violet_"
+		
+	var clean_name = card_name.to_lower().replace(" ", "_")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("'", "_")
+	
+	return prefix + clean_name
+
+
+
 func update_deck_ui() -> void:
 	var piles = {
 		CardColor.Type.BLUE: %BluePileBottom,
@@ -361,6 +378,8 @@ func update_deck_ui() -> void:
 		CardColor.Type.RED: %RedPileBottom,
 		CardColor.Type.PURPLE: %PurplePileBottom
 	}
+	
+	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 	
 	for pile in piles.values():
 		for child in pile.get_children():
@@ -385,31 +404,63 @@ func update_deck_ui() -> void:
 			var target_pile = piles[color]
 			
 			for i in range(quantity):
-				var card_visual = Button.new()
-				card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name()
-				card_visual.custom_minimum_size = Vector2(100, 140)
-				card_visual.disabled = true
-				card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-				var offset_x = pile_counts[color] * 15 
-				card_visual.position = Vector2(offset_x, 0)
+				var card_visual = CARD_SCENE.instantiate()
+				var card_name = card_data.get_name() 
+				var card_color = card_data.get_color()
 				
-				var style = StyleBoxFlat.new()
-				match color:
-					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+				var clean_name = get_clean_file_name(card_name, card_color)
 				
-				style.set_border_width_all(1)
-				style.border_color = Color(0, 0, 0, 0.3)
+				var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+				var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 				
-				card_visual.add_theme_stylebox_override("disabled", style)
-				card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
+				if FileAccess.file_exists(path_basis):
+					var image_node = card_visual.get_node_or_null("Visual")
+					if image_node is TextureButton:
+						image_node.texture_normal = load(path_basis)
+						
+						var card_scale = 1
+						card_visual.scale = Vector2(card_scale, card_scale)
+						
+						image_node.ignore_texture_size = true
+						image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+						
+						if FileAccess.file_exists(path_hover):
+							image_node.texture_hover = load(path_hover)
+				else:
+					print("Warning: Art missing for ", path_basis)
+
+				var tooltip_node = card_visual.get_node_or_null("Tooltip")
+				if tooltip_node:
+					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+					if FileAccess.file_exists(tip_path):
+						tooltip_node.texture = load(tip_path)
+						tooltip_node.hide()
+
+				var stack_gap = 25 
+				var offset_x = pile_counts[card_color] * stack_gap 
+				var push_up_amount = -60 
 				
+				card_visual.position = Vector2(offset_x, push_up_amount)
+					
 				target_pile.add_child(card_visual)
-				pile_counts[color] += 1
-				
+				pile_counts[card_color] += 1
+
+
+func get_texture_path_from_name(card_name: String, color: int) -> String:
+	var prefix = ""
+	match color:
+		0: prefix = "Bleu_"
+		1: prefix = "Vert_"
+		2: prefix = "Rouge_"
+		3: prefix = "violet_"
 	
+	var clean_name = card_name.to_lower().replace(" ", "_")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
+	
+	return "res://assets/Cards/Basis/" + prefix + clean_name + " 2.png"
+
+
+
 func update_names() -> void:
 	active_name.text = current_player.username
 	

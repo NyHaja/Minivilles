@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfcq0b4ui752o"
-path="res://.godot/imported/vert_superette 1.png-3b7205851456b9ca884a7b142b6eab8d.ctex"
+uid="uid://cbkvnx2ukqoen"
+path="res://.godot/imported/violet_chaine_de_tele_2.png-b525b8f6e20a500f9ae47a60b6995a40.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/vert_superette 1.png"
-dest_files=["res://.godot/imported/vert_superette 1.png-3b7205851456b9ca884a7b142b6eab8d.ctex"]
+source_file="res://assets/Cards/Hover/violet_chaine_de_tele_2.png"
+dest_files=["res://.godot/imported/violet_chaine_de_tele_2.png-b525b8f6e20a500f9ae47a60b6995a40.ctex"]
 
 [params]
 

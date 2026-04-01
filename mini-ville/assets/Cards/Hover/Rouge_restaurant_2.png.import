@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crmdcoviu8m5u"
-path="res://.godot/imported/bleu_foret 1.png-30b7b291c74ea508ffcdd4ce89f70029.ctex"
+uid="uid://c6p77cclojgys"
+path="res://.godot/imported/Rouge_restaurant_2.png-92c1485ded31c9c6e0965a35bca47b42.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/bleu_foret 1.png"
-dest_files=["res://.godot/imported/bleu_foret 1.png-30b7b291c74ea508ffcdd4ce89f70029.ctex"]
+source_file="res://assets/Cards/Hover/Rouge_restaurant_2.png"
+dest_files=["res://.godot/imported/Rouge_restaurant_2.png-92c1485ded31c9c6e0965a35bca47b42.ctex"]
 
 [params]
 

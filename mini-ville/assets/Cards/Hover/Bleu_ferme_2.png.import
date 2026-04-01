@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8xrbpljr36vr"
-path="res://.godot/imported/Rouge_cafe 3.png-7e4eda864381c2c20f0cb2ebc475dbaf.ctex"
+uid="uid://k33xa4bf1e4b"
+path="res://.godot/imported/Bleu_ferme_2.png-8496f68336b2e7b4da50b21e9c4d1b97.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/Rouge_cafe 3.png"
-dest_files=["res://.godot/imported/Rouge_cafe 3.png-7e4eda864381c2c20f0cb2ebc475dbaf.ctex"]
+source_file="res://assets/Cards/Hover/Bleu_ferme_2.png"
+dest_files=["res://.godot/imported/Bleu_ferme_2.png-8496f68336b2e7b4da50b21e9c4d1b97.ctex"]
 
 [params]
 

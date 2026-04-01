@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bo30qdnolstij"
-path="res://.godot/imported/vert_fabrique_de_meubles 1.png-b6a547cadae859d20e55d4dcf0a473f2.ctex"
+uid="uid://d3kob7xybp22"
+path="res://.godot/imported/violet_stade_2.png-cf5f9e65a61dde3f1089cf3f9a4fb6ba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/vert_fabrique_de_meubles 1.png"
-dest_files=["res://.godot/imported/vert_fabrique_de_meubles 1.png-b6a547cadae859d20e55d4dcf0a473f2.ctex"]
+source_file="res://assets/Cards/Hover/violet_stade_2.png"
+dest_files=["res://.godot/imported/violet_stade_2.png-cf5f9e65a61dde3f1089cf3f9a4fb6ba.ctex"]
 
 [params]
 

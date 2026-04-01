@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkon31aqdm26p"
-path="res://.godot/imported/bleu_foret 2.png-84406a5ef6304bd5bff4f7e706af9ebe.ctex"
+uid="uid://bo30qdnolstij"
+path="res://.godot/imported/vert_fabrique_de_meubles_2.png-dc1d4890248582bd42b1765dbe321ede.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/bleu_foret 2.png"
-dest_files=["res://.godot/imported/bleu_foret 2.png-84406a5ef6304bd5bff4f7e706af9ebe.ctex"]
+source_file="res://assets/Cards/Hover/vert_fabrique_de_meubles_2.png"
+dest_files=["res://.godot/imported/vert_fabrique_de_meubles_2.png-dc1d4890248582bd42b1765dbe321ede.ctex"]
 
 [params]
 

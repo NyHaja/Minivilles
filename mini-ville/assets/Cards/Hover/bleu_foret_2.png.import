@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brrwy3lucvkm3"
-path="res://.godot/imported/Bleu_champs_de_ble 1.png-3ade43142d0969dc600d6479d1999a09.ctex"
+uid="uid://crmdcoviu8m5u"
+path="res://.godot/imported/bleu_foret_2.png-240fcbd24519a96709de20b3b2d75996.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/Bleu_champs_de_ble 1.png"
-dest_files=["res://.godot/imported/Bleu_champs_de_ble 1.png-3ade43142d0969dc600d6479d1999a09.ctex"]
+source_file="res://assets/Cards/Hover/bleu_foret_2.png"
+dest_files=["res://.godot/imported/bleu_foret_2.png-240fcbd24519a96709de20b3b2d75996.ctex"]
 
 [params]
 

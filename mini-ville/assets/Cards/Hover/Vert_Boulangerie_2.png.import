@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dwd42fy2il2sw"
-path="res://.godot/imported/vert_marche_de_fruit_et_legumes 1.png-67fe0b79f683e6448033730b8192f282.ctex"
+uid="uid://dt617oh7ievmn"
+path="res://.godot/imported/Vert_Boulangerie_2.png-627ec80c463fcd5dd045370f89853163.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/vert_marche_de_fruit_et_legumes 1.png"
-dest_files=["res://.godot/imported/vert_marche_de_fruit_et_legumes 1.png-67fe0b79f683e6448033730b8192f282.ctex"]
+source_file="res://assets/Cards/Hover/Vert_Boulangerie_2.png"
+dest_files=["res://.godot/imported/Vert_Boulangerie_2.png-627ec80c463fcd5dd045370f89853163.ctex"]
 
 [params]
 

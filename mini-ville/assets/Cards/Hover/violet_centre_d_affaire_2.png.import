@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://17v6hctpf2al"
-path="res://.godot/imported/violet_stade 2.png-289038e2d16bf879d7852735adfca540.ctex"
+uid="uid://buobsrrtcpf40"
+path="res://.godot/imported/violet_centre_d_affaire_2.png-0928e55d656d471d9c9a99fd822107d1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/violet_stade 2.png"
-dest_files=["res://.godot/imported/violet_stade 2.png-289038e2d16bf879d7852735adfca540.ctex"]
+source_file="res://assets/Cards/Hover/violet_centre_d_affaire_2.png"
+dest_files=["res://.godot/imported/violet_centre_d_affaire_2.png-0928e55d656d471d9c9a99fd822107d1.ctex"]
 
 [params]
 
