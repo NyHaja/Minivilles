@@ -222,8 +222,10 @@ func set_actions_enabled(can_act: bool) -> void:
 	%Skip.disabled = !can_act
 	open_monuments.disabled = !can_act
 	
-	for btn in shop_container.get_children():
-		btn.disabled = !can_act
+	for card_visual in shop_container.get_children():
+		var button = card_visual.get_node_or_null("Visual")
+		if button and button is TextureButton:
+			button.disabled = !can_act
 	
 func set_dice_buttons_enabled(can_roll: bool) -> void:
 	btn_roll_1.disabled = !can_roll
@@ -237,25 +239,19 @@ func set_dice_buttons_enabled(can_roll: bool) -> void:
 func _on_roll_1_pressed() -> void:
 	dice_amount_chosen.emit(1)
 	
-	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
-	
 func _on_roll_2_pressed() -> void:
 	dice_amount_chosen.emit(2)
-	
-	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
 	
 	
 	
 	
 func setup_monument_button(btn: Button, monu_id: int) -> void:
 	
-	# Red (Not Bought)
 	var red_style = StyleBoxFlat.new()
 	red_style.bg_color = Color(0.6, 0.1, 0.1) 
 	btn.add_theme_stylebox_override("normal", red_style)
 	btn.add_theme_stylebox_override("hover", red_style) 
 	
-	# Green (Bought)
 	var green_style = StyleBoxFlat.new()
 	green_style.bg_color = Color(0.1, 0.6, 0.1) 
 	btn.add_theme_stylebox_override("pressed", green_style)
@@ -314,47 +310,41 @@ func update_shop_ui() -> void:
 	for child in shop_container.get_children():
 		child.queue_free()
 		
+	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+		
 	for slot in test_shop.shop:
-		var btn = Button.new()
-		
-		btn.custom_minimum_size = Vector2(100, 140)
-		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		btn.pressed.connect(_on_shop_card_clicked.bind(slot.id))
-		
+		var card_visual = CARD_SCENE.instantiate()
 		var card_data = CardFactory.get_card(slot.id)
 		
 		if card_data != null:
-			btn.text = str(card_data.activation) + "\n" + card_data.name + "\nQty: " + str(slot.quantity) + "\n" + str(card_data.cost)
+			var card_name = card_data.get_name()
+			var card_color = card_data.get_color()
+			var clean_name = get_clean_file_name(card_name, card_color)
 			
-			var base_color: Color
-			match card_data.color:
-				CardColor.Type.BLUE: base_color = Color(0.2, 0.4, 0.8)
-				CardColor.Type.GREEN: base_color = Color(0.2, 0.6, 0.2)
-				CardColor.Type.RED: base_color = Color(0.8, 0.2, 0.2)
-				CardColor.Type.PURPLE: base_color = Color(0.6, 0.2, 0.8)
+			var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
+			
+			var image_node = card_visual.get_node_or_null("Visual")
+			if image_node is TextureButton:
+				if FileAccess.file_exists(path_basis):
+					image_node.texture_normal = load(path_basis)
 				
-			var style_normal = StyleBoxFlat.new()
-			style_normal.bg_color = base_color
-			
-			var style_hover = StyleBoxFlat.new()
-			style_hover.bg_color = base_color.lightened(0.2)
-			
-			var style_pressed = StyleBoxFlat.new()
-			style_pressed.bg_color = base_color.darkened(0.2)
-			
-			btn.add_theme_stylebox_override("normal", style_normal)
-			btn.add_theme_stylebox_override("hover", style_hover)
-			btn.add_theme_stylebox_override("pressed", style_pressed)
-			btn.add_theme_stylebox_override("focus", style_normal)
-			
-			btn.add_theme_color_override("font_color", Color.WHITE)
-			btn.add_theme_color_override("font_hover_color", Color.WHITE)
-			btn.add_theme_color_override("font_pressed_color", Color.WHITE)
-			btn.add_theme_color_override("font_focus_color", Color.WHITE)
-		
-		shop_container.add_child(btn)
-		
-		
+				if FileAccess.file_exists(path_hover):
+					image_node.texture_hover = load(path_hover)
+				image_node.pressed.connect(_on_shop_card_clicked.bind(slot.id))
+				
+				card_visual.scale = Vector2(0.5, 0.5) 
+				card_visual.custom_minimum_size = Vector2(180, 224) * 0.5
+				
+				var tooltip_node = card_visual.get_node_or_null("Visual/Tooltip")
+				if tooltip_node:
+					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+					if FileAccess.file_exists(tip_path):
+						tooltip_node.texture = load(tip_path)
+					tooltip_node.hide()
+					tooltip_node.rotation_degrees = 0
+
+		shop_container.add_child(card_visual)
 
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""
@@ -384,14 +374,14 @@ func update_deck_ui() -> void:
 	for pile in piles.values():
 		for child in pile.get_children():
 			child.queue_free()
-
+			
 	var pile_counts = {
 		CardColor.Type.BLUE: 0,
 		CardColor.Type.GREEN: 0,
 		CardColor.Type.RED: 0,
 		CardColor.Type.PURPLE: 0
 	}
-
+	
 	for instance in current_player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		
@@ -428,14 +418,14 @@ func update_deck_ui() -> void:
 							image_node.texture_hover = load(path_hover)
 				else:
 					print("Warning: Art missing for ", path_basis)
-
+					
 				var tooltip_node = card_visual.get_node_or_null("Tooltip")
 				if tooltip_node:
 					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
 					if FileAccess.file_exists(tip_path):
 						tooltip_node.texture = load(tip_path)
 						tooltip_node.hide()
-
+						
 				var stack_gap = 25 
 				var offset_x = pile_counts[card_color] * stack_gap 
 				var push_up_amount = -60 
@@ -490,17 +480,26 @@ func update_opponent_ui() -> void:
 	var opponent_slots = [
 		{ 
 			"name": lbl_right_name, "gold": lbl_right_gold, "stats": lbl_right_stats, "parent": right_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileRight, CardColor.Type.GREEN: %GreenPileRight, CardColor.Type.RED: %RedPileRight, CardColor.Type.PURPLE: %PurplePileRight}
+			"piles": { CardColor.Type.BLUE: %BluePileRight, CardColor.Type.GREEN: %GreenPileRight, CardColor.Type.RED: %RedPileRight, CardColor.Type.PURPLE: %PurplePileRight},
+			"axis": "X",
+			"rotation": 90
 		},
 		{ 
 			"name": lbl_top_name, "gold": lbl_top_gold, "stats": lbl_top_stats, "parent": top_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileTop, CardColor.Type.GREEN: %GreenPileTop, CardColor.Type.RED: %RedPileTop, CardColor.Type.PURPLE: %PurplePileTop}
+			"piles": { CardColor.Type.BLUE: %BluePileTop, CardColor.Type.GREEN: %GreenPileTop, CardColor.Type.RED: %RedPileTop, CardColor.Type.PURPLE: %PurplePileTop},
+			"axis": "Y",
+			"rotation": 180
 		},
 		{ 
 			"name": lbl_left_name, "gold": lbl_left_gold, "stats": lbl_left_stats, "parent": left_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileLeft, CardColor.Type.GREEN: %GreenPileLeft, CardColor.Type.RED: %RedPileLeft, CardColor.Type.PURPLE: %PurplePileLeft}
+			"piles": { CardColor.Type.BLUE: %BluePileLeft, CardColor.Type.GREEN: %GreenPileLeft, CardColor.Type.RED: %RedPileLeft, CardColor.Type.PURPLE: %PurplePileLeft},
+			"axis": "X",
+			"rotation": 90
 		}
 	]
+	
+	const CARD_X_SCENE = preload("res://scene/table/card_X_axis.tscn")
+	const CARD_Y_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 	
 	for slot in opponent_slots:
 		slot["name"].text = ""
@@ -536,34 +535,87 @@ func update_opponent_ui() -> void:
 			if card_data != null:
 				var color = card_data.get_color()
 				var target_pile = active_slot["piles"][color]
+				var card_name = card_data.get_name()
 				
-				var lane_width = 80.0 
-				var default_offset = 10.0
-				var current_offset = default_offset
-				
-				if (quantity * default_offset) > lane_width:
-					current_offset = lane_width / quantity
-
 				for j in range(quantity):
-					var card_visual = Button.new()
-					card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name() 
-					card_visual.custom_minimum_size = Vector2(60, 90) 
-					card_visual.add_theme_font_size_override("font_size", 8) 
-					card_visual.disabled = true 
-					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART 
+					var card_visual
+					var tex_width = 180 
+					var tex_height = 224 
 					
-					card_visual.position = Vector2(pile_counts[color] * current_offset, 0)
+					if active_slot["axis"] == "Y":
+						card_visual = CARD_Y_SCENE.instantiate()
+						card_visual.custom_minimum_size = Vector2(tex_width, tex_height)
+						card_visual.size = Vector2(tex_width, tex_height)
+					else:
+						card_visual = CARD_X_SCENE.instantiate()
+						card_visual.custom_minimum_size = Vector2(tex_height, tex_width)
+						card_visual.size = Vector2(tex_height, tex_width)
+
+					var clean_name = get_clean_file_name(card_name, color)
+					var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+					var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 					
-					var style = StyleBoxFlat.new()
-					match color: 
-						CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-						CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-						CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-						CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					if FileAccess.file_exists(path_basis):
+						var image_node = card_visual.get_node_or_null("Visual")
+						if image_node != null and image_node is TextureButton:
+							image_node.texture_normal = load(path_basis)
+							
+							image_node.custom_minimum_size = Vector2(tex_width, tex_height)
+							image_node.size = Vector2(tex_width, tex_height)
+							image_node.ignore_texture_size = true
+							image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED 
+							
+							image_node.pivot_offset = Vector2(tex_width / 2.0, tex_height / 2.0)
+							
+							if active_slot["axis"] == "Y":
+								image_node.position = Vector2(0, 0)
+							else:
+								image_node.position = Vector2((tex_height - tex_width) / 2.0, (tex_width - tex_height) / 2.0)
+							
+							image_node.rotation_degrees = active_slot["rotation"]
+							
+							card_visual.base_pos = image_node.position
+							
+							if active_slot["name"] == lbl_top_name:
+								card_visual.hover_offset = Vector2(0, 50)
+							elif active_slot["name"] == lbl_left_name:
+								card_visual.hover_offset = Vector2(50, 0)
+							elif active_slot["name"] == lbl_right_name:
+								card_visual.hover_offset = Vector2(50, 0)
+							
+							var card_scale = 0.35 
+							card_visual.scale = Vector2(card_scale, card_scale)
+							
+							if FileAccess.file_exists(path_hover):
+								image_node.texture_hover = load(path_hover)
+					else:
+						var placeholder = ColorRect.new()
+						placeholder.color = Color(1.0, 0.0, 1.0, 0.5) 
+						placeholder.custom_minimum_size = card_visual.custom_minimum_size
+						placeholder.scale = Vector2(0.35, 0.35) 
+						card_visual.add_child(placeholder)
+						
+					var stack_gap = 25 
 					
-					card_visual.add_theme_stylebox_override("disabled", style) 
-					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE) 
-					
+					if active_slot["axis"] == "Y":
+						var base_x_offset = 100
+						
+						var offset_x = (pile_counts[color] * stack_gap) + base_x_offset 
+						card_visual.position = Vector2(offset_x, 100)
+					else:
+						var base_y_offset = 120
+						var screen_vertical = (pile_counts[color] * stack_gap) + base_y_offset
+						
+						var screen_horizontal = 0
+						
+						if active_slot["name"] == lbl_right_name:
+							screen_horizontal = 0 
+							
+						if active_slot["name"] == lbl_left_name:
+							screen_horizontal = 0  
+							
+						card_visual.position = Vector2(screen_vertical, screen_horizontal)
+						
 					target_pile.add_child(card_visual)
 					pile_counts[color] += 1
 
@@ -791,22 +843,27 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		child.queue_free()
 	
 	if card_data != null:
-		var preview_card = Button.new()
-		preview_card.custom_minimum_size = Vector2(100, 140) 
-		preview_card.text = str(card_data.activation) + "\n" + card_data.name + "\nCost: " + str(card_data.cost)
-		preview_card.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART 
-		preview_card.disabled = true
+		const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+		var preview_card = CARD_SCENE.instantiate()
 		
-		var style = StyleBoxFlat.new()
-		match card_data.color:
-			CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-			CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-			CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-			CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+		var card_name = card_data.get_name()
+		var card_color = card_data.get_color()
+		var clean_name = get_clean_file_name(card_name, card_color)
+		
+		var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+		var image_node = preview_card.get_node_or_null("Visual")
+		
+		if image_node and image_node is TextureButton:
+			if FileAccess.file_exists(path_basis):
+				image_node.texture_normal = load(path_basis)
 			
-		preview_card.add_theme_stylebox_override("disabled", style)
-		preview_card.add_theme_color_override("font_disabled_color", Color.WHITE)
-		
+			image_node.disabled = true
+			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+		var tooltip_node = preview_card.get_node_or_null("Visual/Tooltip")
+		if tooltip_node:
+			tooltip_node.hide()
+
 		%CardPreview.add_child(preview_card)
 		
 		buy_confirm_panel.show()

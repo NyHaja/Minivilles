@@ -59,7 +59,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="BlueMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=2128767076]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -70,7 +69,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GreenMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1783766102]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -81,7 +79,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="RedMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1462035668]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -92,7 +89,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PurpleMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=857943724]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -139,7 +135,6 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=490164756]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -150,7 +145,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=2013622111]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -161,7 +155,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=1566956518]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -172,7 +165,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=49595285]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -278,7 +270,6 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1105987736]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -289,7 +280,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1176307536]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -300,7 +290,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1933661796]
-clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_right = 20
 
@@ -311,7 +300,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=972748979]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -891,8 +879,8 @@ text = "Roll Dice"
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]

@@ -30,6 +30,9 @@ extends Control
 var lift_amount := 50.0
 var anim_speed := 0.2
 
+var base_pos := Vector2.ZERO 
+var hover_offset := Vector2(0, -lift_amount)
+
 func _ready():
 	# Application des textures au lancement
 	if texture_normale:
@@ -54,7 +57,7 @@ func _on_card_hovered():
 	# Animation de levée
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(visual, "position:y", -lift_amount, anim_speed)
+	tween.tween_property(visual, "position", base_pos + hover_offset, anim_speed)
 	
 	# Gestion de l'affichage
 	z_index = 10
@@ -64,7 +67,7 @@ func _on_card_exited():
 	# Animation de redescente
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(visual, "position:y", 0, anim_speed)
+	tween.tween_property(visual, "position", base_pos, anim_speed)
 	
 	# Reset de l'affichage
 	z_index = 0
