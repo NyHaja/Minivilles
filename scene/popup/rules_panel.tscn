@@ -1,0 +1,215 @@
+[gd_scene format=3 uid="uid://dpmmcwfqqufi6"]
+
+[ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://script/scene/Popup/rules_panel.gd" id="1_07o7p"]
+[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/Image/icon/backArrow.png" id="1_o4co6"]
+[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/Image/icon/backArrowPress.png" id="2_bwkas"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_541gp"]
+[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
+[ext_resource type="FontFile" uid="uid://c7ye6pwadgxl6" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
+[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/Image/icon/Ellipse 32.png" id="6_uxse3"]
+[ext_resource type="FontFile" uid="uid://c16hfaau3y518" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(6, 7)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r7ths"]
+font = ExtResource("4_dlb48")
+font_size = 60
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_nefu6"]
+font = ExtResource("5_wfh2e")
+font_size = 22
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sl5g7"]
+color = Color(1, 1, 1, 1)
+grow_begin = -270.0
+grow_end = 0.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1a0co"]
+color = Color(1, 1, 1, 1)
+grow_begin = 268.0
+thickness = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxy87"]
+bg_color = Color(0.9254902, 0.9411765, 0.94509804, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_07o7p"]
+font = ExtResource("8_p7dpe")
+font_size = 30
+font_color = Color(0, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0.17254902, 0.24313726, 0.3137255, 1)
+
+[node name="RulesPanel" type="Control" unique_id=1392428517]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_07o7p")
+
+[node name="Panel" type="Panel" parent="." unique_id=2106122667]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=284526907]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 6.0
+offset_right = 129.0
+offset_bottom = 142.0
+theme_override_constants/separation = -17
+
+[node name="backbtn" type="TextureButton" parent="Panel/VBoxContainer" unique_id=1089397235]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture_normal = ExtResource("1_o4co6")
+texture_pressed = ExtResource("2_bwkas")
+texture_hover = ExtResource("2_bwkas")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=411881164]
+layout_mode = 2
+text = "Back"
+label_settings = ExtResource("3_541gp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panelrule" type="PanelContainer" parent="Panel" unique_id=238016818]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -425.0
+offset_right = 350.0
+offset_bottom = 425.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h7ook")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Panelrule" unique_id=1308020130]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 40
+
+[node name="Boxconnexion" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer" unique_id=1387551079]
+layout_mode = 2
+theme_override_constants/separation = 29
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion" unique_id=798338019]
+layout_mode = 2
+theme_override_constants/separation = -7
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/VBoxContainer" unique_id=164760900]
+layout_mode = 2
+text = "Minivilles"
+label_settings = SubResource("LabelSettings_r7ths")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/VBoxContainer" unique_id=52051124]
+layout_mode = 2
+text = "Rules"
+label_settings = SubResource("LabelSettings_nefu6")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion" unique_id=48542556]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/HBoxContainer" unique_id=997998328]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_sl5g7")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/HBoxContainer" unique_id=1836843729]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("6_uxse3")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/HBoxContainer" unique_id=1943626524]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_1a0co")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion" unique_id=931820981]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer" unique_id=2101002856]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lxy87")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer" unique_id=1457803731]
+custom_minimum_size = Vector2(0, 500)
+layout_mode = 2
+draw_focus_border = true
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer" unique_id=1752348606]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1661583302]
+layout_mode = 2
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+Nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+Eu fugiat nulla pariatur.
+Excepteur sint occaecat cupidatat non proident.
+Sunt in culpa qui officia deserunt mollit anim id est laborum.
+Curabitur pretium tincidunt lacus.
+Nulla gravida orci a odio.
+Nullam varius, turpis et commodo pharetra.
+Eros quam gravida nisl, id fringilla neque ante vel mi.
+Morbi interdum mollis sapien."
+label_settings = SubResource("LabelSettings_07o7p")
+autowrap_mode = 2
+
+[connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
