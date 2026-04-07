@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dj774vh00bf5o"
-path="res://.godot/imported/vert_Boulangerie_1.png-cbdb734af0c281c494225bb9d282ab0c.ctex"
+uid="uid://6te6e473gwtt"
+path="res://.godot/imported/violet_chaine_de_tele.png-41178e3d663c13d675e219bb1a353763.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Basis/vert_Boulangerie_1.png"
-dest_files=["res://.godot/imported/vert_Boulangerie_1.png-cbdb734af0c281c494225bb9d282ab0c.ctex"]
+source_file="res://assets/cards/violet_chaine_de_tele.png"
+dest_files=["res://.godot/imported/violet_chaine_de_tele.png-41178e3d663c13d675e219bb1a353763.ctex"]
 
 [params]
 

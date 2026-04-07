@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dt617oh7ievmn"
-path="res://.godot/imported/Vert_Boulangerie_2.png-627ec80c463fcd5dd045370f89853163.ctex"
+path="res://.godot/imported/Vert_boulangerie_2.png-badc9822a81383acb9b37216e8f8012f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Cards/Hover/Vert_Boulangerie_2.png"
-dest_files=["res://.godot/imported/Vert_Boulangerie_2.png-627ec80c463fcd5dd045370f89853163.ctex"]
+source_file="res://assets/Cards/Hover/Vert_boulangerie_2.png"
+dest_files=["res://.godot/imported/Vert_boulangerie_2.png-badc9822a81383acb9b37216e8f8012f.ctex"]
 
 [params]
 
