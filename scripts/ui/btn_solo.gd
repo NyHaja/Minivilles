@@ -1,4 +1,4 @@
-extends TextureButton
+extends Button
 
 
 func _ready():
@@ -30,4 +30,4 @@ func _on_button_up():
 
 
 func _on_pressed():
-	print("Solo sélectionné")
+	get_tree().change_scene_to_file("res://scenes/ui/local_lobby.tscn")

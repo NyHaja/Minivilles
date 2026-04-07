@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://Assets/Image/icon/Ellipse 32.png" id="6_fe3jr"]
 [ext_resource type="FontFile" uid="uid://b8rhdspwo18yo" path="res://Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="7_gfe4b"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="8_gu3gm"]
+[ext_resource type="Script" path="res://script/popup_signin.gd" id="99_sc_signin"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf780"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -129,6 +130,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("99_sc_signin")
 
 [node name="Panel" type="Panel" parent="." unique_id=182428005]
 layout_mode = 1

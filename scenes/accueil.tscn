@@ -65,7 +65,7 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_fonts/font = ExtResource("4_cf2on")
-text = "Rules"
+text = "Règles"
 label_settings = ExtResource("8_nrxky")
 horizontal_alignment = 1
 
@@ -89,7 +89,7 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_fonts/font = ExtResource("4_cf2on")
-text = "Settings"
+text = "Paramètres"
 label_settings = ExtResource("8_nrxky")
 horizontal_alignment = 1
 
@@ -158,7 +158,7 @@ theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = ExtResource("5_w3kyk")
 theme_override_styles/pressed = ExtResource("6_2063g")
 theme_override_styles/hover = ExtResource("6_2063g")
-text = "Login"
+text = "Connexion"
 
 [node name="guestbtn" type="Button" parent="gameMode" unique_id=105060779]
 layout_mode = 2
@@ -173,7 +173,7 @@ theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = ExtResource("5_w3kyk")
 theme_override_styles/pressed = ExtResource("6_2063g")
 theme_override_styles/hover = ExtResource("6_2063g")
-text = "Play as a Guest"
+text = "Jouer en invité"
 
 [node name="Popup_login" parent="." unique_id=180227008 instance=ExtResource("13_wvwwm")]
 visible = false

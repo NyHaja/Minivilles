@@ -1,0 +1,266 @@
+[gd_scene format=3 uid="uid://local_lobby_mv"]
+
+[ext_resource type="Script" path="res://scripts/ui/local_lobby.gd" id="1_sc"]
+[ext_resource type="Script" path="res://scripts/ui/btn_fleche.gd" id="14_btn_fleche"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/icone_de.png" id="4_de"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/fleche_gauche.png" id="6_fg"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/fleche_droite.png" id="7_fd"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/joueur.png" id="9_j"]
+[ext_resource type="Texture2D" path="res://assets/ui/creation_lobby/chronometre.png" id="12_chrono"]
+[ext_resource type="Texture2D" path="res://assets/ui/stats_joueur/btn_retour_fleche.png" id="99_fleche"]
+[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://Fonts/EricaOne-Regular.ttf" id="11_font"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://Themebtn/miniville.tres" id="20_ls_title"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="98_ls_icon"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="16_style_n"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="17_style_p"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_titre_section"]
+font = ExtResource("11_font")
+font_size = 45
+font_color = Color(1, 1, 1, 1)
+outline_size = 4
+outline_color = Color(0.16862745, 0.2, 0.48627451, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_duree"]
+font = ExtResource("11_font")
+font_size = 80
+font_color = Color(1, 1, 1, 1)
+outline_size = 6
+outline_color = Color(0.16862745, 0.2, 0.48627451, 1)
+
+[node name="LocalLobby" type="Control" unique_id=918273645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sc")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 6
+texture = ExtResource("2_bg")
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 160.0
+mouse_filter = 0
+theme_override_constants/separation = 5
+
+[node name="Fleche" type="TextureRect" parent="BtnRetour" unique_id=100000051]
+layout_mode = 2
+custom_minimum_size = Vector2(70, 70)
+size_flags_horizontal = 4
+expand_mode = 0
+stretch_mode = 5
+mouse_filter = 2
+texture = ExtResource("99_fleche")
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+label_settings = ExtResource("98_ls_icon")
+text = "Retour"
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+theme_override_constants/separation = 15
+
+[node name="LogoRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 30
+
+[node name="DiceGauche" type="TextureRect" parent="Content/LogoRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(90, 88)
+size_flags_vertical = 4
+expand_mode = 0
+stretch_mode = 5
+texture = ExtResource("4_de")
+
+[node name="Minivilles" type="Label" parent="Content/LogoRow"]
+layout_mode = 2
+size_flags_vertical = 4
+label_settings = ExtResource("20_ls_title")
+text = "Minivilles"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DiceDroite" type="TextureRect" parent="Content/LogoRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(90, 88)
+size_flags_vertical = 4
+expand_mode = 0
+stretch_mode = 5
+texture = ExtResource("4_de")
+
+[node name="DureeTitreWrap" type="CenterContainer" parent="Content"]
+layout_mode = 2
+
+[node name="DureeDunTour" type="Label" parent="Content/DureeTitreWrap"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_titre_section")
+text = "Durée d'un tour"
+horizontal_alignment = 1
+
+[node name="DureeRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="ArrowGaucheDuree" type="TextureButton" parent="Content/DureeRow" unique_id=372065534]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(108, 81)
+size_flags_vertical = 4
+texture_normal = ExtResource("6_fg")
+script = ExtResource("14_btn_fleche")
+
+[node name="DureeDisplay" type="Control" parent="Content/DureeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 200)
+
+[node name="Chronometre" type="TextureRect" parent="Content/DureeRow/DureeDisplay"]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 16.0
+offset_right = 283.0
+offset_bottom = 183.0
+stretch_mode = 5
+texture = ExtResource("12_chrono")
+
+[node name="LabelDuree" type="Label" parent="Content/DureeRow/DureeDisplay" unique_id=281956443]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 0.0
+offset_top = 54.0
+offset_right = 400.0
+offset_bottom = 146.0
+label_settings = SubResource("LabelSettings_duree")
+text = "2 min"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArrowDroiteDuree" type="TextureButton" parent="Content/DureeRow" unique_id=190847352]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(108, 81)
+size_flags_vertical = 4
+texture_normal = ExtResource("7_fd")
+script = ExtResource("14_btn_fleche")
+
+[node name="JoueursTitreWrap" type="CenterContainer" parent="Content"]
+layout_mode = 2
+
+[node name="NombreJoueurs" type="Label" parent="Content/JoueursTitreWrap"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_titre_section")
+text = "Nombre de joueurs"
+horizontal_alignment = 1
+
+[node name="JoueursRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="ArrowGaucheJoueurs" type="TextureButton" parent="Content/JoueursRow" unique_id=918273644]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(108, 81)
+size_flags_vertical = 4
+texture_normal = ExtResource("6_fg")
+script = ExtResource("14_btn_fleche")
+
+[node name="JoueursIcons" type="Control" parent="Content/JoueursRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 125)
+
+[node name="Joueur1" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=827364518]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 169.0
+offset_top = 0.0
+offset_right = 260.0
+offset_bottom = 125.0
+stretch_mode = 5
+texture = ExtResource("9_j")
+
+[node name="Joueur2" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=736451927]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 299.0
+offset_top = 0.0
+offset_right = 390.0
+offset_bottom = 125.0
+stretch_mode = 5
+texture = ExtResource("9_j")
+
+[node name="Joueur3" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=645392816]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 429.0
+offset_top = 0.0
+offset_right = 520.0
+offset_bottom = 125.0
+visible = false
+stretch_mode = 5
+texture = ExtResource("9_j")
+
+[node name="Joueur4" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=554283715]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 559.0
+offset_top = 0.0
+offset_right = 650.0
+offset_bottom = 125.0
+visible = false
+stretch_mode = 5
+texture = ExtResource("9_j")
+
+[node name="ArrowDroiteJoueurs" type="TextureButton" parent="Content/JoueursRow" unique_id=463174624]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(108, 81)
+size_flags_vertical = 4
+texture_normal = ExtResource("7_fd")
+script = ExtResource("14_btn_fleche")
+
+[node name="BtnLancerWrap" type="CenterContainer" parent="Content"]
+layout_mode = 2
+
+[node name="BtnLancer" type="Button" parent="Content/BtnLancerWrap" unique_id=372065533]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(720, 110)
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/normal = ExtResource("16_style_n")
+theme_override_styles/pressed = ExtResource("17_style_p")
+theme_override_styles/hover = ExtResource("17_style_p")
+theme_override_styles/focus = ExtResource("16_style_n")
+text = "Lancer la partie"

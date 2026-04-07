@@ -1,28 +1,46 @@
 [gd_scene format=3 uid="uid://bx7np4qhm2ck"]
 
 [ext_resource type="FontFile" uid="uid://d2xtv1ijglmss" path="res://Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="0_font"]
+[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://Fonts/EricaOne-Regular.ttf" id="15_font_erica"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="21_ls_icon"]
 [ext_resource type="Script" uid="uid://dg4sm1ebtod2s" path="res://scripts/ui/attente_lobby.gd" id="0_sc_attente"]
 [ext_resource type="Texture2D" uid="uid://b2ueh2xtswpv8" path="res://assets/backgrounds/bg_lobby.png" id="1_bg"]
-[ext_resource type="Texture2D" uid="uid://c4yygd7c2uf3f" path="res://assets/ui/lobby/texte_code.png" id="2_code"]
 [ext_resource type="Texture2D" uid="uid://bud3qsj4nfeeo" path="res://assets/ui/lobby/icone_de.png" id="4_de"]
-[ext_resource type="Texture2D" uid="uid://g1osv0egmk2u" path="res://assets/ui/lobby/texte_duree_tour.png" id="5_duree"]
 [ext_resource type="Texture2D" uid="uid://cfp0v1l1lcc2d" path="res://assets/ui/lobby/joueur1.png" id="6_j1"]
 [ext_resource type="Texture2D" uid="uid://cdbr1wiwp5qwt" path="res://assets/ui/lobby/joueur2.png" id="7_j2"]
 [ext_resource type="Texture2D" uid="uid://ddlyocpwntwjk" path="res://assets/ui/lobby/joueur3.png" id="8_j3"]
 [ext_resource type="Texture2D" uid="uid://dgly1hv3jg2a7" path="res://assets/ui/lobby/joueur4.png" id="9_j4"]
-[ext_resource type="Texture2D" uid="uid://co0cqlowwoor8" path="res://assets/ui/lobby/btn_pret.png" id="10_pret"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="10_style_n"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="20_style_p"]
 [ext_resource type="Texture2D" uid="uid://p2p2rd7usp8q" path="res://assets/ui/icons/icone_parametres.png" id="11_params"]
 [ext_resource type="Script" uid="uid://cm4xuafkpqwa" path="res://scripts/ui/btn_pret_attente_lobby.gd" id="12_sc_pret"]
 [ext_resource type="Script" uid="uid://dn7rh2bjw3e5" path="res://scripts/ui/btn_parametres_attente_lobby.gd" id="13_sc_params"]
-[ext_resource type="Texture2D" uid="uid://bpy40it0t2r7i" path="res://assets/ui/mode_de_jeu/texte_parametres.png" id="14_texte_params"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_code"]
+font = ExtResource("15_font_erica")
+font_size = 120
+font_color = Color(1, 1, 1, 1)
+outline_size = 6
+outline_color = Color(0.16862745, 0.2, 0.48627451, 1)
+shadow_size = 6
+shadow_offset = Vector2(0, 6)
+shadow_color = Color(0.16862745, 0.2, 0.48627451, 0.7)
 
 [sub_resource type="LabelSettings" id="LabelSettings_timer"]
 font = ExtResource("0_font")
 font_size = 80
+font_color = Color(1, 1, 1, 1)
 outline_size = 3
 outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
 shadow_size = 3
 shadow_color = Color(0.92156863, 0.9254902, 0.9490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ready"]
+bg_color = Color(0.1, 0.75, 0.1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [node name="Control" type="Control" unique_id=-1447803706]
 layout_mode = 3
@@ -44,13 +62,16 @@ texture = ExtResource("1_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TexteCode" type="TextureRect" parent="." unique_id=-1236772570]
+[node name="LabelCode" type="Label" parent="." unique_id=987654324]
 layout_mode = 0
-offset_left = 547.0
-offset_top = 80.0
-offset_right = 1370.0
-offset_bottom = 247.0
-texture = ExtResource("2_code")
+offset_left = 544.0
+offset_top = 60.0
+offset_right = 1376.0
+offset_bottom = 250.0
+label_settings = SubResource("LabelSettings_code")
+text = "A4HUI5"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="LabelTimer" type="Label" parent="." unique_id=987654321]
 layout_mode = 0
@@ -77,11 +98,11 @@ layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("4_de")
 
-[node name="TexteDureeTour" type="TextureRect" parent="DureeTourRow" unique_id=1857632490]
-custom_minimum_size = Vector2(763, 69)
+[node name="TexteDureeTour" type="Label" parent="DureeTourRow" unique_id=1857632490]
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("5_duree")
+label_settings = SubResource("LabelSettings_timer")
+text = "Durée du tour :"
 
 [node name="LabelDuree" type="Label" parent="DureeTourRow" unique_id=987654323]
 layout_mode = 2
@@ -95,39 +116,169 @@ offset_top = 541.0
 offset_right = 1600.0
 offset_bottom = 756.0
 theme_override_constants/separation = 107
+alignment = 1
 
-[node name="Joueur1" type="TextureRect" parent="JoueursRow" unique_id=-1053159662]
+[node name="Joueur1" type="Control" parent="JoueursRow" unique_id=-1053159662]
 custom_minimum_size = Vector2(235, 215)
 layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="JoueursRow/Joueur1" unique_id=100000001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource("6_j1")
 stretch_mode = 5
 
-[node name="Joueur2" type="TextureRect" parent="JoueursRow" unique_id=2073946518]
+[node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur1" unique_id=100000002]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ready")
+visible = false
+
+[node name="CheckMark" type="Label" parent="JoueursRow/Joueur1/ReadyBadge" unique_id=100000009]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Joueur2" type="Control" parent="JoueursRow" unique_id=2073946518]
 custom_minimum_size = Vector2(235, 215)
 layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="JoueursRow/Joueur2" unique_id=100000003]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource("7_j2")
 stretch_mode = 5
 
-[node name="Joueur3" type="TextureRect" parent="JoueursRow" unique_id=1385726309]
+[node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur2" unique_id=100000004]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ready")
+visible = false
+
+[node name="CheckMark" type="Label" parent="JoueursRow/Joueur2/ReadyBadge" unique_id=100000010]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Joueur3" type="Control" parent="JoueursRow" unique_id=1385726309]
 custom_minimum_size = Vector2(235, 215)
 layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="JoueursRow/Joueur3" unique_id=100000005]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource("8_j3")
 stretch_mode = 5
 
-[node name="Joueur4" type="TextureRect" parent="JoueursRow" unique_id=-196596051]
+[node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur3" unique_id=100000006]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ready")
+visible = false
+
+[node name="CheckMark" type="Label" parent="JoueursRow/Joueur3/ReadyBadge" unique_id=100000011]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Joueur4" type="Control" parent="JoueursRow" unique_id=-196596051]
 custom_minimum_size = Vector2(235, 215)
 layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="JoueursRow/Joueur4" unique_id=100000007]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource("9_j4")
 stretch_mode = 5
 
-[node name="BtnPret" type="TextureButton" parent="." unique_id=-1730928379]
+[node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur4" unique_id=100000008]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ready")
+visible = false
+
+[node name="CheckMark" type="Label" parent="JoueursRow/Joueur4/ReadyBadge" unique_id=100000012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BtnPret" type="Button" parent="." unique_id=-1730928379]
 layout_mode = 0
 offset_left = 600.0
 offset_top = 854.0
 offset_right = 1319.0
 offset_bottom = 963.0
-texture_normal = ExtResource("10_pret")
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("15_font_erica")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("10_style_n")
+theme_override_styles/pressed = ExtResource("20_style_p")
+theme_override_styles/hover = ExtResource("20_style_p")
+theme_override_styles/focus = ExtResource("10_style_n")
+text = "Prêt"
 script = ExtResource("12_sc_pret")
+
+[node name="BtnCommencer" type="Button" parent="." unique_id=100000013]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 854.0
+offset_right = 1319.0
+offset_bottom = 963.0
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("15_font_erica")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("10_style_n")
+theme_override_styles/pressed = ExtResource("20_style_p")
+theme_override_styles/hover = ExtResource("20_style_p")
+theme_override_styles/focus = ExtResource("10_style_n")
+text = "Commencer"
+visible = false
 
 [node name="BtnParametres" type="TextureButton" parent="." unique_id=1703829456]
 layout_mode = 0
@@ -138,12 +289,14 @@ offset_bottom = 179.0
 texture_normal = ExtResource("11_params")
 script = ExtResource("13_sc_params")
 
-[node name="TexteParametres" type="TextureRect" parent="." unique_id=1703829457]
+[node name="TexteParametres" type="Label" parent="." unique_id=1703829457]
 layout_mode = 0
 offset_left = 1610.0
 offset_top = 183.0
 offset_right = 1849.0
-offset_bottom = 222.0
-texture = ExtResource("14_texte_params")
+offset_bottom = 233.0
+label_settings = ExtResource("21_ls_icon")
+text = "Paramètres"
+horizontal_alignment = 1
 
 [node name="TimerChrono" type="Timer" parent="." unique_id=987654322]

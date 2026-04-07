@@ -1,4 +1,4 @@
-extends TextureButton
+extends Button
 
 
 func _ready():
@@ -30,4 +30,4 @@ func _on_button_up():
 
 
 func _on_pressed():
-	print("Prêt")
+	pass

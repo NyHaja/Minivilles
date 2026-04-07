@@ -14,6 +14,8 @@
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="12_1ti8x"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="13_bhvod"]
 
+[ext_resource type="Script" uid="uid://crbofsejnkw0o" path="res://script/player_screen.gd" id="99_sc_player"]
+
 [node name="Player_screen" type="Control" unique_id=266147662]
 layout_mode = 3
 anchors_preset = 15
@@ -21,6 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("99_sc_player")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=577262117]
 layout_mode = 1

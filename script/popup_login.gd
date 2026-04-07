@@ -21,3 +21,7 @@ func bouton_connexion() -> void:
 # bouton d'inscription
 func bouton_inscription():
 	SoundManager.play_click()
+	var popup_signin = load("res://scenes/popup_signin.tscn").instantiate()
+	get_tree().root.add_child(popup_signin)
+	popup_signin.on_back.connect(func(): show())
+	hide()

@@ -30,4 +30,5 @@ func _on_button_up():
 
 
 func _on_pressed():
-	print("Règles")
+	var popup = load("res://scenes/rules_panel.tscn").instantiate()
+	get_tree().root.add_child(popup)

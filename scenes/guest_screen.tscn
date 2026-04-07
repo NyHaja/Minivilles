@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://bkyidxcm0m8vp" path="res://Assets/Image/icon/dice.png" id="8_v2fnf"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://Themebtn/miniville.tres" id="9_1fevk"]
 
+[ext_resource type="Script" path="res://script/guest_screen.gd" id="99_sc_guest"]
+
 [node name="guest_screen" type="Control" unique_id=139461560]
 layout_mode = 3
 anchors_preset = 15
@@ -19,6 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("99_sc_guest")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1498344044]
 layout_mode = 1

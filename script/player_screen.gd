@@ -8,8 +8,11 @@ func _ready() -> void:
 	popup_rule = pop_rule_scene.instantiate()
 	add_child(popup_rule)
 	popup_rule.hide()
-	
+
 	popup_rule.on_back.connect(_on_popup_back)
+
+	$gameMode/playbtn.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scenes/ui/mode_de_jeu.tscn"))
 
 
 #------------- HEADER --------------
