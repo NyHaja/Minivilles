@@ -222,18 +222,6 @@ size_flags_vertical = 4
 [node name="Dice" type="HBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=1670836831]
 layout_mode = 2
 
-[node name="BtnRoll1" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice" unique_id=553782980]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(55, 55)
-layout_mode = 2
-text = "1 Die"
-
-[node name="BtnRoll2" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice" unique_id=955709809]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(55, 55)
-layout_mode = 2
-text = "2 Dice"
-
 [node name="LblDice" type="Label" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=336477209]
 unique_name_in_owner = true
 layout_mode = 2
@@ -934,10 +922,8 @@ texture_normal = ExtResource("5_8a6bx")
 
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll1" to="." method="_on_roll_1_pressed"]
-[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/DiceContainer/Dice/BtnRoll2" to="." method="_on_roll_2_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]

@@ -131,7 +131,7 @@ func _ready() -> void:
 	# --- CONNEXION DES BOUTONS DE L'OVERLAY ---
 	btn_overlay_roll_1.pressed.connect(_on_overlay_roll_1_pressed)
 	btn_overlay_roll_2.pressed.connect(_on_overlay_roll_2_pressed)
-	btn_roll_2.disabled = true
+	#btn_roll_2.disabled = true
 	
 	print("\n=== GAME STARTED ===")
 
@@ -151,7 +151,6 @@ func RefreshBasicInfo(current_game: Game) -> void:
 	update_names()
 	
 	set_actions_enabled(false) 
-	set_dice_buttons_enabled(true)
 
 
 func ask_yes_no(question: String) -> bool:
@@ -216,16 +215,11 @@ func waitForDiceRoll() -> int:
 	# 3. On désactive les autres actions pendant ce temps 
 	set_actions_enabled(false)
 	
-	# On active les petits boutons en dessous au cas où (sécurité)
-	btn_roll_1.disabled = false
-	btn_roll_2.disabled = not has_gare
-	
 	# 4. On attend que le joueur clique sur un bouton
 	var amount = await dice_amount_chosen
 	
 	# 5. Nettoyage après le clic
-	turn_overlay.hide() 
-	set_dice_buttons_enabled(false) # On redésactive les petits boutons
+	turn_overlay.hide()
 	
 	return amount
 
@@ -237,17 +231,7 @@ func set_actions_enabled(can_act: bool) -> void:
 	for card_visual in shop_container.get_children():
 		var button = card_visual.get_node_or_null("Visual")
 		if button and button is TextureButton:
-			button.disabled = !can_act
-
-
-func set_dice_buttons_enabled(can_roll: bool) -> void:
-	btn_roll_1.disabled = !can_roll
-	
-	if can_roll and current_player.monumentIsActive(Monument.MONUMENT_ID.Gare):
-		btn_roll_2.disabled = false
-	else:
-		btn_roll_2.disabled = true
-	
+			button.disabled = !can_act	
 
 func _on_roll_1_pressed() -> void:
 	dice_amount_chosen.emit(1)
@@ -962,7 +946,6 @@ func ask_chalutier_roll() -> int:
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	set_dice_buttons_enabled(false)
 	
 	lbl_winner_name.text = "🏆 " + winner_name + " WINS! 🏆\nAll 5 Monuments Built!"
 	victory_screen.show()
