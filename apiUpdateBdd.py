@@ -66,14 +66,25 @@ def login():
 
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT authenPlayer(%s, %s) AS is_auth", (data.get('email'), data.get('password')))
+        cursor.execute(
+            "SELECT authenPlayer(%s, %s) AS player_id",
+            (data.get('email'), data.get('password'))
+        )
         result = cursor.fetchone()
-        is_auth = result[0] if result else 0 
+        player_id = result[0] if result else -1
         
-        if is_auth == 1:
-            return jsonify({"status": "success", "message": "Authentification réussie"})
+        if player_id != -1:
+            return jsonify({
+                "status": "success",
+                "message": "Authentification réussie",
+                "player_id": player_id
+            })
         else:
-            return jsonify({"status": "error", "message": "Identifiants incorrects"}), 401
+            return jsonify({
+                "status": "error",
+                "message": "Identifiants incorrects"
+            }), 401
+
     except Error as e:
         return jsonify({"status": "error", "message": str(e)}), 400
     finally:

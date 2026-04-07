@@ -495,7 +495,6 @@ CREATE PROCEDURE updateStatPlayer(
 -- Retourner l'ID est plus utile qu'un booléen : le serveur en a besoin
 -- pour la session.
 -- NOT DETERMINISTIC car le résultat change si les données changent.
-
 DELIMITER //
 
 DROP FUNCTION IF EXISTS authenPlayer //
@@ -504,20 +503,22 @@ CREATE FUNCTION authenPlayer(
     p_email    VARCHAR(100), 
     p_password VARCHAR(100)
 ) 
-RETURNS BOOLEAN
+RETURNS INT
 DETERMINISTIC
 READS SQL DATA
 BEGIN
-    DECLARE v_nb INT DEFAULT 0;  
+    DECLARE v_id INT DEFAULT -1;  
 
-    SELECT COUNT(*) INTO v_nb 
+    SELECT id INTO v_id
     FROM REGISTERED_PLAYER 
-    WHERE email = p_email AND password = p_password; 
+    WHERE email = p_email 
+      AND password = p_password
+    LIMIT 1;
 
-    IF v_nb > 0 THEN 
-        RETURN TRUE;
+    IF v_id IS NULL THEN
+        RETURN -1;
     ELSE
-        RETURN FALSE; 
+        RETURN v_id;
     END IF; 
 END //
 
