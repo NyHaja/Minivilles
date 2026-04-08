@@ -4,53 +4,66 @@ class_name Jeu
 signal action_selected(choide_data:Array)
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
-signal player_chosen(target: Player)
+signal player_chosen(target)
 signal trade_completed(trade_data: Array)
 signal give_card_completed(give_data: Array)
 signal demolish_completed(monu_id: int)
 signal chalutier_roll_pressed()
 
-var current_player: Player
-var test_shop: Shop
-var game:Game
+var current_player
+var test_shop
+var game
 
 @onready var shop_container: GridContainer = %ShopContainer
-
 @onready var btn_roll_1: Button = %BtnRoll1
 @onready var btn_roll_2: Button = %BtnRoll2
 @onready var lbl_dice: Label = %LblDice
 
-#Active Player (Bottom)
-@onready var acrtive_deck_container: HBoxContainer = %ActiveDeckContainer
-@onready var active_name: Label = %ActiveName
-@onready var lbl_active_gold: Label = %LblActiveGold
-@onready var lbl_active_stats: Label = %LblActiveStats
+# Active Player UI
+@onready var active_deck_container: Control = get_node_or_null("%EmplacementsCartes")
+@onready var active_name: Label = %PlayerLabel
+@onready var lbl_active_gold: Label = %PlayerMoney
+@onready var lbl_active_stats: Label = get_node_or_null("%LblActiveStats")
 
-# --- OVERLAY TOUR DU JOUEUR ---
+# Overlay Tour
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = $TurnOverlay/VBoxContainer/LblTurnAnnouncement
 @onready var btn_overlay_roll_1: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1
 @onready var btn_overlay_roll_2: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2
 
-#Top Player
+# --- ECRAN DE RESULTAT (Variables assignées dynamiquement) ---
+var result_overlay: ColorRect
+var die_1: TextureRect
+var die_2: TextureRect
+var btn_conserver: TextureButton
+
+var dice_textures = [
+	preload("res://assets/UI/die_one.png"),
+	preload("res://assets/UI/die_two.png"),
+	preload("res://assets/UI/die_three.png"),
+	preload("res://assets/UI/die_four.png"),
+	preload("res://assets/UI/die_five.png"),
+	preload("res://assets/UI/die_six.png")
+]
+
+# Tableau pour stocker les "clones" des dés qui volent
+var mini_dice_array: Array = []
+
+# Opponents UI
 @onready var top_deck_container: HBoxContainer = %PlayerTopDeckContainer
 @onready var lbl_top_name: Label = %LblPlayerTopName
 @onready var lbl_top_gold: Label = %LblPlayerTopGold
 @onready var lbl_top_stats: Label = %LblPlayerTopStats
-
-#Left Player
 @onready var left_deck_container: HBoxContainer = %LeftDeckContainer
 @onready var lbl_left_name: Label = %LblLeftName
 @onready var lbl_left_gold: Label = %LblLeftGold
 @onready var lbl_left_stats: Label = %LblLeftStats
-
-#Right Player
 @onready var right_deck_container: HBoxContainer = %RightDeckContainer
 @onready var lbl_right_name: Label = %LblRightName
 @onready var lbl_right_gold: Label = %LblRightGold
 @onready var lbl_right_stats: Label = %LblRightStats
 
-@onready var open_monuments: Button = %OpenMonuMenu
+@onready var open_monuments: TextureButton = %MonumentButton
 @onready var monument_menu: ColorRect = $MonumentMenu
 @onready var confirm_buy: Button = $MonumentMenu/BuySelected
 @onready var close_menu: Button = $MonumentMenu/Close
@@ -89,10 +102,10 @@ var game:Game
 @onready var lbl_chalutier_result: Label = %LblChalutierResult
 @onready var chalutier_roll: Button = %ChalutierRoll
 
-var trade_target: Player = null
+var trade_target = null
 var trade_their_card_id: int = -1
 var trade_my_card_id: int = -1
-var give_target: Player = null
+var give_target = null
 var give_card_id: int = -1
 var demolish_monu_id: int = -1
 
@@ -101,8 +114,10 @@ var selected_shop_card_id: int = -1
 
 
 func _ready() -> void:
-	%Skip.pressed.connect(_on_skip_pressed)
-	open_monuments.pressed.connect(_on_open_monuments_pressed)
+	_find_dice_ui_nodes()
+	
+	%PasserLeTourButton.pressed.connect(_on_skip_pressed)
+	%MonumentButton.pressed.connect(_on_open_monuments_pressed)
 	close_menu.pressed.connect(_on_close_menu_pressed)
 	confirm_buy.pressed.connect(_on_confirm_buy_pressed)
 	btn_quit.pressed.connect(_on_quit_pressed)
@@ -115,7 +130,6 @@ func _ready() -> void:
 	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
 	chalutier_roll.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
-	# Optimisation de l'initialisation des monuments
 	var monuments_to_setup = {
 		$MonumentMenu/BuildGare: Monument.MONUMENT_ID.Gare,
 		$MonumentMenu/BuildCentreCommercial: Monument.MONUMENT_ID.Centre_Commercial,
@@ -128,20 +142,132 @@ func _ready() -> void:
 	for btn in monuments_to_setup:
 		setup_monument_button(btn, monuments_to_setup[btn])
 	
-	# --- CONNEXION DES BOUTONS DE L'OVERLAY ---
 	btn_overlay_roll_1.pressed.connect(_on_overlay_roll_1_pressed)
 	btn_overlay_roll_2.pressed.connect(_on_overlay_roll_2_pressed)
-	#btn_roll_2.disabled = true
 	
 	print("\n=== GAME STARTED ===")
 
 
-func RefreshBasicInfo(current_game: Game) -> void:
+func _find_dice_ui_nodes() -> void:
+	result_overlay = find_child("ResultOverlay", true, false)
+	die_1 = find_child("Die1", true, false)
+	die_2 = find_child("Die2", true, false)
+	btn_conserver = find_child("BtnConserver", true, false)
+
+
+func showResult(d1: int, d2: int) -> void:
+	var amount = 1 if d2 == 0 else 2
+	
+	await play_dice_animation(amount, d1, d2)
+	
+	if d2 == 0:
+		lbl_dice.text = "Rolled: " + str(d1)
+	else:
+		lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(d1 + d2)
+
+
+func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
+	if die_1 == null or result_overlay == null:
+		return
+		
+	result_overlay.show()
+	if btn_conserver: btn_conserver.hide() 
+	
+	die_1.show()
+	if die_2: die_2.visible = (amount == 2)
+
+	var frames = 15
+	var delay = 0.05 
+	
+	for i in range(frames):
+		die_1.texture = dice_textures[randi() % 6]
+		if amount == 2 and die_2:
+			die_2.texture = dice_textures[randi() % 6]
+			
+		await get_tree().create_timer(delay).timeout
+		
+		if i > frames - 4: 
+			delay += 0.05 
+
+	die_1.texture = dice_textures[final_d1 - 1]
+	if amount == 2 and die_2:
+		die_2.texture = dice_textures[final_d2 - 1]
+		
+	if btn_conserver:
+		btn_conserver.show()
+		await btn_conserver.pressed
+		
+	var start_pos_1 = die_1.global_position
+	var start_size_1 = die_1.size
+	var start_pos_2 = Vector2.ZERO
+	var start_size_2 = Vector2.ZERO
+	if amount == 2 and die_2:
+		start_pos_2 = die_2.global_position
+		start_size_2 = die_2.size
+
+	result_overlay.hide()
+
+	var dummy_1 = TextureRect.new()
+	dummy_1.texture = die_1.texture
+	dummy_1.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	dummy_1.size = start_size_1
+	dummy_1.global_position = start_pos_1
+	dummy_1.mouse_filter = Control.MOUSE_FILTER_IGNORE 
+	add_child(dummy_1)
+	mini_dice_array.append(dummy_1)
+
+	var dummy_2 = null
+	if amount == 2 and die_2:
+		dummy_2 = TextureRect.new()
+		dummy_2.texture = die_2.texture
+		dummy_2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		dummy_2.size = start_size_2
+		dummy_2.global_position = start_pos_2
+		dummy_2.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(dummy_2)
+		mini_dice_array.append(dummy_2)
+
+	var target_node = get_node_or_null("%PasserLeTourButton")
+	if not target_node:
+		target_node = lbl_dice 
+
+	var target_pos = target_node.global_position
+	var target_size = target_node.size
+	
+	var anim_duration = 0.5 
+	var target_scale = Vector2(0.25, 0.25)
+	var final_size_1 = start_size_1 * target_scale
+	var final_size_2 = start_size_2 * target_scale
+	
+	# --- AJUSTEMENT VERTICAL ---
+	# Ajoutez des pixels ici pour baisser les dés, ou enlevez-en pour les monter
+	var y_adjustment = -4 
+	
+	var center_y = target_pos.y + (target_size.y / 2.0) - (final_size_1.y / 2.0) + y_adjustment
+	
+	var final_pos_1 = Vector2(target_pos.x - final_size_1.x - 10, center_y)
+	var final_pos_2 = Vector2.ZERO
+
+	if amount == 2 and dummy_2:
+		final_pos_1 = Vector2(target_pos.x - (final_size_1.x * 2) - 20, center_y)
+		final_pos_2 = Vector2(target_pos.x - final_size_2.x - 10, center_y)
+
+	var tween = get_tree().create_tween().set_parallel(true)
+
+	tween.tween_property(dummy_1, "global_position", final_pos_1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(dummy_1, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+	if dummy_2:
+		tween.tween_property(dummy_2, "global_position", final_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+	await tween.finished
+
+
+func RefreshBasicInfo(current_game) -> void:
 	self.game = current_game
 	self.current_player = game.getActivePlayer()
 	self.test_shop = game.shop
-	
-	print("It is now ", current_player.username, "'s turn! \n")
 	
 	update_shop_ui()
 	update_deck_ui()
@@ -156,27 +282,16 @@ func RefreshBasicInfo(current_game: Game) -> void:
 func ask_yes_no(question: String) -> bool:
 	lbl_question.text = question
 	yes_no_panel.show()
-	
 	var result = await yes_no_answered
 	yes_no_panel.hide()
 	return result
 
-func _on_yes_pressed() -> void:
-	yes_no_answered.emit(true)
 
-func _on_no_pressed() -> void:
-	yes_no_answered.emit(false)
+func _on_yes_pressed() -> void: yes_no_answered.emit(true)
+func _on_no_pressed() -> void: yes_no_answered.emit(false)
 
-
-func showResult(d1: int, d2: int) -> void:
-	if d2 == 0:
-		lbl_dice.text = "Rolled: " + str(d1)
-	else:
-		lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(d1 + d2)
-		
 
 func pause() -> Array:
-	print("Waiting for ", current_player.username, "to take an action...")
 	print_player_stats() 
 	update_opponent_ui()
 	set_actions_enabled(true)
@@ -185,59 +300,47 @@ func pause() -> Array:
 	return choice
 
 
-func next_round():
+func next_round() -> void:
 	current_player = game.getActivePlayer()
 	update_deck_ui()
 
 
 func waitForDiceRoll() -> int:
-	print("Waiting for ", current_player.username ," to choose dice amount...")
-	
-	# 1. Vérifier si le joueur a la Gare
+	# --- NETTOYAGE DES DÉS DU TOUR PRÉCÉDENT ---
+	for d in mini_dice_array:
+		if is_instance_valid(d):
+			d.queue_free()
+	mini_dice_array.clear()
+
 	var has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
+	var nom = current_player.username
+	var prep = "Tour d'" if ["A","E","I","O","U","Y"].has(nom[0].to_upper()) else "Tour de "
 	
-	# 2. Configurer l'Overlay avec gestion des voyelles
-	var nom_joueur = current_player.username
-	var premiere_lettre = nom_joueur.substr(0, 1).to_upper()
-	
-	if ["A", "E", "I", "O", "U", "Y"].has(premiere_lettre):
-		lbl_turn_announcement.text = "Tour d'" + nom_joueur
-	else:
-		lbl_turn_announcement.text = "Tour de " + nom_joueur
-		
-	# On active/cache le bouton 2 dés selon la Gare
+	lbl_turn_announcement.text = prep + nom
 	btn_overlay_roll_2.disabled = not has_gare
 	btn_overlay_roll_2.visible = has_gare 
 	
-	# Afficher le grand écran
 	turn_overlay.show()
-	
-	# 3. On désactive les autres actions pendant ce temps 
 	set_actions_enabled(false)
 	
-	# 4. On attend que le joueur clique sur un bouton
 	var amount = await dice_amount_chosen
 	
-	# 5. Nettoyage après le clic
 	turn_overlay.hide()
-	
 	return amount
 
 
 func set_actions_enabled(can_act: bool) -> void:
-	%Skip.disabled = !can_act
-	open_monuments.disabled = !can_act
+	%PasserLeTourButton.disabled = !can_act
+	%MonumentButton.disabled = !can_act
 	
 	for card_visual in shop_container.get_children():
 		var button = card_visual.get_node_or_null("Visual")
 		if button and button is TextureButton:
 			button.disabled = !can_act	
 
-func _on_roll_1_pressed() -> void:
-	dice_amount_chosen.emit(1)
 
-func _on_roll_2_pressed() -> void:
-	dice_amount_chosen.emit(2)
+func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
+func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 
 
 func setup_monument_button(btn: Button, monu_id: int) -> void:
@@ -261,8 +364,9 @@ func _on_open_monuments_pressed() -> void:
 	monument_info.text = "Select a monument to view details."
 	monument_menu.show()
 
-func _on_close_menu_pressed() -> void:
-	monument_menu.hide()
+
+func _on_close_menu_pressed() -> void: monument_menu.hide()
+
 
 func _on_monument_selected(monu_id: int) -> void:
 	selected_monument_id = monu_id
@@ -270,29 +374,30 @@ func _on_monument_selected(monu_id: int) -> void:
 	var data = game.getMonumentData(monu_id)
 	monument_info.text = data["name"] + "\nCost: " + str(data["cost"]) + " Gold"
 
+
 func _on_confirm_buy_pressed() -> void:
 	monument_menu.hide()
-	action_selected.emit([Game.CHOICE.Build_MONUMENT, selected_monument_id])
+	if game and game.CHOICE:
+		action_selected.emit([game.CHOICE.Build_MONUMENT, selected_monument_id])
+
 
 func _on_skip_pressed() -> void:
-	action_selected.emit([game.CHOICE.SKIP, 0])
+	if game and game.CHOICE:
+		action_selected.emit([game.CHOICE.SKIP, 0])
+
 
 func _on_add_gold_pressed() -> void:
 	current_player.receiveGold(5)
-	print("\n[+] Added 5 Gold.")
 	print_player_stats()
+
 
 func _on_remove_gold_pressed() -> void:
 	current_player.loseGold(2)
-	print("\n[-] Lost 2 Gold.")
 	print_player_stats()
 
-# --- FONCTIONS DE L'OVERLAY ---
-func _on_overlay_roll_1_pressed() -> void:
-	_on_roll_1_pressed()
 
-func _on_overlay_roll_2_pressed() -> void:
-	_on_roll_2_pressed()
+func _on_overlay_roll_1_pressed() -> void: _on_roll_1_pressed()
+func _on_overlay_roll_2_pressed() -> void: _on_roll_2_pressed()
 
 
 func update_shop_ui() -> void:
@@ -366,10 +471,10 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 
 func update_deck_ui() -> void:
 	var piles = {
-		CardColor.Type.BLUE: %BluePileBottom,
-		CardColor.Type.GREEN: %GreenPileBottom,
-		CardColor.Type.RED: %RedPileBottom,
-		CardColor.Type.PURPLE: %PurplePileBottom
+		CardColor.Type.BLUE: %ZoneBleue,
+		CardColor.Type.GREEN: %ZoneVerte,
+		CardColor.Type.RED: %ZoneRouge,
+		CardColor.Type.PURPLE: %ZoneViolette
 	}
 	
 	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
@@ -428,7 +533,6 @@ func update_deck_ui() -> void:
 							tooltip_node.texture = load(tip_path)
 							tooltip_node.hide()
 				else:
-					print("Warning: Art missing for ", path_basis)
 					card_visual = Button.new()
 					card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name()
 					card_visual.custom_minimum_size = Vector2(130, 180)
@@ -453,7 +557,7 @@ func update_deck_ui() -> void:
 						
 				var stack_gap = 25 
 				var offset_x = pile_counts[card_color] * stack_gap 
-				var push_up_amount = -60 
+				var push_up_amount = 0
 				
 				card_visual.position = Vector2(offset_x, push_up_amount)
 					
@@ -492,7 +596,7 @@ func updateMonumentColors() -> void:
 	for btn in monuments_to_check:
 		check_and_color_monument(btn, monuments_to_check[btn])
 
-	
+
 func check_and_color_monument(btn: Button, monu_id: int) -> void:
 	var style = StyleBoxFlat.new()
 	
@@ -534,7 +638,7 @@ func update_opponent_ui() -> void:
 	for slot in opponent_slots:
 		slot["name"].text = ""
 		slot["gold"].text = ""
-		slot["stats"].text = ""
+		if slot["stats"]: slot["stats"].text = ""
 		slot["parent"].get_parent().hide() 
 		for pile in slot["piles"].values():
 			for child in pile.get_children():
@@ -550,8 +654,8 @@ func update_opponent_ui() -> void:
 		active_slot["parent"].get_parent().show() 
 		
 		active_slot["name"].text = opponent.username 
-		active_slot["gold"].text = "Gold: " + str(opponent.balance) 
-		active_slot["stats"].text = "Est: " + str(opponent.establishmentCount) + "\nMonu: " + str(opponent.monumentCount) 
+		active_slot["gold"].text = str(opponent.balance)
+		if active_slot["stats"]: active_slot["stats"].text = "Est: " + str(opponent.establishmentCount) + "\nMonu: " + str(opponent.monumentCount) 
 		
 		var pile_counts = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
 
@@ -669,14 +773,14 @@ func update_opponent_ui() -> void:
 					pile_counts[color] += 1
 
 
-func ask_choose_player(owner: Player, all_players: Array) -> Player:
+func ask_choose_player(owner_player, all_players: Array):
 	choose_player_panel.show()
 	
 	for child in player_buttons_container.get_children():
 		child.queue_free()
 
 	for p in all_players:
-		if p != owner:
+		if p != owner_player:
 			var btn = Button.new()
 			btn.text = p.username + " (" + str(p.balance) + " Gold)"
 			btn.custom_minimum_size = Vector2(200, 60)
@@ -690,11 +794,12 @@ func ask_choose_player(owner: Player, all_players: Array) -> Player:
 	choose_player_panel.hide()
 	return chosen_target
 
-func _on_player_chosen(target: Player) -> void:
+
+func _on_player_chosen(target) -> void:
 	player_chosen.emit(target)
 
 
-func ask_trade_cards(owner: Player, all_players: Array) -> Array:
+func ask_trade_cards(owner_player, all_players: Array) -> Array:
 	trade_panel.show()
 	btn_confirm_trade.disabled = true
 	btn_confirm_trade.text = "Select cards to trade..."
@@ -707,26 +812,28 @@ func ask_trade_cards(owner: Player, all_players: Array) -> Array:
 	for c in trade_my_cards.get_children(): c.queue_free()
 	
 	for p in all_players:
-		if p != owner:
+		if p != owner_player:
 			var btn = Button.new()
 			btn.text = p.username
 			btn.custom_minimum_size = Vector2(120, 40)
 			btn.pressed.connect(func(): _on_trade_opponent_selected(p))
 			trade_opponents.add_child(btn)
 			
-	_populate_trade_deck(owner, trade_my_cards, true)
+	_populate_trade_deck(owner_player, trade_my_cards, true)
 	
 	var result = await trade_completed
 	trade_panel.hide()
 	return result
 
-func _on_trade_opponent_selected(target: Player) -> void:
+
+func _on_trade_opponent_selected(target) -> void:
 	trade_target = target
 	for c in trade_their_cards.get_children(): c.queue_free()
 	_populate_trade_deck(target, trade_their_cards, false)
 	_check_trade_valid()
 
-func _populate_trade_deck(player: Player, container: Container, is_mine: bool) -> void:
+
+func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 	for instance in player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
@@ -759,16 +866,18 @@ func _populate_trade_deck(player: Player, container: Container, is_mine: bool) -
 			)
 			container.add_child(btn)
 
+
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
 		btn_confirm_trade.text = "Confirm Trade!"
 
+
 func _on_confirm_trade_pressed() -> void:
 	trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
 
-func ask_give_card(owner: Player, all_players: Array) -> Array:
+func ask_give_card(owner_player, all_players: Array) -> Array:
 	give_panel.show()
 	btn_confirm_give.disabled = true
 	btn_confirm_give.text = "Select a card and an opponent..."
@@ -778,7 +887,7 @@ func ask_give_card(owner: Player, all_players: Array) -> Array:
 	for c in give_my_cards.get_children(): c.queue_free()
 	for c in give_opponents.get_children(): c.queue_free()
 	
-	for instance in owner.deck:
+	for instance in owner_player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
@@ -807,7 +916,7 @@ func ask_give_card(owner: Player, all_players: Array) -> Array:
 			give_my_cards.add_child(btn)
 
 	for p in all_players:
-		if p != owner:
+		if p != owner_player:
 			var btn = Button.new()
 			btn.text = p.username
 			btn.custom_minimum_size = Vector2(120, 40)
@@ -824,16 +933,18 @@ func ask_give_card(owner: Player, all_players: Array) -> Array:
 	give_panel.hide()
 	return result
 
+
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
 		btn_confirm_give.text = "Confirm Gift!"
 
+
 func _on_confirm_give_pressed() -> void:
 	give_card_completed.emit([give_card_id, give_target])
 
 
-func ask_demolish_monument(owner: Player) -> int:
+func ask_demolish_monument(owner_player) -> int:
 	demolish_panel.show()
 	btn_confirm_demolish.disabled = true
 	btn_confirm_demolish.text = "Select a monument..."
@@ -843,8 +954,8 @@ func ask_demolish_monument(owner: Player) -> int:
 	
 	var has_built_monuments = false
 	
-	for monu_id in owner.monumentArray:
-		if owner.monumentArray[monu_id] == true:
+	for monu_id in owner_player.monumentArray:
+		if owner_player.monumentArray[monu_id] == true:
 			has_built_monuments = true
 			
 			var btn = Button.new()
@@ -877,6 +988,7 @@ func ask_demolish_monument(owner: Player) -> int:
 	var result = await demolish_completed
 	demolish_panel.hide()
 	return result
+
 
 func _on_confirm_demolish_pressed() -> void:
 	demolish_completed.emit(demolish_monu_id)
@@ -915,9 +1027,12 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		
 		buy_confirm_panel.show()
 
+
 func _on_confirm_buy_shop_pressed() -> void:
 	buy_confirm_panel.hide()
-	action_selected.emit([Game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+	if game and game.CHOICE:
+		action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+
 
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
@@ -950,12 +1065,15 @@ func show_victory_screen(winner_name: String) -> void:
 	lbl_winner_name.text = "🏆 " + winner_name + " WINS! 🏆\nAll 5 Monuments Built!"
 	victory_screen.show()
 	
+
 func _on_quit_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")
 
+
 func print_player_stats() -> void:
-	lbl_active_gold.text = "Gold: " + str(current_player.balance)
-	lbl_active_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
+	lbl_active_gold.text = str(current_player.balance)
+	if lbl_active_stats:
+		lbl_active_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
 	
 	print("--- PLAYER STATS ---")
 	print("Current Player: ", current_player.username)

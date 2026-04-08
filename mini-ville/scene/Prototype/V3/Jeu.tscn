@@ -2,9 +2,74 @@
 
 [ext_resource type="Script" uid="uid://b7iorriitoyi4" path="res://script/scene/prototype/v3/JeuScript.gd" id="1_pm7t7"]
 [ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="2_i5b7y"]
+[ext_resource type="Texture2D" uid="uid://c0syfj2pyls0q" path="res://assets/UI/profile_picture_player.png" id="3_8a6bx"]
+[ext_resource type="Texture2D" uid="uid://biuyww3chvr7t" path="res://assets/UI/player_area.png" id="3_dgctq"]
 [ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="3_tbpra"]
+[ext_resource type="Texture2D" uid="uid://d1dcosvuy7386" path="res://assets/UI/button_border.png" id="3_u3wdh"]
 [ext_resource type="Texture2D" uid="uid://l6jtewrp4hlx" path="res://assets/UI/roll_one_die_button.png" id="4_dgctq"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_m0he3"]
 [ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="5_8a6bx"]
+[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="6_trdnx"]
+[ext_resource type="Texture2D" uid="uid://8sgtmvnheoiq" path="res://assets/UI/pass_turn_button.png" id="8_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="9_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
+[ext_resource type="Texture2D" uid="uid://b2u6ilehm44b4" path="res://assets/UI/die_two.png" id="10_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://b0ny7tx28twc1" path="res://assets/UI/die_three.png" id="11_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://ds5kieewa1djk" path="res://assets/UI/die_four.png" id="12_tcw7y"]
+[ext_resource type="Texture2D" uid="uid://cyey2r3nd2kk0" path="res://assets/UI/die_five.png" id="13_fyh2q"]
+[ext_resource type="Texture2D" uid="uid://mq41veql72f8" path="res://assets/UI/die_six.png" id="14_sxbm1"]
+[ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 14.0
+content_margin_bottom = 5.0
+texture = ExtResource("3_u3wdh")
+
+[sub_resource type="FontVariation" id="FontVariation_trdnx"]
+base_font = ExtResource("4_m0he3")
+
+[sub_resource type="FontVariation" id="FontVariation_88jjp"]
+base_font = ExtResource("3_tbpra")
+variation_opentype = {
+2003265652: 900
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dgctq"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+texture = ExtResource("3_dgctq")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8a6bx"]
+bg_color = Color(0.53333336, 0.15294118, 0.101960786, 0.7058824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgctq"]
+bg_color = Color(0.43529412, 0.07450981, 0.4117647, 0.7058824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m0he3"]
+bg_color = Color(0.11372549, 0.35686275, 0.8117647, 0.7058824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trdnx"]
+bg_color = Color(0.34117648, 0.49411765, 0.07450981, 0.7058824)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="FontVariation" id="FontVariation_m0he3"]
 base_font = ExtResource("3_tbpra")
@@ -35,6 +100,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Control2" type="Control" parent="MainUI" unique_id=1556895022]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 
 [node name="PlayerTopArea" type="HBoxContainer" parent="MainUI" unique_id=1528484801]
 layout_mode = 2
@@ -203,11 +272,6 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "- 2 Gold"
 
-[node name="Skip" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=152502219]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Skip Turn"
-
 [node name="ShopContainer" type="GridContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=1391810629]
 unique_name_in_owner = true
 layout_mode = 2
@@ -218,9 +282,6 @@ columns = 3
 [node name="DiceContainer" type="VBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=61961936]
 layout_mode = 2
 size_flags_vertical = 4
-
-[node name="Dice" type="HBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=1670836831]
-layout_mode = 2
 
 [node name="LblDice" type="Label" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=336477209]
 unique_name_in_owner = true
@@ -306,85 +367,187 @@ custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1408029711]
+[node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1895989354]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 10
+size_flags_vertical = 8
 
-[node name="ActivePlayerStats" type="VBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1520586336]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="ActiveName" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=1906984545]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Player 1 Name"
-horizontal_alignment = 1
-
-[node name="LblActiveGold" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=936391913]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="LblActiveStats" type="Label" parent="MainUI/PlayerBottomArea/ActivePlayerStats" unique_id=1310969396]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="ActiveDeckContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1811438683]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(500, 0)
+[node name="MainColumn" type="VBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1158026153]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 10
 
-[node name="BlueMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=1741113173]
+[node name="TopBar" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=1322924405]
 layout_mode = 2
-theme_override_constants/margin_right = 20
 
-[node name="BluePileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/BlueMargin" unique_id=1678029284]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
+[node name="ActivePlayerStats" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=47050779]
 layout_mode = 2
-size_flags_horizontal = 3
 
-[node name="GreenMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=1164571395]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="GreenPileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/GreenMargin" unique_id=1193423327]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RedMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=101093988]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="RedPileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/RedMargin" unique_id=1370049028]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurpleMargin" type="MarginContainer" parent="MainUI/PlayerBottomArea/ActiveDeckContainer" unique_id=207906989]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurplePileBottom" type="Control" parent="MainUI/PlayerBottomArea/ActiveDeckContainer/PurpleMargin" unique_id=2006504553]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="OpenMonuMenu" type="Button" parent="MainUI/PlayerBottomArea" unique_id=1984504989]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+[node name="PanelContainer" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=361027093]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Monuments"
+theme_override_styles/panel = SubResource("StyleBoxTexture_l0rt3")
+
+[node name="PlayerButton" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer" unique_id=274318703]
+layout_mode = 2
+
+[node name="ProfilePicture" type="TextureRect" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=1440519422]
+custom_minimum_size = Vector2(40, 20)
+layout_mode = 2
+texture = ExtResource("3_8a6bx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerLabel" type="Label" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=1832634439]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_trdnx")
+theme_override_font_sizes/font_size = 20
+text = "Joueur 1"
+
+[node name="Espace" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=1937230171]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=1456125300]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="PlayerMoney" type="Label" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=1629325410]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = SubResource("FontVariation_88jjp")
+theme_override_font_sizes/font_size = 40
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CoinIcon" type="TextureRect" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=815668900]
+custom_minimum_size = Vector2(30, 37)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("6_trdnx")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="RessortGauche" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=59806948]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PasserLeTourButton" type="TextureButton" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=585773981]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("8_u3wdh")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=187133416]
+layout_mode = 2
+
+[node name="CardZone" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer" unique_id=447412021]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_dgctq")
+
+[node name="EmplacementsCartes" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone" unique_id=135716709]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ZoneRouge" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=788586104]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8a6bx")
+
+[node name="ZoneViolette" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=333444545]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dgctq")
+
+[node name="ZoneBleue" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=1354434502]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m0he3")
+
+[node name="ZoneVerte" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=2040775777]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_trdnx")
+
+[node name="MonumentZone" type="MarginContainer" parent="MainUI/PlayerBottomArea" unique_id=2536659]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/margin_left = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainUI/PlayerBottomArea/MonumentZone" unique_id=703696673]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MonumentButton" type="TextureButton" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer" unique_id=1455298354]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("9_2vk2f")
+
+[node name="GridContainer" type="GridContainer" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer" unique_id=1686085059]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=512234392]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("9_417mv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect2" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1882497123]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("10_2vk2f")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect3" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=134974695]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("11_u3wdh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect4" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1389453162]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("12_tcw7y")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect5" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=809189407]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("13_fyh2q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect6" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1422436671]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("14_sxbm1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control" type="Control" parent="MainUI" unique_id=449633774]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 
 [node name="MonumentMenu" type="ColorRect" parent="." unique_id=1857296200]
 visible = false
@@ -913,17 +1076,75 @@ theme_override_constants/separation = 30
 alignment = 1
 
 [node name="BtnOverlayRoll1" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=364657080]
+unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("4_dgctq")
 
 [node name="BtnOverlayRoll2" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=984704587]
+unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("5_8a6bx")
 
+[node name="ResultOverlay" type="ColorRect" parent="." unique_id=362615289]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.9098039)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ResultOverlay" unique_id=194343799]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="LblResultTitle" type="Label" parent="ResultOverlay/VBoxContainer" unique_id=1861842772]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = SubResource("FontVariation_m0he3")
+theme_override_font_sizes/font_size = 100
+text = "Résultat du lancer"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ResultOverlay/VBoxContainer" unique_id=967269921]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Die1" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=619760799]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("9_417mv")
+
+[node name="Die2" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=505113168]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("9_417mv")
+
+[node name="BtnConserver" type="TextureButton" parent="ResultOverlay/VBoxContainer" unique_id=172460190]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("19_tcw7y")
+
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
