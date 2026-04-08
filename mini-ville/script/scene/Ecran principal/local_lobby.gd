@@ -61,6 +61,16 @@ func _on_lancer():
 	get_tree().set_meta("mode_local", true)
 	# TODO: changer vers la scène de jeu quand elle sera prête
 	print("Lancement local avec %d joueurs, durée index %d" % [nb_joueurs, dur_index])
+	
+	GameData.player_names.clear()
+	
+	for i in range(nb_joueurs):
+		
+			GameData.player_names.append("Player " + str(i + 1))
+	
+	print("Starting game with: ", GameData.player_names)
+	
+	get_tree().change_scene_to_file("res://scene/Prototype/V3/main.tscn")
 
 
 func _input(event):
