@@ -166,7 +166,6 @@ def insert_history():
             data.get('action_type'),
             data.get('dice_result'),
             data.get('amount_exchanged', 0),
-            data.get('action_details'),
             None  # execute_at est géré par MySQL
         ))
         conn.commit()
