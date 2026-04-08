@@ -36,7 +36,7 @@ func _on_pressed():
 	var code = _generate_code()
 	get_tree().set_meta("lobby_code", code)
 	LobbyManager.add_lobby(code, lobby.is_private)
-	get_tree().change_scene_to_file("res://scenes/ui/attente_lobby.tscn")
+	get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 
 
 func _generate_code() -> String:

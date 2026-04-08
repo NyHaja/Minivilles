@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://cl142ptcxeqdo"]
 
 [ext_resource type="Script" uid="uid://bx0vpo3ta12ck" path="res://script/scene/Popup/popup_parametres.gd" id="1_sc"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
-[ext_resource type="FontFile" uid="uid://b8rhdspwo18yo" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/Image/icon/backArrow.png" id="4_back"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/Image/icon/backArrowPress.png" id="5_backp"]
+[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
+[ext_resource type="FontFile" uid="uid://b2bjbpsmhp2ei" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
+[ext_resource type="Texture2D" uid="uid://bdb21gpxhu7ks" path="res://assets/Image/icon/backArrow.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://b1t6dq7ev6kb" path="res://assets/Image/icon/backArrowPress.png" id="5_backp"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_ls"]
-[ext_resource type="Texture2D" uid="uid://p2p2rd7usp8q" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="7_gear"]
+[ext_resource type="Texture2D" uid="uid://bfxhxihlcdomy" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="7_gear"]
+[ext_resource type="Texture2D" uid="uid://bykg5rf2pli5m" path="res://assets/Image/icon/Ellipse 32.png" id="8_gy5cr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -25,51 +26,63 @@ shadow_offset = Vector2(6, 7)
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font = ExtResource("2_erica")
-font_size = 50
+font_size = 60
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_subtitle"]
 font = ExtResource("3_exo")
-font_size = 20
+font_size = 30
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 4
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep"]
-color = Color(1, 1, 1, 0.6)
-thickness = 2
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_qgbbu"]
+color = Color(1, 1, 1, 1)
+grow_begin = -220.0
+grow_end = 0.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_qs8kj"]
+color = Color(1, 1, 1, 1)
+grow_begin = 216.0
+thickness = 4
 
 [sub_resource type="LabelSettings" id="LabelSettings_item"]
 font = ExtResource("3_exo")
-font_size = 18
+font_size = 25
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 4
 
 [sub_resource type="LabelSettings" id="LabelSettings_value"]
 font = ExtResource("3_exo")
-font_size = 18
+font_size = 23
 outline_size = 3
 
 [sub_resource type="LabelSettings" id="LabelSettings_section"]
 font = ExtResource("3_exo")
-font_size = 22
+font_size = 25
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwmbq"]
+bg_color = Color(1, 1, 1, 1)
+border_width_top = 3
+border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_a"]
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 3
-border_width_top = 3
+border_width_top = 15
 border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_bottom = 15
+border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
-bg_color = Color(1, 1, 1, 0.9)
+bg_color = Color(1, 1, 1, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -158,7 +171,7 @@ theme_override_constants/margin_bottom = 30
 
 [node name="MainVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer" unique_id=736492810]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 25
 
 [node name="TitleVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=192837466]
 layout_mode = 2
@@ -183,13 +196,32 @@ horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox" unique_id=736492811]
 layout_mode = 2
-text = "réglages"
+text = "Réglages"
 label_settings = SubResource("LabelSettings_subtitle")
 horizontal_alignment = 1
 
-[node name="TitleSep" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=192837467]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=212662200]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_sep")
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=1040715376]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=456353009]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=2029659106]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
 
 [node name="AudioVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=584739202]
 layout_mode = 2
@@ -235,32 +267,28 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 value = 85.0
 
-[node name="NotifVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=847362914]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=1772992586]
 layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=1260963566]
+layout_mode = 2
+size_flags_horizontal = 0
 theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
 
-[node name="NotifTitle" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/NotifVBox" unique_id=293847565]
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=993688369]
 layout_mode = 2
-text = "Notifications"
-label_settings = SubResource("LabelSettings_section")
-
-[node name="NotifSep" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/NotifVBox" unique_id=736492814]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_sep")
-
-[node name="NotifRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/NotifVBox" unique_id=192837470]
-layout_mode = 2
-
-[node name="NotifLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/NotifVBox/NotifRow" unique_id=584739205]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Notifications activées"
-label_settings = SubResource("LabelSettings_item")
-
-[node name="ToggleNotifs" type="CheckButton" parent="Panel/PanelParametres/MarginContainer/MainVBox/NotifVBox/NotifRow" unique_id=847362915]
-layout_mode = 2
+size_flags_horizontal = 6
 size_flags_vertical = 4
-button_pressed = true
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=1582413772]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
 
 [node name="LangueVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=293847566]
 layout_mode = 2
@@ -270,60 +298,59 @@ theme_override_constants/separation = 5
 layout_mode = 2
 text = "Langue"
 label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
 
-[node name="LangueSep" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=192837471]
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=127516245]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_sep")
+theme_override_styles/separator = SubResource("StyleBoxFlat_rwmbq")
 
-[node name="LangueGrid" type="GridContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=584739206]
+[node name="LangueGrid" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=27490603]
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 2
 
 [node name="BtnFR" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=847362916]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_a")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_n")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "FR  Français"
+text = "Français"
 
 [node name="BtnEN" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=293847567]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "EN  English"
+text = "Anglais"
 
-[node name="BtnDE" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=736492816]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=506170679]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
-theme_override_fonts/font = ExtResource("3_exo")
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "DE  Deutsch"
 
-[node name="BtnES" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=192837472]
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=1142722193]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
-theme_override_fonts/font = ExtResource("3_exo")
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
-text = "ES  Español"
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=478587229]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=1054442830]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
 
 [node name="AffichageVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=584739207]
 layout_mode = 2
@@ -333,10 +360,11 @@ theme_override_constants/separation = 5
 layout_mode = 2
 text = "Affichage"
 label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
 
-[node name="AffichageSep" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=293847568]
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=50814693]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_sep")
+theme_override_styles/separator = SubResource("StyleBoxFlat_rwmbq")
 
 [node name="AffichageRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=736492817]
 layout_mode = 2

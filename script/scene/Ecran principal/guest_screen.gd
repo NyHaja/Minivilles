@@ -6,6 +6,6 @@ func _ready() -> void:
 		get_tree().change_scene_to_file("res://scenes/ui/mode_de_jeu.tscn"))
 
 	$gameMode/loginbtn.pressed.connect(func():
-		var popup_login = load("res://scenes/popup_login.tscn").instantiate()
+		var popup_login = load("res://scene/popup/popup_login.tscn").instantiate()
 		get_tree().root.add_child(popup_login)
 		popup_login.on_back.connect(func(): popup_login.queue_free()))

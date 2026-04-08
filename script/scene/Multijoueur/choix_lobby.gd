@@ -1,12 +1,13 @@
 extends Control
 
+signal on_back
 
 func _ready():
-	_setup_btn($Content/BtnCreerWrap/BtnCreer, func(): get_tree().change_scene_to_file("res://scenes/ui/creation_lobby.tscn"))
-	_setup_btn($Content/BtnRejoindreWrap/BtnRejoindre, func(): get_tree().change_scene_to_file("res://scenes/ui/rejoindre_lobby.tscn"))
-	$BtnRetour.gui_input.connect(func(event):
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			get_tree().change_scene_to_file("res://scenes/ui/mode_de_jeu.tscn"))
+	_setup_btn($Content/BtnCreerWrap/BtnCreer, func(): get_tree().change_scene_to_file("res://scene/Multijoueur/creation_lobby.tscn"))
+	_setup_btn($Content/BtnRejoindreWrap/BtnRejoindre, func(): get_tree().change_scene_to_file("res://scene/Multijoueur/rejoindre_lobby.tscn"))
+#	$BtnRetour.gui_input.connect(func(event):
+#		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+#			get_tree().change_scene_to_file("res://scene/Ecran principale/mode_de_jeu.tscn"))
 
 
 func _setup_btn(btn: Button, on_press: Callable):

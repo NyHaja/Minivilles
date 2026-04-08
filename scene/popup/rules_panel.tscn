@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dpmmcwfqqufi6"]
 
 [ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://script/scene/Popup/rules_panel.gd" id="1_07o7p"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/Image/icon/backArrow.png" id="1_o4co6"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/Image/icon/backArrowPress.png" id="2_bwkas"]
+[ext_resource type="Texture2D" uid="uid://bdb21gpxhu7ks" path="res://assets/Image/icon/backArrow.png" id="1_o4co6"]
+[ext_resource type="Texture2D" uid="uid://b1t6dq7ev6kb" path="res://assets/Image/icon/backArrowPress.png" id="2_bwkas"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_541gp"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
-[ext_resource type="FontFile" uid="uid://c7ye6pwadgxl6" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/Image/icon/Ellipse 32.png" id="6_uxse3"]
-[ext_resource type="FontFile" uid="uid://c16hfaau3y518" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
+[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
+[ext_resource type="FontFile" uid="uid://d0m4e02j5p3uq" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
+[ext_resource type="Texture2D" uid="uid://bykg5rf2pli5m" path="res://assets/Image/icon/Ellipse 32.png" id="6_uxse3"]
+[ext_resource type="FontFile" uid="uid://c4o0nbqdnhtcu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)

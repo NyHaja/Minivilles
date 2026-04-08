@@ -2,7 +2,7 @@ extends Control
 
 signal on_back
 
-var player_mode = preload("res://scenes/player_screen.tscn")
+var player_mode = preload("res://scene/Ecran principale/player_screen.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,7 +21,7 @@ func bouton_connexion() -> void:
 # bouton d'inscription
 func bouton_inscription():
 	SoundManager.play_click()
-	var popup_signin = load("res://scenes/popup_signin.tscn").instantiate()
+	var popup_signin = load("res://scene/popup/popup_signin.tscn").instantiate()
 	get_tree().root.add_child(popup_signin)
 	popup_signin.on_back.connect(func(): show())
 	hide()

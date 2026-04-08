@@ -1,19 +1,18 @@
 [gd_scene format=3 uid="uid://bntbferfc67eh"]
 
-[ext_resource type="Texture2D" uid="uid://djjjguq8fb2vo" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
-[ext_resource type="Texture2D" uid="uid://cx3c6u3r4roa3" path="res://assets/ui/a supprimer/icone_de (2).png" id="2_oejkh"]
+[ext_resource type="Texture2D" uid="uid://dfoomldgs5mv1" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
+[ext_resource type="Texture2D" uid="uid://c12ivo8tix6pb" path="res://assets/Image/icon/dice.png" id="2_31rsn"]
 [ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="3_anmlk"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="4_gwrmv"]
-[ext_resource type="Texture2D" uid="uid://bctdq2hiecc1o" path="res://assets/ui/a supprimer/icone_de2.png" id="5_2usgq"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="6_dg5l6"]
+[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="6_dg5l6"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="7_y6f07"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_lprcw"]
 [ext_resource type="Script" uid="uid://bnd1nn86amgdg" path="res://script/scene/Local/btn_solo.gd" id="9_dmcf4"]
 [ext_resource type="Script" uid="uid://1jdhm04axmh1" path="res://script/scene/Local/btn_multi.gd" id="10_okktj"]
-[ext_resource type="Texture2D" uid="uid://do0hrlpynkh7x" path="res://assets/ui/a supprimer/icons/icone_regles.png" id="11_nt4lc"]
+[ext_resource type="Texture2D" uid="uid://o2cty6bfgdkv" path="res://assets/ui/a supprimer/icons/icone_regles.png" id="11_nt4lc"]
 [ext_resource type="Script" uid="uid://bq0tdq8lvp6co" path="res://script/scene/Popup/btn_regles.gd" id="12_g5hcx"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="13_v37wi"]
-[ext_resource type="Texture2D" uid="uid://p2p2rd7usp8q" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="14_fny1t"]
+[ext_resource type="Texture2D" uid="uid://bfxhxihlcdomy" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="14_fny1t"]
 [ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="15_mqpi4"]
 
 [node name="Control" type="Control" unique_id=1166678645]
@@ -44,31 +43,35 @@ grow_vertical = 2
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="LogoRow" type="HBoxContainer" parent="Content" unique_id=2063897754]
+[node name="Title" type="MarginContainer" parent="Content" unique_id=300086292]
 layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
 
-[node name="Dé" type="TextureRect" parent="Content/LogoRow" unique_id=1557635892]
-custom_minimum_size = Vector2(110, 107)
+[node name="HBoxContainer" type="HBoxContainer" parent="Content/Title" unique_id=819987837]
 layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("2_oejkh")
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+
+[node name="Dice2" type="TextureRect" parent="Content/Title/HBoxContainer" unique_id=116088302]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("2_31rsn")
+expand_mode = 1
 stretch_mode = 5
 script = ExtResource("3_anmlk")
 
-[node name="Logo" type="Label" parent="Content/LogoRow" unique_id=1847709166]
+[node name="Label" type="Label" parent="Content/Title/HBoxContainer" unique_id=997130082]
 layout_mode = 2
 text = "Minivilles"
 label_settings = ExtResource("4_gwrmv")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Dé2" type="TextureRect" parent="Content/LogoRow" unique_id=1288394340]
-custom_minimum_size = Vector2(110, 107)
+[node name="Dice" type="TextureRect" parent="Content/Title/HBoxContainer" unique_id=1329831146]
+custom_minimum_size = Vector2(120, 120)
+layout_direction = 2
 layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("5_2usgq")
+texture = ExtResource("2_31rsn")
+expand_mode = 1
 stretch_mode = 5
 script = ExtResource("3_anmlk")
 

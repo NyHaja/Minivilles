@@ -76,7 +76,7 @@ func _setup_joueur_click(joueur: Control, nom: String):
 
 
 func _ouvrir_stats(nom: String):
-	var stats = load("res://scenes/ui/stats_joueur.tscn").instantiate()
+	var stats = load("res://scene/Multijoueur/stats_joueur.tscn").instantiate()
 	get_tree().root.add_child(stats)
 	stats.setup(
 		PlayerData.nom if PlayerData.is_logged_in() else nom,

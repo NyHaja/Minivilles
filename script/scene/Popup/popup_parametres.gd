@@ -1,5 +1,6 @@
 extends Control
 
+signal on_back
 
 func _ready():
 	$Panel/VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
@@ -8,12 +9,14 @@ func _ready():
 	var grid = $Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid
 	grid.get_node("BtnFR").pressed.connect(func(): LocaleManager.set_language("fr"))
 	grid.get_node("BtnEN").pressed.connect(func(): LocaleManager.set_language("en"))
-	grid.get_node("BtnDE").pressed.connect(func(): LocaleManager.set_language("de"))
-	grid.get_node("BtnES").pressed.connect(func(): LocaleManager.set_language("es"))
+#	grid.get_node("BtnDE").pressed.connect(func(): LocaleManager.set_language("de"))
+#	grid.get_node("BtnES").pressed.connect(func(): LocaleManager.set_language("es"))
 
 
 func _on_back_pressed():
-	queue_free()
+	SoundManager.play_click()
+	on_back.emit()
+	hide()
 
 
 func _on_musique_changed(value: float):

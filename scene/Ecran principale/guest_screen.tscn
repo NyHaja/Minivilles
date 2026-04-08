@@ -1,16 +1,19 @@
 [gd_scene format=3 uid="uid://c0kph3t4yxfjo"]
 
-[ext_resource type="Texture2D" uid="uid://vjrsovpxjfsb" path="res://assets/Image/background/background.png" id="1_sr3p1"]
-[ext_resource type="Texture2D" uid="uid://1gtnyy3d1m5l" path="res://assets/Image/icon/rules_btn.png" id="2_lydxh"]
+[ext_resource type="Texture2D" uid="uid://bdrnhj4g37bux" path="res://assets/Image/background/background.png" id="1_sr3p1"]
+[ext_resource type="Texture2D" uid="uid://ccnv546ksf2oe" path="res://assets/Image/icon/rules_btn.png" id="2_lydxh"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="2_n7xrt"]
-[ext_resource type="Texture2D" uid="uid://c7d26omepqj6e" path="res://assets/Image/icon/règles.png" id="3_h386m"]
+[ext_resource type="Texture2D" uid="uid://bfeeec5sxmhpt" path="res://assets/Image/icon/règles.png" id="3_h386m"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="3_uq2vg"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_g8ood"]
+[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_g8ood"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="5_4j18g"]
-[ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://assets/Image/icon/iconeparamètre.png" id="6_baefl"]
-[ext_resource type="Texture2D" uid="uid://cjs8w6uwfd47y" path="res://assets/Image/icon/settingicon.png" id="7_flw7e"]
-[ext_resource type="Texture2D" uid="uid://bkyidxcm0m8vp" path="res://assets/Image/icon/dice.png" id="8_v2fnf"]
+[ext_resource type="Script" uid="uid://bq0tdq8lvp6co" path="res://script/scene/Popup/btn_regles.gd" id="5_f0ckc"]
+[ext_resource type="Texture2D" uid="uid://djnd8kngjod8s" path="res://assets/Image/icon/iconeparamètre.png" id="6_baefl"]
+[ext_resource type="Texture2D" uid="uid://dnnv2aon3ocnj" path="res://assets/Image/icon/settingicon.png" id="7_flw7e"]
+[ext_resource type="Texture2D" uid="uid://c12ivo8tix6pb" path="res://assets/Image/icon/dice.png" id="8_v2fnf"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="9_1fevk"]
+[ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="10_kkca0"]
+[ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Ecran principal/de.gd" id="10_yg4um"]
 [ext_resource type="Script" uid="uid://dcyhop2gi5qrk" path="res://script/scene/Ecran principal/guest_screen.gd" id="99_sc_guest"]
 
 [node name="guest_screen" type="Control" unique_id=139461560]
@@ -58,6 +61,7 @@ texture_pressed = ExtResource("3_h386m")
 texture_hover = ExtResource("3_h386m")
 ignore_texture_size = true
 stretch_mode = 5
+script = ExtResource("5_f0ckc")
 
 [node name="Label" type="Label" parent="Header/header/rulebtn" unique_id=1006613575]
 layout_mode = 2
@@ -82,6 +86,7 @@ texture_pressed = ExtResource("7_flw7e")
 texture_hover = ExtResource("7_flw7e")
 ignore_texture_size = true
 stretch_mode = 5
+script = ExtResource("10_kkca0")
 
 [node name="Label" type="Label" parent="Header/header/settingbtn" unique_id=3412015]
 layout_mode = 2
@@ -113,6 +118,7 @@ layout_mode = 2
 texture = ExtResource("8_v2fnf")
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("10_yg4um")
 
 [node name="Label" type="Label" parent="Title/HBoxContainer" unique_id=1721634458]
 layout_mode = 2
@@ -128,6 +134,7 @@ layout_mode = 2
 texture = ExtResource("8_v2fnf")
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("10_yg4um")
 
 [node name="gameMode" type="VBoxContainer" parent="." unique_id=839666234]
 layout_mode = 1
