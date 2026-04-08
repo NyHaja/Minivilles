@@ -13,6 +13,7 @@ const ICON_Y_BOTTOM = 125.0
 const CENTER_X = 280.0
 
 func _ready():
+
 	%LabelDuree.text = durations[dur_index]
 	%ArrowGaucheDuree.pressed.connect(_on_duree_gauche)
 	%ArrowDroiteDuree.pressed.connect(_on_duree_droite)
