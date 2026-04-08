@@ -11,6 +11,10 @@ const MAX_REQUESTS_PER_FRAME = 10
 
 var active_sessions : Dictionary = {}
 
+func on_client_login_success(client_socket, player_id):
+	active_sessions[client_socket] = player_id
+	print("Joueur", player_id, "est maintenant lié à cette connexion.")
+
 func _ready():
 	print("Démarrage du Game Server sur le port ", port, "...")
 	var err = server.listen(port)
@@ -72,14 +76,20 @@ func route_request(client: StreamPeerTCP, data: Dictionary):
 		
 	var action = data["action"]
 	
-	# Le routeur est maintenant propre et sans doublons
 	match action:
 		"register":
 			handler_register(client, data)
-		"historic": # J'ai utilisé 'historic' selon ton code précédent
+			
+		"historic": 
 			handler_historic(client, data)
+		"authentification" : 
+			handler_authentification(client,data)
+		"guest_player":
+			handler_guest_player(client,data)
 		_:
 			send_to_client(client, {"status": "error", "message": "Action non reconnue."})
+
+			
 
 
 ## ====================================================
@@ -97,21 +107,45 @@ func handler_register(client: StreamPeerTCP, data: Dictionary):
 	send_to_flask_api("register", "/register", payload, client)
 
 func handler_historic(client: StreamPeerTCP, data: Dictionary):
+	var raw_player_id = data.get("player_id", -1)
+	var raw_guest_id = data.get("guest_id", -1)
+	
+	var final_player_id = null if raw_player_id == -1 else raw_player_id
+	var final_guest_id = null if raw_guest_id == -1 else raw_guest_id
+		
 	var payload = {
 		"game_id": data.get("game_id", ""),
 		"turn_number": data.get("turn_number", ""),
 		"action_type": data.get("action_type", ""),
 		"dice_result": data.get("dice_result", ""),
 		"amount_exchanged": data.get("amount_exchanged", ""),
-		"player_id": data.get("player_id", ""),
-		"guest_id": data.get("guest_id", ""),
+		"player_id": final_player_id,
+		"guest_id": final_guest_id,
 		"card_id": data.get("card_id", ""),
 		"monument_id": data.get("monument_id", "")
+		
+		
+			
 	}
 	# Appel de notre fonction factorisée !
 	send_to_flask_api("historic", "/history/insert", payload, client)
 
 
+func handler_authentification(client :StreamPeerTCP, data : Dictionary) : 
+	var payload = {
+		"email" : data.get("identifiant",""),
+		"password" : data.get("mot_de_passe")
+	}
+
+	send_to_flask_api("authentification","/login",payload,client)
+	
+func handler_guest_player(client : StreamPeerTCP,data : Dictionary) : 
+	
+	var payload = {
+		"nickname" : data.get("nickname",""),
+	}
+
+	send_to_flask_api("guest_player","/guest/register",payload,client)
 ## ====================================================
 ## 2. L'API FLASK FACTORISÉE (Le "Moteur" HTTP)
 ## ====================================================
@@ -121,7 +155,6 @@ func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionar
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	
-	# On passe "action_name" à la fonction de réponse pour qu'elle sache à quelle action elle répond !
 	http_request.request_completed.connect(_on_flask_response.bind(client, http_request, action_name))
 	
 	var url = "http://192.168.100.125:5000" + endpoint
@@ -141,16 +174,28 @@ func _on_flask_response(result, response_code, headers, body, client: StreamPeer
 		
 	var flask_response = JSON.parse_string(body.get_string_from_utf8())
 	
-	# On construit la réponse de manière générique en utilisant "action_name"
+	# --- NOUVEAU : INTERCEPTION DU LOGIN ---
+	# Si l'action était l'authentification et que Flask renvoie un succès
+	if action_name == "authentification" and flask_response.get("status") == "success":
+		var player_id = flask_response.get("player_id")
+		if player_id != null:
+			# On lie le socket au player_id dans le dictionnaire active_sessions
+			on_client_login_success(client, player_id)
+	# ---------------------------------------
+	
+	# On construit la réponse à renvoyer au jeu (client Godot)
 	var reponse_client = {
 		"action_reply": action_name, 
 		"status": flask_response.get("status", "error"),
 		"message": flask_response.get("message", "Erreur inconnue.")
 	}
 	
-	# S'il y a des données additionnelles renvoyées par Flask, on les transmet au client
+	# S'il y a des données additionnelles (ex: le player_id), on les transmet au client
 	if flask_response.has("data"):
 		reponse_client["data"] = flask_response["data"]
+		
+	if flask_response.has("player_id"):
+		reponse_client["player_id"] = flask_response["player_id"]
 	
 	send_to_client(client, reponse_client)
 

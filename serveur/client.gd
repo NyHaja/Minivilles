@@ -60,7 +60,7 @@ func send_historic(game_id: int, turn_number: int, action_type: String, player_i
 		
 		# Champs obligatoires (NOT NULL)
 		var request_data = {
-			"action": "log_history",
+			"action": "historic",
 			"game_id": game_id,
 			"turn_number": turn_number,
 			"action_type": action_type,
@@ -84,9 +84,54 @@ func send_historic(game_id: int, turn_number: int, action_type: String, player_i
 	else:
 		print("Impossible d'envoyer l'historique : non connecté.")
 
+## ----------------------------------------------------
+## 3. REQUÊTE : CREATION D'UNE PARTIE 
+## ----------------------------------------------------
 
+func create_game() :
+	
+	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+		var request_data = {
+			"action": "create_game",
+			"status" : "waiting"
+			
+		}
+		var json_string = JSON.stringify(request_data) + "\n"
+		tcp.put_data(json_string.to_utf8_buffer())
+		print("Requête de création de partie envoyée.")
+
+## ----------------------------------------------------
+## 4. REQUÊTE : AUTHENTIFICATION 
+## ----------------------------------------------------	
+
+func authentication(identifiant:String, mdp:String) :
+	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+		var request_data = {
+			"action" : "authentification",
+			"identifiant": identifiant, 
+			"mot_de_passe": mdp
+		}
+		var json_string = JSON.stringify(request_data) + "\n"
+		tcp.put_data(json_string.to_utf8_buffer())
+		print("Requête d'authenfication envoyée")
+
+## ----------------------------------------------------
+## 5. REQUÊTE : PLAYING GUEST 
+## ----------------------------------------------------	
+
+func insert_guest(nickname: String): 
+	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+		var request_data = {
+			"action": "guest_player",
+			"nickname" : nickname
+		}
+		var json_string = JSON.stringify(request_data) + "\n"
+		tcp.put_data(json_string.to_utf8_buffer())
+		print("Requête pour le guest_player envoyée")
+
+		
 func _input(event):
 	# Appuie sur Espace / Entrée (l'action ui_accept par défaut) pour tester l'envoi
 	if event.is_action_pressed("ui_accept"):
-		# On envoie un faux joueur test
-		send_register_request("JoueurTest2", "monSuperMdp", "joueur2@test.com", "http://image.com/avatar.png")
+		send_historic(5,1,"TEST",1043,-1,100,1,2,2)
+		
