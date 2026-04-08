@@ -15,9 +15,17 @@ run/main_scene="uid://dteg5cm4blsjl"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://cjihtogdq8orn"
+
 [autoload]
 
 GameData="*uid://43kqotfp2uyk"
+SoundManager="*uid://bu5ukwdc2m6d"
+PlayerData="*res://script/scene/Multijoueur/player_data.gd"
+LocaleManager="*res://script/scene/Traduction/locale_manager.gd"
+LobbyManager="*res://script/scene/Multijoueur/lobby_manager.gd"
 
 [display]
 
