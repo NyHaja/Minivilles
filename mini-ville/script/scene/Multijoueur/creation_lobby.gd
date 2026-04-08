@@ -21,9 +21,9 @@ func _ready():
 	%ArrowDroiteJoueurs.pressed.connect(_on_joueurs_droite)
 	_update_joueurs()
 	$SwitchContainer/Switch.toggled.connect(_on_switch_toggled)
-	$BtnRetour.gui_input.connect(func(event):
+	$VBoxContainer/backbtn.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			get_tree().change_scene_to_file("res://scenes/ui/choix_lobby.tscn"))
+			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
 
 
 func _on_switch_toggled(pressed: bool):

@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://wxbvq4jsbxh3"]
 
 [ext_resource type="Script" uid="uid://b4w7fdbnubt8v" path="res://script/scene/Multijoueur/creation_lobby.gd" id="1_q5v2b"]
-[ext_resource type="Texture2D" uid="uid://bcuo8w3em402k" path="res://assets/ui/a supprimer/btn_retour_fleche.png" id="2_uy7m1"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_y76a8"]
-[ext_resource type="Texture2D" uid="uid://er7mwuj2sfck" path="res://assets/Background/bg.png" id="4_hckvh"]
-[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="5_q5v2b"]
+[ext_resource type="Texture2D" uid="uid://w4xl63u4e48n" path="res://assets/Background/bg.png" id="4_hckvh"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_q5v2b"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="6_wipa4"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_cx3lq"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="8_uy7m1"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_cx3lq"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="8_uy7m1"]
 [ext_resource type="Script" uid="uid://r80okf66ptxh" path="res://script/scene/Multijoueur/btn_fleche.gd" id="9_rxlvl"]
-[ext_resource type="Texture2D" uid="uid://bli0qo61j8ax3" path="res://assets/icon/chronometre.png" id="10_y76a8"]
-[ext_resource type="Texture2D" uid="uid://6bd48btrlugf" path="res://assets/icon/joueur.png" id="11_hckvh"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="12_6cn7a"]
+[ext_resource type="Texture2D" uid="uid://dulxo2tcqe74g" path="res://assets/icon/chronometre.png" id="10_y76a8"]
+[ext_resource type="Texture2D" uid="uid://b6rtifuh8un50" path="res://assets/icon/joueur.png" id="11_hckvh"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="12_6cn7a"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_v5av7"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_70pqk"]
 [ext_resource type="Script" uid="uid://4s6wrcfars54" path="res://script/scene/Multijoueur/btn_creer.gd" id="15_tsbko"]
@@ -36,30 +35,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_q5v2b")
-
-[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 20.0
-offset_right = 200.0
-offset_bottom = 160.0
-mouse_filter = 0
-theme_override_constants/separation = 5
-
-[node name="Fleche" type="TextureRect" parent="BtnRetour" unique_id=100000051]
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("2_uy7m1")
-stretch_mode = 5
-
-[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Retour"
-label_settings = ExtResource("3_y76a8")
-horizontal_alignment = 1
 
 [node name="Background" type="TextureRect" parent="." unique_id=872612023]
 layout_mode = 1
@@ -259,6 +234,31 @@ theme_override_styles/focus = ExtResource("13_v5av7")
 text = "Créer"
 script = ExtResource("15_tsbko")
 
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=637545061]
+layout_mode = 1
+offset_top = 15.0
+offset_right = 202.0
+offset_bottom = 230.0
+theme_override_constants/separation = -17
+
+[node name="backbtn" type="TextureButton" parent="VBoxContainer" unique_id=28496431]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1133380511]
+layout_mode = 2
+text = "Retour"
+label_settings = ExtResource("3_y76a8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="SwitchContainer" type="HBoxContainer" parent="." unique_id=200000003]
 layout_mode = 0
 offset_left = 1550.0
@@ -277,3 +277,5 @@ horizontal_alignment = 1
 [node name="Switch" type="CheckButton" parent="SwitchContainer" unique_id=200000005]
 layout_mode = 2
 size_flags_vertical = 4
+
+[connection signal="pressed" from="VBoxContainer/backbtn" to="." method="_on_back_pressed"]
