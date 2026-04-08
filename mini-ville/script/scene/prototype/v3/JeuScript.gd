@@ -15,8 +15,6 @@ var test_shop
 var game
 
 @onready var shop_container: GridContainer = %ShopContainer
-@onready var btn_roll_1: Button = %BtnRoll1
-@onready var btn_roll_2: Button = %BtnRoll2
 @onready var lbl_dice: Label = %LblDice
 
 # Active Player UI
@@ -54,14 +52,8 @@ var mini_dice_array: Array = []
 @onready var lbl_top_name: Label = %LblPlayerTopName
 @onready var lbl_top_gold: Label = %LblPlayerTopGold
 @onready var lbl_top_stats: Label = %LblPlayerTopStats
-@onready var left_deck_container: HBoxContainer = %LeftDeckContainer
-@onready var lbl_left_name: Label = %LblLeftName
-@onready var lbl_left_gold: Label = %LblLeftGold
-@onready var lbl_left_stats: Label = %LblLeftStats
-@onready var right_deck_container: HBoxContainer = %RightDeckContainer
-@onready var lbl_right_name: Label = %LblRightName
-@onready var lbl_right_gold: Label = %LblRightGold
-@onready var lbl_right_stats: Label = %LblRightStats
+@onready var left_deck_container: VBoxContainer = %LeftDeckContainer
+@onready var right_deck_container: VBoxContainer = %RightDeckContainer
 
 @onready var open_monuments: TextureButton = %MonumentButton
 @onready var monument_menu: ColorRect = $MonumentMenu
@@ -471,17 +463,19 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 
 func update_deck_ui() -> void:
 	var piles = {
-		CardColor.Type.BLUE: %ZoneBleue,
-		CardColor.Type.GREEN: %ZoneVerte,
-		CardColor.Type.RED: %ZoneRouge,
-		CardColor.Type.PURPLE: %ZoneViolette
+		CardColor.Type.BLUE: %BluePileBottom,
+		CardColor.Type.GREEN: %GreenPileBottom,
+		CardColor.Type.RED: %RedPileBottom,
+		CardColor.Type.PURPLE: %PurplePileBottom
 	}
 	
 	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 	
 	for pile in piles.values():
-		for child in pile.get_children():
-			child.queue_free()
+		var anchor = pile.get_node_or_null("Anchor")
+		if anchor:
+			for child in anchor.get_children():
+				child.queue_free()
 			
 	var pile_counts = {
 		CardColor.Type.BLUE: 0,
@@ -489,6 +483,11 @@ func update_deck_ui() -> void:
 		CardColor.Type.RED: 0,
 		CardColor.Type.PURPLE: 0
 	}
+	
+	var card_width = 156 
+	var card_height = 200
+	var stack_gap = 25 
+	var push_up_amount = 0 
 	
 	for instance in current_player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
@@ -500,32 +499,25 @@ func update_deck_ui() -> void:
 		if card_data != null:
 			var color = card_data.get_color()
 			var target_pile = piles[color]
+			var anchor = target_pile.get_node("Anchor")
 			
 			for i in range(quantity):
 				var card_visual
 				var card_name = card_data.get_name() 
-				var card_color = card_data.get_color()
 				
-				var clean_name = get_clean_file_name(card_name, card_color)
-				
+				var clean_name = get_clean_file_name(card_name, color)
 				var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 				var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 				
 				if FileAccess.file_exists(path_basis):
 					card_visual = CARD_SCENE.instantiate()
 					var image_node = card_visual.get_node_or_null("Visual")
+					
 					if image_node is TextureButton:
 						image_node.texture_normal = load(path_basis)
-						
-						var card_scale = 1
-						card_visual.scale = Vector2(card_scale, card_scale)
-						
-						image_node.ignore_texture_size = true
-						image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-						
 						if FileAccess.file_exists(path_hover):
 							image_node.texture_hover = load(path_hover)
-					
+							
 					var tooltip_node = card_visual.get_node_or_null("Tooltip")
 					if tooltip_node:
 						var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
@@ -533,13 +525,11 @@ func update_deck_ui() -> void:
 							tooltip_node.texture = load(tip_path)
 							tooltip_node.hide()
 				else:
+					print("Warning: Art missing for ", path_basis)
 					card_visual = Button.new()
 					card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name()
-					card_visual.custom_minimum_size = Vector2(130, 180)
 					card_visual.disabled = true
 					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-					var offset_x = pile_counts[color] * 15 
-					card_visual.position = Vector2(offset_x, 0)
 					
 					var style = StyleBoxFlat.new()
 					match color:
@@ -554,15 +544,24 @@ func update_deck_ui() -> void:
 					card_visual.add_theme_stylebox_override("disabled", style)
 					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
 					
+				card_visual.custom_minimum_size = Vector2(card_width, card_height)
+				card_visual.size = Vector2(card_width, card_height)
 						
-				var stack_gap = 25 
-				var offset_x = pile_counts[card_color] * stack_gap 
-				var push_up_amount = 0
-				
+				var offset_x = pile_counts[color] * stack_gap 
 				card_visual.position = Vector2(offset_x, push_up_amount)
 					
-				target_pile.add_child(card_visual)
-				pile_counts[card_color] += 1
+				anchor.add_child(card_visual)
+				pile_counts[color] += 1
+
+	for color in piles:
+		var pile = piles[color]
+		var count = pile_counts[color]
+		
+		if count > 0:
+			var new_width = card_width + ((count - 1) * stack_gap)
+			pile.custom_minimum_size.x = new_width
+		else:
+			pile.custom_minimum_size.x = card_width
 
 
 func get_texture_path_from_name(card_name: String, color: int) -> String:
@@ -613,36 +612,43 @@ func check_and_color_monument(btn: Button, monu_id: int) -> void:
 func update_opponent_ui() -> void:
 	var opponent_slots = [
 		{ 
-			"name": lbl_right_name, "gold": lbl_right_gold, "stats": lbl_right_stats, "parent": right_deck_container,
+			"parent": right_deck_container,
 			"piles": { CardColor.Type.BLUE: %BluePileRight, CardColor.Type.GREEN: %GreenPileRight, CardColor.Type.RED: %RedPileRight, CardColor.Type.PURPLE: %PurplePileRight},
-			"axis": "X",
-			"rotation": 90
+			"seat": "Right"
 		},
 		{ 
-			"name": lbl_top_name, "gold": lbl_top_gold, "stats": lbl_top_stats, "parent": top_deck_container,
+			"parent": top_deck_container,
 			"piles": { CardColor.Type.BLUE: %BluePileTop, CardColor.Type.GREEN: %GreenPileTop, CardColor.Type.RED: %RedPileTop, CardColor.Type.PURPLE: %PurplePileTop},
-			"axis": "Y",
-			"rotation": 180
+			"seat": "Top"
 		},
 		{ 
-			"name": lbl_left_name, "gold": lbl_left_gold, "stats": lbl_left_stats, "parent": left_deck_container,
+			"parent": left_deck_container,
 			"piles": { CardColor.Type.BLUE: %BluePileLeft, CardColor.Type.GREEN: %GreenPileLeft, CardColor.Type.RED: %RedPileLeft, CardColor.Type.PURPLE: %PurplePileLeft},
-			"axis": "X",
-			"rotation": 90
+			"seat": "Left"
 		}
 	]
 	
-	const CARD_X_SCENE = preload("res://scene/table/card_X_axis.tscn")
-	const CARD_Y_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 	
+	# --- MASTER SIZING CONSTANTS ---
+	var opp_w = 156
+	var opp_h = 200
+	var opp_gap = 30
+	
+	var side_w = 200  
+	var side_h = 156
+	
+	var offset_x = (side_w - opp_w) / 2.0
+	var offset_y = (side_h - opp_h) / 2.0 
+
+	# 1. CLEANUP PHASE
 	for slot in opponent_slots:
-		slot["name"].text = ""
-		slot["gold"].text = ""
-		if slot["stats"]: slot["stats"].text = ""
-		slot["parent"].get_parent().hide() 
+		slot["parent"].show() 
 		for pile in slot["piles"].values():
-			for child in pile.get_children():
-				child.queue_free()
+			var anchor = pile.get_node_or_null("Anchor")
+			if anchor:
+				for child in anchor.get_children():
+					child.queue_free()
 	
 	var current_index = game.playerArray.find(current_player)
 	
@@ -651,11 +657,12 @@ func update_opponent_ui() -> void:
 		var opponent = game.playerArray[target_index]
 		
 		var active_slot = opponent_slots[1] if game.playerCount == 2 else opponent_slots[i - 1] 
-		active_slot["parent"].get_parent().show() 
 		
-		active_slot["name"].text = opponent.username 
-		active_slot["gold"].text = str(opponent.balance)
-		if active_slot["stats"]: active_slot["stats"].text = "Est: " + str(opponent.establishmentCount) + "\nMonu: " + str(opponent.monumentCount) 
+		var total_cards = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
+		for instance in opponent.deck: 
+			if typeof(instance) == TYPE_ARRAY:
+				var c_data = CardFactory.get_card(instance[0])
+				if c_data != null: total_cards[c_data.get_color()] += instance[1]
 		
 		var pile_counts = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
 
@@ -669,108 +676,57 @@ func update_opponent_ui() -> void:
 			if card_data != null:
 				var color = card_data.get_color()
 				var target_pile = active_slot["piles"][color]
+				var anchor = target_pile.get_node("Anchor")
 				var card_name = card_data.get_name()
-				
-				var lane_width = 80.0 
-				var default_offset = 10.0
-				var current_offset = default_offset
-				
-				if (quantity * default_offset) > lane_width:
-					current_offset = lane_width / quantity
-
 				
 				for j in range(quantity):
 					var card_visual
-					var tex_width = 180 
-					var tex_height = 224 
-					var button_shift = Vector2.ZERO
-
 					var clean_name = get_clean_file_name(card_name, color)
 					var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-					var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 					
-						
-					if FileAccess.file_exists(path_basis):
-						if active_slot["axis"] == "Y":
-							card_visual = CARD_Y_SCENE.instantiate()
-							card_visual.custom_minimum_size = Vector2(tex_width, tex_height)
-							card_visual.size = Vector2(tex_width, tex_height)
-						else:
-							card_visual = CARD_X_SCENE.instantiate()
-							card_visual.custom_minimum_size = Vector2(tex_height, tex_width)
-							card_visual.size = Vector2(tex_height, tex_width)
-							
-						var image_node = card_visual.get_node_or_null("Visual")
-						if image_node != null and image_node is TextureButton:
-							image_node.texture_normal = load(path_basis)
-							
-							image_node.custom_minimum_size = Vector2(tex_width, tex_height)
-							image_node.size = Vector2(tex_width, tex_height)
-							image_node.ignore_texture_size = true
-							image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED 
-							
-							image_node.pivot_offset = Vector2(tex_width / 2.0, tex_height / 2.0)
-							
-							if active_slot["axis"] == "Y":
-								image_node.position = Vector2(0, 0)
-							else:
-								image_node.position = Vector2((tex_height - tex_width) / 2.0, (tex_width - tex_height) / 2.0)
-							
-							image_node.rotation_degrees = active_slot["rotation"]
-							
-							card_visual.base_pos = image_node.position
-							
-							if active_slot["name"] == lbl_top_name:
-								card_visual.hover_offset = Vector2(0, 50)
-							elif active_slot["name"] == lbl_left_name:
-								card_visual.hover_offset = Vector2(50, 0)
-							elif active_slot["name"] == lbl_right_name:
-								card_visual.hover_offset = Vector2(50, 0)
-							
-							var card_scale = 0.35 
-							card_visual.scale = Vector2(card_scale, card_scale)
-							
-							if FileAccess.file_exists(path_hover):
-								image_node.texture_hover = load(path_hover)
-						
-					else :
-						card_visual = Button.new()
-						card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name() 
-						card_visual.custom_minimum_size = Vector2(130, 180) 
-						card_visual.add_theme_font_size_override("font_size", 8) 
-						card_visual.disabled = true 
-						card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART 
-						
-						card_visual.position = Vector2(pile_counts[color] * current_offset, 1000)
-						
-						if active_slot["axis"] == "Y":
-							button_shift = Vector2(-40, -70) 
-						else:
-							button_shift = Vector2(20, -80)
-						
-						var card_scale = 0.8 
-						card_visual.scale = Vector2(card_scale, card_scale)
-						var style = StyleBoxFlat.new()
-						match color: 
-							CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-							CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-							CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-							CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
-						
-						style.set_border_width_all(1)
-						style.border_color = Color(0, 0, 0, 0.3)
-							
-						card_visual.add_theme_stylebox_override("disabled", style) 
-						card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
-						
-					var stack_gap = 25 
-					if active_slot["axis"] == "Y":
-						card_visual.position = Vector2((pile_counts[color] * stack_gap) + 100, 100) + button_shift
+					card_visual = CARD_SCENE.instantiate()
+					card_visual.custom_minimum_size = Vector2(opp_w, opp_h)
+					card_visual.size = Vector2(opp_w, opp_h)
+					
+					var image_node = card_visual.get_node_or_null("Visual")
+					if image_node is TextureButton and FileAccess.file_exists(path_basis):
+						image_node.texture_normal = load(path_basis)
 					else:
-						card_visual.position = Vector2((pile_counts[color] * stack_gap) + 120, 0) + button_shift
-							
-					target_pile.add_child(card_visual)
+						image_node = Button.new()
+						image_node.text = card_data.get_name()
+						image_node.size = Vector2(opp_w, opp_h)
+						card_visual.add_child(image_node)
+
+					card_visual.pivot_offset = Vector2.ZERO 
+
+					if active_slot["seat"] == "Left":
+						card_visual.rotation_degrees = 90
+						var x_pos = opp_h - (pile_counts[color] * opp_gap)
+						card_visual.position = Vector2(x_pos, 0)
+						
+					elif active_slot["seat"] == "Right":
+						card_visual.rotation_degrees = -90
+						var x_pos = (pile_counts[color] * opp_gap)
+						card_visual.position = Vector2(x_pos, side_h)
+						
+					elif active_slot["seat"] == "Top":
+						card_visual.rotation_degrees = 180
+						var x_pos = opp_w - (pile_counts[color] * opp_gap)
+						card_visual.position = Vector2(x_pos, opp_h)
+
+					anchor.add_child(card_visual)
 					pile_counts[color] += 1
+
+		for color in active_slot["piles"]:
+			var pile = active_slot["piles"][color]
+			var count = pile_counts[color]
+			
+			if active_slot["seat"] == "Top":
+				pile.custom_minimum_size.y = opp_h
+				pile.custom_minimum_size.x = opp_w + ((count - 1) * opp_gap) if count > 0 else opp_w
+			else:
+				pile.custom_minimum_size.y = side_h
+				pile.custom_minimum_size.x = side_w + ((count - 1) * opp_gap) if count > 0 else side_w
 
 
 func ask_choose_player(owner_player, all_players: Array):

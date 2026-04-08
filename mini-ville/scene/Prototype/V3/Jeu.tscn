@@ -3,15 +3,14 @@
 [ext_resource type="Script" uid="uid://b7iorriitoyi4" path="res://script/scene/prototype/v3/JeuScript.gd" id="1_pm7t7"]
 [ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="2_i5b7y"]
 [ext_resource type="Texture2D" uid="uid://c0syfj2pyls0q" path="res://assets/UI/profile_picture_player.png" id="3_8a6bx"]
-[ext_resource type="Texture2D" uid="uid://biuyww3chvr7t" path="res://assets/UI/player_area.png" id="3_dgctq"]
 [ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="3_tbpra"]
-[ext_resource type="Texture2D" uid="uid://d1dcosvuy7386" path="res://assets/UI/button_border.png" id="3_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://x5cxd5hg8lxo" path="res://assets/UI/button_border.png" id="3_u3wdh"]
 [ext_resource type="Texture2D" uid="uid://l6jtewrp4hlx" path="res://assets/UI/roll_one_die_button.png" id="4_dgctq"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_m0he3"]
 [ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="5_8a6bx"]
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="6_trdnx"]
-[ext_resource type="Texture2D" uid="uid://8sgtmvnheoiq" path="res://assets/UI/pass_turn_button.png" id="8_u3wdh"]
-[ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="9_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://kjacdl85wgrh" path="res://assets/UI/pass_turn_button.png" id="8_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://0whrml61cqd7" path="res://assets/UI/Monuments_button.png" id="9_2vk2f"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
 [ext_resource type="Texture2D" uid="uid://b2u6ilehm44b4" path="res://assets/UI/die_two.png" id="10_2vk2f"]
 [ext_resource type="Texture2D" uid="uid://b0ny7tx28twc1" path="res://assets/UI/die_three.png" id="11_u3wdh"]
@@ -19,6 +18,90 @@
 [ext_resource type="Texture2D" uid="uid://cyey2r3nd2kk0" path="res://assets/UI/die_five.png" id="13_fyh2q"]
 [ext_resource type="Texture2D" uid="uid://mq41veql72f8" path="res://assets/UI/die_six.png" id="14_sxbm1"]
 [ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yln80"]
+bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4a53q"]
+bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxqjm"]
+bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fiso1"]
+bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgkkh"]
+bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kgc6u"]
+bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xjma"]
+bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_beeqq"]
+bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vf6uw"]
+bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ijtxi"]
+bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_evejj"]
+bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fcipe"]
+bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
 content_margin_left = 6.0
@@ -36,40 +119,33 @@ variation_opentype = {
 2003265652: 900
 }
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dgctq"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-texture = ExtResource("3_dgctq")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3wdh"]
+bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8a6bx"]
-bg_color = Color(0.53333336, 0.15294118, 0.101960786, 0.7058824)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcw7y"]
+bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgctq"]
-bg_color = Color(0.43529412, 0.07450981, 0.4117647, 0.7058824)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyh2q"]
+bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m0he3"]
-bg_color = Color(0.11372549, 0.35686275, 0.8117647, 0.7058824)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trdnx"]
-bg_color = Color(0.34117648, 0.49411765, 0.07450981, 0.7058824)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sxbm1"]
+bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [sub_resource type="FontVariation" id="FontVariation_m0he3"]
 base_font = ExtResource("3_tbpra")
@@ -136,236 +212,161 @@ custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BlueMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=2128767076]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="BluePileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/BlueMargin" unique_id=1793673571]
+[node name="PurplePileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1382130605]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_yln80")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/PurplePileTop" unique_id=411783083]
 custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GreenMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1783766102]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="GreenPileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/GreenMargin" unique_id=2067669785]
+[node name="RedPileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1849753327]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_4a53q")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/RedPileTop" unique_id=142133056]
 custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RedMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1462035668]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="RedPileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/RedMargin" unique_id=142133056]
+[node name="GreenPileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1315703022]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_dxqjm")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/GreenPileTop" unique_id=2067669785]
 custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PurpleMargin" type="MarginContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=857943724]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurplePileTop" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/PurpleMargin" unique_id=411783083]
+[node name="BluePileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1057246572]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_fiso1")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/BluePileTop" unique_id=1793673571]
 custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HorizontalContainer" type="HBoxContainer" parent="MainUI" unique_id=1798727798]
+[node name="MiddleArea" type="HBoxContainer" parent="MainUI" unique_id=829775824]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LeftWrapper" type="Control" parent="MainUI/HorizontalContainer" unique_id=931236967]
-custom_minimum_size = Vector2(600, 200)
-layout_mode = 2
-
-[node name="PlayerLeftArea" type="VBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper" unique_id=969269845]
-layout_mode = 0
-offset_left = 200.0
-offset_top = -146.0
-offset_right = 872.0
-offset_bottom = 211.0
-rotation = 1.5707964
-size_flags_horizontal = 0
-
-[node name="LeftStats" type="VBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea" unique_id=1732315646]
-layout_mode = 2
-
-[node name="LblLeftName" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=2017706965]
+[node name="LeftDeckContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=1781631069]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LblLeftGold" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=2131172721]
+[node name="BluePileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=1154330259]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sgkkh")
 
-[node name="LblLeftStats" type="Label" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftStats" unique_id=993380011]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/BluePileLeft" unique_id=1879974777]
+layout_mode = 2
+
+[node name="GreenPileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=15994418]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kgc6u")
 
-[node name="LeftDeckContainer" type="HBoxContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea" unique_id=2080361472]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/GreenPileLeft" unique_id=321842469]
+layout_mode = 2
+
+[node name="RedPileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=1959224934]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0xjma")
 
-[node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=490164756]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/RedPileLeft" unique_id=674066695]
 layout_mode = 2
-theme_override_constants/margin_right = 20
 
-[node name="BluePileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/BlueMargin" unique_id=608413384]
+[node name="PurplePileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=586567121]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_beeqq")
 
-[node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=2013622111]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/PurplePileLeft" unique_id=618559849]
 layout_mode = 2
-theme_override_constants/margin_right = 20
 
-[node name="GreenPileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/GreenMargin" unique_id=2072367782]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=1566956518]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="RedPileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/RedMargin" unique_id=1353963166]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer" unique_id=49595285]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurplePileLeft" type="Control" parent="MainUI/HorizontalContainer/LeftWrapper/PlayerLeftArea/LeftDeckContainer/PurpleMargin" unique_id=1486210493]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MiddleArea" type="HBoxContainer" parent="MainUI/HorizontalContainer" unique_id=2126635692]
+[node name="MiddleArea" type="HBoxContainer" parent="MainUI/MiddleArea" unique_id=2126635692]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="GoldSkip" type="VBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=1667196113]
+[node name="GoldSkip" type="VBoxContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=1667196113]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="AddGold" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=2001308356]
+[node name="AddGold" type="Button" parent="MainUI/MiddleArea/MiddleArea/GoldSkip" unique_id=2001308356]
 unique_name_in_owner = true
 layout_mode = 2
 text = "+ 5 Gold"
 
-[node name="RemoveGold" type="Button" parent="MainUI/HorizontalContainer/MiddleArea/GoldSkip" unique_id=38618146]
+[node name="RemoveGold" type="Button" parent="MainUI/MiddleArea/MiddleArea/GoldSkip" unique_id=38618146]
 unique_name_in_owner = true
 layout_mode = 2
 text = "- 2 Gold"
 
-[node name="ShopContainer" type="GridContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=1391810629]
+[node name="ShopContainer" type="GridContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=1391810629]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 columns = 3
 
-[node name="DiceContainer" type="VBoxContainer" parent="MainUI/HorizontalContainer/MiddleArea" unique_id=61961936]
+[node name="DiceContainer" type="VBoxContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=61961936]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="LblDice" type="Label" parent="MainUI/HorizontalContainer/MiddleArea/DiceContainer" unique_id=336477209]
+[node name="LblDice" type="Label" parent="MainUI/MiddleArea/MiddleArea/DiceContainer" unique_id=336477209]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Waiting..."
 
-[node name="RightWrapper" type="Control" parent="MainUI/HorizontalContainer" unique_id=1920188137]
-custom_minimum_size = Vector2(600, 200)
-layout_mode = 2
-
-[node name="PlayerRightArea" type="VBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper" unique_id=39581801]
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -203.0
-offset_top = 342.5
-offset_right = 469.0
-offset_bottom = 699.5
-grow_horizontal = 0
-grow_vertical = 2
-rotation = -1.5707964
-size_flags_horizontal = 8
-
-[node name="RightStats" type="VBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea" unique_id=1480541070]
-layout_mode = 2
-
-[node name="LblRightName" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=1626783841]
+[node name="RightDeckContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=326150629]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LblRightGold" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=412842137]
+[node name="PurplePileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=552157897]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vf6uw")
 
-[node name="LblRightStats" type="Label" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightStats" unique_id=611546176]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/PurplePileRight" unique_id=1056399662]
+layout_mode = 2
+
+[node name="RedPileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=1279042823]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ijtxi")
 
-[node name="RightDeckContainer" type="HBoxContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea" unique_id=512935730]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/RedPileRight" unique_id=1041500607]
+layout_mode = 2
+
+[node name="GreenPileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=426286110]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_evejj")
 
-[node name="BlueMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1105987736]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/GreenPileRight" unique_id=307731437]
 layout_mode = 2
-theme_override_constants/margin_right = 20
 
-[node name="BluePileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/BlueMargin" unique_id=1580836461]
+[node name="BluePileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=1766714317]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_fcipe")
 
-[node name="GreenMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1176307536]
+[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/BluePileRight" unique_id=1801333240]
 layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="GreenPileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/GreenMargin" unique_id=454469038]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RedMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=1933661796]
-layout_mode = 2
-theme_override_constants/margin_right = 20
-
-[node name="RedPileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/RedMargin" unique_id=1019185869]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurpleMargin" type="MarginContainer" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer" unique_id=972748979]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurplePileRight" type="Control" parent="MainUI/HorizontalContainer/RightWrapper/PlayerRightArea/RightDeckContainer/PurpleMargin" unique_id=1411620135]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1895989354]
 layout_mode = 2
@@ -445,40 +446,41 @@ unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("8_u3wdh")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=187133416]
+[node name="ActiveDeckContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=187133416]
+custom_minimum_size = Vector2(600, 200)
 layout_mode = 2
 
-[node name="CardZone" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer" unique_id=447412021]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_dgctq")
-
-[node name="EmplacementsCartes" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone" unique_id=135716709]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="ZoneRouge" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=788586104]
+[node name="BluePileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=70920770]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 200)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8a6bx")
+theme_override_styles/panel = SubResource("StyleBoxFlat_u3wdh")
 
-[node name="ZoneViolette" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=333444545]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
+[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/BluePileBottom" unique_id=1325224695]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dgctq")
 
-[node name="ZoneBleue" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=1354434502]
+[node name="GreenPileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=385839370]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_m0he3")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tcw7y")
 
-[node name="ZoneVerte" type="Panel" parent="MainUI/PlayerBottomArea/MainColumn/HBoxContainer/CardZone/EmplacementsCartes" unique_id=2040775777]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
+[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/GreenPileBottom" unique_id=910054690]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_trdnx")
+
+[node name="RedPileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=310112636]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fyh2q")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/RedPileBottom" unique_id=526349018]
+layout_mode = 2
+
+[node name="PurplePileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=1786753757]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sxbm1")
+
+[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/PurplePileBottom" unique_id=70730425]
+layout_mode = 2
 
 [node name="MonumentZone" type="MarginContainer" parent="MainUI/PlayerBottomArea" unique_id=2536659]
 layout_mode = 2
@@ -1141,10 +1143,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("19_tcw7y")
 
-[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
-[connection signal="pressed" from="MainUI/HorizontalContainer/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
+[connection signal="pressed" from="MainUI/MiddleArea/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
+[connection signal="pressed" from="MainUI/MiddleArea/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
+[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
