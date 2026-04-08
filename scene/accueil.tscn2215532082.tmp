@@ -1,0 +1,187 @@
+[gd_scene format=3 uid="uid://xg6ijxmum5pm"]
+
+[ext_resource type="Texture2D" uid="uid://vjrsovpxjfsb" path="res://Assets/Image/background/background.png" id="1_1a5la"]
+[ext_resource type="Script" uid="uid://bnybfyj3hw0b7" path="res://script/accueil.gd" id="1_vry6q"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://Themebtn/miniville.tres" id="2_wjnm5"]
+[ext_resource type="Texture2D" uid="uid://bkyidxcm0m8vp" path="res://Assets/Image/icon/dice.png" id="3_mr1wo"]
+[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://Fonts/EricaOne-Regular.ttf" id="4_cf2on"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://Themebtn/butonstyle.tres" id="5_w3kyk"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://Themebtn/butonstylePress.tres" id="6_2063g"]
+[ext_resource type="Texture2D" uid="uid://1gtnyy3d1m5l" path="res://Assets/Image/icon/rules_btn.png" id="7_jein4"]
+[ext_resource type="Texture2D" uid="uid://c7d26omepqj6e" path="res://Assets/Image/icon/règles.png" id="8_24k3x"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://Themebtn/new_label_settings.tres" id="8_nrxky"]
+[ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://Assets/Image/icon/iconeparamètre.png" id="10_ayf35"]
+[ext_resource type="Texture2D" uid="uid://cjs8w6uwfd47y" path="res://Assets/Image/icon/settingicon.png" id="11_p74dm"]
+[ext_resource type="PackedScene" uid="uid://dl2wa48txlfy1" path="res://scenes/panel.tscn" id="12_uv6rx"]
+[ext_resource type="PackedScene" uid="uid://c0kph3t4yxfjo" path="res://scenes/guest_screen.tscn" id="14_q7dny"]
+
+[node name="Accueil" type="Control" unique_id=1580754874]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vry6q")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=250678287]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_1a5la")
+
+[node name="Header" type="MarginContainer" parent="." unique_id=91776782]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 13.0
+offset_top = 3.0
+offset_right = -10.0
+offset_bottom = 181.0
+grow_horizontal = 2
+
+[node name="header" type="HBoxContainer" parent="Header" unique_id=1009899170]
+layout_mode = 2
+
+[node name="rulebtn" type="VBoxContainer" parent="Header/header" unique_id=553448747]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = -20
+
+[node name="TextureButton" type="TextureButton" parent="Header/header/rulebtn" unique_id=40861617]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("7_jein4")
+texture_pressed = ExtResource("8_24k3x")
+texture_hover = ExtResource("8_24k3x")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Header/header/rulebtn" unique_id=1053564895]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("4_cf2on")
+text = "Rules"
+label_settings = ExtResource("8_nrxky")
+horizontal_alignment = 1
+
+[node name="settingbtn" type="VBoxContainer" parent="Header/header" unique_id=709816501]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = -20
+
+[node name="TextureButton" type="TextureButton" parent="Header/header/settingbtn" unique_id=1458154686]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("10_ayf35")
+texture_pressed = ExtResource("11_p74dm")
+texture_hover = ExtResource("11_p74dm")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Header/header/settingbtn" unique_id=800880592]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("4_cf2on")
+text = "Settings"
+label_settings = ExtResource("8_nrxky")
+horizontal_alignment = 1
+
+[node name="Title" type="MarginContainer" parent="." unique_id=1543718144]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -353.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Title" unique_id=995658980]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+
+[node name="Dice2" type="TextureRect" parent="Title/HBoxContainer" unique_id=1003890425]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("3_mr1wo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Title/HBoxContainer" unique_id=367985288]
+layout_mode = 2
+text = "Minivilles"
+label_settings = ExtResource("2_wjnm5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Dice" type="TextureRect" parent="Title/HBoxContainer" unique_id=742928800]
+custom_minimum_size = Vector2(120, 120)
+layout_direction = 2
+layout_mode = 2
+texture = ExtResource("3_mr1wo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="gameMode" type="VBoxContainer" parent="." unique_id=800500394]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -430.0
+offset_top = -455.0
+offset_right = 430.0
+offset_bottom = -170.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 31
+
+[node name="loginbtn" type="Button" parent="gameMode" unique_id=2112749602]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("4_cf2on")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("5_w3kyk")
+theme_override_styles/pressed = ExtResource("6_2063g")
+theme_override_styles/hover = ExtResource("6_2063g")
+text = "Login"
+
+[node name="guestbtn" type="Button" parent="gameMode" unique_id=105060779]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("4_cf2on")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("5_w3kyk")
+theme_override_styles/pressed = ExtResource("6_2063g")
+theme_override_styles/hover = ExtResource("6_2063g")
+text = "Play as a Guest"
+
+[node name="Panel" parent="." unique_id=1900099017 instance=ExtResource("12_uv6rx")]
+visible = false
+layout_mode = 1
+
+[node name="guest_screen" parent="." unique_id=1123465006 instance=ExtResource("14_q7dny")]
+visible = false
+layout_mode = 1
+
+[connection signal="button_down" from="gameMode/loginbtn" to="." method="_on_loginbtn_button_down"]
+[connection signal="button_down" from="gameMode/guestbtn" to="." method="_on_guestbtn_button_down"]
