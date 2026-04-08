@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cl142ptcxeqdo"]
 
 [ext_resource type="Script" uid="uid://bx0vpo3ta12ck" path="res://script/scene/Popup/popup_parametres.gd" id="1_sc"]
-[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
-[ext_resource type="FontFile" uid="uid://b2bjbpsmhp2ei" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
-[ext_resource type="Texture2D" uid="uid://bdb21gpxhu7ks" path="res://assets/Image/icon/backArrow.png" id="4_back"]
-[ext_resource type="Texture2D" uid="uid://b1t6dq7ev6kb" path="res://assets/Image/icon/backArrowPress.png" id="5_backp"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
+[ext_resource type="FontFile" uid="uid://duiwby4dfs03n" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
+[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="5_backp"]
+[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="5_gy5cr"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_ls"]
-[ext_resource type="Texture2D" uid="uid://bfxhxihlcdomy" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="7_gear"]
-[ext_resource type="Texture2D" uid="uid://bykg5rf2pli5m" path="res://assets/Image/icon/Ellipse 32.png" id="8_gy5cr"]
+[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="8_gy5cr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -185,7 +185,7 @@ alignment = 1
 custom_minimum_size = Vector2(55, 55)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("7_gear")
+texture = ExtResource("5_gy5cr")
 stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox/TitleRow" unique_id=293847562]

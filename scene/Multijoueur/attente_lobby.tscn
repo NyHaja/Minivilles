@@ -1,18 +1,15 @@
 [gd_scene format=3 uid="uid://bx7np4qhm2ck"]
 
 [ext_resource type="Script" uid="uid://dg4sm1ebtod2s" path="res://script/scene/Multijoueur/attente_lobby.gd" id="1_ox6yk"]
-[ext_resource type="Texture2D" uid="uid://b2ueh2xtswpv8" path="res://assets/Background/bg_lobby.png" id="2_rre76"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_1rs2g"]
-[ext_resource type="FontFile" uid="uid://d2xtv1ijglmss" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
-[ext_resource type="Texture2D" uid="uid://bud3qsj4nfeeo" path="res://assets/ui/a supprimer/lobby/icone_de.png" id="5_1cd0v"]
-[ext_resource type="Texture2D" uid="uid://cfp0v1l1lcc2d" path="res://assets/ui/a supprimer/joueur1.png" id="6_thxuj"]
-[ext_resource type="Texture2D" uid="uid://cdbr1wiwp5qwt" path="res://assets/ui/a supprimer/joueur2.png" id="7_qo6xd"]
-[ext_resource type="Texture2D" uid="uid://ddlyocpwntwjk" path="res://assets/ui/a supprimer/joueur3.png" id="8_l04ay"]
-[ext_resource type="Texture2D" uid="uid://dgly1hv3jg2a7" path="res://assets/ui/a supprimer/joueur4.png" id="9_o5e7d"]
+[ext_resource type="Texture2D" uid="uid://0h56cl0cwlwg" path="res://assets/Background/bg_lobby.png" id="2_rre76"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_1rs2g"]
+[ext_resource type="FontFile" uid="uid://esvwa6ctkwib" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
+[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="5_gdpiv"]
+[ext_resource type="Texture2D" uid="uid://ky6a0ic0abmg" path="res://assets/icon/ProfilExemple.png" id="6_thxuj"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_c7hce"]
+[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_12xal"]
 [ext_resource type="Script" uid="uid://cm4xuafkpqwa" path="res://script/scene/Multijoueur/btn_pret_attente_lobby.gd" id="12_lrqwt"]
-[ext_resource type="Texture2D" uid="uid://p2p2rd7usp8q" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="13_4wipu"]
 [ext_resource type="Script" uid="uid://dn7rh2bjw3e5" path="res://script/scene/Popup/btn_parametres_attente_lobby.gd" id="14_kcgef"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="15_fnt2l"]
 
@@ -94,7 +91,7 @@ theme_override_constants/separation = 19
 custom_minimum_size = Vector2(55, 54)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("5_1cd0v")
+texture = ExtResource("5_gdpiv")
 
 [node name="TexteDureeTour" type="Label" parent="DureeTourRow" unique_id=1857632490]
 layout_mode = 2
@@ -158,7 +155,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("7_qo6xd")
+texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
 [node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur2" unique_id=100000004]
@@ -190,7 +187,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("8_l04ay")
+texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
 [node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur3" unique_id=100000006]
@@ -222,7 +219,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("9_o5e7d")
+texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
 [node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur4" unique_id=100000008]
@@ -291,7 +288,7 @@ offset_left = 1671.0
 offset_top = 63.0
 offset_right = 1787.0
 offset_bottom = 179.0
-texture_normal = ExtResource("13_4wipu")
+texture_normal = ExtResource("10_gdpiv")
 script = ExtResource("14_kcgef")
 
 [node name="TexteParametres" type="Label" parent="." unique_id=1703829457]

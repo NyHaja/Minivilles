@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://bntbferfc67eh"]
 
-[ext_resource type="Texture2D" uid="uid://dfoomldgs5mv1" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
-[ext_resource type="Texture2D" uid="uid://c12ivo8tix6pb" path="res://assets/Image/icon/dice.png" id="2_31rsn"]
+[ext_resource type="Texture2D" uid="uid://0wbmqpgavrqu" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
+[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="2_31rsn"]
 [ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="3_anmlk"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="4_gwrmv"]
-[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="6_dg5l6"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="6_dg5l6"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="7_y6f07"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_lprcw"]
 [ext_resource type="Script" uid="uid://bnd1nn86amgdg" path="res://script/scene/Local/btn_solo.gd" id="9_dmcf4"]
 [ext_resource type="Script" uid="uid://1jdhm04axmh1" path="res://script/scene/Local/btn_multi.gd" id="10_okktj"]
-[ext_resource type="Texture2D" uid="uid://o2cty6bfgdkv" path="res://assets/ui/a supprimer/icons/icone_regles.png" id="11_nt4lc"]
+[ext_resource type="Texture2D" uid="uid://c7d26omepqj6e" path="res://assets/icon/règles.png" id="11_nt4lc"]
 [ext_resource type="Script" uid="uid://bq0tdq8lvp6co" path="res://script/scene/Popup/btn_regles.gd" id="12_g5hcx"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="13_v37wi"]
-[ext_resource type="Texture2D" uid="uid://bfxhxihlcdomy" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="14_fny1t"]
+[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="14_fny1t"]
 [ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="15_mqpi4"]
 
 [node name="Control" type="Control" unique_id=1166678645]
@@ -32,6 +32,60 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_gtnaa")
 stretch_mode = 6
+
+[node name="Header" type="MarginContainer" parent="." unique_id=626700265]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 3.0
+offset_bottom = 181.0
+grow_horizontal = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="Header" unique_id=1265227652]
+layout_mode = 2
+
+[node name="ReglesWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=847073492]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = -20
+
+[node name="BtnRegles" type="TextureButton" parent="Header/HeaderRow/ReglesWrap" unique_id=1621742470]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("11_nt4lc")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("12_g5hcx")
+
+[node name="TexteRegles" type="Label" parent="Header/HeaderRow/ReglesWrap" unique_id=853611786]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Règles"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1
+
+[node name="ParametresWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=920821242]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = -20
+
+[node name="BtnParametres" type="TextureButton" parent="Header/HeaderRow/ParametresWrap" unique_id=382097206]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture_normal = ExtResource("14_fny1t")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("15_mqpi4")
+
+[node name="TexteParametres" type="Label" parent="Header/HeaderRow/ParametresWrap" unique_id=1191556903]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Paramètres"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1
 
 [node name="Content" type="VBoxContainer" parent="." unique_id=1530701729]
 layout_mode = 1
@@ -120,57 +174,3 @@ theme_override_styles/hover = ExtResource("8_lprcw")
 theme_override_styles/focus = ExtResource("7_y6f07")
 text = "En ligne"
 script = ExtResource("10_okktj")
-
-[node name="Header" type="MarginContainer" parent="." unique_id=626700265]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 3.0
-offset_bottom = 181.0
-grow_horizontal = 2
-
-[node name="HeaderRow" type="HBoxContainer" parent="Header" unique_id=1265227652]
-layout_mode = 2
-
-[node name="ReglesWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=847073492]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_constants/separation = -20
-
-[node name="BtnRegles" type="TextureButton" parent="Header/HeaderRow/ReglesWrap" unique_id=1621742470]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_vertical = 3
-texture_normal = ExtResource("11_nt4lc")
-ignore_texture_size = true
-stretch_mode = 5
-script = ExtResource("12_g5hcx")
-
-[node name="TexteRegles" type="Label" parent="Header/HeaderRow/ReglesWrap" unique_id=853611786]
-layout_mode = 2
-size_flags_vertical = 6
-text = "Règles"
-label_settings = ExtResource("13_v37wi")
-horizontal_alignment = 1
-
-[node name="ParametresWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=920821242]
-layout_mode = 2
-size_flags_horizontal = 10
-theme_override_constants/separation = -20
-
-[node name="BtnParametres" type="TextureButton" parent="Header/HeaderRow/ParametresWrap" unique_id=382097206]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-texture_normal = ExtResource("14_fny1t")
-ignore_texture_size = true
-stretch_mode = 5
-script = ExtResource("15_mqpi4")
-
-[node name="TexteParametres" type="Label" parent="Header/HeaderRow/ParametresWrap" unique_id=1191556903]
-layout_mode = 2
-size_flags_vertical = 6
-text = "Paramètres"
-label_settings = ExtResource("13_v37wi")
-horizontal_alignment = 1

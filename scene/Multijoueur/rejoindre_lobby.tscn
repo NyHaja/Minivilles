@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://j6vvlrs1s36k"]
 
 [ext_resource type="Script" uid="uid://cfo0iiykc6iud" path="res://script/scene/Multijoueur/rejoindre_lobby.gd" id="1_rcr0h"]
-[ext_resource type="Texture2D" uid="uid://b2ueh2xtswpv8" path="res://assets/Background/bg_lobby.png" id="2_sbngy"]
-[ext_resource type="Texture2D" uid="uid://bepwqc8mh0ps2" path="res://assets/ui/a supprimer/btn_retour_fleche.png" id="3_jkqrd"]
+[ext_resource type="Texture2D" uid="uid://0h56cl0cwlwg" path="res://assets/Background/bg_lobby.png" id="2_sbngy"]
+[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="3_rcr0h"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_i2uor"]
-[ext_resource type="Texture2D" uid="uid://p2p2rd7usp8q" path="res://assets/ui/a supprimer/icons/icone_parametres.png" id="5_3y2rk"]
+[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="5_sbngy"]
 [ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="6_wubpy"]
-[ext_resource type="FontFile" uid="uid://qyfcvvro8bl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_ep5k2"]
-[ext_resource type="FontFile" uid="uid://d2xtv1ijglmss" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="8_ctfjb"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_ep5k2"]
+[ext_resource type="FontFile" uid="uid://esvwa6ctkwib" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="8_ctfjb"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="9_2mvr5"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="10_44j5d"]
 
@@ -103,7 +103,7 @@ custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("3_jkqrd")
+texture = ExtResource("3_rcr0h")
 stretch_mode = 5
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
@@ -119,7 +119,7 @@ offset_left = 1736.0
 offset_top = 48.0
 offset_right = 1852.0
 offset_bottom = 164.0
-texture_normal = ExtResource("5_3y2rk")
+texture_normal = ExtResource("5_sbngy")
 script = ExtResource("6_wubpy")
 
 [node name="TexteParametres" type="Label" parent="." unique_id=2020493256]

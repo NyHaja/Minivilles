@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://bwsgp0xv8a83p"]
 
 [ext_resource type="Script" uid="uid://vj4ludw2mwdb" path="res://script/scene/Ecran principal/local_lobby.gd" id="1_3wfq1"]
-[ext_resource type="Texture2D" uid="uid://cywl2mg1j84ns" path="res://assets/Background/bg.png" id="2_eisn6"]
-[ext_resource type="Texture2D" uid="uid://cnftl8moqj4rg" path="res://assets/ui/a supprimer/btn_retour_fleche.png" id="3_qoion"]
+[ext_resource type="Texture2D" uid="uid://er7mwuj2sfck" path="res://assets/Background/bg.png" id="2_eisn6"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_p8n71"]
-[ext_resource type="Texture2D" uid="uid://bfod5mkx4d42l" path="res://assets/ui/a supprimer/icone_de.png" id="5_82uys"]
+[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="5_eisn6"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="6_vhivr"]
-[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_d7sa8"]
-[ext_resource type="Texture2D" uid="uid://db71ojno0d625" path="res://assets/ui/a supprimer/fleche_gauche.png" id="8_278m8"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_d7sa8"]
 [ext_resource type="Script" uid="uid://r80okf66ptxh" path="res://script/scene/Multijoueur/btn_fleche.gd" id="9_vrjxr"]
-[ext_resource type="Texture2D" uid="uid://dpaolj70enr04" path="res://assets/Image/icon/chronometre.png" id="10_1tuen"]
-[ext_resource type="Texture2D" uid="uid://bh84xc1k0prgt" path="res://assets/Image/icon/fleche_droite.png" id="11_vus0f"]
-[ext_resource type="Texture2D" uid="uid://b7v85fe1mr0sd" path="res://assets/Image/icon/joueur.png" id="12_fprgg"]
+[ext_resource type="Texture2D" uid="uid://bli0qo61j8ax3" path="res://assets/icon/chronometre.png" id="10_1tuen"]
+[ext_resource type="Texture2D" uid="uid://6bd48btrlugf" path="res://assets/icon/joueur.png" id="10_qqwuh"]
+[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="11_vus0f"]
+[ext_resource type="Texture2D" uid="uid://ky6a0ic0abmg" path="res://assets/icon/ProfilExemple.png" id="12_fprgg"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_yejr6"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_nmhnt"]
 
@@ -60,7 +59,7 @@ custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("3_qoion")
+texture = ExtResource("11_vus0f")
 stretch_mode = 5
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
@@ -89,7 +88,7 @@ alignment = 1
 custom_minimum_size = Vector2(90, 88)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("5_82uys")
+texture = ExtResource("5_eisn6")
 stretch_mode = 5
 
 [node name="Minivilles" type="Label" parent="Content/LogoRow" unique_id=684284841]
@@ -103,7 +102,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(90, 88)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("5_82uys")
+texture = ExtResource("5_eisn6")
 stretch_mode = 5
 
 [node name="DureeTitreWrap" type="CenterContainer" parent="Content" unique_id=1771112007]
@@ -125,7 +124,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
-texture_normal = ExtResource("8_278m8")
+texture_normal = ExtResource("11_vus0f")
 script = ExtResource("9_vrjxr")
 
 [node name="DureeDisplay" type="Control" parent="Content/DureeRow" unique_id=596225526]
@@ -158,6 +157,7 @@ custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
 texture_normal = ExtResource("11_vus0f")
+flip_h = true
 script = ExtResource("9_vrjxr")
 
 [node name="JoueursTitreWrap" type="CenterContainer" parent="Content" unique_id=779113222]
@@ -179,7 +179,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
-texture_normal = ExtResource("8_278m8")
+texture_normal = ExtResource("11_vus0f")
 script = ExtResource("9_vrjxr")
 
 [node name="JoueursIcons" type="Control" parent="Content/JoueursRow" unique_id=779669607]
@@ -192,7 +192,7 @@ layout_mode = 0
 offset_left = 169.0
 offset_right = 260.0
 offset_bottom = 125.0
-texture = ExtResource("12_fprgg")
+texture = ExtResource("10_qqwuh")
 stretch_mode = 5
 
 [node name="Joueur2" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=736451927]
@@ -201,7 +201,7 @@ layout_mode = 0
 offset_left = 299.0
 offset_right = 390.0
 offset_bottom = 125.0
-texture = ExtResource("12_fprgg")
+texture = ExtResource("10_qqwuh")
 stretch_mode = 5
 
 [node name="Joueur3" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=645392816]
@@ -230,6 +230,7 @@ custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
 texture_normal = ExtResource("11_vus0f")
+flip_h = true
 script = ExtResource("9_vrjxr")
 
 [node name="BtnLancerWrap" type="CenterContainer" parent="Content" unique_id=449766620]

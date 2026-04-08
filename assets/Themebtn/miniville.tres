@@ -1,6 +1,6 @@
 [gd_resource type="LabelSettings" format=3 uid="uid://ch3eob5twgr5n"]
 
-[ext_resource type="FontFile" uid="uid://pot6pqvx2bku" path="res://assets/Fonts/EricaOne-Regular.ttf" id="1_16tha"]
+[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="1_16tha"]
 
 [sub_resource type="FontVariation" id="FontVariation_ul6ys"]
 base_font = ExtResource("1_16tha")

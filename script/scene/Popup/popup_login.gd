@@ -2,7 +2,7 @@ extends Control
 
 signal on_back
 
-var player_mode = preload("res://scene/Ecran principale/player_screen.tscn")
+var player_mode = preload("res://scene/Ecran principale/connected_screen.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
