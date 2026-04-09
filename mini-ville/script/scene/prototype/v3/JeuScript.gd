@@ -15,7 +15,6 @@ var current_player
 var test_shop
 var game
 
-@onready var shop_container: GridContainer = %ShopContainer
 @onready var middle_area: HBoxContainer = $MiddleArea
 @onready var lbl_dice: Label = %LblDice
 
@@ -27,6 +26,10 @@ var game
 	$TablePivot/BoardJoueurHaut,
 	$TablePivot/BoardJoueurDroite
 ]
+
+# --- GESTION DU SHOP ---
+
+@onready var shop_board = %ShopBoard
 
 var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var active_boards: Array = []
@@ -98,6 +101,7 @@ var selected_monument_id: int = -1
 var selected_shop_card_id: int = -1
 
 func _ready() -> void:
+	shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(_on_roll_2_pressed)
 	
@@ -187,7 +191,7 @@ func RefreshBasicInfo(current_game) -> void:
 	else:
 		active_boards = boards.duplicate()
 	
-	update_shop_ui()
+	shop_board.update_shop(test_shop)
 	update_all_boards()
 	updateMonumentColors()
 	
@@ -221,7 +225,7 @@ func positionner_plateaux(animate: bool = true) -> void:
 		tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 
 	for p_idx in range(game.playerCount):
-		var board = boards[p_idx]
+		var board = active_boards[p_idx]
 		if not is_instance_valid(board): continue
 		board.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
 		board.custom_minimum_size = Vector2(b_w, b_h)
@@ -416,9 +420,8 @@ func pause() -> Array:
 func set_actions_enabled(can_act: bool) -> void:
 	for board in boards:
 		if is_instance_valid(board): board.set_actions_enabled(can_act)
-	for card_visual in shop_container.get_children():
-		var button = card_visual.get_node_or_null("Visual")
-		if button and button is TextureButton: button.disabled = !can_act	
+	
+	if is_instance_valid(shop_board): shop_board.set_actions_enabled(can_act)
 
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
@@ -457,49 +460,6 @@ func _on_confirm_buy_pressed() -> void:
 func _on_skip_pressed() -> void:
 	if game and game.CHOICE: action_selected.emit([game.CHOICE.SKIP, 0])
 
-func update_shop_ui() -> void:
-	for child in shop_container.get_children(): child.queue_free()
-	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
-	
-	for slot in test_shop.shop:
-		var card_visual
-		var card_data = CardFactory.get_card(slot.id)
-		if card_data != null:
-			var card_name = card_data.get_name()
-			var card_color = card_data.get_color()
-			var clean_name = get_clean_file_name(card_name, card_color)
-			var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
-			
-			if FileAccess.file_exists(path_basis):
-				card_visual = CARD_SCENE.instantiate()
-				var image_node = card_visual.get_node_or_null("Visual")
-				if image_node is TextureButton:
-					image_node.texture_normal = load(path_basis)
-					if FileAccess.file_exists(path_hover): image_node.texture_hover = load(path_hover)
-					image_node.pressed.connect(_on_shop_card_clicked.bind(slot.id))
-				card_visual.scale = Vector2(0.5, 0.5) 
-				card_visual.custom_minimum_size = Vector2(180, 224) * 0.5
-				
-				var tooltip_node = card_visual.get_node_or_null("Visual/Tooltip")
-				if tooltip_node:
-					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
-					if FileAccess.file_exists(tip_path): tooltip_node.texture = load(tip_path)
-					tooltip_node.hide()
-					tooltip_node.rotation_degrees = 0
-			else:
-				card_visual = Button.new()
-				card_visual.text = str(card_data.get_activation_num()) + "\n" + card_name
-				card_visual.custom_minimum_size = Vector2(90, 112)
-				card_visual.pressed.connect(_on_shop_card_clicked.bind(slot.id))
-				var style = StyleBoxFlat.new()
-				match card_color:
-					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
-				card_visual.add_theme_stylebox_override("normal", style)
-		shop_container.add_child(card_visual)
 
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""
