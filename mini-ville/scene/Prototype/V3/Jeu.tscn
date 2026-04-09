@@ -7,8 +7,41 @@
 [ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/Prototype/V3/ShopBoard.tscn" id="3_trdnx"]
 [ext_resource type="Texture2D" uid="uid://l6jtewrp4hlx" path="res://assets/UI/roll_one_die_button.png" id="4_dgctq"]
 [ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="5_8a6bx"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_88jjp"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
 [ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua8b"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ju1ig"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqux4"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0rt3"]
+bg_color = Color(0.9607843, 0.7490196, 0.28627452, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88jjp"]
+bg_color = Color(0.39988017, 0.2960688, 0.047906794, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mjl58"]
+bg_color = Color(0.6558848, 0.49209058, 0.10105904, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
 
 [sub_resource type="FontVariation" id="FontVariation_m0he3"]
 base_font = ExtResource("3_tbpra")
@@ -21,9 +54,10 @@ script = ExtResource("1_pm7t7")
 
 [node name="GoldSkip" type="VBoxContainer" parent="." unique_id=1667196113]
 offset_left = 924.0
-offset_top = 506.5
+offset_top = 400.0
 offset_right = 995.0
 offset_bottom = 572.5
+size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="AddGold" type="Button" parent="GoldSkip" unique_id=2001308356]
@@ -102,86 +136,56 @@ layout_mode = 0
 
 [node name="MonumentMenu" type="ColorRect" parent="." unique_id=1857296200]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.23753911, 0.23753914, 0.23753911, 1)
+color = Color(0, 0, 0, 0.8627451)
 
-[node name="BuildPort" type="Button" parent="MonumentMenu" unique_id=662767255]
-layout_mode = 0
-offset_left = 322.0
-offset_top = 69.0
-offset_right = 482.0
-offset_bottom = 229.0
-text = "Port"
+[node name="CenterContainer" type="CenterContainer" parent="MonumentMenu" unique_id=1991440085]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="BuildGare" type="Button" parent="MonumentMenu" unique_id=1526636648]
-layout_mode = 0
-offset_left = 130.0
-offset_top = 69.0
-offset_right = 290.0
-offset_bottom = 229.0
-text = "Gare"
+[node name="MonumentHBox" type="HBoxContainer" parent="MonumentMenu/CenterContainer" unique_id=1527377543]
+unique_name_in_owner = true
+layout_mode = 2
 
-[node name="BuildCentreCommercial" type="Button" parent="MonumentMenu" unique_id=1874711702]
-layout_mode = 0
-offset_left = 521.0
-offset_top = 68.0
-offset_right = 681.0
-offset_bottom = 228.0
-text = "Centre Commercial"
+[node name="CancelMargin" type="MarginContainer" parent="MonumentMenu" unique_id=56221781]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 300
 
-[node name="BuildParcAttraction" type="Button" parent="MonumentMenu" unique_id=1136149165]
-layout_mode = 0
-offset_left = 521.0
-offset_top = 252.0
-offset_right = 681.0
-offset_bottom = 412.0
-text = "Parc d'Attraction"
-
-[node name="BuildRadio" type="Button" parent="MonumentMenu" unique_id=1048285729]
-layout_mode = 0
-offset_left = 130.0
-offset_top = 251.0
-offset_right = 290.0
-offset_bottom = 411.0
-text = "Tour de Radio"
-
-[node name="BuildAeroport" type="Button" parent="MonumentMenu" unique_id=74189158]
-layout_mode = 0
-offset_left = 323.0
-offset_top = 252.0
-offset_right = 483.0
-offset_bottom = 412.0
-text = "Aeroport"
-
-[node name="MonuInfo" type="Label" parent="MonumentMenu" unique_id=1347746914]
-layout_mode = 0
-offset_left = 326.0
-offset_top = 33.0
-offset_right = 476.0
-offset_bottom = 56.0
-text = "Select a Monument"
-
-[node name="Close" type="Button" parent="MonumentMenu" unique_id=1698517968]
-layout_mode = 0
-offset_left = 737.0
-offset_top = 33.0
-offset_right = 761.0
-offset_bottom = 57.0
-text = "Close"
-
-[node name="BuySelected" type="Button" parent="MonumentMenu" unique_id=1255149321]
-layout_mode = 0
-offset_left = 354.0
-offset_top = 425.0
-offset_right = 461.0
-offset_bottom = 456.0
-text = "Buy Selected"
+[node name="Close" type="Button" parent="MonumentMenu/CancelMargin" unique_id=94776316]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_pressed_color = Color(0.30323282, 0.30323282, 0.30323282, 1)
+theme_override_colors/font_hover_color = Color(0.5770082, 0.5770083, 0.5770093, 1)
+theme_override_colors/font_outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+theme_override_colors/icon_pressed_color = Color(0.3019608, 0.3019608, 0.3019608, 1)
+theme_override_colors/icon_hover_color = Color(0.5764706, 0.5764706, 0.5764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_constants/icon_max_width = 60
+theme_override_constants/line_spacing = 1
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 28
+theme_override_icons/icon = ExtResource("6_l0rt3")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eua8b")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ju1ig")
+theme_override_styles/hover = SubResource("StyleBoxFlat_aqux4")
+text = "Retour"
 
 [node name="VictoryScreen" type="ColorRect" parent="." unique_id=1800803325]
 visible = false
@@ -487,47 +491,85 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.5254902, 0.5254902, 0.5254902, 0.5254902)
+color = Color(0, 0, 0, 0.8627451)
 
-[node name="PanelContainer" type="PanelContainer" parent="ConfirmCardBuyPanel" unique_id=70023887]
+[node name="CenterContainer" type="CenterContainer" parent="ConfirmCardBuyPanel" unique_id=781105539]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -208.0
-offset_top = -179.5
-offset_right = 208.0
-offset_bottom = 179.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmCardBuyPanel/PanelContainer" unique_id=1217947664]
+[node name="MainBox" type="VBoxContainer" parent="ConfirmCardBuyPanel/CenterContainer" unique_id=1631668752]
 layout_mode = 2
-alignment = 1
+theme_override_constants/separation = 20
 
-[node name="CenterContainer" type="CenterContainer" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer" unique_id=358164571]
-layout_mode = 2
-
-[node name="CardPreview" type="Control" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/CenterContainer" unique_id=492289452]
+[node name="CardPreview" type="Control" parent="ConfirmCardBuyPanel/CenterContainer/MainBox" unique_id=855202235]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 140)
+custom_minimum_size = Vector2(234, 300)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer" unique_id=938163775]
-layout_mode = 2
-alignment = 1
-
-[node name="CancelCardBuy" type="Button" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/HBoxContainer" unique_id=807234987]
+[node name="TooltipImage" type="TextureRect" parent="ConfirmCardBuyPanel/CenterContainer/MainBox" unique_id=855495132]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(216, 134)
 layout_mode = 2
-text = "Cancel"
+expand_mode = 1
+stretch_mode = 5
 
-[node name="ConfirmCardBuy" type="Button" parent="ConfirmCardBuyPanel/PanelContainer/VBoxContainer/HBoxContainer" unique_id=855074204]
+[node name="ConfirmCardBuy" type="Button" parent="ConfirmCardBuyPanel/CenterContainer/MainBox" unique_id=855074204]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Buy Card"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_l0rt3")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_88jjp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mjl58")
+text = "ACHETER"
+
+[node name="TextureRect" type="TextureRect" parent="ConfirmCardBuyPanel/CenterContainer/MainBox/ConfirmCardBuy" unique_id=1405901068]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 236.0
+offset_bottom = 40.0
+
+[node name="CancelMargin" type="MarginContainer" parent="ConfirmCardBuyPanel" unique_id=807470077]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 500
+theme_override_constants/margin_top = 300
+
+[node name="CancelCardBuy" type="Button" parent="ConfirmCardBuyPanel/CancelMargin" unique_id=807234987]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_pressed_color = Color(0.30323282, 0.30323282, 0.30323282, 1)
+theme_override_colors/font_hover_color = Color(0.5770082, 0.5770083, 0.5770093, 1)
+theme_override_colors/font_outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+theme_override_colors/icon_pressed_color = Color(0.3019608, 0.3019608, 0.3019608, 1)
+theme_override_colors/icon_hover_color = Color(0.5764706, 0.5764706, 0.5764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_constants/icon_max_width = 60
+theme_override_constants/line_spacing = 1
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 28
+theme_override_icons/icon = ExtResource("6_l0rt3")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eua8b")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ju1ig")
+theme_override_styles/hover = SubResource("StyleBoxFlat_aqux4")
+text = "Retour"
 
 [node name="ChalutierPanel" type="ColorRect" parent="." unique_id=1592227133]
 unique_name_in_owner = true
@@ -690,15 +732,3 @@ texture_normal = ExtResource("19_tcw7y")
 
 [connection signal="pressed" from="GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildCentreCommercial" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_parc_attraction_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildParcAttraction" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_radio_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildRadio" to="." method="_on_build_monu_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_aeroport_pressed"]
-[connection signal="pressed" from="MonumentMenu/BuildAeroport" to="." method="_on_build_monu_pressed"]

@@ -59,9 +59,7 @@ var dice_textures = [
 ]
 
 @onready var monument_menu: ColorRect = $MonumentMenu
-@onready var confirm_buy: Button = $MonumentMenu/BuySelected
-@onready var close_menu: Button = $MonumentMenu/Close
-@onready var monument_info: Label = $MonumentMenu/MonuInfo
+@onready var close_menu: Button = $MonumentMenu/CancelMargin/Close
 @onready var victory_screen: ColorRect = $VictoryScreen
 @onready var lbl_winner_name: Label = $VictoryScreen/LblWinnerName
 @onready var btn_quit: Button = $VictoryScreen/ReturnToMenu 
@@ -97,8 +95,9 @@ var trade_my_card_id: int = -1
 var give_target = null
 var give_card_id: int = -1
 var demolish_monu_id: int = -1
-var selected_monument_id: int = -1
 var selected_shop_card_id: int = -1
+
+const MONUMENT_SLOT_SCENE = preload("res://scene/table/MonumentSlot.tscn")
 
 func _ready() -> void:
 	shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
@@ -119,7 +118,6 @@ func _ready() -> void:
 			board.open_monuments_requested.connect(_on_open_monuments_pressed)
 	
 	close_menu.pressed.connect(_on_close_menu_pressed)
-	confirm_buy.pressed.connect(_on_confirm_buy_pressed)
 	btn_quit.pressed.connect(_on_quit_pressed)
 	btn_yes.pressed.connect(_on_yes_pressed)
 	btn_no.pressed.connect(_on_no_pressed)
@@ -131,16 +129,6 @@ func _ready() -> void:
 	
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
-	
-	var monuments_to_setup = {
-		$MonumentMenu/BuildGare: Monument.MONUMENT_ID.Gare,
-		$MonumentMenu/BuildCentreCommercial: Monument.MONUMENT_ID.Centre_Commercial,
-		$MonumentMenu/BuildParcAttraction: Monument.MONUMENT_ID.Parc,
-		$MonumentMenu/BuildRadio: Monument.MONUMENT_ID.Radio,
-		$MonumentMenu/BuildAeroport: Monument.MONUMENT_ID.Aeroport,
-		$MonumentMenu/BuildPort: Monument.MONUMENT_ID.Port
-	}
-	for btn in monuments_to_setup: setup_monument_button(btn, monuments_to_setup[btn])
 
 func _on_window_resized() -> void:
 	var screen_size = get_viewport().get_visible_rect().size
@@ -193,7 +181,6 @@ func RefreshBasicInfo(current_game) -> void:
 	
 	shop_board.update_shop(test_shop)
 	update_all_boards()
-	updateMonumentColors()
 	
 	if not is_game_initialized:
 		positionner_plateaux(false) 
@@ -426,42 +413,71 @@ func set_actions_enabled(can_act: bool) -> void:
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 
-func setup_monument_button(btn: Button, monu_id: int) -> void:
-	var red_style = StyleBoxFlat.new()
-	red_style.bg_color = Color(0.6, 0.1, 0.1) 
-	btn.add_theme_stylebox_override("normal", red_style)
-	btn.add_theme_stylebox_override("hover", red_style) 
-	var green_style = StyleBoxFlat.new()
-	green_style.bg_color = Color(0.1, 0.6, 0.1) 
-	btn.add_theme_stylebox_override("pressed", green_style)
-	btn.add_theme_stylebox_override("hover_pressed", green_style) 
-	btn.button_pressed = false
-	btn.pressed.connect(_on_monument_selected.bind(monu_id))
+func update_monument_menu():
+	for child in %MonumentHBox.get_children():
+		child.queue_free()
+	
+	var target_player = self.current_player 
+	
+	var monument_list = [
+		Monument.MONUMENT_ID.Gare, 
+		Monument.MONUMENT_ID.Centre_Commercial, 
+		Monument.MONUMENT_ID.Parc, 
+		Monument.MONUMENT_ID.Radio, 
+		Monument.MONUMENT_ID.Port, 
+		Monument.MONUMENT_ID.Aeroport
+	]
+	
+	for m_id in monument_list:
+		var slot = MONUMENT_SLOT_SCENE.instantiate()
+		%MonumentHBox.add_child(slot)
+		
+		var card_data = CardFactory.get_card(m_id)
+		var is_built = target_player.monumentIsActive(m_id) 
+		
+		setup_slot_visuals(slot, card_data, is_built)
+		
+		var btn = slot.get_node("VBoxContainer/BuildButton")
+		btn.pressed.connect(_on_construct_clicked.bind(m_id))
+
+func setup_slot_visuals(slot, data, built):
+	var card_name = data.get_name()
+	var clean_name = get_clean_file_name(card_name)
+	
+	var state = "active" if built else "inactive"
+	var tex_path = "res://assets/Cards/Monuments/monument_" + clean_name + "_" + state + ".png"
+	
+	
+	var card_btn = slot.get_node("VBoxContainer/CardImage")
+	if FileAccess.file_exists(tex_path):
+		card_btn.texture_normal = load(tex_path)
+	
+	var build_btn = slot.get_node("VBoxContainer/BuildButton")
+	if built:
+		build_btn.disabled = true
+		build_btn.text = "CONSTRUIT"
+	else:
+		build_btn.disabled = false
+		build_btn.text = "CONSTRUIRE"
+		
+func _on_construct_clicked(m_id):
+	_on_shop_card_clicked(m_id) 
+	
+	%ConfirmCardBuy.text = "CONSTRUIRE"
 
 func _on_open_monuments_pressed() -> void:
-	selected_monument_id = -1
-	confirm_buy.disabled = true
-	monument_info.text = "Select a monument to view details."
+	update_monument_menu()
 	monument_menu.move_to_front()
 	monument_menu.show()
 
 func _on_close_menu_pressed() -> void: monument_menu.hide()
 
-func _on_monument_selected(monu_id: int) -> void:
-	selected_monument_id = monu_id
-	confirm_buy.disabled = false
-	var data = game.getMonumentData(monu_id)
-	monument_info.text = data["name"] + "\nCost: " + str(data["cost"]) + " Gold"
-
-func _on_confirm_buy_pressed() -> void:
-	monument_menu.hide()
-	if game and game.CHOICE: action_selected.emit([game.CHOICE.Build_MONUMENT, selected_monument_id])
 
 func _on_skip_pressed() -> void:
 	if game and game.CHOICE: action_selected.emit([game.CHOICE.SKIP, 0])
 
 
-func get_clean_file_name(card_name: String, color: int) -> String:
+func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
 	match color:
 		CardColor.Type.BLUE: prefix = "bleu_"
@@ -472,24 +488,6 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
 	return prefix + clean_name
 
-func updateMonumentColors() -> void:
-	var monuments_to_check = {
-		$MonumentMenu/BuildGare: Monument.MONUMENT_ID.Gare,
-		$MonumentMenu/BuildCentreCommercial: Monument.MONUMENT_ID.Centre_Commercial,
-		$MonumentMenu/BuildParcAttraction: Monument.MONUMENT_ID.Parc,
-		$MonumentMenu/BuildRadio: Monument.MONUMENT_ID.Radio,
-		$MonumentMenu/BuildAeroport: Monument.MONUMENT_ID.Aeroport,
-		$MonumentMenu/BuildPort: Monument.MONUMENT_ID.Port
-	}
-	for btn in monuments_to_check: check_and_color_monument(btn, monuments_to_check[btn])
-
-func check_and_color_monument(btn: Button, monu_id: int) -> void:
-	var style = StyleBoxFlat.new()
-	if current_player.monumentIsActive(monu_id): style.bg_color = Color(0.1, 0.6, 0.1)
-	else: style.bg_color = Color(0.6, 0.1, 0.1)
-	btn.add_theme_stylebox_override("normal", style)
-	btn.add_theme_stylebox_override("hover", style)
-	btn.add_theme_stylebox_override("pressed", style)
 
 func ask_choose_player(owner_player, all_players: Array):
 	choose_player_panel.move_to_front()
@@ -650,28 +648,76 @@ func _on_confirm_demolish_pressed() -> void: demolish_completed.emit(demolish_mo
 func _on_shop_card_clicked(card_id: int) -> void:
 	selected_shop_card_id = card_id
 	var card_data = CardFactory.get_card(card_id)
-	for child in %CardPreview.get_children(): child.queue_free()
+	
+	for child in %CardPreview.get_children(): 
+		child.queue_free()
+		
 	if card_data != null:
 		const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 		var preview_card = CARD_SCENE.instantiate()
+		
 		var card_name = card_data.get_name()
-		var card_color = card_data.get_color()
-		var clean_name = get_clean_file_name(card_name, card_color)
-		var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+		var clean_name = ""
+		var path_basis = ""
+		var tip_path = ""
+		
+		if card_data is Monument:
+			clean_name = get_clean_file_name(card_name)
+			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
+			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+		else:
+			var card_color = card_data.get_color()
+			clean_name = get_clean_file_name(card_name, card_color)
+			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			tip_path = "res://assets/Tooltips/tooltip_monument_" + clean_name + "_top.png"
+		
 		var image_node = preview_card.get_node_or_null("Visual")
+		
 		if image_node and image_node is TextureButton:
-			if FileAccess.file_exists(path_basis): image_node.texture_normal = load(path_basis)
+			if FileAccess.file_exists(path_basis): 
+				image_node.texture_normal = load(path_basis)
+			
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var tooltip_node = preview_card.get_node_or_null("Visual/Tooltip")
-		if tooltip_node: tooltip_node.hide()
+			
+			image_node.ignore_texture_size = true
+			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			
+		preview_card.custom_minimum_size = Vector2(234, 300)
+		preview_card.size = Vector2(234, 300)
+		
+		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
+		if internal_tooltip: 
+			internal_tooltip.hide()
+			
 		%CardPreview.add_child(preview_card)
+		
+		var placeholder_path = "res://assets/Tooltips/tooltip_marché_fruit_et_légume_top.png" 
+		
+		if tip_path != "" and FileAccess.file_exists(tip_path):
+			%TooltipImage.texture = load(tip_path)
+			%TooltipImage.show()
+		elif tip_path != "" and FileAccess.file_exists(placeholder_path):
+			%TooltipImage.texture = load(placeholder_path)
+			%TooltipImage.show()
+		else:
+			%TooltipImage.hide()
+
 		buy_confirm_panel.move_to_front()
 		buy_confirm_panel.show()
 
 func _on_confirm_buy_shop_pressed() -> void:
 	buy_confirm_panel.hide()
-	if game and game.CHOICE: action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+	
+	if game and game.CHOICE:
+		var card_data = CardFactory.get_card(selected_shop_card_id)
+		
+		if card_data is Monument:
+			monument_menu.hide() 
+			
+			action_selected.emit([game.CHOICE.Build_MONUMENT, selected_shop_card_id])
+		else:
+			action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
 
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1

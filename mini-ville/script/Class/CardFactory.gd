@@ -2,7 +2,7 @@ class_name CardFactory
 
 static var _database: Dictionary = {}
 
-static func get_card(card_id: int) -> Establishment:
+static func get_card(card_id: int) -> Card:
 	if _database.is_empty():
 		_initialize_database()
 	return _database.get(card_id)
@@ -29,6 +29,12 @@ static func _initialize_database() -> void:
 	_database[19] = creerRestaurantFamilial()
 	_database[20] = creerCentreImpots()
 	_database[21] = creerEpicerie()
+	_database[22] = creerGare()
+	_database[23] = creerCentreCommercial()
+	_database[24] = creerParcAttractions()
+	_database[25] = creerTourRadio()
+	_database[26] = creerPort()
+	_database[27] = creerAeroport()
 	_database[28] = creerClubPrive()
 	_database[29] = creerChalutier()
 	_database[30] = creerEntrepriseTravauxPublics()
