@@ -1,6 +1,7 @@
 extends Node
 class_name Jeu
 
+# --- SIGNAUX ---
 signal action_selected(choide_data:Array)
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
@@ -15,61 +16,56 @@ var test_shop
 var game
 
 @onready var shop_container: GridContainer = %ShopContainer
+@onready var middle_area: HBoxContainer = $MiddleArea
 @onready var lbl_dice: Label = %LblDice
 
-# Active Player UI
-@onready var active_deck_container: Control = get_node_or_null("%EmplacementsCartes")
-@onready var active_name: Label = %PlayerLabel
-@onready var lbl_active_gold: Label = %PlayerMoney
-@onready var lbl_active_stats: Label = get_node_or_null("%LblActiveStats")
+# --- GESTION DES JOUEURS ---
+@onready var table_pivot: Control = $TablePivot
+@onready var boards: Array = [
+	$TablePivot/BoardJoueurBas,
+	$TablePivot/BoardJoueurGauche,
+	$TablePivot/BoardJoueurHaut,
+	$TablePivot/BoardJoueurDroite
+]
 
-# Overlay Tour
+var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
+var active_boards: Array = []
+
+# --- SECURITE D'ANIMATION ---
+var currently_displayed_player = null
+var is_game_initialized: bool = false
+var is_rotating: bool = false
+signal rotation_finished
+
+# Overlays et Menus
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = $TurnOverlay/VBoxContainer/LblTurnAnnouncement
 @onready var btn_overlay_roll_1: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1
 @onready var btn_overlay_roll_2: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2
 
-# --- ECRAN DE RESULTAT (Variables assignées dynamiquement) ---
 var result_overlay: ColorRect
 var die_1: TextureRect
 var die_2: TextureRect
 var btn_conserver: TextureButton
-
-var dice_textures = [
-	preload("res://assets/UI/die_one.png"),
-	preload("res://assets/UI/die_two.png"),
-	preload("res://assets/UI/die_three.png"),
-	preload("res://assets/UI/die_four.png"),
-	preload("res://assets/UI/die_five.png"),
-	preload("res://assets/UI/die_six.png")
-]
-
-# Tableau pour stocker les "clones" des dés qui volent
 var mini_dice_array: Array = []
 
-# Opponents UI
-@onready var top_deck_container: HBoxContainer = %PlayerTopDeckContainer
-@onready var lbl_top_name: Label = %LblPlayerTopName
-@onready var lbl_top_gold: Label = %LblPlayerTopGold
-@onready var lbl_top_stats: Label = %LblPlayerTopStats
-@onready var left_deck_container: VBoxContainer = %LeftDeckContainer
-@onready var right_deck_container: VBoxContainer = %RightDeckContainer
+var dice_textures = [
+	preload("res://assets/UI/die_one.png"), preload("res://assets/UI/die_two.png"),
+	preload("res://assets/UI/die_three.png"), preload("res://assets/UI/die_four.png"),
+	preload("res://assets/UI/die_five.png"), preload("res://assets/UI/die_six.png")
+]
 
-@onready var open_monuments: TextureButton = %MonumentButton
 @onready var monument_menu: ColorRect = $MonumentMenu
 @onready var confirm_buy: Button = $MonumentMenu/BuySelected
 @onready var close_menu: Button = $MonumentMenu/Close
 @onready var monument_info: Label = $MonumentMenu/MonuInfo
-
 @onready var victory_screen: ColorRect = $VictoryScreen
 @onready var lbl_winner_name: Label = $VictoryScreen/LblWinnerName
-@onready var btn_quit: Button = $VictoryScreen/ReturnToMenu
-
+@onready var btn_quit: Button = $VictoryScreen/ReturnToMenu 
 @onready var yes_no_panel: ColorRect = %YesNoPanel
 @onready var lbl_question: Label = %LblQuestion
 @onready var btn_yes: Button = %BtnYes
 @onready var btn_no: Button = %BtnNo
-
 @onready var choose_player_panel: ColorRect = $ChoosePlayerPanel
 @onready var player_buttons_container: VBoxContainer = $ChoosePlayerPanel/PlayerButtonsContainer
 @onready var trade_panel: ColorRect = $TradePanel
@@ -84,12 +80,10 @@ var mini_dice_array: Array = []
 @onready var demolish_panel: ColorRect = $DemolishPanel
 @onready var demolish_monuments: HBoxContainer = %DemolishMonuments
 @onready var btn_confirm_demolish: Button = %ConfirmDemolish
-
-@onready var buy_confirm_panel: ColorRect = $ConfirmCardBuyPanel
+@onready var buy_confirm_panel: ColorRect = %ConfirmCardBuyPanel
 @onready var card_preview: Control = %CardPreview
 @onready var confirm_card_buy: Button = %ConfirmCardBuy
 @onready var cancel_card_buy: Button = %CancelCardBuy
-
 @onready var chalutier_panel: ColorRect = %ChalutierPanel
 @onready var lbl_chalutier_result: Label = %LblChalutierResult
 @onready var chalutier_roll: Button = %ChalutierRoll
@@ -100,16 +94,26 @@ var trade_my_card_id: int = -1
 var give_target = null
 var give_card_id: int = -1
 var demolish_monu_id: int = -1
-
 var selected_monument_id: int = -1
 var selected_shop_card_id: int = -1
 
-
 func _ready() -> void:
-	_find_dice_ui_nodes()
+	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
+	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(_on_roll_2_pressed)
 	
-	%PasserLeTourButton.pressed.connect(_on_skip_pressed)
-	%MonumentButton.pressed.connect(_on_open_monuments_pressed)
+	if turn_overlay: turn_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+		
+	_find_dice_ui_nodes()
+	_force_overlays_to_front()
+	
+	get_viewport().size_changed.connect(_on_window_resized)
+	_on_window_resized() 
+	
+	for board in boards:
+		if is_instance_valid(board):
+			board.pass_turn_requested.connect(_on_skip_pressed)
+			board.open_monuments_requested.connect(_on_open_monuments_pressed)
+	
 	close_menu.pressed.connect(_on_close_menu_pressed)
 	confirm_buy.pressed.connect(_on_confirm_buy_pressed)
 	btn_quit.pressed.connect(_on_quit_pressed)
@@ -120,7 +124,9 @@ func _ready() -> void:
 	%ConfirmDemolish.pressed.connect(_on_confirm_demolish_pressed)
 	%ConfirmCardBuy.pressed.connect(_on_confirm_buy_shop_pressed)
 	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
-	chalutier_roll.pressed.connect(func(): chalutier_roll_pressed.emit())
+	
+	var chal_btn = get_node_or_null("%ChalutierRoll")
+	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
 	var monuments_to_setup = {
 		$MonumentMenu/BuildGare: Monument.MONUMENT_ID.Gare,
@@ -130,15 +136,181 @@ func _ready() -> void:
 		$MonumentMenu/BuildAeroport: Monument.MONUMENT_ID.Aeroport,
 		$MonumentMenu/BuildPort: Monument.MONUMENT_ID.Port
 	}
-	
-	for btn in monuments_to_setup:
-		setup_monument_button(btn, monuments_to_setup[btn])
-	
-	btn_overlay_roll_1.pressed.connect(_on_overlay_roll_1_pressed)
-	btn_overlay_roll_2.pressed.connect(_on_overlay_roll_2_pressed)
-	
-	print("\n=== GAME STARTED ===")
+	for btn in monuments_to_setup: setup_monument_button(btn, monuments_to_setup[btn])
 
+func _on_window_resized() -> void:
+	var screen_size = get_viewport().get_visible_rect().size
+	
+	if table_pivot:
+		table_pivot.set_anchors_preset(Control.PRESET_FULL_RECT)
+		table_pivot.size = screen_size
+		table_pivot.pivot_offset = screen_size / 2.0
+		table_pivot.position = Vector2.ZERO
+	
+	if middle_area:
+		middle_area.set_anchors_preset(Control.PRESET_CENTER)
+		# On s'assure que les boutons Gold sont collés au shop via la séparation de l'HBoxContainer
+		middle_area.add_theme_constant_override("separation", 20)
+		middle_area.position = (screen_size / 2.0) - (middle_area.size / 2.0)
+	
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
+					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+	for ov in overlays:
+		if is_instance_valid(ov):
+			ov.size = screen_size
+			ov.position = Vector2.ZERO
+			
+	if is_game_initialized:
+		positionner_plateaux(false) 
+
+func _force_overlays_to_front() -> void:
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+	for overlay in overlays:
+		if is_instance_valid(overlay): overlay.z_index = 100 
+
+func RefreshBasicInfo(current_game) -> void:
+	self.game = current_game
+	self.current_player = game.getActivePlayer()
+	self.test_shop = game.shop
+	
+	var player_changed = (currently_displayed_player != current_player)
+	currently_displayed_player = current_player
+	
+	active_boards.clear()
+	if game.playerCount == 2:
+		active_boards.append(boards[0])
+		active_boards.append(boards[2])
+	elif game.playerCount == 3:
+		active_boards.append(boards[0])
+		active_boards.append(boards[1])
+		active_boards.append(boards[2])
+	else:
+		active_boards = boards.duplicate()
+	
+	update_shop_ui()
+	update_all_boards()
+	updateMonumentColors()
+	
+	if not is_game_initialized:
+		positionner_plateaux(false) 
+		is_game_initialized = true
+	elif player_changed and game.playerCount > 0:
+		positionner_plateaux(true)  
+		
+	set_actions_enabled(false) 
+
+func positionner_plateaux(animate: bool = true) -> void:
+	if not game or game.playerCount == 0: return
+	var active_idx = game.playerArray.find(current_player)
+	if active_idx == -1: active_idx = 0
+
+	var screen_size = get_viewport().get_visible_rect().size
+	var c = screen_size / 2.0
+	var b_w = 750
+	var b_h = 260 
+	var margin = 35 
+
+	var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
+	var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+
+	var tween = null
+	if animate:
+		is_rotating = true
+		set_actions_enabled(false)
+		tween = get_tree().create_tween().set_parallel(true)
+		tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+
+	for p_idx in range(game.playerCount):
+		var board = boards[p_idx]
+		if not is_instance_valid(board): continue
+		board.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
+		board.custom_minimum_size = Vector2(b_w, b_h)
+		board.size = Vector2(b_w, b_h)
+		board.pivot_offset = Vector2(b_w / 2.0, b_h / 2.0)
+
+		var diff = (p_idx - active_idx)
+		if diff < 0: diff += game.playerCount
+		var target_angle = 0.0 
+		var target_rot = 0.0   
+
+		if game.playerCount == 2:
+			if diff == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif diff == 1: target_angle = -PI/2.0; target_rot = PI
+		elif game.playerCount == 3:
+			if diff == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif diff == 1: target_angle = PI; target_rot = PI/2.0
+			elif diff == 2: target_angle = -PI/2.0; target_rot = PI
+		else:
+			if diff == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif diff == 1: target_angle = PI; target_rot = PI/2.0
+			elif diff == 2: target_angle = -PI/2.0; target_rot = PI
+			elif diff == 3: target_angle = 0.0; target_rot = -PI/2.0
+
+		if animate:
+			var start_angle = player_angles[p_idx]
+			var current_rot = board.rotation
+			var rot_diff = fmod((target_rot - current_rot + PI), 2*PI) - PI
+			var final_rot = current_rot + rot_diff
+			var ang_diff = fmod((target_angle - start_angle + PI), 2*PI) - PI
+			var final_ang = start_angle + ang_diff
+
+			var move_circular = func(t: float, b: Control, s_ang: float, t_ang: float):
+				var current_ang = lerp(s_ang, t_ang, t)
+				var target_center = c + Vector2(cos(current_ang)*rx, sin(current_ang)*ry)
+				b.position = target_center - b.pivot_offset
+			
+			tween.tween_method(move_circular.bind(board, start_angle, final_ang), 0.0, 1.0, 1.2)
+			tween.tween_property(board, "rotation", final_rot, 1.2)
+			player_angles[p_idx] = final_ang
+		else:
+			var target_center = c + Vector2(cos(target_angle)*rx, sin(target_angle)*ry)
+			board.position = target_center - board.pivot_offset
+			board.rotation = target_rot
+			player_angles[p_idx] = target_angle
+
+	if animate:
+		await tween.finished
+		await get_tree().create_timer(0.2).timeout
+		is_rotating = false
+		rotation_finished.emit()
+
+func update_all_boards() -> void:
+	for b in boards: b.hide()
+	for i in range(game.playerCount):
+		var board = active_boards[i]
+		board.show()
+		var p = game.playerArray[i]
+		board.setup(p, p == current_player)
+
+func waitForDiceRoll() -> int:
+	if is_rotating:
+		var timer = get_tree().create_timer(1.5)
+		var finished = false
+		rotation_finished.connect(func(): finished = true)
+		while is_rotating and not finished and timer.time_left > 0:
+			await get_tree().process_frame
+		is_rotating = false 
+
+	for d in mini_dice_array:
+		if is_instance_valid(d): d.queue_free()
+	mini_dice_array.clear()
+	
+	var has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
+	var nom = current_player.username
+	var prefix = "Tour de "
+	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()): prefix = "Tour d' "
+	
+	lbl_turn_announcement.text = prefix + nom
+	btn_overlay_roll_2.disabled = not has_gare
+	btn_overlay_roll_2.visible = has_gare 
+	
+	turn_overlay.move_to_front()
+	turn_overlay.show()
+	set_actions_enabled(false) # Désactive le bouton pendant le choix du dé
+	
+	var amount = await dice_amount_chosen
+	turn_overlay.hide()
+	return amount
 
 func _find_dice_ui_nodes() -> void:
 	result_overlay = find_child("ResultOverlay", true, false)
@@ -146,59 +318,40 @@ func _find_dice_ui_nodes() -> void:
 	die_2 = find_child("Die2", true, false)
 	btn_conserver = find_child("BtnConserver", true, false)
 
-
 func showResult(d1: int, d2: int) -> void:
 	var amount = 1 if d2 == 0 else 2
-	
 	await play_dice_animation(amount, d1, d2)
-	
-	if d2 == 0:
-		lbl_dice.text = "Rolled: " + str(d1)
-	else:
-		lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(d1 + d2)
-
+	# RÉAPPARITION DU BOUTON ICI
+	set_actions_enabled(true)
 
 func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
-	if die_1 == null or result_overlay == null:
-		return
-		
+	if die_1 == null or result_overlay == null: return
+	
+	result_overlay.move_to_front()
 	result_overlay.show()
 	if btn_conserver: btn_conserver.hide() 
-	
 	die_1.show()
 	if die_2: die_2.visible = (amount == 2)
-
+	
 	var frames = 15
 	var delay = 0.05 
-	
 	for i in range(frames):
 		die_1.texture = dice_textures[randi() % 6]
-		if amount == 2 and die_2:
-			die_2.texture = dice_textures[randi() % 6]
-			
+		if amount == 2 and die_2: die_2.texture = dice_textures[randi() % 6]
 		await get_tree().create_timer(delay).timeout
+		if i > frames - 4: delay += 0.05 
 		
-		if i > frames - 4: 
-			delay += 0.05 
-
 	die_1.texture = dice_textures[final_d1 - 1]
-	if amount == 2 and die_2:
-		die_2.texture = dice_textures[final_d2 - 1]
-		
+	if amount == 2 and die_2: die_2.texture = dice_textures[final_d2 - 1]
+	
 	if btn_conserver:
 		btn_conserver.show()
 		await btn_conserver.pressed
 		
 	var start_pos_1 = die_1.global_position
 	var start_size_1 = die_1.size
-	var start_pos_2 = Vector2.ZERO
-	var start_size_2 = Vector2.ZERO
-	if amount == 2 and die_2:
-		start_pos_2 = die_2.global_position
-		start_size_2 = die_2.size
-
+	
 	result_overlay.hide()
-
 	var dummy_1 = TextureRect.new()
 	dummy_1.texture = die_1.texture
 	dummy_1.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -207,158 +360,89 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 	dummy_1.mouse_filter = Control.MOUSE_FILTER_IGNORE 
 	add_child(dummy_1)
 	mini_dice_array.append(dummy_1)
-
+	
 	var dummy_2 = null
 	if amount == 2 and die_2:
 		dummy_2 = TextureRect.new()
 		dummy_2.texture = die_2.texture
 		dummy_2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		dummy_2.size = start_size_2
-		dummy_2.global_position = start_pos_2
+		dummy_2.size = die_2.size
+		dummy_2.global_position = die_2.global_position
 		dummy_2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(dummy_2)
 		mini_dice_array.append(dummy_2)
-
-	var target_node = get_node_or_null("%PasserLeTourButton")
-	if not target_node:
-		target_node = lbl_dice 
-
-	var target_pos = target_node.global_position
-	var target_size = target_node.size
+		
+	var active_idx = game.playerArray.find(current_player)
+	if active_idx == -1: active_idx = 0
+	var target_board = active_boards[active_idx]
 	
-	var anim_duration = 0.5 
-	var target_scale = Vector2(0.25, 0.25)
-	var final_size_1 = start_size_1 * target_scale
-	var final_size_2 = start_size_2 * target_scale
+	# PLACEMENT MIEUX ÉTUDIÉ : au dessus de la zone de cartes du joueur
+	var target_pos = target_board.global_position + Vector2(250, 20)
+	if is_instance_valid(target_board.btn_pass) and target_board.btn_pass.is_inside_tree():
+		target_pos = target_board.btn_pass.global_position + Vector2(-80, -20)
+		
+	var anim_duration = 0.6 
+	var target_scale = Vector2(0.4, 0.4) 
 	
-	# --- AJUSTEMENT VERTICAL ---
-	# Ajoutez des pixels ici pour baisser les dés, ou enlevez-en pour les monter
-	var y_adjustment = -4 
-	
-	var center_y = target_pos.y + (target_size.y / 2.0) - (final_size_1.y / 2.0) + y_adjustment
-	
-	var final_pos_1 = Vector2(target_pos.x - final_size_1.x - 10, center_y)
-	var final_pos_2 = Vector2.ZERO
-
-	if amount == 2 and dummy_2:
-		final_pos_1 = Vector2(target_pos.x - (final_size_1.x * 2) - 20, center_y)
-		final_pos_2 = Vector2(target_pos.x - final_size_2.x - 10, center_y)
-
 	var tween = get_tree().create_tween().set_parallel(true)
-
-	tween.tween_property(dummy_1, "global_position", final_pos_1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(dummy_1, "global_position", target_pos, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(dummy_1, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-
+	
 	if dummy_2:
-		tween.tween_property(dummy_2, "global_position", final_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		var target_pos_2 = target_pos + Vector2(50, 0)
+		tween.tween_property(dummy_2, "global_position", target_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-
+	
 	await tween.finished
-
-
-func RefreshBasicInfo(current_game) -> void:
-	self.game = current_game
-	self.current_player = game.getActivePlayer()
-	self.test_shop = game.shop
-	
-	update_shop_ui()
-	update_deck_ui()
-	update_opponent_ui()
-	updateMonumentColors()
-	print_player_stats()
-	update_names()
-	
-	set_actions_enabled(false) 
-
 
 func ask_yes_no(question: String) -> bool:
 	lbl_question.text = question
+	yes_no_panel.move_to_front()
 	yes_no_panel.show()
 	var result = await yes_no_answered
 	yes_no_panel.hide()
 	return result
 
-
 func _on_yes_pressed() -> void: yes_no_answered.emit(true)
 func _on_no_pressed() -> void: yes_no_answered.emit(false)
 
-
 func pause() -> Array:
-	print_player_stats() 
-	update_opponent_ui()
+	update_all_boards()
 	set_actions_enabled(true)
 	var choice = await action_selected
 	set_actions_enabled(false)
 	return choice
 
-
-func next_round() -> void:
-	current_player = game.getActivePlayer()
-	update_deck_ui()
-
-
-func waitForDiceRoll() -> int:
-	# --- NETTOYAGE DES DÉS DU TOUR PRÉCÉDENT ---
-	for d in mini_dice_array:
-		if is_instance_valid(d):
-			d.queue_free()
-	mini_dice_array.clear()
-
-	var has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
-	var nom = current_player.username
-	var prep = "Tour d'" if ["A","E","I","O","U","Y"].has(nom[0].to_upper()) else "Tour de "
-	
-	lbl_turn_announcement.text = prep + nom
-	btn_overlay_roll_2.disabled = not has_gare
-	btn_overlay_roll_2.visible = has_gare 
-	
-	turn_overlay.show()
-	set_actions_enabled(false)
-	
-	var amount = await dice_amount_chosen
-	
-	turn_overlay.hide()
-	return amount
-
-
 func set_actions_enabled(can_act: bool) -> void:
-	%PasserLeTourButton.disabled = !can_act
-	%MonumentButton.disabled = !can_act
-	
+	for board in boards:
+		if is_instance_valid(board): board.set_actions_enabled(can_act)
 	for card_visual in shop_container.get_children():
 		var button = card_visual.get_node_or_null("Visual")
-		if button and button is TextureButton:
-			button.disabled = !can_act	
-
+		if button and button is TextureButton: button.disabled = !can_act	
 
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
-
 
 func setup_monument_button(btn: Button, monu_id: int) -> void:
 	var red_style = StyleBoxFlat.new()
 	red_style.bg_color = Color(0.6, 0.1, 0.1) 
 	btn.add_theme_stylebox_override("normal", red_style)
 	btn.add_theme_stylebox_override("hover", red_style) 
-	
 	var green_style = StyleBoxFlat.new()
 	green_style.bg_color = Color(0.1, 0.6, 0.1) 
 	btn.add_theme_stylebox_override("pressed", green_style)
 	btn.add_theme_stylebox_override("hover_pressed", green_style) 
-	
 	btn.button_pressed = false
 	btn.pressed.connect(_on_monument_selected.bind(monu_id))
-
 
 func _on_open_monuments_pressed() -> void:
 	selected_monument_id = -1
 	confirm_buy.disabled = true
 	monument_info.text = "Select a monument to view details."
+	monument_menu.move_to_front()
 	monument_menu.show()
 
-
 func _on_close_menu_pressed() -> void: monument_menu.hide()
-
 
 func _on_monument_selected(monu_id: int) -> void:
 	selected_monument_id = monu_id
@@ -366,47 +450,24 @@ func _on_monument_selected(monu_id: int) -> void:
 	var data = game.getMonumentData(monu_id)
 	monument_info.text = data["name"] + "\nCost: " + str(data["cost"]) + " Gold"
 
-
 func _on_confirm_buy_pressed() -> void:
 	monument_menu.hide()
-	if game and game.CHOICE:
-		action_selected.emit([game.CHOICE.Build_MONUMENT, selected_monument_id])
-
+	if game and game.CHOICE: action_selected.emit([game.CHOICE.Build_MONUMENT, selected_monument_id])
 
 func _on_skip_pressed() -> void:
-	if game and game.CHOICE:
-		action_selected.emit([game.CHOICE.SKIP, 0])
-
-
-func _on_add_gold_pressed() -> void:
-	current_player.receiveGold(5)
-	print_player_stats()
-
-
-func _on_remove_gold_pressed() -> void:
-	current_player.loseGold(2)
-	print_player_stats()
-
-
-func _on_overlay_roll_1_pressed() -> void: _on_roll_1_pressed()
-func _on_overlay_roll_2_pressed() -> void: _on_roll_2_pressed()
-
+	if game and game.CHOICE: action_selected.emit([game.CHOICE.SKIP, 0])
 
 func update_shop_ui() -> void:
-	for child in shop_container.get_children():
-		child.queue_free()
-		
+	for child in shop_container.get_children(): child.queue_free()
 	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
-		
+	
 	for slot in test_shop.shop:
 		var card_visual
 		var card_data = CardFactory.get_card(slot.id)
-		
 		if card_data != null:
 			var card_name = card_data.get_name()
 			var card_color = card_data.get_color()
 			var clean_name = get_clean_file_name(card_name, card_color)
-			
 			var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 			var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 			
@@ -415,19 +476,22 @@ func update_shop_ui() -> void:
 				var image_node = card_visual.get_node_or_null("Visual")
 				if image_node is TextureButton:
 					image_node.texture_normal = load(path_basis)
-					if FileAccess.file_exists(path_hover):
-						image_node.texture_hover = load(path_hover)
+					if FileAccess.file_exists(path_hover): image_node.texture_hover = load(path_hover)
 					image_node.pressed.connect(_on_shop_card_clicked.bind(slot.id))
-
 				card_visual.scale = Vector2(0.5, 0.5) 
 				card_visual.custom_minimum_size = Vector2(180, 224) * 0.5
-			
+				
+				var tooltip_node = card_visual.get_node_or_null("Visual/Tooltip")
+				if tooltip_node:
+					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+					if FileAccess.file_exists(tip_path): tooltip_node.texture = load(tip_path)
+					tooltip_node.hide()
+					tooltip_node.rotation_degrees = 0
 			else:
 				card_visual = Button.new()
 				card_visual.text = str(card_data.get_activation_num()) + "\n" + card_name
 				card_visual.custom_minimum_size = Vector2(90, 112)
 				card_visual.pressed.connect(_on_shop_card_clicked.bind(slot.id))
-				
 				var style = StyleBoxFlat.new()
 				match card_color:
 					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
@@ -435,17 +499,7 @@ func update_shop_ui() -> void:
 					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
 					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
 				card_visual.add_theme_stylebox_override("normal", style)
-			
-				var tooltip_node = card_visual.get_node_or_null("Visual/Tooltip")
-				if tooltip_node:
-					var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
-					if FileAccess.file_exists(tip_path):
-						tooltip_node.texture = load(tip_path)
-					tooltip_node.hide()
-					tooltip_node.rotation_degrees = 0
-
 		shop_container.add_child(card_visual)
-
 
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""
@@ -454,134 +508,10 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 		CardColor.Type.GREEN: prefix = "vert_"
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
-		
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
-	
 	return prefix + clean_name
 
-
-func update_deck_ui() -> void:
-	var piles = {
-		CardColor.Type.BLUE: %BluePileBottom,
-		CardColor.Type.GREEN: %GreenPileBottom,
-		CardColor.Type.RED: %RedPileBottom,
-		CardColor.Type.PURPLE: %PurplePileBottom
-	}
-	
-	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
-	
-	for pile in piles.values():
-		var anchor = pile.get_node_or_null("Anchor")
-		if anchor:
-			for child in anchor.get_children():
-				child.queue_free()
-			
-	var pile_counts = {
-		CardColor.Type.BLUE: 0,
-		CardColor.Type.GREEN: 0,
-		CardColor.Type.RED: 0,
-		CardColor.Type.PURPLE: 0
-	}
-	
-	var card_width = 156 
-	var card_height = 200
-	var stack_gap = 25 
-	var push_up_amount = 0 
-	
-	for instance in current_player.deck:
-		if typeof(instance) != TYPE_ARRAY: continue
-		
-		var card_id = instance[0]
-		var quantity = instance[1]
-		var card_data = CardFactory.get_card(card_id)
-		
-		if card_data != null:
-			var color = card_data.get_color()
-			var target_pile = piles[color]
-			var anchor = target_pile.get_node("Anchor")
-			
-			for i in range(quantity):
-				var card_visual
-				var card_name = card_data.get_name() 
-				
-				var clean_name = get_clean_file_name(card_name, color)
-				var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-				var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
-				
-				if FileAccess.file_exists(path_basis):
-					card_visual = CARD_SCENE.instantiate()
-					var image_node = card_visual.get_node_or_null("Visual")
-					
-					if image_node is TextureButton:
-						image_node.texture_normal = load(path_basis)
-						if FileAccess.file_exists(path_hover):
-							image_node.texture_hover = load(path_hover)
-							
-					var tooltip_node = card_visual.get_node_or_null("Tooltip")
-					if tooltip_node:
-						var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
-						if FileAccess.file_exists(tip_path):
-							tooltip_node.texture = load(tip_path)
-							tooltip_node.hide()
-				else:
-					print("Warning: Art missing for ", path_basis)
-					card_visual = Button.new()
-					card_visual.text = str(card_data.get_activation_num()) + "\n" + card_data.get_name()
-					card_visual.disabled = true
-					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-					
-					var style = StyleBoxFlat.new()
-					match color:
-						CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-						CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-						CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-						CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
-						
-					style.set_border_width_all(1)
-					style.border_color = Color(0, 0, 0, 0.3)
-					
-					card_visual.add_theme_stylebox_override("disabled", style)
-					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
-					
-				card_visual.custom_minimum_size = Vector2(card_width, card_height)
-				card_visual.size = Vector2(card_width, card_height)
-						
-				var offset_x = pile_counts[color] * stack_gap 
-				card_visual.position = Vector2(offset_x, push_up_amount)
-					
-				anchor.add_child(card_visual)
-				pile_counts[color] += 1
-
-	for color in piles:
-		var pile = piles[color]
-		var count = pile_counts[color]
-		
-		if count > 0:
-			var new_width = card_width + ((count - 1) * stack_gap)
-			pile.custom_minimum_size.x = new_width
-		else:
-			pile.custom_minimum_size.x = card_width
-
-
-func get_texture_path_from_name(card_name: String, color: int) -> String:
-	var prefix = ""
-	match color:
-		0: prefix = "Bleu_"
-		1: prefix = "Vert_"
-		2: prefix = "Rouge_"
-		3: prefix = "violet_"
-	
-	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
-	
-	return "res://assets/Cards/Basis/" + prefix + clean_name + " 2.png"
-
-
-func update_names() -> void:
-	active_name.text = current_player.username
-	
-	
 func updateMonumentColors() -> void:
 	var monuments_to_check = {
 		$MonumentMenu/BuildGare: Monument.MONUMENT_ID.Gare,
@@ -591,182 +521,40 @@ func updateMonumentColors() -> void:
 		$MonumentMenu/BuildAeroport: Monument.MONUMENT_ID.Aeroport,
 		$MonumentMenu/BuildPort: Monument.MONUMENT_ID.Port
 	}
-	
-	for btn in monuments_to_check:
-		check_and_color_monument(btn, monuments_to_check[btn])
-
+	for btn in monuments_to_check: check_and_color_monument(btn, monuments_to_check[btn])
 
 func check_and_color_monument(btn: Button, monu_id: int) -> void:
 	var style = StyleBoxFlat.new()
-	
-	if current_player.monumentIsActive(monu_id):
-		style.bg_color = Color(0.1, 0.6, 0.1)
-	else:
-		style.bg_color = Color(0.6, 0.1, 0.1)
-		
+	if current_player.monumentIsActive(monu_id): style.bg_color = Color(0.1, 0.6, 0.1)
+	else: style.bg_color = Color(0.6, 0.1, 0.1)
 	btn.add_theme_stylebox_override("normal", style)
 	btn.add_theme_stylebox_override("hover", style)
 	btn.add_theme_stylebox_override("pressed", style)
-	
-
-func update_opponent_ui() -> void:
-	var opponent_slots = [
-		{ 
-			"parent": right_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileRight, CardColor.Type.GREEN: %GreenPileRight, CardColor.Type.RED: %RedPileRight, CardColor.Type.PURPLE: %PurplePileRight},
-			"seat": "Right"
-		},
-		{ 
-			"parent": top_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileTop, CardColor.Type.GREEN: %GreenPileTop, CardColor.Type.RED: %RedPileTop, CardColor.Type.PURPLE: %PurplePileTop},
-			"seat": "Top"
-		},
-		{ 
-			"parent": left_deck_container,
-			"piles": { CardColor.Type.BLUE: %BluePileLeft, CardColor.Type.GREEN: %GreenPileLeft, CardColor.Type.RED: %RedPileLeft, CardColor.Type.PURPLE: %PurplePileLeft},
-			"seat": "Left"
-		}
-	]
-	
-	const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
-	
-	# --- MASTER SIZING CONSTANTS ---
-	var opp_w = 156
-	var opp_h = 200
-	var opp_gap = 30
-	
-	var side_w = 200  
-	var side_h = 156
-	
-	var offset_x = (side_w - opp_w) / 2.0
-	var offset_y = (side_h - opp_h) / 2.0 
-
-	# 1. CLEANUP PHASE
-	for slot in opponent_slots:
-		slot["parent"].show() 
-		for pile in slot["piles"].values():
-			var anchor = pile.get_node_or_null("Anchor")
-			if anchor:
-				for child in anchor.get_children():
-					child.queue_free()
-	
-	var current_index = game.playerArray.find(current_player)
-	
-	for i in range(1, game.playerCount):
-		var target_index = (current_index + i) % game.playerCount
-		var opponent = game.playerArray[target_index]
-		
-		var active_slot = opponent_slots[1] if game.playerCount == 2 else opponent_slots[i - 1] 
-		
-		var total_cards = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
-		for instance in opponent.deck: 
-			if typeof(instance) == TYPE_ARRAY:
-				var c_data = CardFactory.get_card(instance[0])
-				if c_data != null: total_cards[c_data.get_color()] += instance[1]
-		
-		var pile_counts = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
-
-		for instance in opponent.deck: 
-			if typeof(instance) != TYPE_ARRAY: continue 
-			
-			var card_id = instance[0] 
-			var quantity = instance[1] 
-			var card_data = CardFactory.get_card(card_id) 
-			
-			if card_data != null:
-				var color = card_data.get_color()
-				var target_pile = active_slot["piles"][color]
-				var anchor = target_pile.get_node("Anchor")
-				var card_name = card_data.get_name()
-				
-				for j in range(quantity):
-					var card_visual
-					var clean_name = get_clean_file_name(card_name, color)
-					var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-					
-					card_visual = CARD_SCENE.instantiate()
-					card_visual.custom_minimum_size = Vector2(opp_w, opp_h)
-					card_visual.size = Vector2(opp_w, opp_h)
-					
-					var image_node = card_visual.get_node_or_null("Visual")
-					if image_node is TextureButton and FileAccess.file_exists(path_basis):
-						image_node.texture_normal = load(path_basis)
-					else:
-						image_node = Button.new()
-						image_node.text = card_data.get_name()
-						image_node.size = Vector2(opp_w, opp_h)
-						card_visual.add_child(image_node)
-
-					card_visual.pivot_offset = Vector2.ZERO 
-
-					if active_slot["seat"] == "Left":
-						card_visual.rotation_degrees = 90
-						var x_pos = opp_h - (pile_counts[color] * opp_gap)
-						card_visual.position = Vector2(x_pos, 0)
-						
-					elif active_slot["seat"] == "Right":
-						card_visual.rotation_degrees = -90
-						var x_pos = (pile_counts[color] * opp_gap)
-						card_visual.position = Vector2(x_pos, side_h)
-						
-					elif active_slot["seat"] == "Top":
-						card_visual.rotation_degrees = 180
-						var x_pos = opp_w - (pile_counts[color] * opp_gap)
-						card_visual.position = Vector2(x_pos, opp_h)
-
-					anchor.add_child(card_visual)
-					pile_counts[color] += 1
-
-		for color in active_slot["piles"]:
-			var pile = active_slot["piles"][color]
-			var count = pile_counts[color]
-			
-			if active_slot["seat"] == "Top":
-				pile.custom_minimum_size.y = opp_h
-				pile.custom_minimum_size.x = opp_w + ((count - 1) * opp_gap) if count > 0 else opp_w
-			else:
-				pile.custom_minimum_size.y = side_h
-				pile.custom_minimum_size.x = side_w + ((count - 1) * opp_gap) if count > 0 else side_w
-
 
 func ask_choose_player(owner_player, all_players: Array):
+	choose_player_panel.move_to_front()
 	choose_player_panel.show()
-	
-	for child in player_buttons_container.get_children():
-		child.queue_free()
-
+	for child in player_buttons_container.get_children(): child.queue_free()
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
 			btn.text = p.username + " (" + str(p.balance) + " Gold)"
 			btn.custom_minimum_size = Vector2(200, 60)
-			
 			btn.pressed.connect(func(): _on_player_chosen(p))
-			
 			player_buttons_container.add_child(btn)
-			
 	var chosen_target = await player_chosen
-	
 	choose_player_panel.hide()
 	return chosen_target
 
-
-func _on_player_chosen(target) -> void:
-	player_chosen.emit(target)
-
+func _on_player_chosen(target) -> void: player_chosen.emit(target)
 
 func ask_trade_cards(owner_player, all_players: Array) -> Array:
+	trade_panel.move_to_front()
 	trade_panel.show()
 	btn_confirm_trade.disabled = true
 	btn_confirm_trade.text = "Select cards to trade..."
-	trade_target = null
-	trade_their_card_id = -1
-	trade_my_card_id = -1
-	
+	trade_target = null; trade_their_card_id = -1; trade_my_card_id = -1
 	for c in trade_opponents.get_children(): c.queue_free()
-	for c in trade_their_cards.get_children(): c.queue_free()
-	for c in trade_my_cards.get_children(): c.queue_free()
-	
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
@@ -774,13 +562,10 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			btn.custom_minimum_size = Vector2(120, 40)
 			btn.pressed.connect(func(): _on_trade_opponent_selected(p))
 			trade_opponents.add_child(btn)
-			
 	_populate_trade_deck(owner_player, trade_my_cards, true)
-	
 	var result = await trade_completed
 	trade_panel.hide()
 	return result
-
 
 func _on_trade_opponent_selected(target) -> void:
 	trade_target = target
@@ -788,19 +573,16 @@ func _on_trade_opponent_selected(target) -> void:
 	_populate_trade_deck(target, trade_their_cards, false)
 	_check_trade_valid()
 
-
 func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 	for instance in player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
-		
 		if card != null and card.color != CardColor.Type.PURPLE:
 			var btn = Button.new()
 			btn.text = card.name
 			btn.custom_minimum_size = Vector2(80, 110)
 			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			
 			var style = StyleBoxFlat.new()
 			match card.color:
 				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
@@ -809,232 +591,151 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 			btn.add_theme_stylebox_override("normal", style)
 			btn.add_theme_stylebox_override("hover", style)
 			btn.add_theme_color_override("font_color", Color.WHITE)
-			
 			btn.pressed.connect(func():
 				if is_mine: trade_my_card_id = card_id
 				else: trade_their_card_id = card_id
 				_check_trade_valid()
 				for child in container.get_children():
-					if child == btn:
-						child.modulate = Color(1.0, 1.0, 1.0)
-					else:
-						child.modulate = Color(0.4, 0.4, 0.4)
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
 			)
 			container.add_child(btn)
-
 
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
 		btn_confirm_trade.text = "Confirm Trade!"
 
-
-func _on_confirm_trade_pressed() -> void:
-	trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
-
+func _on_confirm_trade_pressed() -> void: trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
 func ask_give_card(owner_player, all_players: Array) -> Array:
+	give_panel.move_to_front()
 	give_panel.show()
 	btn_confirm_give.disabled = true
 	btn_confirm_give.text = "Select a card and an opponent..."
-	give_target = null
-	give_card_id = -1
-	
+	give_target = null; give_card_id = -1
 	for c in give_my_cards.get_children(): c.queue_free()
-	for c in give_opponents.get_children(): c.queue_free()
-	
 	for instance in owner_player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
-		
 		if card != null and card.color != CardColor.Type.PURPLE:
 			var btn = Button.new()
 			btn.text = card.name
 			btn.custom_minimum_size = Vector2(80, 110)
-			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			
 			var style = StyleBoxFlat.new()
 			match card.color:
 				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
 				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
 				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
 			btn.add_theme_stylebox_override("normal", style)
-			btn.add_theme_stylebox_override("hover", style)
-			btn.add_theme_color_override("font_color", Color.WHITE)
-			
 			btn.pressed.connect(func():
 				give_card_id = card_id
 				_check_give_valid()
-				for child in give_my_cards.get_children():
-					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+				for child in give_my_cards.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
 			)
 			give_my_cards.add_child(btn)
-
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
 			btn.text = p.username
 			btn.custom_minimum_size = Vector2(120, 40)
-			
 			btn.pressed.connect(func():
 				give_target = p
 				_check_give_valid()
-				for child in give_opponents.get_children():
-					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+				for child in give_opponents.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
 			)
 			give_opponents.add_child(btn)
-
 	var result = await give_card_completed
 	give_panel.hide()
 	return result
-
 
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
 		btn_confirm_give.text = "Confirm Gift!"
 
-
-func _on_confirm_give_pressed() -> void:
-	give_card_completed.emit([give_card_id, give_target])
-
+func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
 func ask_demolish_monument(owner_player) -> int:
+	demolish_panel.move_to_front()
 	demolish_panel.show()
 	btn_confirm_demolish.disabled = true
-	btn_confirm_demolish.text = "Select a monument..."
 	demolish_monu_id = -1
-	
 	for c in demolish_monuments.get_children(): c.queue_free()
-	
 	var has_built_monuments = false
-	
 	for monu_id in owner_player.monumentArray:
 		if owner_player.monumentArray[monu_id] == true:
 			has_built_monuments = true
-			
 			var btn = Button.new()
 			var monu_data = game.getMonumentData(monu_id)
 			btn.text = monu_data["name"]
 			btn.custom_minimum_size = Vector2(120, 80)
-			
 			var style_normal = StyleBoxFlat.new()
 			style_normal.bg_color = Color(0.8, 0.2, 0.2)
-			var style_hover = StyleBoxFlat.new()
-			style_hover.bg_color = Color(0.8, 0.2, 0.2).lightened(0.2)
 			btn.add_theme_stylebox_override("normal", style_normal)
-			btn.add_theme_stylebox_override("hover", style_hover)
-			
 			btn.pressed.connect(func():
 				demolish_monu_id = monu_id
 				btn_confirm_demolish.disabled = false
 				btn_confirm_demolish.text = "Demolish " + monu_data["name"] + "!"
-				
-				for child in demolish_monuments.get_children():
-					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+				for child in demolish_monuments.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
 			)
 			demolish_monuments.add_child(btn)
-			
-	if not has_built_monuments:
-		print("No monuments built to demolish! Skipping effect.")
-		demolish_panel.hide()
-		return -1
-
+	if not has_built_monuments: return -1
 	var result = await demolish_completed
 	demolish_panel.hide()
 	return result
 
-
-func _on_confirm_demolish_pressed() -> void:
-	demolish_completed.emit(demolish_monu_id)
-
+func _on_confirm_demolish_pressed() -> void: demolish_completed.emit(demolish_monu_id)
 
 func _on_shop_card_clicked(card_id: int) -> void:
 	selected_shop_card_id = card_id
 	var card_data = CardFactory.get_card(card_id)
-	
-	for child in %CardPreview.get_children():
-		child.queue_free()
-	
+	for child in %CardPreview.get_children(): child.queue_free()
 	if card_data != null:
 		const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
 		var preview_card = CARD_SCENE.instantiate()
-		
 		var card_name = card_data.get_name()
 		var card_color = card_data.get_color()
 		var clean_name = get_clean_file_name(card_name, card_color)
-		
 		var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 		var image_node = preview_card.get_node_or_null("Visual")
-		
 		if image_node and image_node is TextureButton:
-			if FileAccess.file_exists(path_basis):
-				image_node.texture_normal = load(path_basis)
-			
+			if FileAccess.file_exists(path_basis): image_node.texture_normal = load(path_basis)
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
 		var tooltip_node = preview_card.get_node_or_null("Visual/Tooltip")
-		if tooltip_node:
-			tooltip_node.hide()
-
+		if tooltip_node: tooltip_node.hide()
 		%CardPreview.add_child(preview_card)
-		
+		buy_confirm_panel.move_to_front()
 		buy_confirm_panel.show()
-
 
 func _on_confirm_buy_shop_pressed() -> void:
 	buy_confirm_panel.hide()
-	if game and game.CHOICE:
-		action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
-
+	if game and game.CHOICE: action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
 
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
 	buy_confirm_panel.hide()
 
-
 func ask_chalutier_roll() -> int:
+	chalutier_panel.move_to_front()
 	chalutier_panel.show()
 	chalutier_roll.disabled = false
 	lbl_chalutier_result.text = "Roll to see how much gold you catch."
-	
 	await chalutier_roll_pressed
-	
 	var d1 = (randi() % 6) + 1
 	var d2 = (randi() % 6) + 1
 	var total = d1 + d2
-	
 	lbl_chalutier_result.text = "You caught " + str(total) + " Gold!"
 	chalutier_roll.disabled = true
-	
 	await get_tree().create_timer(2.0).timeout
-	
 	chalutier_panel.hide()
 	return total
 
-
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	
-	lbl_winner_name.text = "🏆 " + winner_name + " WINS! 🏆\nAll 5 Monuments Built!"
+	lbl_winner_name.text = "🏆 " + winner_name + " WINS!\nAll 5 Monuments Built!"
+	victory_screen.move_to_front()
 	victory_screen.show()
 	
-
-func _on_quit_pressed() -> void:
-	get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")
-
-
-func print_player_stats() -> void:
-	lbl_active_gold.text = str(current_player.balance)
-	if lbl_active_stats:
-		lbl_active_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
-	
-	print("--- PLAYER STATS ---")
-	print("Current Player: ", current_player.username)
-	print("Gold: ", current_player.balance)
-	print("Establishments: ", current_player.establishmentCount)
-	print("Monuments: ", current_player.monumentCount)
-	print("Deck Array: ", current_player.deck)
-	print("--------------------")
+func _on_quit_pressed() -> void: get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")

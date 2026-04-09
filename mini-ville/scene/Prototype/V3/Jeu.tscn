@@ -2,150 +2,12 @@
 
 [ext_resource type="Script" uid="uid://b7iorriitoyi4" path="res://script/scene/prototype/v3/JeuScript.gd" id="1_pm7t7"]
 [ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="2_i5b7y"]
-[ext_resource type="Texture2D" uid="uid://c0syfj2pyls0q" path="res://assets/UI/profile_picture_player.png" id="3_8a6bx"]
+[ext_resource type="PackedScene" uid="uid://b5jkk7cw0wbjt" path="res://scene/Prototype/V3/PlayerBoard.tscn" id="3_m0he3"]
 [ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="3_tbpra"]
-[ext_resource type="Texture2D" uid="uid://x5cxd5hg8lxo" path="res://assets/UI/button_border.png" id="3_u3wdh"]
 [ext_resource type="Texture2D" uid="uid://l6jtewrp4hlx" path="res://assets/UI/roll_one_die_button.png" id="4_dgctq"]
-[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_m0he3"]
 [ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="5_8a6bx"]
-[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="6_trdnx"]
-[ext_resource type="Texture2D" uid="uid://kjacdl85wgrh" path="res://assets/UI/pass_turn_button.png" id="8_u3wdh"]
-[ext_resource type="Texture2D" uid="uid://0whrml61cqd7" path="res://assets/UI/Monuments_button.png" id="9_2vk2f"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
-[ext_resource type="Texture2D" uid="uid://b2u6ilehm44b4" path="res://assets/UI/die_two.png" id="10_2vk2f"]
-[ext_resource type="Texture2D" uid="uid://b0ny7tx28twc1" path="res://assets/UI/die_three.png" id="11_u3wdh"]
-[ext_resource type="Texture2D" uid="uid://ds5kieewa1djk" path="res://assets/UI/die_four.png" id="12_tcw7y"]
-[ext_resource type="Texture2D" uid="uid://cyey2r3nd2kk0" path="res://assets/UI/die_five.png" id="13_fyh2q"]
-[ext_resource type="Texture2D" uid="uid://mq41veql72f8" path="res://assets/UI/die_six.png" id="14_sxbm1"]
 [ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yln80"]
-bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4a53q"]
-bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxqjm"]
-bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fiso1"]
-bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgkkh"]
-bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kgc6u"]
-bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xjma"]
-bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_beeqq"]
-bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vf6uw"]
-bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ijtxi"]
-bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_evejj"]
-bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fcipe"]
-bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
-content_margin_left = 6.0
-content_margin_top = 5.0
-content_margin_right = 14.0
-content_margin_bottom = 5.0
-texture = ExtResource("3_u3wdh")
-
-[sub_resource type="FontVariation" id="FontVariation_trdnx"]
-base_font = ExtResource("4_m0he3")
-
-[sub_resource type="FontVariation" id="FontVariation_88jjp"]
-base_font = ExtResource("3_tbpra")
-variation_opentype = {
-2003265652: 900
-}
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3wdh"]
-bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcw7y"]
-bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyh2q"]
-bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sxbm1"]
-bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
 
 [sub_resource type="FontVariation" id="FontVariation_m0he3"]
 base_font = ExtResource("3_tbpra")
@@ -168,388 +30,71 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_i5b7y")
 
-[node name="MainUI" type="VBoxContainer" parent="." unique_id=1468551468]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="MiddleArea" type="HBoxContainer" parent="." unique_id=2126635692]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -956.0
+offset_top = -181.5
+offset_right = 956.0
+offset_bottom = 181.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="Control2" type="Control" parent="MainUI" unique_id=1556895022]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-
-[node name="PlayerTopArea" type="HBoxContainer" parent="MainUI" unique_id=1528484801]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 2
-
-[node name="PlayerTopStats" type="VBoxContainer" parent="MainUI/PlayerTopArea" unique_id=2138522530]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LblPlayerTopName" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=1810641958]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Player 2 Name"
-horizontal_alignment = 1
-
-[node name="LblPlayerTopGold" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=2033321195]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="LblPlayerTopStats" type="Label" parent="MainUI/PlayerTopArea/PlayerTopStats" unique_id=1814125237]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="PlayerTopDeckContainer" type="HBoxContainer" parent="MainUI/PlayerTopArea" unique_id=185466759]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(450, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PurplePileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1382130605]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_yln80")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/PurplePileTop" unique_id=411783083]
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RedPileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1849753327]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_4a53q")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/RedPileTop" unique_id=142133056]
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="GreenPileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1315703022]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_dxqjm")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/GreenPileTop" unique_id=2067669785]
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BluePileTop" type="PanelContainer" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer" unique_id=1057246572]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_fiso1")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerTopArea/PlayerTopDeckContainer/BluePileTop" unique_id=1793673571]
-custom_minimum_size = Vector2(150, 140)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MiddleArea" type="HBoxContainer" parent="MainUI" unique_id=829775824]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="LeftDeckContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=1781631069]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="BluePileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=1154330259]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sgkkh")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/BluePileLeft" unique_id=1879974777]
-layout_mode = 2
-
-[node name="GreenPileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=15994418]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_kgc6u")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/GreenPileLeft" unique_id=321842469]
-layout_mode = 2
-
-[node name="RedPileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=1959224934]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_0xjma")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/RedPileLeft" unique_id=674066695]
-layout_mode = 2
-
-[node name="PurplePileLeft" type="PanelContainer" parent="MainUI/MiddleArea/LeftDeckContainer" unique_id=586567121]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_beeqq")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/LeftDeckContainer/PurplePileLeft" unique_id=618559849]
-layout_mode = 2
-
-[node name="MiddleArea" type="HBoxContainer" parent="MainUI/MiddleArea" unique_id=2126635692]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
+alignment = 1
 
-[node name="GoldSkip" type="VBoxContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=1667196113]
+[node name="GoldSkip" type="VBoxContainer" parent="MiddleArea" unique_id=1667196113]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="AddGold" type="Button" parent="MainUI/MiddleArea/MiddleArea/GoldSkip" unique_id=2001308356]
+[node name="AddGold" type="Button" parent="MiddleArea/GoldSkip" unique_id=2001308356]
 unique_name_in_owner = true
 layout_mode = 2
 text = "+ 5 Gold"
 
-[node name="RemoveGold" type="Button" parent="MainUI/MiddleArea/MiddleArea/GoldSkip" unique_id=38618146]
+[node name="RemoveGold" type="Button" parent="MiddleArea/GoldSkip" unique_id=38618146]
 unique_name_in_owner = true
 layout_mode = 2
 text = "- 2 Gold"
 
-[node name="ShopContainer" type="GridContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=1391810629]
+[node name="ShopContainer" type="GridContainer" parent="MiddleArea" unique_id=1391810629]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 columns = 3
 
-[node name="DiceContainer" type="VBoxContainer" parent="MainUI/MiddleArea/MiddleArea" unique_id=61961936]
-layout_mode = 2
-size_flags_vertical = 4
+[node name="TablePivot" type="Control" parent="." unique_id=1138575796]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="LblDice" type="Label" parent="MainUI/MiddleArea/MiddleArea/DiceContainer" unique_id=336477209]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Waiting..."
+[node name="BoardJoueurBas" parent="TablePivot" unique_id=384742348 instance=ExtResource("3_m0he3")]
+layout_mode = 0
+offset_right = 808.0
+offset_bottom = 259.0
 
-[node name="RightDeckContainer" type="VBoxContainer" parent="MainUI/MiddleArea" unique_id=326150629]
-unique_name_in_owner = true
-layout_mode = 2
+[node name="BoardJoueurGauche" parent="TablePivot" unique_id=316756757 instance=ExtResource("3_m0he3")]
+layout_mode = 0
 
-[node name="PurplePileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=552157897]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vf6uw")
+[node name="BoardJoueurDroite" parent="TablePivot" unique_id=1258910989 instance=ExtResource("3_m0he3")]
+layout_mode = 0
 
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/PurplePileRight" unique_id=1056399662]
-layout_mode = 2
-
-[node name="RedPileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=1279042823]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ijtxi")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/RedPileRight" unique_id=1041500607]
-layout_mode = 2
-
-[node name="GreenPileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=426286110]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_evejj")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/GreenPileRight" unique_id=307731437]
-layout_mode = 2
-
-[node name="BluePileRight" type="PanelContainer" parent="MainUI/MiddleArea/RightDeckContainer" unique_id=1766714317]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_fcipe")
-
-[node name="Anchor" type="Control" parent="MainUI/MiddleArea/RightDeckContainer/BluePileRight" unique_id=1801333240]
-layout_mode = 2
-
-[node name="PlayerBottomArea" type="HBoxContainer" parent="MainUI" unique_id=1895989354]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-
-[node name="MainColumn" type="VBoxContainer" parent="MainUI/PlayerBottomArea" unique_id=1158026153]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
-
-[node name="TopBar" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=1322924405]
-layout_mode = 2
-
-[node name="ActivePlayerStats" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=47050779]
-layout_mode = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=361027093]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxTexture_l0rt3")
-
-[node name="PlayerButton" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer" unique_id=274318703]
-layout_mode = 2
-
-[node name="ProfilePicture" type="TextureRect" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=1440519422]
-custom_minimum_size = Vector2(40, 20)
-layout_mode = 2
-texture = ExtResource("3_8a6bx")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerLabel" type="Label" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=1832634439]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/outline_size = 10
-theme_override_fonts/font = SubResource("FontVariation_trdnx")
-theme_override_font_sizes/font_size = 20
-text = "Joueur 1"
-
-[node name="Espace" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=1937230171]
-custom_minimum_size = Vector2(10, 0)
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats" unique_id=1456125300]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="PlayerMoney" type="Label" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=1629325410]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 1
-theme_override_fonts/font = SubResource("FontVariation_88jjp")
-theme_override_font_sizes/font_size = 40
-text = "5"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CoinIcon" type="TextureRect" parent="MainUI/PlayerBottomArea/MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=815668900]
-custom_minimum_size = Vector2(30, 37)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-texture = ExtResource("6_trdnx")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="RessortGauche" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=59806948]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PasserLeTourButton" type="TextureButton" parent="MainUI/PlayerBottomArea/MainColumn/TopBar" unique_id=585773981]
-unique_name_in_owner = true
-layout_mode = 2
-texture_normal = ExtResource("8_u3wdh")
-
-[node name="ActiveDeckContainer" type="HBoxContainer" parent="MainUI/PlayerBottomArea/MainColumn" unique_id=187133416]
-custom_minimum_size = Vector2(600, 200)
-layout_mode = 2
-
-[node name="BluePileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=70920770]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_u3wdh")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/BluePileBottom" unique_id=1325224695]
-layout_mode = 2
-
-[node name="GreenPileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=385839370]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_tcw7y")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/GreenPileBottom" unique_id=910054690]
-layout_mode = 2
-
-[node name="RedPileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=310112636]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_fyh2q")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/RedPileBottom" unique_id=526349018]
-layout_mode = 2
-
-[node name="PurplePileBottom" type="PanelContainer" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer" unique_id=1786753757]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sxbm1")
-
-[node name="Anchor" type="Control" parent="MainUI/PlayerBottomArea/MainColumn/ActiveDeckContainer/PurplePileBottom" unique_id=70730425]
-layout_mode = 2
-
-[node name="MonumentZone" type="MarginContainer" parent="MainUI/PlayerBottomArea" unique_id=2536659]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_constants/margin_left = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainUI/PlayerBottomArea/MonumentZone" unique_id=703696673]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="MonumentButton" type="TextureButton" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer" unique_id=1455298354]
-unique_name_in_owner = true
-layout_mode = 2
-texture_normal = ExtResource("9_2vk2f")
-
-[node name="GridContainer" type="GridContainer" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer" unique_id=1686085059]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/h_separation = 20
-theme_override_constants/v_separation = 20
-columns = 2
-
-[node name="TextureRect" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=512234392]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("9_417mv")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect2" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1882497123]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("10_2vk2f")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect3" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=134974695]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("11_u3wdh")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect4" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1389453162]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("12_tcw7y")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect5" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=809189407]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("13_fyh2q")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect6" type="TextureRect" parent="MainUI/PlayerBottomArea/MonumentZone/VBoxContainer/GridContainer" unique_id=1422436671]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("14_sxbm1")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Control" type="Control" parent="MainUI" unique_id=449633774]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
+[node name="BoardJoueurHaut" parent="TablePivot" unique_id=1540503633 instance=ExtResource("3_m0he3")]
+layout_mode = 0
 
 [node name="MonumentMenu" type="ColorRect" parent="." unique_id=1857296200]
 visible = false
@@ -558,10 +103,6 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -404.0
-offset_top = -237.0
-offset_right = 404.0
-offset_bottom = 237.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.23753911, 0.23753914, 0.23753911, 1)
@@ -1143,8 +684,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("19_tcw7y")
 
-[connection signal="pressed" from="MainUI/MiddleArea/MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
-[connection signal="pressed" from="MainUI/MiddleArea/MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
+[connection signal="pressed" from="MiddleArea/GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
+[connection signal="pressed" from="MiddleArea/GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_port_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="MonumentMenu/BuildGare" to="." method="_on_build_gare_pressed"]
