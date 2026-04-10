@@ -223,12 +223,15 @@ func positionner_plateaux(animate: bool = true) -> void:
 	var c = screen_size / 2.0
 	var margin = 40 
 
-	for board in active_boards:
-		if is_instance_valid(board) and board.has_method("set_ui_visible"):
-			board.set_ui_visible(false)
-
 	var tween = null
+	
+	# --- CORRECTION ICI ---
 	if animate:
+		# On ne cache l'interface QUE s'il y a une animation (changement de tour)
+		for board in active_boards:
+			if is_instance_valid(board) and board.has_method("set_ui_visible"):
+				board.set_ui_visible(false)
+				
 		is_rotating = true
 		set_actions_enabled(false)
 		tween = get_tree().create_tween().set_parallel(true)
@@ -238,10 +241,9 @@ func positionner_plateaux(animate: bool = true) -> void:
 		var board = active_boards[p_idx]
 		if not is_instance_valid(board): continue
 		
-		# --- LE SECRET DU CENTRAGE ---
 		# On annule toute taille forcée précédente
 		board.custom_minimum_size = Vector2(0, 0)
-		# On force Godot à serrer la "boîte en pointillés" au plus près des cartes
+		# On force Godot à serrer la "boîte" au plus près des cartes
 		board.reset_size()
 		
 		var real_size = board.size
@@ -252,7 +254,6 @@ func positionner_plateaux(animate: bool = true) -> void:
 		
 		# Le pivot est maintenant le vrai centre visuel !
 		board.pivot_offset = real_size / 2.0
-		# -----------------------------
 
 		var diff = (p_idx - active_idx)
 		if diff < 0: diff += game.playerCount
