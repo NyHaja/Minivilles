@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="5_jt8eb"]
 [ext_resource type="Texture2D" uid="uid://8sgtmvnheoiq" path="res://assets/UI/pass_turn_button.png" id="6_n5cuu"]
 [ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="7_8eqg2"]
-[ext_resource type="Texture2D" uid="uid://dnt2yup02rk0k" path="res://assets/UI/construction_panel.png" id="9_y3ov3"]
+[ext_resource type="Texture2D" uid="uid://cuyrbvkb7ye6" path="res://assets/UI/construction_panel_v2.png" id="9_y3ov3"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
 content_margin_left = 6.0
@@ -185,7 +185,7 @@ theme_override_constants/margin_left = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MonumentZone" unique_id=853161633]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 20
 
 [node name="MonumentButton" type="TextureButton" parent="MonumentZone/VBoxContainer" unique_id=526610559]
 unique_name_in_owner = true
