@@ -20,7 +20,7 @@ var player = null
 	CardColor.Type.PURPLE: %PurplePileBottom
 }
 
-const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
 func _ready() -> void:
 	if btn_pass: btn_pass.pressed.connect(func(): pass_turn_requested.emit())
@@ -130,3 +130,28 @@ func get_board_tooltip_direction() -> String:
 		return "left"
 	else:
 		return "right"
+		
+# Dans PlayerBoard.gd
+func set_ui_visible(is_visible: bool) -> void:
+	var alpha = 1.0 if is_visible else 0.0
+	
+	if lbl_name: lbl_name.modulate.a = alpha
+	if lbl_gold: lbl_gold.modulate.a = alpha
+	if active_stats_box: active_stats_box.modulate.a = alpha
+	
+	# UTILISATION DE SELF_MODULATE
+	# Cela cache le bouton, mais n'affectera pas l'animation des dés ajoutée en enfant
+	if btn_pass:
+		btn_pass.self_modulate.a = alpha
+		btn_pass.disabled = !is_visible
+		# Au cas où tu as un "Label" de texte à l'intérieur du bouton :
+		for child in btn_pass.get_children():
+			if child is CanvasItem and not child is TextureRect:
+				child.modulate.a = alpha
+		
+	if btn_monu:
+		btn_monu.self_modulate.a = alpha
+		btn_monu.disabled = !is_visible
+		for child in btn_monu.get_children():
+			if child is CanvasItem:
+				child.modulate.a = alpha

@@ -197,6 +197,23 @@ func RefreshBasicInfo(current_game) -> void:
 		
 	set_actions_enabled(false) 
 
+
+		
+func update_all_boards() -> void:
+	for b in boards: b.hide()
+	for i in range(game.playerCount):
+		var board = active_boards[i]
+		board.show()
+		var p = game.playerArray[i]
+		board.setup(p, p == current_player)
+
+
+func _find_dice_ui_nodes() -> void:
+	result_overlay = find_child("ResultOverlay", true, false)
+	die_1 = find_child("Die1", true, false)
+	die_2 = find_child("Die2", true, false)
+	btn_conserver = find_child("BtnConserver", true, false)
+
 func positionner_plateaux(animate: bool = true) -> void:
 	if not game or game.playerCount == 0: return
 	var active_idx = game.playerArray.find(current_player)
@@ -204,12 +221,11 @@ func positionner_plateaux(animate: bool = true) -> void:
 
 	var screen_size = get_viewport().get_visible_rect().size
 	var c = screen_size / 2.0
-	var b_w = 750
-	var b_h = 260 
-	var margin = 35 
+	var margin = 40 
 
-	var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
-	var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+	for board in active_boards:
+		if is_instance_valid(board) and board.has_method("set_ui_visible"):
+			board.set_ui_visible(false)
 
 	var tween = null
 	if animate:
@@ -221,13 +237,26 @@ func positionner_plateaux(animate: bool = true) -> void:
 	for p_idx in range(game.playerCount):
 		var board = active_boards[p_idx]
 		if not is_instance_valid(board): continue
-		board.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
-		board.custom_minimum_size = Vector2(b_w, b_h)
-		board.size = Vector2(b_w, b_h)
-		board.pivot_offset = Vector2(b_w / 2.0, b_h / 2.0)
+		
+		# --- LE SECRET DU CENTRAGE ---
+		# On annule toute taille forcée précédente
+		board.custom_minimum_size = Vector2(0, 0)
+		# On force Godot à serrer la "boîte en pointillés" au plus près des cartes
+		board.reset_size()
+		
+		var real_size = board.size
+		var b_h = real_size.y # On utilise la vraie hauteur générée
+		
+		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
+		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+		
+		# Le pivot est maintenant le vrai centre visuel !
+		board.pivot_offset = real_size / 2.0
+		# -----------------------------
 
 		var diff = (p_idx - active_idx)
 		if diff < 0: diff += game.playerCount
+		
 		var target_angle = 0.0 
 		var target_rot = 0.0   
 
@@ -248,7 +277,6 @@ func positionner_plateaux(animate: bool = true) -> void:
 			var start_angle = player_angles[p_idx]
 			var current_rot = board.rotation
 			
-			# --- FORCE LE SENS ANTI-HORAIRE (VALEURS NÉGATIVES) ---
 			var rot_diff = fmod(target_rot - current_rot, 2 * PI)
 			if rot_diff > 0.01: rot_diff -= 2 * PI
 			elif rot_diff < -2 * PI + 0.01: rot_diff += 2 * PI
@@ -256,7 +284,6 @@ func positionner_plateaux(animate: bool = true) -> void:
 			var ang_diff = fmod(target_angle - start_angle, 2 * PI)
 			if ang_diff > 0.01: ang_diff -= 2 * PI
 			elif ang_diff < -2 * PI + 0.01: ang_diff += 2 * PI
-			# -------------------------------------------------------
 
 			var final_rot = current_rot + rot_diff
 			var final_ang = start_angle + ang_diff
@@ -264,6 +291,9 @@ func positionner_plateaux(animate: bool = true) -> void:
 			var move_circular = func(t: float, b: Control, s_ang: float, t_ang: float):
 				var current_ang = lerp(s_ang, t_ang, t)
 				var target_center = c + Vector2(cos(current_ang)*rx, sin(current_ang)*ry)
+				
+				# Mise à jour du pivot en temps réel si la taille du deck évolue
+				b.pivot_offset = b.size / 2.0
 				b.position = target_center - b.pivot_offset
 			
 			tween.tween_method(move_circular.bind(board, start_angle, final_ang), 0.0, 1.0, 1.2)
@@ -281,54 +311,64 @@ func positionner_plateaux(animate: bool = true) -> void:
 		is_rotating = false
 		rotation_finished.emit()
 
-func update_all_boards() -> void:
-	for b in boards: b.hide()
-	for i in range(game.playerCount):
-		var board = active_boards[i]
-		board.show()
-		var p = game.playerArray[i]
-		board.setup(p, p == current_player)
-
 func waitForDiceRoll() -> int:
+	# Masquage total avant l'annonce 
+	for board in active_boards:
+		if is_instance_valid(board) and board.has_method("set_ui_visible"):
+			board.set_ui_visible(false)
+
 	if is_rotating:
-		var timer = get_tree().create_timer(1.5)
-		var finished = false
-		rotation_finished.connect(func(): finished = true)
-		while is_rotating and not finished and timer.time_left > 0:
-			await get_tree().process_frame
-		is_rotating = false 
+		await rotation_finished
 
 	for d in mini_dice_array:
 		if is_instance_valid(d): d.queue_free()
 	mini_dice_array.clear()
 	
-	var has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
 	var nom = current_player.username
 	var prefix = "Tour de "
-	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()): prefix = "Tour d' "
-	
+	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()): 
+		prefix = "Tour d' "
+		
 	lbl_turn_announcement.text = prefix + nom
-	btn_overlay_roll_2.disabled = not has_gare
-	btn_overlay_roll_2.visible = has_gare 
+	
+	# --- GESTION STRICTE DU BOUTON GARE ---
+	var has_gare = false
+	if current_player.has_method("monumentIsActive"):
+		has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
+		
+	if btn_overlay_roll_2:
+		if has_gare:
+			btn_overlay_roll_2.visible = true
+			btn_overlay_roll_2.disabled = false
+		else:
+			# Cache TOTALEMENT le bouton pour ne pas prendre de place
+			btn_overlay_roll_2.visible = false
+			btn_overlay_roll_2.disabled = true
+	# --------------------------------------
 	
 	turn_overlay.move_to_front()
 	turn_overlay.show()
-	set_actions_enabled(false) # Désactive le bouton pendant le choix du dé
+	set_actions_enabled(false) 
 	
 	var amount = await dice_amount_chosen
 	turn_overlay.hide()
+	
+	# On retourne la valeur, l'UI reste masquée pour le moment (réapparaîtra dans showResult)
 	return amount
-
-func _find_dice_ui_nodes() -> void:
-	result_overlay = find_child("ResultOverlay", true, false)
-	die_1 = find_child("Die1", true, false)
-	die_2 = find_child("Die2", true, false)
-	btn_conserver = find_child("BtnConserver", true, false)
 
 func showResult(d1: int, d2: int) -> void:
 	var amount = 1 if d2 == 0 else 2
+	
+	# L'animation joue, fait descendre les dés, et attend le clic sur "Conserver"
 	await play_dice_animation(amount, d1, d2)
-	# RÉAPPARITION DU BOUTON ICI
+	
+	# --- RÉAPPARITION FINALE ---
+	for board in active_boards:
+		if is_instance_valid(board) and board.has_method("set_ui_visible"):
+			board.set_ui_visible(true)
+			# setup() gère la visibilité sélective des boutons (Monuments/Passer)
+			board.setup(board.player, board.player == current_player)
+	
 	set_actions_enabled(true)
 
 func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
@@ -689,7 +729,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		child.queue_free()
 		
 	if card_data != null:
-		const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+		const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 		var preview_card = CARD_SCENE.instantiate()
 		
 		var card_name = card_data.get_name()

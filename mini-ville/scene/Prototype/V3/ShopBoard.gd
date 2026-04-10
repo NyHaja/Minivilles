@@ -5,7 +5,7 @@ signal shop_card_clicked(card_id: int)
 
 @onready var grid_container: GridContainer = %ShopGridContainer
 
-const CARD_SCENE = preload("res://scene/table/card_Y_axis.tscn")
+const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
 var shop_card_w = 117
 var shop_card_h = 150
