@@ -248,9 +248,18 @@ func positionner_plateaux(animate: bool = true) -> void:
 		if animate:
 			var start_angle = player_angles[p_idx]
 			var current_rot = board.rotation
-			var rot_diff = fmod((target_rot - current_rot + PI), 2*PI) - PI
+			
+			# --- FORCE LE SENS ANTI-HORAIRE (VALEURS NÉGATIVES) ---
+			var rot_diff = fmod(target_rot - current_rot, 2 * PI)
+			if rot_diff > 0.01: rot_diff -= 2 * PI
+			elif rot_diff < -2 * PI + 0.01: rot_diff += 2 * PI
+			
+			var ang_diff = fmod(target_angle - start_angle, 2 * PI)
+			if ang_diff > 0.01: ang_diff -= 2 * PI
+			elif ang_diff < -2 * PI + 0.01: ang_diff += 2 * PI
+			# -------------------------------------------------------
+
 			var final_rot = current_rot + rot_diff
-			var ang_diff = fmod((target_angle - start_angle + PI), 2*PI) - PI
 			var final_ang = start_angle + ang_diff
 
 			var move_circular = func(t: float, b: Control, s_ang: float, t_ang: float):
