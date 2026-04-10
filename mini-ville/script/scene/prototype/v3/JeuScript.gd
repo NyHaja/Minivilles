@@ -521,7 +521,7 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o")
 	return prefix + clean_name
 
 
@@ -700,12 +700,11 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		if card_data is Monument:
 			clean_name = get_clean_file_name(card_name)
 			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
-			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
 		else:
 			var card_color = card_data.get_color()
 			clean_name = get_clean_file_name(card_name, card_color)
 			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			tip_path = "res://assets/Tooltips/tooltip_monument_" + clean_name + "_top.png"
+			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
 		
 		var image_node = preview_card.get_node_or_null("Visual")
 		
@@ -728,7 +727,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			
 		%CardPreview.add_child(preview_card)
 		
-		var placeholder_path = "res://assets/Tooltips/tooltip_marché_fruit_et_légume_top.png" 
+		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png" 
 		
 		if tip_path != "" and FileAccess.file_exists(tip_path):
 			%TooltipImage.texture = load(tip_path)

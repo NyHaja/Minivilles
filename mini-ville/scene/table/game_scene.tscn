@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://csn34tt2obcsb" path="res://assets/Cards/Basis/rouge_restaurant_1.png" id="6_olq2e"]
 [ext_resource type="Texture2D" uid="uid://l4n4mklmls0i" path="res://assets/UI/player_zone_left.png" id="7_5dgvu"]
 [ext_resource type="Texture2D" uid="uid://c6p77cclojgys" path="res://assets/Cards/Hover/Rouge_restaurant_2.png" id="7_w61bx"]
-[ext_resource type="Texture2D" uid="uid://cj58rv1s5ytyl" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_top.png" id="8_uvj3q"]
+[ext_resource type="Texture2D" uid="uid://cj58rv1s5ytyl" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png" id="8_uvj3q"]
 [ext_resource type="Texture2D" uid="uid://8xrbpljr36vr" path="res://assets/Cards/Basis/rouge_cafe_1.png" id="9_uvj3q"]
 [ext_resource type="Texture2D" uid="uid://prd5xhknchq7" path="res://assets/Cards/Hover/Rouge_cafe_2.png" id="10_mqs2o"]
 [ext_resource type="Texture2D" uid="uid://ule5f83dvu1c" path="res://assets/Cards/Basis/violet_centre_d_affaire_1.png" id="11_p4uwf"]
@@ -39,10 +39,10 @@
 [ext_resource type="Texture2D" uid="uid://b1faxjfnp01jv" path="res://assets/Cards/Hover/vert_marche_de_fruit_et_legumes_2.png" id="33_1ol4r"]
 [ext_resource type="Texture2D" uid="uid://blkpvpx30sx8f" path="res://assets/Cards/Basis/vert_superette_1.png" id="34_2e2dr"]
 [ext_resource type="Texture2D" uid="uid://dfcq0b4ui752o" path="res://assets/Cards/Hover/vert_superette_2.png" id="35_k55q4"]
-[ext_resource type="Texture2D" uid="uid://w4c03s26l5h" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_bottom.png" id="37_w61bx"]
-[ext_resource type="Texture2D" uid="uid://kgufh3a4t6wa" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_right.png" id="40_mqs2o"]
+[ext_resource type="Texture2D" uid="uid://w4c03s26l5h" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_bottom.png" id="37_w61bx"]
+[ext_resource type="Texture2D" uid="uid://kgufh3a4t6wa" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_right.png" id="40_mqs2o"]
 [ext_resource type="PackedScene" uid="uid://daptylvdfs3ss" path="res://scene/table/card_X_axis.tscn" id="40_p4uwf"]
-[ext_resource type="Texture2D" uid="uid://bpddo20e4ohh" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_left.png" id="43_atg6p"]
+[ext_resource type="Texture2D" uid="uid://bpddo20e4ohh" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_left.png" id="43_atg6p"]
 
 [node name="GameScene" type="Control" unique_id=725904039]
 layout_mode = 3

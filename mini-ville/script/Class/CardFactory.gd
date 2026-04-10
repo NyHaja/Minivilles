@@ -523,7 +523,7 @@ static func creerMarcheFL() -> Establishment:
 	carte.NewCard(
 		effet,
 		14,                             # id card
-		"Marché fruits/légumes",
+		"Marché fruits et légumes",
 		Icon.Type.FRUIT,
 		CardColor.Type.GREEN,
 		2,                              # coût
