@@ -37,7 +37,7 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if $BtnRetour.get_global_rect().has_point(event.position):
-			get_tree().change_scene_to_file("res://scenes/ui/choix_lobby.tscn")
+			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn")
 
 
 func _init_styles():
@@ -197,7 +197,7 @@ func _creer_bande_lobby(code_lobby: String, temps_restant: String, is_private: b
 				_ouvrir_popup()
 			else:
 				get_tree().set_meta("lobby_code", code_lobby)
-				get_tree().change_scene_to_file("res://scenes/ui/attente_lobby.tscn"))
+				get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn"))
 
 	list.add_child(bande)
 
@@ -226,7 +226,7 @@ func _on_rejoindre():
 			break
 	if valide:
 		get_tree().set_meta("lobby_code", code)
-		get_tree().change_scene_to_file("res://scenes/ui/attente_lobby.tscn")
+		get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 	else:
 		_feedback_erreur()
 

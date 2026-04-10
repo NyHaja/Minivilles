@@ -18,7 +18,7 @@ func setup(nom: String, parties_jouees: int, parties_gagnees: int, rang: String 
 	$Content/StatsContainer/Stat1Row/StatJouees.text = tr("Nombre de partie(s) jouée(s) : %d") % parties_jouees
 	$Content/StatsContainer/Stat2Row/StatGagnees.text = tr("Nombre de partie(s) gagnée(s) : %d") % parties_gagnees
 	$Content/RangContainer/BadgeWrap/BadgeRang.texture = load("res://assets/ui/stats_joueur/badge_%s.png" % rang)
-	$Content/RangContainer/LegendeTxtWrap/TexteLegende.texture = load("res://assets/ui/stats_joueur/texte_%s.png" % rang)
+	$Content/RangContainer/LegendeTxtWrap/TexteLegende.text = rang.capitalize()
 
 
 func _on_retour():

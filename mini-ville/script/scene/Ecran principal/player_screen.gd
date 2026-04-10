@@ -32,7 +32,7 @@ func _ready() -> void:
 	$Header/header/settingbtn/TextureButton.pressed.connect(affiche_parametre)
 
 	$gameMode/playbtn.pressed.connect(func():
-		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
+		get_tree().change_scene_to_file("res://scene/Ecran principale/mode_de_jeu.tscn"))
 
 
 #------------- HEADER --------------

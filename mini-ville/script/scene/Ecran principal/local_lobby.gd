@@ -76,7 +76,7 @@ func _on_lancer():
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if $BtnRetour.get_global_rect().has_point(event.position):
-			get_tree().change_scene_to_file("res://scenes/ui/mode_de_jeu.tscn")
+			get_tree().change_scene_to_file("res://scene/Ecran principale/mode_de_jeu.tscn")
 
 
 func _update_joueurs():
