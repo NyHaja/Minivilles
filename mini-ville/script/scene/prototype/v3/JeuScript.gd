@@ -148,7 +148,7 @@ func _on_window_resized() -> void:
 			
 			# On place le pivot exactement au milieu pour que la réduction se fasse depuis le centre
 			middle_area.pivot_offset = middle_area.size / 2.0
-			middle_area.scale = Vector2(0.7, 0.7)
+			middle_area.scale = Vector2(0.8, 0.8)
 		
 		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
 	
