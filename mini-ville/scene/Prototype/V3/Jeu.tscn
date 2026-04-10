@@ -88,14 +88,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -956.0
-offset_top = -181.5
-offset_right = 956.0
-offset_bottom = 181.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
+size_flags_horizontal = 8
+size_flags_vertical = 8
 size_flags_stretch_ratio = 3.0
 alignment = 1
 
@@ -121,6 +121,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="BoardJoueurBas" parent="TablePivot" unique_id=384742348 instance=ExtResource("3_m0he3")]
+visible = false
 layout_mode = 0
 offset_right = 808.0
 offset_bottom = 259.0

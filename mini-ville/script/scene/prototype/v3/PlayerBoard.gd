@@ -36,8 +36,12 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if active_stats_box and is_inside_tree():
 		active_stats_box.pivot_offset = active_stats_box.size / 2.0
-		var angle = fmod(self.rotation + PI, 2*PI) - PI
-		if abs(angle) > PI * 0.8:
+		
+		# On normalise la rotation pour qu'elle reste toujours strictement entre -PI et PI
+		var normalized_rot = wrapf(self.rotation, -PI, PI)
+		
+		# Si le plateau est en haut (rotation proche de 180° ou -180°)
+		if abs(normalized_rot) > PI * 0.8:
 			active_stats_box.rotation = -self.rotation
 		else:
 			active_stats_box.rotation = 0

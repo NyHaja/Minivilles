@@ -15,7 +15,7 @@ var current_player
 var test_shop
 var game
 
-@onready var middle_area: HBoxContainer = $MiddleArea
+@onready var middle_area: HBoxContainer = $Shop
 @onready var lbl_dice: Label = %LblDice
 
 # --- GESTION DES JOUEURS ---
@@ -110,7 +110,7 @@ func _ready() -> void:
 	_force_overlays_to_front()
 	
 	get_viewport().size_changed.connect(_on_window_resized)
-	_on_window_resized() 
+	_on_window_resized.call_deferred()
 	
 	for board in boards:
 		if is_instance_valid(board):
@@ -140,10 +140,18 @@ func _on_window_resized() -> void:
 		table_pivot.position = Vector2.ZERO
 	
 	if middle_area:
-		middle_area.set_anchors_preset(Control.PRESET_CENTER)
-		# On s'assure que les boutons Gold sont collés au shop via la séparation de l'HBoxContainer
-		middle_area.add_theme_constant_override("separation", 20)
-		middle_area.position = (screen_size / 2.0) - (middle_area.size / 2.0)
+			# On laisse Godot gérer le centrage automatiquement via l'ancre
+			middle_area.set_anchors_preset(Control.PRESET_CENTER)
+			middle_area.add_theme_constant_override("separation", 20)
+			
+			# On force la mise à jour de la taille pour que le pivot soit parfait
+			middle_area.reset_size()
+			
+			# On place le pivot exactement au milieu pour que la réduction se fasse depuis le centre
+			middle_area.pivot_offset = middle_area.size / 2.0
+			middle_area.scale = Vector2(0.7, 0.7)
+		
+		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
 	
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
 					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
@@ -341,47 +349,59 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 		
 	var start_pos_1 = die_1.global_position
 	var start_size_1 = die_1.size
+		
+	# 1. On identifie le plateau cible
+	var active_idx = game.playerArray.find(current_player)
+	if active_idx == -1: active_idx = 0
+	var target_board = active_boards[active_idx]
 	
 	result_overlay.hide()
+	
+	# --- SÉCURITÉ : on cible le bouton directement ---
+	var target_btn = target_board.btn_pass
+	if not is_instance_valid(target_btn) or not target_btn.is_inside_tree():
+		target_btn = target_board # Sécurité au cas où le bouton est caché
+	
+	# --- DÉ 1 ---
 	var dummy_1 = TextureRect.new()
 	dummy_1.texture = die_1.texture
 	dummy_1.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	dummy_1.size = start_size_1
-	dummy_1.global_position = start_pos_1
+	
+	# LA MAGIE EST ICI : On l'attache DIRECTEMENT au bouton !
+	target_btn.add_child(dummy_1) 
+	dummy_1.global_position = start_pos_1 # On maintient sa position globale de départ à l'écran
 	dummy_1.mouse_filter = Control.MOUSE_FILTER_IGNORE 
-	add_child(dummy_1)
 	mini_dice_array.append(dummy_1)
 	
+	# --- DÉ 2 ---
 	var dummy_2 = null
 	if amount == 2 and die_2:
 		dummy_2 = TextureRect.new()
 		dummy_2.texture = die_2.texture
 		dummy_2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		dummy_2.size = die_2.size
+		
+		target_btn.add_child(dummy_2) # On l'attache DIRECTEMENT au bouton !
 		dummy_2.global_position = die_2.global_position
 		dummy_2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(dummy_2)
 		mini_dice_array.append(dummy_2)
 		
-	var active_idx = game.playerArray.find(current_player)
-	if active_idx == -1: active_idx = 0
-	var target_board = active_boards[active_idx]
-	
-	# PLACEMENT MIEUX ÉTUDIÉ : au dessus de la zone de cartes du joueur
-	var target_pos = target_board.global_position + Vector2(250, 20)
-	if is_instance_valid(target_board.btn_pass) and target_board.btn_pass.is_inside_tree():
-		target_pos = target_board.btn_pass.global_position + Vector2(-80, -20)
-		
 	var anim_duration = 0.6 
-	var target_scale = Vector2(0.4, 0.4) 
+	var target_scale = Vector2(0.2, 0.2)
 	
+	# 2. Position locale cible (Par rapport au bouton lui-même !)
+	# -60 pixels vers la gauche, -10 pixels vers le haut pour centrer un peu
+	var target_local_pos_1 = Vector2(-50, 5)
+	
+	# 3. Animation de la position LOCALE (et plus global_position)
 	var tween = get_tree().create_tween().set_parallel(true)
-	tween.tween_property(dummy_1, "global_position", target_pos, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(dummy_1, "position", target_local_pos_1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(dummy_1, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
 	if dummy_2:
-		var target_pos_2 = target_pos + Vector2(50, 0)
-		tween.tween_property(dummy_2, "global_position", target_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		var target_local_pos_2 = target_local_pos_1 + Vector2(60, 0) # Le 2ème dé juste à côté
+		tween.tween_property(dummy_2, "position", target_local_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
 	await tween.finished
