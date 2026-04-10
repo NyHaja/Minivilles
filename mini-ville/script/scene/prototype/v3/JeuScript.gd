@@ -390,17 +390,25 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 	var anim_duration = 0.6 
 	var target_scale = Vector2(0.2, 0.2)
 	
-	# 2. Position locale cible (Par rapport au bouton lui-même !)
-	# -60 pixels vers la gauche, -10 pixels vers le haut pour centrer un peu
-	var target_local_pos_1 = Vector2(-50, 5)
+	# 2. Ta position locale parfaite (qui sert d'ancrage à droite)
+	var base_local_pos = Vector2(-50, 5)
+	var ecart_entre_des = 45 
 	
-	# 3. Animation de la position LOCALE (et plus global_position)
+	var target_local_pos_1 = base_local_pos
+	var target_local_pos_2 = Vector2.ZERO # Valeur par défaut
+	
+	# S'il y a 2 dés, le 2ème prend la place "de base", 
+	# et le 1er se décale à sa gauche !
+	if amount == 2:
+		target_local_pos_1 = base_local_pos - Vector2(ecart_entre_des, 0) # Dé 1 à gauche
+		target_local_pos_2 = base_local_pos # Dé 2 sur le point d'ancrage
+	
+	# 3. Animation
 	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(dummy_1, "position", target_local_pos_1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(dummy_1, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
 	if dummy_2:
-		var target_local_pos_2 = target_local_pos_1 + Vector2(60, 0) # Le 2ème dé juste à côté
 		tween.tween_property(dummy_2, "position", target_local_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
