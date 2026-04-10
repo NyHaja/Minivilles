@@ -86,23 +86,18 @@ func update_deck() -> void:
 			var anchor = target_pile.get_node_or_null("Anchor")
 			if not anchor: continue
 			
+			var dir_suffix = get_board_tooltip_direction()
+			
 			for i in range(quantity):
-				var card_visual
-				var clean_name = get_clean_file_name(card_data.get_name(), color)
-				var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+				var card_visual = CARD_SCENE.instantiate()
 				
-				if FileAccess.file_exists(path_basis):
-					card_visual = CARD_SCENE.instantiate()
-					var image_node = card_visual.get_node_or_null("Visual")
-					if image_node is TextureButton:
-						image_node.texture_normal = load(path_basis)
-				else:
-					card_visual = Button.new()
-					card_visual.text = card_data.get_name()
-					
+				anchor.add_child(card_visual)
+				
+				card_visual.setup_card(card_data, dir_suffix)
+				
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
-				anchor.add_child(card_visual)
+				
 				pile_counts[color] += 1
 
 	for color in piles:
@@ -119,3 +114,19 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
 	return prefix + clean_name
+
+
+
+
+
+func get_board_tooltip_direction() -> String:
+	var rot = wrapf(self.rotation, -PI, PI)
+	
+	if abs(rot) < 0.5:
+		return "top"
+	elif abs(rot) > 2.5:
+		return "bottom"
+	elif rot > 0.5:
+		return "left"
+	else:
+		return "right"

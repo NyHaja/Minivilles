@@ -16,7 +16,6 @@ var test_shop
 var game
 
 @onready var middle_area: HBoxContainer = $Shop
-@onready var lbl_dice: Label = %LblDice
 
 # --- GESTION DES JOUEURS ---
 @onready var table_pivot: Control = $TablePivot

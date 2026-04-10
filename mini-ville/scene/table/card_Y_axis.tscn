@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cd2sh1b6hfen5"]
 
 [ext_resource type="Script" uid="uid://5brxf40ioo38" path="res://script/scene/table/card_Y_axis.gd" id="1_tslg0"]
-[ext_resource type="Texture2D" uid="uid://cj58rv1s5ytyl" path="res://assets/Tooltips/tooltip_marché_fruit_et_légume_top.png" id="2_3blp8"]
 
 [node name="Card_Y_axis" type="Control" unique_id=1098696589]
 custom_minimum_size = Vector2(156, 200)
@@ -30,5 +29,4 @@ offset_left = -28.0
 offset_top = -134.0
 offset_right = 188.0
 mouse_filter = 2
-texture = ExtResource("2_3blp8")
 stretch_mode = 4
