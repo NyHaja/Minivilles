@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="5_jt8eb"]
 [ext_resource type="Texture2D" uid="uid://8sgtmvnheoiq" path="res://assets/UI/pass_turn_button.png" id="6_n5cuu"]
 [ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="7_8eqg2"]
+[ext_resource type="Script" uid="uid://b1sswurdf8its" path="res://script/scene/prototype/v3/DeckOutline.gd" id="8_si7nk"]
 [ext_resource type="Texture2D" uid="uid://cuyrbvkb7ye6" path="res://assets/UI/construction_panel_v2.png" id="9_y3ov3"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
@@ -62,7 +63,7 @@ script = ExtResource("1_jujw4")
 [node name="MainColumn" type="VBoxContainer" parent="." unique_id=103638250]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 15
 
 [node name="TopBar" type="HBoxContainer" parent="MainColumn" unique_id=1427482158]
 unique_name_in_owner = true
@@ -139,6 +140,9 @@ stretch_mode = 5
 [node name="ActiveDeckContainer" type="HBoxContainer" parent="MainColumn" unique_id=139624129]
 custom_minimum_size = Vector2(600, 200)
 layout_mode = 2
+script = ExtResource("8_si7nk")
+line_color = Color(1, 1, 1, 1)
+padding = 8.0
 
 [node name="BluePileBottom" type="PanelContainer" parent="MainColumn/ActiveDeckContainer" unique_id=803500589]
 unique_name_in_owner = true
