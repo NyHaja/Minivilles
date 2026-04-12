@@ -5,15 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://b5jkk7cw0wbjt" path="res://scene/Prototype/V3/PlayerBoard.tscn" id="3_m0he3"]
 [ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="3_tbpra"]
 [ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/Prototype/V3/ShopBoard.tscn" id="3_trdnx"]
-[ext_resource type="Texture2D" uid="uid://l6jtewrp4hlx" path="res://assets/UI/roll_one_die_button.png" id="4_dgctq"]
-[ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="5_8a6bx"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_88jjp"]
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
+[ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="7_ju1ig"]
+[ext_resource type="Texture2D" uid="uid://rpvbm3xjvk8a" path="res://assets/icon/Rectangle 6.png" id="8_aqux4"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
-[ext_resource type="Texture2D" uid="uid://bq1r4ivany6fh" path="res://assets/UI/roll_one_die_button_hover.png" id="10_ju1ig"]
-[ext_resource type="Texture2D" uid="uid://b3udd8yxgeds8" path="res://assets/UI/keep_result_button_hover.png" id="14_aqux4"]
-[ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
+[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="10_417mv"]
+[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="11_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="15_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://b80b2lkm1gpkv" path="res://assets/UI/blank_red_button.png" id="16_2vk2f"]
+[ext_resource type="Texture2D" uid="uid://22upijbo801o" path="res://assets/UI/2Dice.png" id="16_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://boiqp3n7u5iil" path="res://assets/UI/blank_red_button_hover.png" id="17_u3wdh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua8b"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -23,6 +26,24 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqux4"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_417mv"]
+texture = ExtResource("8_aqux4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2vk2f"]
+texture = ExtResource("8_aqux4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ju1ig"]
+texture = ExtResource("8_aqux4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aqux4"]
+texture = ExtResource("8_aqux4")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vk2f"]
+bg_color = Color(0, 0, 0, 0.8627451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3wdh"]
+bg_color = Color(0, 0, 0, 0.8627451)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0rt3"]
 bg_color = Color(0.9607843, 0.7490196, 0.28627452, 1)
@@ -51,26 +72,26 @@ variation_opentype = {
 2003265652: 900
 }
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u3wdh"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tcw7y"]
+texture = ExtResource("17_u3wdh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sgkkh"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_beeqq"]
+texture = ExtResource("17_u3wdh")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kgc6u"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0xjma"]
+texture = ExtResource("17_u3wdh")
+
 [node name="Jeu" type="Node" unique_id=1592581662]
 script = ExtResource("1_pm7t7")
-
-[node name="GoldSkip" type="VBoxContainer" parent="." unique_id=1667196113]
-offset_left = 924.0
-offset_top = 400.0
-offset_right = 995.0
-offset_bottom = 572.5
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="AddGold" type="Button" parent="GoldSkip" unique_id=2001308356]
-unique_name_in_owner = true
-layout_mode = 2
-text = "+ 5 Gold"
-
-[node name="RemoveGold" type="Button" parent="GoldSkip" unique_id=38618146]
-unique_name_in_owner = true
-layout_mode = 2
-text = "- 2 Gold"
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=698215910]
 anchors_preset = 15
@@ -101,6 +122,21 @@ size_flags_vertical = 8
 size_flags_stretch_ratio = 3.0
 alignment = 1
 
+[node name="GoldSkip" type="VBoxContainer" parent="Shop" unique_id=1667196113]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AddGold" type="Button" parent="Shop/GoldSkip" unique_id=2001308356]
+unique_name_in_owner = true
+layout_mode = 2
+text = "+ 5 Gold"
+
+[node name="RemoveGold" type="Button" parent="Shop/GoldSkip" unique_id=38618146]
+unique_name_in_owner = true
+layout_mode = 2
+text = "- 2 Gold"
+
 [node name="ShopBoard" parent="Shop" unique_id=1010216388 instance=ExtResource("3_trdnx")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -130,12 +166,24 @@ offset_bottom = 259.0
 
 [node name="BoardJoueurGauche" parent="TablePivot" unique_id=316756757 instance=ExtResource("3_m0he3")]
 layout_mode = 0
+offset_left = -376.0
+offset_top = 296.0
+offset_right = 442.0
+offset_bottom = 560.0
 
 [node name="BoardJoueurDroite" parent="TablePivot" unique_id=1258910989 instance=ExtResource("3_m0he3")]
 layout_mode = 0
+offset_left = -376.0
+offset_top = 296.0
+offset_right = 442.0
+offset_bottom = 560.0
 
 [node name="BoardJoueurHaut" parent="TablePivot" unique_id=1540503633 instance=ExtResource("3_m0he3")]
 layout_mode = 0
+offset_left = -376.0
+offset_top = 296.0
+offset_right = 442.0
+offset_bottom = 560.0
 
 [node name="MonumentMenu" type="ColorRect" parent="." unique_id=1857296200]
 visible = false
@@ -235,18 +283,12 @@ text = "Return to Menu"
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(400, 200)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -143.5
-offset_top = -120.0
-offset_right = 143.5
-offset_bottom = 120.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.2231029, 0.2231029, 0.22310284, 0.78431374)
+color = Color(0, 0, 0, 0.8627451)
 
 [node name="LblQuestion" type="Label" parent="YesNoPanel" unique_id=2043625387]
 unique_name_in_owner = true
@@ -257,110 +299,108 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -200.0
-offset_top = -112.0
+offset_top = -161.0
 offset_right = 200.0
-offset_bottom = -7.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_ju1ig")
+theme_override_font_sizes/font_size = 40
 text = "Question"
 horizontal_alignment = 1
 
 [node name="YesNoButtons" type="HBoxContainer" parent="YesNoPanel" unique_id=970060462]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -122.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.5
+offset_top = 48.5
+offset_right = 209.5
+offset_bottom = 163.5
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 alignment = 1
 
 [node name="BtnYes" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=774269821]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxTexture_417mv")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2vk2f")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ju1ig")
 text = "Yes"
 
 [node name="BtnNo" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=1465109800]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxTexture_aqux4")
 text = "No
 "
 
-[node name="ChoosePlayerPanel" type="ColorRect" parent="." unique_id=69624330]
+[node name="ChoosePlayerPanel" type="PanelContainer" parent="." unique_id=741665856]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -162.0
-offset_top = -92.0
-offset_right = 162.0
-offset_bottom = 92.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.4896223, 0.48962218, 0.4896223, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_2vk2f")
 
-[node name="Label" type="Label" parent="ChoosePlayerPanel" unique_id=2100041505]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -63.0
-offset_right = 63.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "Choose a target:"
+[node name="VBoxContainer" type="VBoxContainer" parent="ChoosePlayerPanel" unique_id=1472973019]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="PlayerButtonsContainer" type="VBoxContainer" parent="ChoosePlayerPanel" unique_id=1848192974]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -56.5
-offset_right = 80.0
-offset_bottom = 56.5
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Label" type="RichTextLabel" parent="ChoosePlayerPanel/VBoxContainer" unique_id=1092818956]
+clip_contents = false
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/normal_font = ExtResource("10_417mv")
+theme_override_font_sizes/normal_font_size = 30
+theme_override_icons/horizontal_rule = ExtResource("11_2vk2f")
+bbcode_enabled = true
+text = "[center][color=#----]Choisissez un joueur pour 
+lui voler [color=gold]5[/color] [img=24]res://assets/UI/coin.png[/img]:"
+fit_content = true
 
-[node name="TradePanel" type="ColorRect" parent="." unique_id=1940098199]
+[node name="Control" type="Control" parent="ChoosePlayerPanel/VBoxContainer" unique_id=1984276625]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="PlayerButtonsContainer" type="HBoxContainer" parent="ChoosePlayerPanel/VBoxContainer" unique_id=781056565]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="TradePanel" type="PanelContainer" parent="." unique_id=1662345213]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -353.0
-offset_top = -201.0
-offset_right = 353.0
-offset_bottom = 201.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.6706895, 0.6706895, 0.6706895, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_u3wdh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TradePanel" unique_id=385553588]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -263.0
-offset_top = -150.0
-offset_right = 263.0
-offset_bottom = 150.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="Label" type="Label" parent="TradePanel/VBoxContainer" unique_id=232707057]
 unique_name_in_owner = true
@@ -574,59 +614,6 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_ju1ig")
 theme_override_styles/hover = SubResource("StyleBoxFlat_aqux4")
 text = "Retour"
 
-[node name="ChalutierPanel" type="ColorRect" parent="." unique_id=1592227133]
-unique_name_in_owner = true
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -533.5
-offset_top = -408.0
-offset_right = 533.5
-offset_bottom = 408.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.6392157, 0.6392157, 0.6392157, 0.73333335)
-
-[node name="PanelContainer" type="PanelContainer" parent="ChalutierPanel" unique_id=1223214819]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -275.5
-offset_top = -200.0
-offset_right = 275.5
-offset_bottom = 200.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ChalutierPanel/PanelContainer" unique_id=1666402989]
-layout_mode = 2
-
-[node name="LblChalutierTitle" type="Label" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=481334422]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Chalutier:"
-horizontal_alignment = 1
-
-[node name="LblChalutierResult" type="Label" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=1407734728]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Roll to see how much you get!"
-horizontal_alignment = 1
-
-[node name="ChalutierRoll" type="Button" parent="ChalutierPanel/PanelContainer/VBoxContainer" unique_id=573133875]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Roll Dice"
-
 [node name="TurnOverlay" type="ColorRect" parent="." unique_id=93550791]
 visible = false
 anchors_preset = 15
@@ -653,6 +640,7 @@ theme_override_constants/separation = 30
 alignment = 1
 
 [node name="LblTurnAnnouncement" type="Label" parent="TurnOverlay/VBoxContainer" unique_id=503129196]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -667,23 +655,80 @@ layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="BtnOverlayRoll1" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=364657080]
+[node name="BtnOverlayRoll1" type="Button" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=2069613891]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 87)
 layout_mode = 2
-texture_normal = ExtResource("4_dgctq")
-texture_hover = ExtResource("10_ju1ig")
+theme_override_constants/icon_max_width = 40
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxTexture_u3wdh")
+theme_override_styles/hover = SubResource("StyleBoxTexture_tcw7y")
+icon_alignment = 2
 
-[node name="BtnOverlayRoll2" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=984704587]
-unique_name_in_owner = true
+[node name="HBoxContainer" type="HBoxContainer" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1" unique_id=213972642]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1/HBoxContainer" unique_id=898692158]
 layout_mode = 2
-texture_normal = ExtResource("5_8a6bx")
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+text = "Lancer 1 dé"
+
+[node name="TextureRect" type="TextureRect" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1/HBoxContainer" unique_id=511432146]
+custom_minimum_size = Vector2(43, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("15_2vk2f")
+expand_mode = 1
+
+[node name="BtnOverlayRoll2" type="Button" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=1775681779]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 87)
+layout_mode = 2
+theme_override_constants/icon_max_width = 40
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxTexture_u3wdh")
+theme_override_styles/hover = SubResource("StyleBoxTexture_tcw7y")
+icon_alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2" unique_id=1261176188]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2/HBoxContainer" unique_id=1473378171]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+text = "Lancer 2 dés"
+
+[node name="TextureRect" type="TextureRect" parent="TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2/HBoxContainer" unique_id=586417858]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("16_u3wdh")
+expand_mode = 1
 
 [node name="ResultOverlay" type="ColorRect" parent="." unique_id=362615289]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.9098039)
@@ -695,10 +740,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -698.5
+offset_top = -221.5
+offset_right = 698.5
+offset_bottom = 221.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 30
@@ -719,21 +764,39 @@ layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="Die1" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=619760799]
+[node name="Die1" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=1957845315]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("9_417mv")
 
-[node name="Die2" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=505113168]
+[node name="Die2" type="TextureRect" parent="ResultOverlay/VBoxContainer/HBoxContainer" unique_id=1930808661]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("9_417mv")
 
-[node name="BtnConserver" type="TextureButton" parent="ResultOverlay/VBoxContainer" unique_id=172460190]
+[node name="ButtonContainer" type="HBoxContainer" parent="ResultOverlay/VBoxContainer" unique_id=1139617537]
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = ExtResource("19_tcw7y")
-texture_hover = ExtResource("14_aqux4")
+size_flags_vertical = 4
 
-[connection signal="pressed" from="GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
-[connection signal="pressed" from="GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
+[node name="BtnConserver" type="Button" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=155012279]
+custom_minimum_size = Vector2(500, 87)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxTexture_sgkkh")
+theme_override_styles/hover = SubResource("StyleBoxTexture_beeqq")
+text = "Conserver résultat"
+
+[node name="BtnRelancer" type="Button" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=365512654]
+custom_minimum_size = Vector2(500, 87)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxTexture_kgc6u")
+theme_override_styles/hover = SubResource("StyleBoxTexture_0xjma")
+text = "Relancer les dés"

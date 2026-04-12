@@ -12,7 +12,7 @@ func appliquer(game: Game, owner: Player, roller: Player):
 	# Lancer 2 dés supplémentaires
 	var de1 = randi() % 6 + 1  # Dé 1 : 1-6
 	var de2 = randi() % 6 + 1  # Dé 2 : 1-6
-	var somme = await game.gameplayScreen.ask_chalutier_roll()
+	var somme = await game.gameplayScreen.ask_chalutier_roll(owner.username)
 	
 	owner.receiveGold(somme) 
 	

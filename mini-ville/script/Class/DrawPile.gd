@@ -13,6 +13,9 @@ func _init() -> void:
 		if card != null and card.get_color() == CardColor.Type.PURPLE:
 			copies_to_add = 2
 			
+		if card != null and card_id == 32:
+			copies_to_add = 200
+			
 		for copy in range(copies_to_add):
 			drawPile.push_front(card_id)
 			

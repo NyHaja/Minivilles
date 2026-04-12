@@ -10,6 +10,7 @@ signal trade_completed(trade_data: Array)
 signal give_card_completed(give_data: Array)
 signal demolish_completed(monu_id: int)
 signal chalutier_roll_pressed()
+signal dice_decision_made(wants_reroll: bool)
 
 var current_player
 var test_shop
@@ -41,14 +42,15 @@ signal rotation_finished
 
 # Overlays et Menus
 @onready var turn_overlay: ColorRect = $TurnOverlay
-@onready var lbl_turn_announcement: Label = $TurnOverlay/VBoxContainer/LblTurnAnnouncement
-@onready var btn_overlay_roll_1: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll1
-@onready var btn_overlay_roll_2: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/BtnOverlayRoll2
+@onready var lbl_turn_announcement: Label = %LblTurnAnnouncement
+@onready var btn_overlay_roll_1: Button = %BtnOverlayRoll1
+@onready var btn_overlay_roll_2: Button = %BtnOverlayRoll2
 
 var result_overlay: ColorRect
 var die_1: TextureRect
 var die_2: TextureRect
-var btn_conserver: TextureButton
+var btn_conserver: Button
+var btn_relancer: Button
 var mini_dice_array: Array = []
 
 var dice_textures = [
@@ -66,9 +68,9 @@ var dice_textures = [
 @onready var lbl_question: Label = %LblQuestion
 @onready var btn_yes: Button = %BtnYes
 @onready var btn_no: Button = %BtnNo
-@onready var choose_player_panel: ColorRect = $ChoosePlayerPanel
-@onready var player_buttons_container: VBoxContainer = $ChoosePlayerPanel/PlayerButtonsContainer
-@onready var trade_panel: ColorRect = $TradePanel
+@onready var choose_player_panel: PanelContainer = $ChoosePlayerPanel
+@onready var player_buttons_container: HBoxContainer = %PlayerButtonsContainer
+@onready var trade_panel: PanelContainer = $TradePanel
 @onready var trade_opponents: HBoxContainer = %TradeOpponents
 @onready var trade_their_cards: HFlowContainer = %TradeTheirCards
 @onready var trade_my_cards: HFlowContainer = %TradeMyCards
@@ -84,9 +86,11 @@ var dice_textures = [
 @onready var card_preview: Control = %CardPreview
 @onready var confirm_card_buy: Button = %ConfirmCardBuy
 @onready var cancel_card_buy: Button = %CancelCardBuy
-@onready var chalutier_panel: ColorRect = %ChalutierPanel
-@onready var lbl_chalutier_result: Label = %LblChalutierResult
+@onready var chalutier_panel: PanelContainer = %ChalutierPanel
+@onready var lbl_chalutier_result: RichTextLabel = %LblChalutierResult
 @onready var chalutier_roll: Button = %ChalutierRoll
+@onready var add_gold: Button = %AddGold
+@onready var remove_gold: Button = %RemoveGold
 
 var trade_target = null
 var trade_their_card_id: int = -1
@@ -125,9 +129,19 @@ func _ready() -> void:
 	%ConfirmDemolish.pressed.connect(_on_confirm_demolish_pressed)
 	%ConfirmCardBuy.pressed.connect(_on_confirm_buy_shop_pressed)
 	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
+	add_gold.pressed.connect(_on_add_gold_pressed.bind(5))
+	remove_gold.pressed.connect(_on_add_gold_pressed.bind(-2))
+	btn_conserver.pressed.connect(func(): dice_decision_made.emit(false))
+	btn_relancer.pressed.connect(func(): dice_decision_made.emit(true))
 	
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
+	
+func _on_add_gold_pressed(amount: int) -> void:
+	print("Gold button clicked with amount: ", amount)
+	if current_player != null:
+		current_player.balance = max(0, current_player.balance + amount)
+		update_all_boards()
 
 func _on_window_resized() -> void:
 	var screen_size = get_viewport().get_visible_rect().size
@@ -213,6 +227,7 @@ func _find_dice_ui_nodes() -> void:
 	die_1 = find_child("Die1", true, false)
 	die_2 = find_child("Die2", true, false)
 	btn_conserver = find_child("BtnConserver", true, false)
+	btn_relancer = find_child("BtnRelancer", true, false)
 
 func positionner_plateaux(animate: bool = true) -> void:
 	if not game or game.playerCount == 0: return
@@ -357,27 +372,36 @@ func waitForDiceRoll() -> int:
 	# On retourne la valeur, l'UI reste masquée pour le moment (réapparaîtra dans showResult)
 	return amount
 
-func showResult(d1: int, d2: int) -> void:
+func showResult(d1: int, d2: int, can_reroll: bool = false) -> bool:
 	var amount = 1 if d2 == 0 else 2
 	
-	# L'animation joue, fait descendre les dés, et attend le clic sur "Conserver"
-	await play_dice_animation(amount, d1, d2)
+	# L'animation joue et on attend de savoir si le joueur relance
+	var wants_reroll = await play_dice_animation(amount, d1, d2, can_reroll)
 	
-	# --- RÉAPPARITION FINALE ---
+	# Si le joueur a cliqué sur "Relancer", on s'arrête là et on prévient le moteur
+	if wants_reroll:
+		return true
+	
+	# --- RÉAPPARITION FINALE (Seulement s'il a cliqué sur "Conserver") ---
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(true)
-			# setup() gère la visibilité sélective des boutons (Monuments/Passer)
 			board.setup(board.player, board.player == current_player)
 	
 	set_actions_enabled(true)
+	
+	# Le joueur a gardé les dés
+	return false
 
-func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
-	if die_1 == null or result_overlay == null: return
+func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_reroll: bool = false) -> bool:
+	if die_1 == null or result_overlay == null: return false
 	
 	result_overlay.move_to_front()
 	result_overlay.show()
+	
 	if btn_conserver: btn_conserver.hide() 
+	if btn_relancer: btn_relancer.hide()
+	
 	die_1.show()
 	if die_2: die_2.visible = (amount == 2)
 	
@@ -392,38 +416,38 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 	die_1.texture = dice_textures[final_d1 - 1]
 	if amount == 2 and die_2: die_2.texture = dice_textures[final_d2 - 1]
 	
-	if btn_conserver:
-		btn_conserver.show()
-		await btn_conserver.pressed
+	if btn_conserver: btn_conserver.show()
+	if btn_relancer: btn_relancer.visible = can_reroll 
 		
+	var wants_reroll = await dice_decision_made
+	
+	if wants_reroll:
+		result_overlay.hide()
+		return true 
+	
 	var start_pos_1 = die_1.global_position
 	var start_size_1 = die_1.size
-		
-	# 1. On identifie le plateau cible
+	
 	var active_idx = game.playerArray.find(current_player)
 	if active_idx == -1: active_idx = 0
 	var target_board = active_boards[active_idx]
 	
 	result_overlay.hide()
 	
-	# --- SÉCURITÉ : on cible le bouton directement ---
 	var target_btn = target_board.btn_pass
 	if not is_instance_valid(target_btn) or not target_btn.is_inside_tree():
-		target_btn = target_board # Sécurité au cas où le bouton est caché
-	
-	# --- DÉ 1 ---
+		target_btn = target_board 
+		
 	var dummy_1 = TextureRect.new()
 	dummy_1.texture = die_1.texture
 	dummy_1.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	dummy_1.size = start_size_1
 	
-	# LA MAGIE EST ICI : On l'attache DIRECTEMENT au bouton !
 	target_btn.add_child(dummy_1) 
-	dummy_1.global_position = start_pos_1 # On maintient sa position globale de départ à l'écran
+	dummy_1.global_position = start_pos_1 
 	dummy_1.mouse_filter = Control.MOUSE_FILTER_IGNORE 
 	mini_dice_array.append(dummy_1)
 	
-	# --- DÉ 2 ---
 	var dummy_2 = null
 	if amount == 2 and die_2:
 		dummy_2 = TextureRect.new()
@@ -431,7 +455,7 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 		dummy_2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		dummy_2.size = die_2.size
 		
-		target_btn.add_child(dummy_2) # On l'attache DIRECTEMENT au bouton !
+		target_btn.add_child(dummy_2) 
 		dummy_2.global_position = die_2.global_position
 		dummy_2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		mini_dice_array.append(dummy_2)
@@ -439,20 +463,16 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 	var anim_duration = 0.6 
 	var target_scale = Vector2(0.2, 0.2)
 	
-	# 2. Ta position locale parfaite (qui sert d'ancrage à droite)
 	var base_local_pos = Vector2(-50, 5)
 	var ecart_entre_des = 45 
 	
 	var target_local_pos_1 = base_local_pos
-	var target_local_pos_2 = Vector2.ZERO # Valeur par défaut
+	var target_local_pos_2 = Vector2.ZERO 
 	
-	# S'il y a 2 dés, le 2ème prend la place "de base", 
-	# et le 1er se décale à sa gauche !
 	if amount == 2:
-		target_local_pos_1 = base_local_pos - Vector2(ecart_entre_des, 0) # Dé 1 à gauche
-		target_local_pos_2 = base_local_pos # Dé 2 sur le point d'ancrage
+		target_local_pos_1 = base_local_pos - Vector2(ecart_entre_des, 0) 
+		target_local_pos_2 = base_local_pos 
 	
-	# 3. Animation
 	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(dummy_1, "position", target_local_pos_1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(dummy_1, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -462,6 +482,8 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0) -> void:
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
 	await tween.finished
+	
+	return false
 
 func ask_yes_no(question: String) -> bool:
 	lbl_question.text = question
@@ -490,7 +512,7 @@ func set_actions_enabled(can_act: bool) -> void:
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 
-func update_monument_menu():
+func update_monument_menu(is_demolish_mode: bool = false):
 	for child in %MonumentHBox.get_children():
 		child.queue_free()
 	
@@ -512,30 +534,42 @@ func update_monument_menu():
 		var card_data = CardFactory.get_card(m_id)
 		var is_built = target_player.monumentIsActive(m_id) 
 		
-		setup_slot_visuals(slot, card_data, is_built)
+		setup_slot_visuals(slot, card_data, is_built, is_demolish_mode)
 		
 		var btn = slot.get_node("VBoxContainer/BuildButton")
-		btn.pressed.connect(_on_construct_clicked.bind(m_id))
+		
+		if is_demolish_mode:
+			btn.visible = is_built
+			if btn.pressed.is_connected(_on_construct_clicked):
+				btn.pressed.disconnect(_on_construct_clicked)
+			btn.pressed.connect(func(): demolish_completed.emit(m_id))
+		else:
+			btn.visible = true
+			btn.pressed.connect(_on_construct_clicked.bind(m_id))
 
-func setup_slot_visuals(slot, data, built):
+func setup_slot_visuals(slot, data, built, is_demolish_mode):
 	var card_name = data.get_name()
 	var clean_name = get_clean_file_name(card_name)
 	
 	var state = "active" if built else "inactive"
 	var tex_path = "res://assets/Cards/Monuments/monument_" + clean_name + "_" + state + ".png"
 	
-	
 	var card_btn = slot.get_node("VBoxContainer/CardImage")
 	if FileAccess.file_exists(tex_path):
 		card_btn.texture_normal = load(tex_path)
 	
-	var build_btn = slot.get_node("VBoxContainer/BuildButton")
-	if built:
-		build_btn.disabled = true
-		build_btn.text = "CONSTRUIT"
+	var action_btn = slot.get_node("VBoxContainer/BuildButton")
+	
+	if is_demolish_mode:
+		action_btn.text = "DÉTRUIRE"
+		action_btn.disabled = false 
 	else:
-		build_btn.disabled = false
-		build_btn.text = "CONSTRUIRE"
+		if built:
+			action_btn.disabled = true
+			action_btn.text = "CONSTRUIT"
+		else:
+			action_btn.disabled = false
+			action_btn.text = "CONSTRUIRE"
 		
 func _on_construct_clicked(m_id):
 	_on_shop_card_clicked(m_id) 
@@ -562,7 +596,7 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
 	return prefix + clean_name
 
 
@@ -573,9 +607,57 @@ func ask_choose_player(owner_player, all_players: Array):
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
-			btn.text = p.username + " (" + str(p.balance) + " Gold)"
-			btn.custom_minimum_size = Vector2(200, 60)
+			btn.custom_minimum_size = Vector2(130, 180)
+			
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0.15, 0.15, 0.15, 0.9) 
+			style.set_border_width_all(2)
+			style.border_color = Color(0.8, 0.8, 0.8, 0.5) 
+			style.set_corner_radius_all(8)
+			
+			var hover_style = style.duplicate()
+			hover_style.bg_color = Color(0.25, 0.25, 0.25, 0.9)
+			hover_style.border_color = Color(1, 1, 1, 1)
+			
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", hover_style)
+			btn.add_theme_stylebox_override("pressed", style)
+			
+			var vbox = VBoxContainer.new()
+			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+			vbox.add_theme_constant_override("separation", 10)
+			
+			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
+			btn.add_child(vbox)
+			
+			var profile_tex = TextureRect.new()
+			profile_tex.custom_minimum_size = Vector2(90, 90)
+			profile_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			
+			var avatar_path = "res://assets/UI/profile_picture_player.png"
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
+				
+			vbox.add_child(profile_tex)
+			
+			var name_label = RichTextLabel.new()
+			name_label.bbcode_enabled = true
+			name_label.fit_content = true
+			name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.custom_minimum_size = Vector2(120, 40)
+			
+			var icon_path = "res://assets/UI/coin.png" 
+			
+			var bbcode_text = "[center]" + p.username + "\n[color=gold]" + str(p.balance) + "[/color] [img=13]" + icon_path + "[/img][/center]"
+			
+			name_label.text = bbcode_text
+			vbox.add_child(name_label)
+			
 			btn.pressed.connect(func(): _on_player_chosen(p))
+			
 			player_buttons_container.add_child(btn)
 	var chosen_target = await player_chosen
 	choose_player_panel.hide()
@@ -613,26 +695,66 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
+		
+		# We don't trade Purple cards 
 		if card != null and card.color != CardColor.Type.PURPLE:
 			var btn = Button.new()
-			btn.text = card.name
-			btn.custom_minimum_size = Vector2(80, 110)
-			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			btn.custom_minimum_size = Vector2(130, 180) # Matching Choose Player size 
+			
+			# 1. Styling the Button
 			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0.15, 0.15, 0.15, 0.9) 
+			style.set_border_width_all(2)
+			
+			# Border matches card color for quick identification
 			match card.color:
-				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+				CardColor.Type.BLUE: style.border_color = Color(0.2, 0.4, 0.8, 0.8)
+				CardColor.Type.GREEN: style.border_color = Color(0.2, 0.6, 0.2, 0.8)
+				CardColor.Type.RED: style.border_color = Color(0.8, 0.2, 0.2, 0.8)
+			
+			style.set_corner_radius_all(8)
 			btn.add_theme_stylebox_override("normal", style)
-			btn.add_theme_stylebox_override("hover", style)
-			btn.add_theme_color_override("font_color", Color.WHITE)
+			
+			# 2. Internal Layout (VBox)
+			var vbox = VBoxContainer.new()
+			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+			vbox.add_theme_constant_override("separation", 5)
+			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
+			btn.add_child(vbox)
+			
+			# 3. Card Icon (TextureRect)
+			var card_tex = TextureRect.new()
+			card_tex.custom_minimum_size = Vector2(100, 120)
+			card_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE 
+			card_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			
+			var clean_name = get_clean_file_name(card.name, card.color)
+			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			if FileAccess.file_exists(path):
+				card_tex.texture = load(path)
+				
+			vbox.add_child(card_tex)
+			
+			# 4. Card Name (RichTextLabel)
+			var name_label = RichTextLabel.new()
+			name_label.bbcode_enabled = true
+			name_label.fit_content = true
+			name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.text = "[center][font_size=14]" + card.name + "[/font_size][/center]"
+			vbox.add_child(name_label)
+			
+			# 5. Connection Logic
 			btn.pressed.connect(func():
 				if is_mine: trade_my_card_id = card_id
 				else: trade_their_card_id = card_id
-				_check_trade_valid()
+				_check_trade_valid() 
+				
+				# Visual feedback for selection
 				for child in container.get_children():
 					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
 			)
+			
 			container.add_child(btn)
 
 func _check_trade_valid() -> void:
@@ -692,32 +814,37 @@ func _check_give_valid() -> void:
 func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
 func ask_demolish_monument(owner_player) -> int:
-	demolish_panel.move_to_front()
-	demolish_panel.show()
-	btn_confirm_demolish.disabled = true
-	demolish_monu_id = -1
-	for c in demolish_monuments.get_children(): c.queue_free()
+	# 1. Check if the player has at least one built monument
 	var has_built_monuments = false
-	for monu_id in owner_player.monumentArray:
-		if owner_player.monumentArray[monu_id] == true:
+	for m_id in owner_player.monumentArray:
+		if owner_player.monumentArray[m_id] == true:
 			has_built_monuments = true
-			var btn = Button.new()
-			var monu_data = game.getMonumentData(monu_id)
-			btn.text = monu_data["name"]
-			btn.custom_minimum_size = Vector2(120, 80)
-			var style_normal = StyleBoxFlat.new()
-			style_normal.bg_color = Color(0.8, 0.2, 0.2)
-			btn.add_theme_stylebox_override("normal", style_normal)
-			btn.pressed.connect(func():
-				demolish_monu_id = monu_id
-				btn_confirm_demolish.disabled = false
-				btn_confirm_demolish.text = "Demolish " + monu_data["name"] + "!"
-				for child in demolish_monuments.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
-			)
-			demolish_monuments.add_child(btn)
-	if not has_built_monuments: return -1
+			break
+
+	# 2. Open the menu in Demolish Mode
+	update_monument_menu(true) 
+	monument_menu.move_to_front()
+	monument_menu.show()
+	
+	# 3. Handle the 'Retour' (Close) button based on your rule
+	if has_built_monuments:
+		close_menu.disabled = true
+		close_menu.hide() # Hiding it is better UX so they don't try clicking it
+	else:
+		# This case handles if a player somehow triggers this with 0 monuments
+		close_menu.disabled = false
+		close_menu.show()
+		# Optional: Auto-emit a skip if you want it to close immediately
+		# demolish_completed.emit(-1) 
+
+	# 4. Wait for the signal from the "Détruire" buttons
 	var result = await demolish_completed
-	demolish_panel.hide()
+	
+	# 5. Cleanup: Always reset the button for the next time the menu opens normally
+	close_menu.disabled = false
+	close_menu.show()
+	monument_menu.hide()
+	
 	return result
 
 func _on_confirm_demolish_pressed() -> void: demolish_completed.emit(demolish_monu_id)
@@ -799,19 +926,99 @@ func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
 	buy_confirm_panel.hide()
 
-func ask_chalutier_roll() -> int:
-	chalutier_panel.move_to_front()
-	chalutier_panel.show()
-	chalutier_roll.disabled = false
-	lbl_chalutier_result.text = "Roll to see how much gold you catch."
-	await chalutier_roll_pressed
+func ask_chalutier_roll(player_name: String) -> int:
+	while turn_overlay.visible or result_overlay.visible:
+		await get_tree().create_timer(0.1).timeout
+
+	lbl_turn_announcement.text = "Chalutier de " + player_name
+	
+	if btn_overlay_roll_1: btn_overlay_roll_1.hide()
+	if btn_overlay_roll_2: 
+		btn_overlay_roll_2.show()
+		btn_overlay_roll_2.disabled = false
+		
+	turn_overlay.move_to_front()
+	turn_overlay.show()
+	
+	await dice_amount_chosen 
+	turn_overlay.hide()
+	
+	if btn_overlay_roll_1: btn_overlay_roll_1.show()
+	
 	var d1 = (randi() % 6) + 1
 	var d2 = (randi() % 6) + 1
 	var total = d1 + d2
-	lbl_chalutier_result.text = "You caught " + str(total) + " Gold!"
-	chalutier_roll.disabled = true
-	await get_tree().create_timer(2.0).timeout
-	chalutier_panel.hide()
+	
+	var result_title = result_overlay.get_node("VBoxContainer/LblResultTitle")
+	result_title.text = "Prise de " + player_name + "!"
+	
+	result_overlay.move_to_front()
+	result_overlay.show()
+	
+	btn_conserver.hide()
+	btn_relancer.hide()
+	
+	die_1.show()
+	die_2.show()
+	
+	var frames = 15
+	var delay = 0.05 
+	for i in range(frames):
+		die_1.texture = dice_textures[randi() % 6]
+		die_2.texture = dice_textures[randi() % 6]
+		await get_tree().create_timer(delay).timeout
+		if i > frames - 4: delay += 0.05 
+		
+	die_1.texture = dice_textures[d1 - 1]
+	die_2.texture = dice_textures[d2 - 1]
+	
+	var claim_btn = Button.new()
+	claim_btn.custom_minimum_size = Vector2(500, 87)
+	claim_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
+	var custom_font = preload("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf")
+	claim_btn.add_theme_font_override("font", custom_font)
+	claim_btn.add_theme_font_size_override("font_size", 100)
+	
+	var tex_normal = load("res://assets/UI/blank_red_button.png")
+	var tex_hover = load("res://assets/UI/blank_red_button_hover.png")
+	
+	var style_normal = StyleBoxTexture.new()
+	style_normal.texture = tex_normal
+	
+	var style_hover = StyleBoxTexture.new()
+	style_hover.texture = tex_hover
+	
+	claim_btn.add_theme_stylebox_override("normal", style_normal)
+	claim_btn.add_theme_stylebox_override("hover", style_hover)
+	claim_btn.add_theme_stylebox_override("pressed", style_normal)
+	
+	var btn_vbox = VBoxContainer.new()
+	btn_vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	btn_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	claim_btn.add_child(btn_vbox)
+	
+	var btn_rtlabel = RichTextLabel.new()
+	btn_rtlabel.bbcode_enabled = true
+	btn_rtlabel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn_rtlabel.fit_content = true
+	
+	
+	var icon_path = "res://assets/UI/coin.png"
+	btn_rtlabel.text ="[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=48]Récupérer [color=gold]" + str(total) + "[/color] [img=48]" + icon_path + "[/img][/font_size][/font][/center]"
+	
+	btn_vbox.add_child(btn_rtlabel)
+	
+	var result_vbox = result_overlay.get_node("VBoxContainer")
+	result_vbox.add_child(claim_btn)
+	
+	await claim_btn.pressed
+	
+	claim_btn.queue_free() 
+	result_overlay.hide()
+	result_title.text = "Résultat du lancer" 
+	
 	return total
 
 func show_victory_screen(winner_name: String) -> void:
@@ -821,3 +1028,51 @@ func show_victory_screen(winner_name: String) -> void:
 	victory_screen.show()
 	
 func _on_quit_pressed() -> void: get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")
+
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		
+		if event.keycode == KEY_1:
+			if turn_overlay and turn_overlay.visible and btn_overlay_roll_1 and not btn_overlay_roll_1.disabled:
+				btn_overlay_roll_1.pressed.emit()
+				get_viewport().set_input_as_handled()
+				
+		elif event.keycode == KEY_2:
+			if turn_overlay and turn_overlay.visible and btn_overlay_roll_2 and btn_overlay_roll_2.visible and not btn_overlay_roll_2.disabled:
+				btn_overlay_roll_2.pressed.emit()
+				get_viewport().set_input_as_handled()
+				
+		elif event.keycode == KEY_ENTER or event.keycode == KEY_SPACE:
+			if result_overlay and result_overlay.visible and btn_conserver and btn_conserver.visible and not btn_conserver.disabled:
+				btn_conserver.pressed.emit()
+				get_viewport().set_input_as_handled()
+				
+			if turn_overlay and turn_overlay.visible and btn_overlay_roll_1 and not btn_overlay_roll_1.disabled:
+				btn_overlay_roll_1.pressed.emit()
+				get_viewport().set_input_as_handled()
+				
+			if game and current_player:
+				var active_idx = game.playerArray.find(current_player)
+				if active_idx != -1 and active_boards.size() > active_idx:
+					var target_board = active_boards[active_idx]
+					
+					if not turn_overlay.visible and not result_overlay.visible:
+						_on_skip_pressed()
+						get_viewport().set_input_as_handled()
+				
+		elif event.keycode == KEY_R:
+			if result_overlay and result_overlay.visible and btn_relancer and btn_relancer.visible and not btn_relancer.disabled:
+				btn_relancer.pressed.emit()
+				get_viewport().set_input_as_handled()
+				
+		elif event.keycode == KEY_P:
+			if game and current_player:
+				var active_idx = game.playerArray.find(current_player)
+				if active_idx != -1 and active_boards.size() > active_idx:
+					var target_board = active_boards[active_idx]
+					
+					if not turn_overlay.visible and not result_overlay.visible:
+						_on_skip_pressed()
+						get_viewport().set_input_as_handled()

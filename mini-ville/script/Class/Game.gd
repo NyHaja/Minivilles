@@ -123,16 +123,23 @@ func DicePhase() -> int:
 	
 	var resArray = rollDice(numberDice)
 	
+	var can_reroll = getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Radio)
+	var wants_reroll = await gameplayScreen.showResult(resArray[0], resArray[1], can_reroll)
+	
 	# Monument Radio : pouvoir de relancer
-	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Radio):
-		#RELANCER ?
-		var wants_reroll = await gameplayScreen.ask_yes_no("Use Radio Tower to reroll?")
-		if wants_reroll:
-			numberDice = await gameplayScreen.waitForDiceRoll()
-			
-			resArray = rollDice(numberDice)
+	if wants_reroll:
+		print("Player used Radio Tower to reroll!")
+		resArray = rollDice(numberDice)
 		
-		takes_bonus_turn = false
+		await gameplayScreen.showResult(resArray[0], resArray[1], false)
+		
+	takes_bonus_turn = false
+	
+	# Monument Parc Attraction : pouvoir de rejouer
+	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
+		if numberDice == 2 && resArray[0] == resArray[1]:
+			print("Bonus turn earned!")
+			takes_bonus_turn = true
 		
 	# Monument Parc Arctraction : double -> tour bonus
 	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
@@ -157,7 +164,6 @@ func rollDice(numberDice: int) -> Array[int]:
 	if numberDice == 2:
 		res[1] = (randi() %6) + 1
 		
-	gameplayScreen.showResult(res[0],res[1])
 	return res
 
 func EffectPhase(resDice) -> void:

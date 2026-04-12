@@ -83,7 +83,7 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
 	return prefix + clean_name
 	
 func set_actions_enabled(can_act: bool) -> void:
