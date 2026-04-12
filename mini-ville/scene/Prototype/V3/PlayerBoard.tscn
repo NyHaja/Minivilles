@@ -8,8 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="5_jt8eb"]
 [ext_resource type="Texture2D" uid="uid://8sgtmvnheoiq" path="res://assets/UI/pass_turn_button.png" id="6_n5cuu"]
 [ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="7_8eqg2"]
+[ext_resource type="Texture2D" uid="uid://b13na406s2uwg" path="res://assets/UI/pass_turn_button_hover.png" id="8_jt8eb"]
 [ext_resource type="Script" uid="uid://b1sswurdf8its" path="res://script/scene/prototype/v3/DeckOutline.gd" id="8_si7nk"]
 [ext_resource type="Texture2D" uid="uid://2pcuggpj6flm" path="res://assets/UI/port.png" id="10_fe7pv"]
+[ext_resource type="Texture2D" uid="uid://nmhvion7jxtv" path="res://assets/UI/Monuments_button_hover.png" id="11_n5cuu"]
 [ext_resource type="Texture2D" uid="uid://fn3i5lpclx1s" path="res://assets/UI/gare.png" id="11_yr7xq"]
 [ext_resource type="Texture2D" uid="uid://sbwi2j1i5g15" path="res://assets/UI/centre-commercial.png" id="12_jt8eb"]
 [ext_resource type="Texture2D" uid="uid://cv51jgcw83f2s" path="res://assets/UI/parc-dattractions.png" id="13_n5cuu"]
@@ -139,6 +141,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 texture_normal = ExtResource("6_n5cuu")
+texture_hover = ExtResource("8_jt8eb")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -201,6 +204,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 texture_normal = ExtResource("7_8eqg2")
+texture_hover = ExtResource("11_n5cuu")
 stretch_mode = 4
 
 [node name="GridContainer" type="GridContainer" parent="MonumentZone/VBoxContainer" unique_id=1653480655]

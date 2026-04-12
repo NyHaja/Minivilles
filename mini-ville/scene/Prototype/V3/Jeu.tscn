@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
+[ext_resource type="Texture2D" uid="uid://bq1r4ivany6fh" path="res://assets/UI/roll_one_die_button_hover.png" id="10_ju1ig"]
+[ext_resource type="Texture2D" uid="uid://b3udd8yxgeds8" path="res://assets/UI/keep_result_button_hover.png" id="14_aqux4"]
 [ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="19_tcw7y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua8b"]
@@ -669,6 +671,7 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("4_dgctq")
+texture_hover = ExtResource("10_ju1ig")
 
 [node name="BtnOverlayRoll2" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=984704587]
 unique_name_in_owner = true
@@ -730,6 +733,7 @@ texture = ExtResource("9_417mv")
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("19_tcw7y")
+texture_hover = ExtResource("14_aqux4")
 
 [connection signal="pressed" from="GoldSkip/AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="GoldSkip/RemoveGold" to="." method="_on_remove_gold_pressed"]
