@@ -636,7 +636,7 @@ static func creerCentreAffaires() -> Establishment:
 		CardColor.Type.PURPLE,
 		8,                              # coût
 		"Échangez un de vos établissements (non-violet) avec celui d'un adversaire.",
-		[1, 12]                          # activation sur 6
+		[6, 6]                          # activation sur 6
 	)
 	
 	return carte

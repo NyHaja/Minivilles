@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
 [ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="7_ju1ig"]
-[ext_resource type="Texture2D" uid="uid://rpvbm3xjvk8a" path="res://assets/icon/Rectangle 6.png" id="8_aqux4"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
 [ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="10_417mv"]
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="11_2vk2f"]
@@ -27,23 +26,47 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqux4"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_417mv"]
+bg_color = Color(0, 0, 0, 0.8627451)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fiso1"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dxqjm"]
+texture = ExtResource("17_u3wdh")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_417mv"]
-texture = ExtResource("8_aqux4")
+texture = ExtResource("16_2vk2f")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2vk2f"]
-texture = ExtResource("8_aqux4")
+texture = ExtResource("17_u3wdh")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ju1ig"]
-texture = ExtResource("8_aqux4")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ijtxi"]
+texture = ExtResource("16_2vk2f")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aqux4"]
-texture = ExtResource("8_aqux4")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vf6uw"]
+texture = ExtResource("17_u3wdh")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vk2f"]
 bg_color = Color(0, 0, 0, 0.8627451)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3wdh"]
 bg_color = Color(0, 0, 0, 0.8627451)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fcipe"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_evejj"]
+texture = ExtResource("17_u3wdh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcw7y"]
+bg_color = Color(0, 0, 0, 0.8627451)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fyh2q"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sxbm1"]
+texture = ExtResource("17_u3wdh")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0rt3"]
 bg_color = Color(0.9607843, 0.7490196, 0.28627452, 1)
@@ -238,7 +261,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_ju1ig")
 theme_override_styles/hover = SubResource("StyleBoxFlat_aqux4")
 text = "Retour"
 
-[node name="VictoryScreen" type="ColorRect" parent="." unique_id=1800803325]
+[node name="VictoryScreen" type="PanelContainer" parent="." unique_id=2097343048]
 visible = false
 light_mask = 193
 anchors_preset = 15
@@ -246,38 +269,38 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.13725491, 0.13725491, 0.13725491, 0.78431374)
+theme_override_styles/panel = SubResource("StyleBoxFlat_417mv")
 
-[node name="LblWinnerName" type="Label" parent="VictoryScreen" unique_id=2062272349]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = -77.0
-offset_right = 60.0
-offset_bottom = -35.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 30
-text = "WINNER"
+[node name="VBoxContainer" type="VBoxContainer" parent="VictoryScreen" unique_id=1666695924]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
 
-[node name="ReturnToMenu" type="Button" parent="VictoryScreen" unique_id=1670802333]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -78.0
-offset_top = 112.0
-offset_right = 78.0
-offset_bottom = 168.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Return to Menu"
+[node name="LblWinnerName" type="Label" parent="VictoryScreen/VBoxContainer" unique_id=2062272349]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 100
+text = "gagne la partie!"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="VictoryScreen/VBoxContainer" unique_id=998003061]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="ReturnToMenu" type="Button" parent="VictoryScreen/VBoxContainer" unique_id=1670802333]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 87)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 55
+theme_override_styles/normal = SubResource("StyleBoxTexture_fiso1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxqjm")
+text = "Menu principal"
 
 [node name="YesNoPanel" type="ColorRect" parent="." unique_id=1988240217]
 unique_name_in_owner = true
@@ -305,9 +328,10 @@ offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("7_ju1ig")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 100
 text = "Question"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="YesNoButtons" type="HBoxContainer" parent="YesNoPanel" unique_id=970060462]
 layout_mode = 1
@@ -326,27 +350,27 @@ alignment = 1
 
 [node name="BtnYes" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=774269821]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(400, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("5_88jjp")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxTexture_417mv")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_2vk2f")
-theme_override_styles/hover = SubResource("StyleBoxTexture_ju1ig")
-text = "Yes"
+theme_override_styles/hover = SubResource("StyleBoxTexture_2vk2f")
+text = "Oui"
 
 [node name="BtnNo" type="Button" parent="YesNoPanel/YesNoButtons" unique_id=1465109800]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(400, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("5_88jjp")
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxTexture_aqux4")
-text = "No
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxTexture_ijtxi")
+theme_override_styles/hover = SubResource("StyleBoxTexture_vf6uw")
+text = "Non
 "
 
 [node name="ChoosePlayerPanel" type="PanelContainer" parent="." unique_id=741665856]
@@ -405,85 +429,108 @@ size_flags_vertical = 4
 [node name="Label" type="Label" parent="TradePanel/VBoxContainer" unique_id=232707057]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
 text = "Choose an opponent:"
+horizontal_alignment = 1
 
 [node name="TradeOpponents" type="HBoxContainer" parent="TradePanel/VBoxContainer" unique_id=1286681068]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1200, 0)
 layout_mode = 2
+alignment = 1
 
 [node name="Label2" type="Label" parent="TradePanel/VBoxContainer" unique_id=608750445]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
 text = "Choose their card to steal:"
+horizontal_alignment = 1
 
 [node name="TradeTheirCards" type="HFlowContainer" parent="TradePanel/VBoxContainer" unique_id=1168463806]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1200, 0)
 layout_mode = 2
+alignment = 1
 
 [node name="Label3" type="Label" parent="TradePanel/VBoxContainer" unique_id=1981388932]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
 text = "Choose your card to give:"
+horizontal_alignment = 1
 
 [node name="TradeMyCards" type="HFlowContainer" parent="TradePanel/VBoxContainer" unique_id=252649643]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1200, 0)
 layout_mode = 2
+alignment = 1
 
 [node name="ConfirmTrade" type="Button" parent="TradePanel/VBoxContainer" unique_id=2145443840]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
-text = "Select cards to trade"
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxTexture_fcipe")
+theme_override_styles/hover = SubResource("StyleBoxTexture_evejj")
 
-[node name="GiveCardPanel" type="ColorRect" parent="." unique_id=758882003]
+[node name="GiveCardPanel" type="PanelContainer" parent="." unique_id=754775477]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -365.5
-offset_top = -197.5
-offset_right = 365.5
-offset_bottom = 197.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.6052743, 0.6052743, 0.6052743, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_tcw7y")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GiveCardPanel" unique_id=752854755]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -185.25
-offset_top = -103.5
-offset_right = 185.25
-offset_bottom = 103.5
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
 
 [node name="Label4" type="Label" parent="GiveCardPanel/VBoxContainer" unique_id=469159696]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Choose your card to give:"
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
+text = "Choississez une carte pour donnez:"
+horizontal_alignment = 1
 
 [node name="GiveMyCards" type="HFlowContainer" parent="GiveCardPanel/VBoxContainer" unique_id=282221251]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
+alignment = 1
 
 [node name="Label5" type="Label" parent="GiveCardPanel/VBoxContainer" unique_id=1980309618]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Choose an opponent"
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
+text = "Choississez un adversaire:"
+horizontal_alignment = 1
 
 [node name="GiveOpponents" type="HBoxContainer" parent="GiveCardPanel/VBoxContainer" unique_id=2119665173]
 unique_name_in_owner = true
 layout_mode = 2
+alignment = 1
 
 [node name="ConfirmGive" type="Button" parent="GiveCardPanel/VBoxContainer" unique_id=1700475877]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxTexture_fyh2q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sxbm1")
+text = "Confirmer"
 
 [node name="DemolishPanel" type="ColorRect" parent="." unique_id=1485235932]
 visible = false

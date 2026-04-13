@@ -130,3 +130,38 @@ func _on_card_exited():
 	
 	z_index = 0
 	tooltip.hide()
+	
+func set_badge_count(count: int) -> void:
+	var target_visual = $Visual 
+	
+	var existing_badge = target_visual.get_node_or_null("CountBadge")
+	
+	var badge = existing_badge
+	if badge == null:
+		badge = Label.new()
+		badge.name = "CountBadge"
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.z_index = 5 
+		
+		badge.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		
+		badge.offset_top = 3
+		badge.offset_right = -7
+		
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		badge.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		
+		var label_settings = LabelSettings.new()
+		label_settings.font_size = 15
+		label_settings.font_color = Color.WHITE
+		label_settings.font = load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf")
+		
+		label_settings.outline_size = 6
+		label_settings.outline_color = Color(0, 0, 0, 0.8) 
+		
+		badge.label_settings = label_settings
+		
+		target_visual.add_child(badge) 
+	
+	badge.text = "x" + str(count)

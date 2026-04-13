@@ -61,9 +61,9 @@ var dice_textures = [
 
 @onready var monument_menu: ColorRect = $MonumentMenu
 @onready var close_menu: Button = $MonumentMenu/CancelMargin/Close
-@onready var victory_screen: ColorRect = $VictoryScreen
-@onready var lbl_winner_name: Label = $VictoryScreen/LblWinnerName
-@onready var btn_quit: Button = $VictoryScreen/ReturnToMenu 
+@onready var victory_screen: PanelContainer = $VictoryScreen
+@onready var lbl_winner_name: Label = %LblWinnerName
+@onready var btn_quit: Button = %ReturnToMenu 
 @onready var yes_no_panel: ColorRect = %YesNoPanel
 @onready var lbl_question: Label = %LblQuestion
 @onready var btn_yes: Button = %BtnYes
@@ -75,7 +75,7 @@ var dice_textures = [
 @onready var trade_their_cards: HFlowContainer = %TradeTheirCards
 @onready var trade_my_cards: HFlowContainer = %TradeMyCards
 @onready var btn_confirm_trade: Button = %ConfirmTrade
-@onready var give_panel: ColorRect = $GiveCardPanel
+@onready var give_panel: PanelContainer = $GiveCardPanel
 @onready var give_my_cards: HFlowContainer = %GiveMyCards
 @onready var give_opponents: HBoxContainer = %GiveOpponents
 @onready var btn_confirm_give: Button = %ConfirmGive
@@ -668,18 +668,83 @@ func _on_player_chosen(target) -> void: player_chosen.emit(target)
 func ask_trade_cards(owner_player, all_players: Array) -> Array:
 	trade_panel.move_to_front()
 	trade_panel.show()
+	trade_opponents.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	trade_my_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	trade_their_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	btn_confirm_trade.disabled = true
-	btn_confirm_trade.text = "Select cards to trade..."
-	trade_target = null; trade_their_card_id = -1; trade_my_card_id = -1
+	btn_confirm_trade.text = "Sélectionnez les cartes à échanger"
+	trade_target = null
+	trade_their_card_id = -1
+	trade_my_card_id = -1
+	
 	for c in trade_opponents.get_children(): c.queue_free()
+	for c in trade_my_cards.get_children(): c.queue_free()
+	for c in trade_their_cards.get_children(): c.queue_free()
+	
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
-			btn.text = p.username
-			btn.custom_minimum_size = Vector2(120, 40)
-			btn.pressed.connect(func(): _on_trade_opponent_selected(p))
+			btn.custom_minimum_size = Vector2(130, 180)
+			btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN # <--- ADD THIS
+			btn.pivot_offset = Vector2(65, 90)
+			
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0.15, 0.15, 0.15, 0.9) 
+			style.set_border_width_all(2)
+			style.border_color = Color(0.8, 0.8, 0.8, 0.5) 
+			style.set_corner_radius_all(8)
+			
+			var hover_style = style.duplicate()
+			hover_style.bg_color = Color(0.25, 0.25, 0.25, 0.9)
+			hover_style.border_color = Color(1, 1, 1, 1)
+			
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", hover_style)
+			btn.add_theme_stylebox_override("pressed", style)
+			
+			var vbox = VBoxContainer.new()
+			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+			vbox.add_theme_constant_override("separation", 10)
+			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
+			btn.add_child(vbox)
+			
+			var profile_tex = TextureRect.new()
+			profile_tex.custom_minimum_size = Vector2(90, 90)
+			profile_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var avatar_path = "res://assets/UI/profile_picture_player.png"
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
+			vbox.add_child(profile_tex)
+			
+			var name_label = RichTextLabel.new()
+			name_label.bbcode_enabled = true
+			name_label.fit_content = true
+			name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.custom_minimum_size = Vector2(120, 40)
+			var icon_path = "res://assets/UI/coin.png" 
+			name_label.text = "[center]" + p.username + "\n[color=gold]" + str(p.balance) + "[/color] [img=13]" + icon_path + "[/img][/center]"
+			vbox.add_child(name_label)
+			
+			btn.pressed.connect(func():
+				_on_trade_opponent_selected(p)
+				
+				for child in trade_opponents.get_children():
+					if child == btn:
+						child.modulate = Color(0.4, 0.4, 0.4)
+						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
+			)
 			trade_opponents.add_child(btn)
+
+	for c in trade_my_cards.get_children(): c.queue_free()
 	_populate_trade_deck(owner_player, trade_my_cards, true)
+	
 	var result = await trade_completed
 	trade_panel.hide()
 	return result
@@ -696,71 +761,65 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
 		
-		# We don't trade Purple cards 
 		if card != null and card.color != CardColor.Type.PURPLE:
-			var btn = Button.new()
-			btn.custom_minimum_size = Vector2(130, 180) # Matching Choose Player size 
+			var card_btn = TextureButton.new()
+			card_btn.custom_minimum_size = Vector2(130, 180) 
+			card_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			card_btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN # <--- ADD THIS
+			card_btn.pivot_offset = Vector2(65, 90)
 			
-			# 1. Styling the Button
-			var style = StyleBoxFlat.new()
-			style.bg_color = Color(0.15, 0.15, 0.15, 0.9) 
-			style.set_border_width_all(2)
-			
-			# Border matches card color for quick identification
-			match card.color:
-				CardColor.Type.BLUE: style.border_color = Color(0.2, 0.4, 0.8, 0.8)
-				CardColor.Type.GREEN: style.border_color = Color(0.2, 0.6, 0.2, 0.8)
-				CardColor.Type.RED: style.border_color = Color(0.8, 0.2, 0.2, 0.8)
-			
-			style.set_corner_radius_all(8)
-			btn.add_theme_stylebox_override("normal", style)
-			
-			# 2. Internal Layout (VBox)
-			var vbox = VBoxContainer.new()
-			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-			vbox.add_theme_constant_override("separation", 5)
-			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
-			btn.add_child(vbox)
-			
-			# 3. Card Icon (TextureRect)
-			var card_tex = TextureRect.new()
-			card_tex.custom_minimum_size = Vector2(100, 120)
-			card_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE 
-			card_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			card_btn.ignore_texture_size = true
+			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
 			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 			if FileAccess.file_exists(path):
-				card_tex.texture = load(path)
+				card_btn.texture_normal = load(path)
+			
+			var outline = Panel.new()
+			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
+			outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card_btn.add_child(outline)
+			
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0, 0, 0, 0)
+			style.set_border_width_all(3)
+			style.set_corner_radius_all(8)
+			
+			match card.color:
+				CardColor.Type.BLUE: style.border_color = Color(0.2, 0.4, 0.8, 0.8)
+				CardColor.Type.GREEN: style.border_color = Color(0.2, 0.6, 0.2, 0.8)
+				CardColor.Type.RED: style.border_color = Color(0.8, 0.2, 0.2, 0.8)
 				
-			vbox.add_child(card_tex)
+			outline.add_theme_stylebox_override("panel", style)
 			
-			# 4. Card Name (RichTextLabel)
-			var name_label = RichTextLabel.new()
-			name_label.bbcode_enabled = true
-			name_label.fit_content = true
-			name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			name_label.text = "[center][font_size=14]" + card.name + "[/font_size][/center]"
-			vbox.add_child(name_label)
+			var hover_style = style.duplicate()
+			hover_style.border_color = Color(1, 1, 1, 1)
 			
-			# 5. Connection Logic
-			btn.pressed.connect(func():
+			card_btn.mouse_entered.connect(func(): outline.add_theme_stylebox_override("panel", hover_style))
+			card_btn.mouse_exited.connect(func(): outline.add_theme_stylebox_override("panel", style))
+			
+			card_btn.pressed.connect(func():
 				if is_mine: trade_my_card_id = card_id
 				else: trade_their_card_id = card_id
-				_check_trade_valid() 
 				
-				# Visual feedback for selection
+				_check_trade_valid()
+				
 				for child in container.get_children():
-					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+					if child == card_btn:
+						child.modulate = Color(0.4, 0.4, 0.4)
+						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			
-			container.add_child(btn)
+			container.add_child(card_btn)
 
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
-		btn_confirm_trade.text = "Confirm Trade!"
+		btn_confirm_trade.text = "Confirmer!"
 
 func _on_confirm_trade_pressed() -> void: trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
@@ -768,40 +827,131 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 	give_panel.move_to_front()
 	give_panel.show()
 	btn_confirm_give.disabled = true
-	btn_confirm_give.text = "Select a card and an opponent..."
-	give_target = null; give_card_id = -1
+	btn_confirm_give.text = "Sélectionnez une carte et un adversaire"
+	give_target = null
+	give_card_id = -1
+	
 	for c in give_my_cards.get_children(): c.queue_free()
+	for c in give_opponents.get_children(): c.queue_free()
 	for instance in owner_player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var card = CardFactory.get_card(card_id)
+		
 		if card != null and card.color != CardColor.Type.PURPLE:
-			var btn = Button.new()
-			btn.text = card.name
-			btn.custom_minimum_size = Vector2(80, 110)
+			var card_btn = TextureButton.new()
+			card_btn.custom_minimum_size = Vector2(200, 280)
+			card_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			card_btn.pivot_offset = Vector2(100, 140) 
+			
+			card_btn.ignore_texture_size = true
+			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			
+			var clean_name = get_clean_file_name(card.name, card.color)
+			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			if FileAccess.file_exists(path):
+				card_btn.texture_normal = load(path)
+			
+			var outline = Panel.new()
+			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
+			outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card_btn.add_child(outline)
+			
 			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0, 0, 0, 0)
+			style.set_border_width_all(3)
+			style.set_corner_radius_all(8)
+			
 			match card.color:
-				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
-				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
-				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
-			btn.add_theme_stylebox_override("normal", style)
-			btn.pressed.connect(func():
+				CardColor.Type.BLUE: style.border_color = Color(0.2, 0.4, 0.8, 0.8)
+				CardColor.Type.GREEN: style.border_color = Color(0.2, 0.6, 0.2, 0.8)
+				CardColor.Type.RED: style.border_color = Color(0.8, 0.2, 0.2, 0.8)
+				
+			outline.add_theme_stylebox_override("panel", style)
+			
+			var hover_style = style.duplicate()
+			hover_style.border_color = Color(1, 1, 1, 1)
+			
+			card_btn.mouse_entered.connect(func(): outline.add_theme_stylebox_override("panel", hover_style))
+			card_btn.mouse_exited.connect(func(): outline.add_theme_stylebox_override("panel", style))
+			
+			card_btn.pressed.connect(func():
 				give_card_id = card_id
 				_check_give_valid()
-				for child in give_my_cards.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+				
+				for child in give_my_cards.get_children():
+					if child == card_btn:
+						child.modulate = Color(0.4, 0.4, 0.4)
+						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
-			give_my_cards.add_child(btn)
+			
+			give_my_cards.add_child(card_btn)
+
 	for p in all_players:
 		if p != owner_player:
 			var btn = Button.new()
-			btn.text = p.username
-			btn.custom_minimum_size = Vector2(120, 40)
+			btn.custom_minimum_size = Vector2(130, 180)
+			btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			
+			btn.pivot_offset = Vector2(65, 90)
+			
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0.15, 0.15, 0.15, 0.9) 
+			style.set_border_width_all(2)
+			style.border_color = Color(0.8, 0.8, 0.8, 0.5) 
+			style.set_corner_radius_all(8)
+			
+			var hover_style = style.duplicate()
+			hover_style.bg_color = Color(0.25, 0.25, 0.25, 0.9)
+			hover_style.border_color = Color(1, 1, 1, 1)
+			
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", hover_style)
+			btn.add_theme_stylebox_override("pressed", style)
+			
+			var vbox = VBoxContainer.new()
+			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+			vbox.add_theme_constant_override("separation", 10)
+			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
+			btn.add_child(vbox)
+			
+			var profile_tex = TextureRect.new()
+			profile_tex.custom_minimum_size = Vector2(90, 90)
+			profile_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var avatar_path = "res://assets/UI/profile_picture_player.png"
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
+			vbox.add_child(profile_tex)
+			
+			var name_label = RichTextLabel.new()
+			name_label.bbcode_enabled = true
+			name_label.fit_content = true
+			name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			name_label.custom_minimum_size = Vector2(120, 40)
+			var icon_path = "res://assets/UI/coin.png" 
+			name_label.text = "[center]" + p.username + "\n[color=gold]" + str(p.balance) + "[/color] [img=13]" + icon_path + "[/img][/center]"
+			vbox.add_child(name_label)
+			
 			btn.pressed.connect(func():
 				give_target = p
 				_check_give_valid()
-				for child in give_opponents.get_children(): child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+				
+				for child in give_opponents.get_children():
+					if child == btn:
+						child.modulate = Color(0.4, 0.4, 0.4)
+						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			give_opponents.add_child(btn)
+
 	var result = await give_card_completed
 	give_panel.hide()
 	return result
@@ -809,38 +959,30 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
-		btn_confirm_give.text = "Confirm Gift!"
+		btn_confirm_give.text = "Confirmer"
 
 func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
 func ask_demolish_monument(owner_player) -> int:
-	# 1. Check if the player has at least one built monument
 	var has_built_monuments = false
 	for m_id in owner_player.monumentArray:
 		if owner_player.monumentArray[m_id] == true:
 			has_built_monuments = true
 			break
 
-	# 2. Open the menu in Demolish Mode
 	update_monument_menu(true) 
 	monument_menu.move_to_front()
 	monument_menu.show()
 	
-	# 3. Handle the 'Retour' (Close) button based on your rule
 	if has_built_monuments:
 		close_menu.disabled = true
-		close_menu.hide() # Hiding it is better UX so they don't try clicking it
+		close_menu.hide()
 	else:
-		# This case handles if a player somehow triggers this with 0 monuments
 		close_menu.disabled = false
 		close_menu.show()
-		# Optional: Auto-emit a skip if you want it to close immediately
-		# demolish_completed.emit(-1) 
 
-	# 4. Wait for the signal from the "Détruire" buttons
 	var result = await demolish_completed
 	
-	# 5. Cleanup: Always reset the button for the next time the menu opens normally
 	close_menu.disabled = false
 	close_menu.show()
 	monument_menu.hide()
@@ -1023,7 +1165,7 @@ func ask_chalutier_roll(player_name: String) -> int:
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	lbl_winner_name.text = "🏆 " + winner_name + " WINS!\nAll 5 Monuments Built!"
+	lbl_winner_name.text = "🏆 " + winner_name + " GAGNE!"
 	victory_screen.move_to_front()
 	victory_screen.show()
 	

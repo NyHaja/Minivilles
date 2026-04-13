@@ -44,10 +44,18 @@ func update_shop(shop_data) -> void:
 
 				card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
 				card_visual.size = Vector2(shop_card_w, shop_card_h)
+				
+				if card_visual.has_method("set_badge_count"):
+					card_visual.set_badge_count(slot.quantity)
 			
 			else:
 				card_visual = Button.new()
-				card_visual.text = str(card_data.get_activation_num()) + "\n" + card_name
+				
+				var fallback_text = str(card_data.get_activation_num()) + "\n" + card_name
+				if slot.quantity > 1:
+					fallback_text += "\n(x" + str(slot.quantity) + ")"
+					
+				card_visual.text = fallback_text
 				card_visual.pressed.connect(func(): shop_card_clicked.emit(slot.id))
 				
 				card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
