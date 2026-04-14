@@ -1187,7 +1187,7 @@ func show_victory_screen(winner_name: String) -> void:
 	victory_screen.move_to_front()
 	victory_screen.show()
 	
-func _on_quit_pressed() -> void: get_tree().change_scene_to_file("res://scene/Prototype/V3/MainMenu.tscn")
+func _on_quit_pressed() -> void: get_tree().change_scene_to_file("res://scene/Ecran principale/accueil.tscn")
 
 
 
