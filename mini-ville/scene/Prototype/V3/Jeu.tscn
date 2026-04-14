@@ -22,6 +22,7 @@
 [ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="19_tcw7y"]
 [ext_resource type="Texture2D" uid="uid://b32xmcol4o7cy" path="res://assets/UI/roll_two_dices_button.png" id="19_x6onv"]
 [ext_resource type="Texture2D" uid="uid://d4h85hiv2aiy3" path="res://assets/Cards/Monuments/aéroport_verso.png" id="20_sgkkh"]
+[ext_resource type="Texture2D" uid="uid://xsxslohh74of" path="res://assets/UI/roll_two_dices_hover.png" id="20_xeyo0"]
 [ext_resource type="Texture2D" uid="uid://bo24nrmwxqg54" path="res://assets/UI/build_button.png" id="21_beeqq"]
 [ext_resource type="Texture2D" uid="uid://bv6kmc2vv5hf8" path="res://assets/UI/keep_result_button.png" id="21_cutg6"]
 [ext_resource type="Texture2D" uid="uid://bxnmk8sxcjcrf" path="res://assets/UI/return_button_hover.png" id="21_vf6uw"]
@@ -678,7 +679,7 @@ texture_hover = ExtResource("18_xeyo0")
 [node name="Roll2Dices" type="TextureButton" parent="TurnOverlay/VBoxContainer/HBoxContainer" unique_id=208030128]
 layout_mode = 2
 texture_normal = ExtResource("19_x6onv")
-texture_hover = ExtResource("19_x6onv")
+texture_hover = ExtResource("20_xeyo0")
 
 [node name="ResultOverlay" type="ColorRect" parent="." unique_id=362615289]
 unique_name_in_owner = true

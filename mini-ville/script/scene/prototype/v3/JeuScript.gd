@@ -502,21 +502,24 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	var target_local_pos_1 = base_local_pos
 	var target_local_pos_2 = Vector2.ZERO 
 	
-	var final_lbl = Label.new()
+	var addTwo_lbl = Label.new()
+	var result_lbl = Label.new()
 	
 	var espace_a_droite_des_des = 40
 		
-	final_lbl.add_theme_font_size_override("font_size", 34) 
+	result_lbl.add_theme_font_size_override("font_size", 34) 
+	addTwo_lbl.add_theme_font_size_override("font_size", 34)
 	if FileAccess.file_exists("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"):
-		final_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
+		result_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
+		addTwo_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
 	
 	if action == "add2":
 		base_local_pos += Vector2(-50,0)
-		final_lbl.text = " + 2 = " + str(total + 2)
-		final_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) # Doré pour le bonus
-	else:
-		final_lbl.text = " = " + str(total)
-		final_lbl.add_theme_color_override("font_color", Color.WHITE) # Blanc normal
+		addTwo_lbl.text = " + 2 "
+		addTwo_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) # Doré pour le bonus
+
+	result_lbl.text += " = " + str(total)
+	result_lbl.add_theme_color_override("font_color", Color.WHITE) # Blanc normal
 	
 	if amount == 2:
 		base_local_pos += Vector2(-20,0)
@@ -536,20 +539,29 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	
 	# --- 3. APPARITION DU TEXTE ("= X") UNIQUEMENT ICI ---
 
-		
-	target_btn.add_child(final_lbl)
+	if action == "add2":
+		target_btn.add_child(addTwo_lbl)
+		addTwo_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des-5, -5)
+		base_local_pos += Vector2(50, 0)
+	
+	target_btn.add_child(result_lbl)
 	
 	# Positionnement : On décale le texte vers la droite en fonction de `espace_a_droite_des_des`
 
-	final_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des, -5)
+	result_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des, -5)
 	
 	# Apparition douce en fondu
-	final_lbl.modulate.a = 0.0
+	result_lbl.modulate.a = 0.0
 	var fade_tween = get_tree().create_tween()
-	fade_tween.tween_property(final_lbl, "modulate:a", 1.0, 0.2)
+	fade_tween.tween_property(result_lbl, "modulate:a", 1.0, 0.2)
+	if action == "add2":
+		fade_tween.tween_property(addTwo_lbl, "modulate:a", 1.0, 0.2)
+		
 	
 	# On ajoute le texte à l'array pour qu'il soit détruit au tour suivant
-	mini_dice_array.append(final_lbl) 
+	mini_dice_array.append(result_lbl) 
+	if action == "add2":
+			mini_dice_array.append(addTwo_lbl) 
 	
 	return action
 
