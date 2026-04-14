@@ -10,7 +10,7 @@ signal trade_completed(trade_data: Array)
 signal give_card_completed(give_data: Array)
 signal demolish_completed(monu_id: int)
 signal chalutier_roll_pressed()
-signal dice_decision_made(wants_reroll: bool)
+signal dice_decision_made(action: String)
 
 var current_player
 var test_shop
@@ -43,14 +43,17 @@ signal rotation_finished
 # Overlays et Menus
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = %LblTurnAnnouncement
-@onready var btn_overlay_roll_1: Button = %BtnOverlayRoll1
-@onready var btn_overlay_roll_2: Button = %BtnOverlayRoll2
+
+# On pointe vers les nouveaux noms dans le TurnOverlay
+@onready var btn_overlay_roll_1: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/Roll1Die
+@onready var btn_overlay_roll_2: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/Roll2Dices
 
 var result_overlay: ColorRect
 var die_1: TextureRect
 var die_2: TextureRect
-var btn_conserver: Button
-var btn_relancer: Button
+var btn_conserver: TextureButton
+var btn_relancer: TextureButton
+var btn_add_2: TextureButton # <-- Ajout de la variable pour ton nouveau bouton
 var mini_dice_array: Array = []
 
 var dice_textures = [
@@ -59,8 +62,9 @@ var dice_textures = [
 	preload("res://assets/UI/die_five.png"), preload("res://assets/UI/die_six.png")
 ]
 
-@onready var monument_menu: ColorRect = $MonumentMenu
-@onready var close_menu: Button = $MonumentMenu/CancelMargin/Close
+@onready var monument_menu: ColorRect = %MonumentOverlay
+@onready var close_menu: TextureButton = %closeButton # Utilise l'Unique Name que tu as défini
+@onready var cards_monuments_container = $MonumentOverlay/MainContainer/CardsMonumentsContainer
 @onready var victory_screen: PanelContainer = $VictoryScreen
 @onready var lbl_winner_name: Label = %LblWinnerName
 @onready var btn_quit: Button = %ReturnToMenu 
@@ -136,8 +140,13 @@ func _ready() -> void:
 	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
 	add_gold.pressed.connect(_on_add_gold_pressed.bind(5))
 	remove_gold.pressed.connect(_on_add_gold_pressed.bind(-2))
-	btn_conserver.pressed.connect(func(): dice_decision_made.emit(false))
-	btn_relancer.pressed.connect(func(): dice_decision_made.emit(true))
+	# On relie les 3 boutons à notre signal texte
+	if btn_conserver: 
+		btn_conserver.pressed.connect(func(): dice_decision_made.emit("keep"))
+	if btn_relancer: 
+		btn_relancer.pressed.connect(func(): dice_decision_made.emit("reroll"))
+	if btn_add_2: 
+		btn_add_2.pressed.connect(func(): dice_decision_made.emit("add2"))
 	settings_button.pressed.connect(func(): _on_settings_pressed())
 	continue_button.pressed.connect(func(): _on_continue_pressed())
 	main_menu_button.pressed.connect(func(): _on_quit_pressed())
@@ -239,13 +248,14 @@ func update_all_boards() -> void:
 		var p = game.playerArray[i]
 		board.setup(p, p == current_player)
 
-
 func _find_dice_ui_nodes() -> void:
-	result_overlay = find_child("ResultOverlay", true, false)
-	die_1 = find_child("Die1", true, false)
-	die_2 = find_child("Die2", true, false)
-	btn_conserver = find_child("BtnConserver", true, false)
-	btn_relancer = find_child("BtnRelancer", true, false)
+	result_overlay = %ResultOverlay
+	die_1 = %Die1
+	die_2 = %Die2
+	
+	btn_conserver = find_child("ConserverLeRésultat", true, false)
+	btn_relancer = find_child("RefaireLeLancer", true, false)
+	btn_add_2 = find_child("Ajouter2AuRésultat", true, false) # <-- Trouve ton nouveau bouton
 
 func positionner_plateaux(animate: bool = true) -> void:
 	if not game or game.playerCount == 0: return
@@ -390,17 +400,16 @@ func waitForDiceRoll() -> int:
 	# On retourne la valeur, l'UI reste masquée pour le moment (réapparaîtra dans showResult)
 	return amount
 
-func showResult(d1: int, d2: int, can_reroll: bool = false) -> bool:
+func showResult(d1: int, d2: int, can_reroll: bool = false) -> String:
 	var amount = 1 if d2 == 0 else 2
 	
-	# L'animation joue et on attend de savoir si le joueur relance
-	var wants_reroll = await play_dice_animation(amount, d1, d2, can_reroll)
+	var action = await play_dice_animation(amount, d1, d2, can_reroll)
 	
-	# Si le joueur a cliqué sur "Relancer", on s'arrête là et on prévient le moteur
-	if wants_reroll:
-		return true
+	# On ne quitte direct que si on relance. "add2" et "keep" affichent le plateau.
+	if action == "reroll":
+		return action
 	
-	# --- RÉAPPARITION FINALE (Seulement s'il a cliqué sur "Conserver") ---
+	# --- RÉAPPARITION FINALE ---
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(true)
@@ -408,21 +417,22 @@ func showResult(d1: int, d2: int, can_reroll: bool = false) -> bool:
 	
 	set_actions_enabled(true)
 	
-	# Le joueur a gardé les dés
-	return false
+	return action
 
-func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_reroll: bool = false) -> bool:
-	if die_1 == null or result_overlay == null: return false
+func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_reroll: bool = false) -> String:
+	if die_1 == null or result_overlay == null: return "keep"
 	
 	result_overlay.move_to_front()
 	result_overlay.show()
 	
 	if btn_conserver: btn_conserver.hide() 
 	if btn_relancer: btn_relancer.hide()
+	if btn_add_2: btn_add_2.hide() 
 	
 	die_1.show()
 	if die_2: die_2.visible = (amount == 2)
 	
+	# --- 1. ROULEMENT DES DÉS (Aucun texte n'est affiché) ---
 	var frames = 15
 	var delay = 0.05 
 	for i in range(frames):
@@ -434,15 +444,23 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	die_1.texture = dice_textures[final_d1 - 1]
 	if amount == 2 and die_2: die_2.texture = dice_textures[final_d2 - 1]
 	
-	if btn_conserver: btn_conserver.show()
-	if btn_relancer: btn_relancer.visible = can_reroll 
+	var total = final_d1 + final_d2
+	var has_port = false
+	if current_player and current_player.has_method("monumentIsActive"):
+		has_port = current_player.monumentIsActive(Monument.MONUMENT_ID.Port)
 		
-	var wants_reroll = await dice_decision_made
+	# On affiche juste les boutons de décision
+	if btn_conserver: btn_conserver.show(); btn_conserver.disabled = false
+	if btn_relancer: btn_relancer.visible = can_reroll; btn_relancer.disabled = false
+	if btn_add_2: btn_add_2.visible = (has_port and total >= 10); btn_add_2.disabled = false
+		
+	var action = await dice_decision_made
 	
-	if wants_reroll:
+	if action == "reroll":
 		result_overlay.hide()
-		return true 
+		return action 
 	
+	# --- 2. DÉCOLLAGE DES DÉS ---
 	var start_pos_1 = die_1.global_position
 	var start_size_1 = die_1.size
 	
@@ -460,7 +478,6 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	dummy_1.texture = die_1.texture
 	dummy_1.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	dummy_1.size = start_size_1
-	
 	target_btn.add_child(dummy_1) 
 	dummy_1.global_position = start_pos_1 
 	dummy_1.mouse_filter = Control.MOUSE_FILTER_IGNORE 
@@ -472,7 +489,6 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		dummy_2.texture = die_2.texture
 		dummy_2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		dummy_2.size = die_2.size
-		
 		target_btn.add_child(dummy_2) 
 		dummy_2.global_position = die_2.global_position
 		dummy_2.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -480,14 +496,30 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		
 	var anim_duration = 0.6 
 	var target_scale = Vector2(0.2, 0.2)
-	
-	var base_local_pos = Vector2(-50, 5)
+	var base_local_pos = Vector2(-105, 7)
 	var ecart_entre_des = 45 
 	
 	var target_local_pos_1 = base_local_pos
 	var target_local_pos_2 = Vector2.ZERO 
 	
+	var final_lbl = Label.new()
+	
+	var espace_a_droite_des_des = 40
+		
+	final_lbl.add_theme_font_size_override("font_size", 34) 
+	if FileAccess.file_exists("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"):
+		final_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
+	
+	if action == "add2":
+		base_local_pos += Vector2(-50,0)
+		final_lbl.text = " + 2 = " + str(total + 2)
+		final_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) # Doré pour le bonus
+	else:
+		final_lbl.text = " = " + str(total)
+		final_lbl.add_theme_color_override("font_color", Color.WHITE) # Blanc normal
+	
 	if amount == 2:
+		base_local_pos += Vector2(-20,0)
 		target_local_pos_1 = base_local_pos - Vector2(ecart_entre_des, 0) 
 		target_local_pos_2 = base_local_pos 
 	
@@ -498,10 +530,28 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	if dummy_2:
 		tween.tween_property(dummy_2, "position", target_local_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	
+		
+	# On attend sagement que les dés atterrissent
 	await tween.finished
 	
-	return false
+	# --- 3. APPARITION DU TEXTE ("= X") UNIQUEMENT ICI ---
+
+		
+	target_btn.add_child(final_lbl)
+	
+	# Positionnement : On décale le texte vers la droite en fonction de `espace_a_droite_des_des`
+
+	final_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des, -5)
+	
+	# Apparition douce en fondu
+	final_lbl.modulate.a = 0.0
+	var fade_tween = get_tree().create_tween()
+	fade_tween.tween_property(final_lbl, "modulate:a", 1.0, 0.2)
+	
+	# On ajoute le texte à l'array pour qu'il soit détruit au tour suivant
+	mini_dice_array.append(final_lbl) 
+	
+	return action
 
 func ask_yes_no(question: String) -> bool:
 	lbl_question.text = question
@@ -531,63 +581,56 @@ func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 
 func update_monument_menu(is_demolish_mode: bool = false):
-	for child in %MonumentHBox.get_children():
-		child.queue_free()
-	
 	var target_player = self.current_player 
 	
-	var monument_list = [
-		Monument.MONUMENT_ID.Gare, 
-		Monument.MONUMENT_ID.Centre_Commercial, 
-		Monument.MONUMENT_ID.Parc, 
-		Monument.MONUMENT_ID.Radio, 
-		Monument.MONUMENT_ID.Port, 
-		Monument.MONUMENT_ID.Aeroport
-	]
+	# Mapping précis : ID -> Nom du Noeud -> Nom de l'image (sans _verso/_recto)
+	var monument_map = {
+		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "PORT"},
+		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "Gare"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "Centre_commercial"},
+		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "PARC_DATTRACTION"},
+		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "TOUR_RADIO"},
+		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "Aéroport"}
+	}
 	
-	for m_id in monument_list:
-		var slot = MONUMENT_SLOT_SCENE.instantiate()
-		%MonumentHBox.add_child(slot)
+	for m_id in monument_map:
+		var data = monument_map[m_id]
+		var vbox = cards_monuments_container.get_node_or_null(data["node"])
+		if not vbox: continue
 		
-		var card_data = CardFactory.get_card(m_id)
-		var is_built = target_player.monumentIsActive(m_id) 
+		var tex_rect: TextureRect = vbox.get_child(0)
+		var build_btn: TextureButton = vbox.get_child(1)
 		
-		setup_slot_visuals(slot, card_data, is_built, is_demolish_mode)
+		var is_built = target_player.monumentIsActive(m_id)
 		
-		var btn = slot.get_node("VBoxContainer/BuildButton")
+		# --- GESTION DU VISUEL (Recto/Verso) ---
+		# Respecte la casse de tes fichiers (ex: PORT_VERSO.png vs Gare_verso.png)
+		var state = ""
+		if data["file"] == data["file"].to_upper():
+			state = "RECTO" if is_built else "VERSO"
+		else:
+			state = "recto" if is_built else "verso"
+			
+		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
 		
+		if FileAccess.file_exists(tex_path):
+			tex_rect.texture = load(tex_path)
+			
+		# --- GESTION DU BOUTON (Achat direct) ---
+		for conn in build_btn.pressed.get_connections():
+			build_btn.pressed.disconnect(conn.callable)
+			
 		if is_demolish_mode:
-			btn.visible = is_built
-			if btn.pressed.is_connected(_on_construct_clicked):
-				btn.pressed.disconnect(_on_construct_clicked)
-			btn.pressed.connect(func(): demolish_completed.emit(m_id))
+			build_btn.visible = is_built
+			build_btn.pressed.connect(func(): demolish_completed.emit(m_id))
 		else:
-			btn.visible = true
-			btn.pressed.connect(_on_construct_clicked.bind(m_id))
-
-func setup_slot_visuals(slot, data, built, is_demolish_mode):
-	var card_name = data.get_name()
-	var clean_name = get_clean_file_name(card_name)
-	
-	var state = "active" if built else "inactive"
-	var tex_path = "res://assets/Cards/Monuments/monument_" + clean_name + "_" + state + ".png"
-	
-	var card_btn = slot.get_node("VBoxContainer/CardImage")
-	if FileAccess.file_exists(tex_path):
-		card_btn.texture_normal = load(tex_path)
-	
-	var action_btn = slot.get_node("VBoxContainer/BuildButton")
-	
-	if is_demolish_mode:
-		action_btn.text = "DÉTRUIRE"
-		action_btn.disabled = false 
-	else:
-		if built:
-			action_btn.disabled = true
-			action_btn.text = "CONSTRUIT"
-		else:
-			action_btn.disabled = false
-			action_btn.text = "CONSTRUIRE"
+			build_btn.visible = not is_built 
+			
+			# ACHAT DIRECT SANS OVERLAY
+			build_btn.pressed.connect(func():
+				monument_menu.hide() # Ferme le menu des monuments
+				action_selected.emit([game.CHOICE.Build_MONUMENT, m_id]) # Déclenche l'achat dans la logique
+			)
 		
 func _on_construct_clicked(m_id):
 	_on_shop_card_clicked(m_id) 

@@ -120,40 +120,30 @@ func finishGame(winner:Player) -> void:
 
 func DicePhase() -> int:
 	var numberDice = await gameplayScreen.waitForDiceRoll()
-	
 	var resArray = rollDice(numberDice)
 	
 	var can_reroll = getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Radio)
-	var wants_reroll = await gameplayScreen.showResult(resArray[0], resArray[1], can_reroll)
+	var choix = await gameplayScreen.showResult(resArray[0], resArray[1], can_reroll)
 	
-	# Monument Radio : pouvoir de relancer
-	if wants_reroll:
+	# --- 1. GESTION DE LA RELANCE (Tour Radio) ---
+	if choix == "reroll":
 		print("Player used Radio Tower to reroll!")
 		resArray = rollDice(numberDice)
+		choix = await gameplayScreen.showResult(resArray[0], resArray[1], false)
 		
-		await gameplayScreen.showResult(resArray[0], resArray[1], false)
-		
-	takes_bonus_turn = false
-	
-	# Monument Parc Attraction : pouvoir de rejouer
-	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
-		if numberDice == 2 && resArray[0] == resArray[1]:
-			print("Bonus turn earned!")
-			takes_bonus_turn = true
-		
-	# Monument Parc Arctraction : double -> tour bonus
-	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
-		if numberDice == 2 && resArray[0] == resArray[1]:
-			print("Bonus turn earned!")
-			takes_bonus_turn = true
-	
 	var sum = resArray[0] + resArray[1]
-	# Monument Port : resultat des >= 10, ajoutez +2.
-	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Port):
-		if sum >= 10:
-			var wants_add2 = await gameplayScreen.ask_yes_no("Ajouter 2 aux dés?")
-			if wants_add2:
-				sum = sum + 2
+	
+	# --- 2. GESTION DU BONUS (Port) ---
+	if choix == "add2":
+		print("Player used Port to add 2 to the dice!")
+		sum += 2
+	
+	# --- 3. GESTION DU TOUR BONUS (Parc d'attraction) ---
+	takes_bonus_turn = false
+	if getActivePlayer().monumentIsActive(Monument.MONUMENT_ID.Parc):
+		if numberDice == 2 and resArray[0] == resArray[1]:
+			print("Bonus turn earned!")
+			takes_bonus_turn = true
 	
 	current_roll_value = sum
 	return sum

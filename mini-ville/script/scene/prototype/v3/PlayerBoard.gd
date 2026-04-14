@@ -45,11 +45,38 @@ func _process(_delta: float) -> void:
 			active_stats_box.rotation = -self.rotation
 		else:
 			active_stats_box.rotation = 0
+	
+	
+func setup(player_data, is_active_player: bool):
+	self.player = player_data
+	
+	# --- LOGIQUE DES MONUMENTS (déjà présente) ---
+	var monument_nodes = {
+		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AeroportUnbuild", "build": "AeroportBuild"},
+		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
+		Monument.MONUMENT_ID.Gare: {"unbuild": "GareUnbuild", "build": "GareBuild"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"unbuild": "CentreCommercialUnbuild", "build": "CentreCommercialBuild"},
+		Monument.MONUMENT_ID.Parc: {"unbuild": "ParcDattractionUnbuild", "build": "ParcDattractionBuild"},
+		Monument.MONUMENT_ID.Radio: {"unbuild": "TourRadioUnbuild", "build": "TourRadioBuild"}
+	}
 
-func setup(player_data, is_active_player: bool) -> void:
-	player = player_data
-	if btn_pass: btn_pass.visible = is_active_player
-	if btn_monu: btn_monu.visible = is_active_player 
+	for m_id in monument_nodes:
+		var info = monument_nodes[m_id]
+		var unbuild_node = find_child(info["unbuild"], true, false)
+		var build_node = find_child(info["build"], true, false)
+		var is_built = player_data.monumentIsActive(m_id)
+		
+		if unbuild_node: unbuild_node.visible = not is_built
+		if build_node: build_node.visible = is_built
+
+	# --- NOUVELLE LOGIQUE : CACHER LES BOUTONS ---
+	# On affiche les boutons 'Passer le tour' et 'Monuments' 
+	# UNIQUEMENT si c'est le tour de ce joueur.
+	if btn_pass:
+		btn_pass.visible = is_active_player
+	if btn_monu:
+		btn_monu.visible = is_active_player
+
 	update_info()
 	update_deck()
 
