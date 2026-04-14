@@ -1,0 +1,734 @@
+[gd_scene format=3 uid="uid://deryxwrbl7vwu"]
+
+[ext_resource type="Script" uid="uid://cgy6f5o8vtdmt" path="res://script/scene/Ecran principal/profil.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cn6lhiosvojju" path="res://assets/Background/bg2.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://cw21gdhjicgct" path="res://assets/icon/icone_canard.png" id="3_avatar"]
+[ext_resource type="Texture2D" uid="uid://dvjstugda1lcq" path="res://assets/icon/profile_circle.png" id="4_cercle"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_font"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_lbl"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="7_btn"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_btnp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0, 0.698, 0.871, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_titre"]
+font = ExtResource("5_font")
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+outline_color = Color(1, 1, 1, 0.5)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trans"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pseudo"]
+font = ExtResource("5_font")
+font_size = 36
+font_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_stat_titre"]
+font = ExtResource("5_font")
+font_size = 22
+font_color = Color(0.45, 0.45, 0.45, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat"]
+bg_color = Color(0.92, 0.92, 0.92, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="FontFile" id="FontFile_awxc8"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/57/0/ascent = 0.0
+cache/0/57/0/descent = 0.0
+cache/0/57/0/underline_position = 0.0
+cache/0/57/0/underline_thickness = 0.0
+cache/0/57/0/scale = 1.0
+cache/0/58/0/ascent = 0.0
+cache/0/58/0/descent = 0.0
+cache/0/58/0/underline_position = 0.0
+cache/0/58/0/underline_thickness = 0.0
+cache/0/58/0/scale = 1.0
+cache/0/59/0/ascent = 0.0
+cache/0/59/0/descent = 0.0
+cache/0/59/0/underline_position = 0.0
+cache/0/59/0/underline_thickness = 0.0
+cache/0/59/0/scale = 1.0
+cache/0/60/0/ascent = 0.0
+cache/0/60/0/descent = 0.0
+cache/0/60/0/underline_position = 0.0
+cache/0/60/0/underline_thickness = 0.0
+cache/0/60/0/scale = 1.0
+cache/0/61/0/ascent = 0.0
+cache/0/61/0/descent = 0.0
+cache/0/61/0/underline_position = 0.0
+cache/0/61/0/underline_thickness = 0.0
+cache/0/61/0/scale = 1.0
+cache/0/62/0/ascent = 0.0
+cache/0/62/0/descent = 0.0
+cache/0/62/0/underline_position = 0.0
+cache/0/62/0/underline_thickness = 0.0
+cache/0/62/0/scale = 1.0
+cache/0/63/0/ascent = 0.0
+cache/0/63/0/descent = 0.0
+cache/0/63/0/underline_position = 0.0
+cache/0/63/0/underline_thickness = 0.0
+cache/0/63/0/scale = 1.0
+cache/0/64/0/ascent = 0.0
+cache/0/64/0/descent = 0.0
+cache/0/64/0/underline_position = 0.0
+cache/0/64/0/underline_thickness = 0.0
+cache/0/64/0/scale = 1.0
+cache/0/65/0/ascent = 0.0
+cache/0/65/0/descent = 0.0
+cache/0/65/0/underline_position = 0.0
+cache/0/65/0/underline_thickness = 0.0
+cache/0/65/0/scale = 1.0
+cache/0/66/0/ascent = 0.0
+cache/0/66/0/descent = 0.0
+cache/0/66/0/underline_position = 0.0
+cache/0/66/0/underline_thickness = 0.0
+cache/0/66/0/scale = 1.0
+cache/0/67/0/ascent = 0.0
+cache/0/67/0/descent = 0.0
+cache/0/67/0/underline_position = 0.0
+cache/0/67/0/underline_thickness = 0.0
+cache/0/67/0/scale = 1.0
+cache/0/68/0/ascent = 0.0
+cache/0/68/0/descent = 0.0
+cache/0/68/0/underline_position = 0.0
+cache/0/68/0/underline_thickness = 0.0
+cache/0/68/0/scale = 1.0
+cache/0/69/0/ascent = 0.0
+cache/0/69/0/descent = 0.0
+cache/0/69/0/underline_position = 0.0
+cache/0/69/0/underline_thickness = 0.0
+cache/0/69/0/scale = 1.0
+cache/0/70/0/ascent = 0.0
+cache/0/70/0/descent = 0.0
+cache/0/70/0/underline_position = 0.0
+cache/0/70/0/underline_thickness = 0.0
+cache/0/70/0/scale = 1.0
+cache/0/71/0/ascent = 0.0
+cache/0/71/0/descent = 0.0
+cache/0/71/0/underline_position = 0.0
+cache/0/71/0/underline_thickness = 0.0
+cache/0/71/0/scale = 1.0
+cache/0/72/0/ascent = 0.0
+cache/0/72/0/descent = 0.0
+cache/0/72/0/underline_position = 0.0
+cache/0/72/0/underline_thickness = 0.0
+cache/0/72/0/scale = 1.0
+cache/0/73/0/ascent = 0.0
+cache/0/73/0/descent = 0.0
+cache/0/73/0/underline_position = 0.0
+cache/0/73/0/underline_thickness = 0.0
+cache/0/73/0/scale = 1.0
+cache/0/74/0/ascent = 0.0
+cache/0/74/0/descent = 0.0
+cache/0/74/0/underline_position = 0.0
+cache/0/74/0/underline_thickness = 0.0
+cache/0/74/0/scale = 1.0
+cache/0/75/0/ascent = 0.0
+cache/0/75/0/descent = 0.0
+cache/0/75/0/underline_position = 0.0
+cache/0/75/0/underline_thickness = 0.0
+cache/0/75/0/scale = 1.0
+cache/0/76/0/ascent = 0.0
+cache/0/76/0/descent = 0.0
+cache/0/76/0/underline_position = 0.0
+cache/0/76/0/underline_thickness = 0.0
+cache/0/76/0/scale = 1.0
+cache/0/77/0/ascent = 0.0
+cache/0/77/0/descent = 0.0
+cache/0/77/0/underline_position = 0.0
+cache/0/77/0/underline_thickness = 0.0
+cache/0/77/0/scale = 1.0
+cache/0/78/0/ascent = 0.0
+cache/0/78/0/descent = 0.0
+cache/0/78/0/underline_position = 0.0
+cache/0/78/0/underline_thickness = 0.0
+cache/0/78/0/scale = 1.0
+cache/0/79/0/ascent = 0.0
+cache/0/79/0/descent = 0.0
+cache/0/79/0/underline_position = 0.0
+cache/0/79/0/underline_thickness = 0.0
+cache/0/79/0/scale = 1.0
+cache/0/80/0/ascent = 0.0
+cache/0/80/0/descent = 0.0
+cache/0/80/0/underline_position = 0.0
+cache/0/80/0/underline_thickness = 0.0
+cache/0/80/0/scale = 1.0
+cache/0/81/0/ascent = 0.0
+cache/0/81/0/descent = 0.0
+cache/0/81/0/underline_position = 0.0
+cache/0/81/0/underline_thickness = 0.0
+cache/0/81/0/scale = 1.0
+cache/0/82/0/ascent = 0.0
+cache/0/82/0/descent = 0.0
+cache/0/82/0/underline_position = 0.0
+cache/0/82/0/underline_thickness = 0.0
+cache/0/82/0/scale = 1.0
+cache/0/83/0/ascent = 0.0
+cache/0/83/0/descent = 0.0
+cache/0/83/0/underline_position = 0.0
+cache/0/83/0/underline_thickness = 0.0
+cache/0/83/0/scale = 1.0
+cache/0/84/0/ascent = 0.0
+cache/0/84/0/descent = 0.0
+cache/0/84/0/underline_position = 0.0
+cache/0/84/0/underline_thickness = 0.0
+cache/0/84/0/scale = 1.0
+cache/0/85/0/ascent = 0.0
+cache/0/85/0/descent = 0.0
+cache/0/85/0/underline_position = 0.0
+cache/0/85/0/underline_thickness = 0.0
+cache/0/85/0/scale = 1.0
+cache/0/86/0/ascent = 0.0
+cache/0/86/0/descent = 0.0
+cache/0/86/0/underline_position = 0.0
+cache/0/86/0/underline_thickness = 0.0
+cache/0/86/0/scale = 1.0
+cache/0/87/0/ascent = 0.0
+cache/0/87/0/descent = 0.0
+cache/0/87/0/underline_position = 0.0
+cache/0/87/0/underline_thickness = 0.0
+cache/0/87/0/scale = 1.0
+cache/0/88/0/ascent = 0.0
+cache/0/88/0/descent = 0.0
+cache/0/88/0/underline_position = 0.0
+cache/0/88/0/underline_thickness = 0.0
+cache/0/88/0/scale = 1.0
+cache/0/89/0/ascent = 0.0
+cache/0/89/0/descent = 0.0
+cache/0/89/0/underline_position = 0.0
+cache/0/89/0/underline_thickness = 0.0
+cache/0/89/0/scale = 1.0
+cache/0/90/0/ascent = 0.0
+cache/0/90/0/descent = 0.0
+cache/0/90/0/underline_position = 0.0
+cache/0/90/0/underline_thickness = 0.0
+cache/0/90/0/scale = 1.0
+cache/0/91/0/ascent = 0.0
+cache/0/91/0/descent = 0.0
+cache/0/91/0/underline_position = 0.0
+cache/0/91/0/underline_thickness = 0.0
+cache/0/91/0/scale = 1.0
+cache/0/92/0/ascent = 0.0
+cache/0/92/0/descent = 0.0
+cache/0/92/0/underline_position = 0.0
+cache/0/92/0/underline_thickness = 0.0
+cache/0/92/0/scale = 1.0
+cache/0/93/0/ascent = 0.0
+cache/0/93/0/descent = 0.0
+cache/0/93/0/underline_position = 0.0
+cache/0/93/0/underline_thickness = 0.0
+cache/0/93/0/scale = 1.0
+cache/0/94/0/ascent = 0.0
+cache/0/94/0/descent = 0.0
+cache/0/94/0/underline_position = 0.0
+cache/0/94/0/underline_thickness = 0.0
+cache/0/94/0/scale = 1.0
+cache/0/95/0/ascent = 0.0
+cache/0/95/0/descent = 0.0
+cache/0/95/0/underline_position = 0.0
+cache/0/95/0/underline_thickness = 0.0
+cache/0/95/0/scale = 1.0
+cache/0/96/0/ascent = 0.0
+cache/0/96/0/descent = 0.0
+cache/0/96/0/underline_position = 0.0
+cache/0/96/0/underline_thickness = 0.0
+cache/0/96/0/scale = 1.0
+cache/0/97/0/ascent = 0.0
+cache/0/97/0/descent = 0.0
+cache/0/97/0/underline_position = 0.0
+cache/0/97/0/underline_thickness = 0.0
+cache/0/97/0/scale = 1.0
+cache/0/98/0/ascent = 0.0
+cache/0/98/0/descent = 0.0
+cache/0/98/0/underline_position = 0.0
+cache/0/98/0/underline_thickness = 0.0
+cache/0/98/0/scale = 1.0
+cache/0/99/0/ascent = 0.0
+cache/0/99/0/descent = 0.0
+cache/0/99/0/underline_position = 0.0
+cache/0/99/0/underline_thickness = 0.0
+cache/0/99/0/scale = 1.0
+cache/0/100/0/ascent = 0.0
+cache/0/100/0/descent = 0.0
+cache/0/100/0/underline_position = 0.0
+cache/0/100/0/underline_thickness = 0.0
+cache/0/100/0/scale = 1.0
+cache/0/101/0/ascent = 0.0
+cache/0/101/0/descent = 0.0
+cache/0/101/0/underline_position = 0.0
+cache/0/101/0/underline_thickness = 0.0
+cache/0/101/0/scale = 1.0
+cache/0/102/0/ascent = 0.0
+cache/0/102/0/descent = 0.0
+cache/0/102/0/underline_position = 0.0
+cache/0/102/0/underline_thickness = 0.0
+cache/0/102/0/scale = 1.0
+cache/0/103/0/ascent = 0.0
+cache/0/103/0/descent = 0.0
+cache/0/103/0/underline_position = 0.0
+cache/0/103/0/underline_thickness = 0.0
+cache/0/103/0/scale = 1.0
+cache/0/104/0/ascent = 0.0
+cache/0/104/0/descent = 0.0
+cache/0/104/0/underline_position = 0.0
+cache/0/104/0/underline_thickness = 0.0
+cache/0/104/0/scale = 1.0
+cache/0/105/0/ascent = 0.0
+cache/0/105/0/descent = 0.0
+cache/0/105/0/underline_position = 0.0
+cache/0/105/0/underline_thickness = 0.0
+cache/0/105/0/scale = 1.0
+cache/0/106/0/ascent = 0.0
+cache/0/106/0/descent = 0.0
+cache/0/106/0/underline_position = 0.0
+cache/0/106/0/underline_thickness = 0.0
+cache/0/106/0/scale = 1.0
+cache/0/107/0/ascent = 0.0
+cache/0/107/0/descent = 0.0
+cache/0/107/0/underline_position = 0.0
+cache/0/107/0/underline_thickness = 0.0
+cache/0/107/0/scale = 1.0
+cache/0/108/0/ascent = 0.0
+cache/0/108/0/descent = 0.0
+cache/0/108/0/underline_position = 0.0
+cache/0/108/0/underline_thickness = 0.0
+cache/0/108/0/scale = 1.0
+cache/0/109/0/ascent = 0.0
+cache/0/109/0/descent = 0.0
+cache/0/109/0/underline_position = 0.0
+cache/0/109/0/underline_thickness = 0.0
+cache/0/109/0/scale = 1.0
+cache/0/110/0/ascent = 0.0
+cache/0/110/0/descent = 0.0
+cache/0/110/0/underline_position = 0.0
+cache/0/110/0/underline_thickness = 0.0
+cache/0/110/0/scale = 1.0
+cache/0/111/0/ascent = 0.0
+cache/0/111/0/descent = 0.0
+cache/0/111/0/underline_position = 0.0
+cache/0/111/0/underline_thickness = 0.0
+cache/0/111/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_7hdvn"]
+font = SubResource("FontFile_awxc8")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontFile" id="FontFile_tcmw1"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/57/0/ascent = 0.0
+cache/0/57/0/descent = 0.0
+cache/0/57/0/underline_position = 0.0
+cache/0/57/0/underline_thickness = 0.0
+cache/0/57/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_6atrx"]
+font = SubResource("FontFile_tcmw1")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontFile" id="FontFile_f4kfe"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/57/0/ascent = 0.0
+cache/0/57/0/descent = 0.0
+cache/0/57/0/underline_position = 0.0
+cache/0/57/0/underline_thickness = 0.0
+cache/0/57/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_nbc8u"]
+font = SubResource("FontFile_f4kfe")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontFile" id="FontFile_gtixo"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/57/0/ascent = 0.0
+cache/0/57/0/descent = 0.0
+cache/0/57/0/underline_position = 0.0
+cache/0/57/0/underline_thickness = 0.0
+cache/0/57/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_val"]
+font = SubResource("FontFile_gtixo")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bxy4l"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+skew = Vector2(1, 0)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 70.0
+expand_margin_right = 70.0
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(8, 9)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rouge"]
+bg_color = Color(0.82, 0.15, 0.15, 1)
+skew = Vector2(1, 0)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0.4, 0.05, 0.05, 1)
+shadow_size = 1
+shadow_offset = Vector2(8, 9)
+
+[node name="Profil" type="Control" unique_id=1533452229]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1975494498]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1834138668]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer" unique_id=99799936]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBoxCard" type="VBoxContainer" parent="CenterContainer/Card" unique_id=1114843864]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="CenterContainer/Card/VBoxCard" unique_id=860699902]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="HeaderRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/Header" unique_id=74196468]
+layout_mode = 2
+alignment = 1
+
+[node name="HeaderSpacer" type="Control" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=2125381682]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=1117335878]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MON PROFIL"
+label_settings = SubResource("LabelSettings_titre")
+horizontal_alignment = 1
+
+[node name="BtnFermer" type="Button" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=277087688]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.15, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_trans")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_trans")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_trans")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_trans")
+text = "✕"
+
+[node name="MarginContent" type="MarginContainer" parent="CenterContainer/Card/VBoxCard" unique_id=1780507488]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 36
+
+[node name="VBoxContent" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent" unique_id=137856708]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ProfileRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=2009491533]
+layout_mode = 2
+theme_override_constants/separation = 120
+
+[node name="AvatarStack" type="Control" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow" unique_id=1726316891]
+custom_minimum_size = Vector2(178, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AvatarCercle" type="TextureRect" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/AvatarStack" unique_id=1636494803]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_cercle")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AvatarIcon" type="TextureRect" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/AvatarStack" unique_id=528716808]
+custom_minimum_size = Vector2(90, 84)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -42.0
+offset_right = 45.0
+offset_bottom = 42.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_avatar")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoContainer" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow" unique_id=1305995105]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="LabelPseudo" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=1578382332]
+layout_mode = 2
+text = "MAYOR PSEUDO"
+label_settings = SubResource("LabelSettings_pseudo")
+
+[node name="LabelEmail" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=597468529]
+layout_mode = 2
+text = "email@miniville.com"
+label_settings = ExtResource("6_lbl")
+
+[node name="LabelMembre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=1762247697]
+layout_mode = 2
+text = "Membre depuis le 01/01/2025"
+label_settings = ExtResource("6_lbl")
+
+[node name="Separator" type="HSeparator" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=1335987060]
+layout_mode = 2
+
+[node name="LabelStats" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=263351698]
+layout_mode = 2
+text = "☰ STATISTIQUES"
+label_settings = SubResource("LabelSettings_stat_titre")
+
+[node name="StatsGrid" type="GridContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=1205621679]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="BoxParties" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=361744268]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties" unique_id=376177028]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties/VBox" unique_id=1208715627]
+layout_mode = 2
+text = "PARTIES"
+label_settings = SubResource("LabelSettings_stat_titre")
+
+[node name="LabelPartiesVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties/VBox" unique_id=1756935306]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_7hdvn")
+
+[node name="BoxVictoires" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=541753749]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires" unique_id=1503193892]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires/VBox" unique_id=151366573]
+layout_mode = 2
+text = "VICTOIRES"
+label_settings = SubResource("LabelSettings_stat_titre")
+
+[node name="LabelVictoiresVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires/VBox" unique_id=1535891618]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6atrx")
+
+[node name="BoxDefaites" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=1451582638]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites" unique_id=765355452]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites/VBox" unique_id=172720663]
+layout_mode = 2
+text = "DÉFAITES"
+label_settings = SubResource("LabelSettings_stat_titre")
+
+[node name="LabelDefaitesVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites/VBox" unique_id=1282485309]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_nbc8u")
+
+[node name="BoxWinRate" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=1574847374]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate" unique_id=1500490187]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate/VBox" unique_id=1896712404]
+layout_mode = 2
+text = "WIN RATE"
+label_settings = SubResource("LabelSettings_stat_titre")
+
+[node name="LabelWinRateVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate/VBox" unique_id=544774242]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_val")
+
+[node name="BtnModifier" type="Button" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=1731412170]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_colors/font_color = Color(0.784, 0.224, 0.149, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_bxy4l")
+theme_override_styles/pressed = ExtResource("8_btnp")
+theme_override_styles/hover = ExtResource("8_btnp")
+theme_override_styles/focus = ExtResource("7_btn")
+text = "MODIFIER LE PROFIL"
+
+[node name="BtnRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=62938538]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BtnMotDePasse" type="Button" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/BtnRow" unique_id=2042925520]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.784, 0.224, 0.149, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = ExtResource("7_btn")
+theme_override_styles/pressed = ExtResource("8_btnp")
+theme_override_styles/hover = ExtResource("8_btnp")
+theme_override_styles/focus = ExtResource("7_btn")
+text = "CHANGER DE MOT DE PASSE"
+
+[node name="BtnDeconnexion" type="Button" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/BtnRow" unique_id=461291777]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.5, 0.1, 0.1, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_rouge")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rouge")
+text = "DÉCONNEXION"
