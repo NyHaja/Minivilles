@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dl2wa48txlfy1"]
 
 [ext_resource type="Script" uid="uid://cal60a45rnbck" path="res://script/scene/Popup/popup_login.gd" id="1_jxo3r"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="2_jxo3r"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="3_aaky7"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="2_jxo3r"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="3_aaky7"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_1hqms"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_rgr1t"]
-[ext_resource type="FontFile" uid="uid://bprswygvdi7v7" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_l61gd"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="7_arvrg"]
-[ext_resource type="FontFile" uid="uid://duiwby4dfs03n" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="8_dix67"]
-[ext_resource type="FontFile" uid="uid://c34qqu7cew8ab" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="9_xvepj"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_rgr1t"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_l61gd"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="7_arvrg"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="8_dix67"]
+[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="9_xvepj"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_s5moy"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_4otwt"]
 
@@ -171,7 +171,7 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=2045653350]
 layout_mode = 2
-text = "Back"
+text = "Retour"
 label_settings = ExtResource("4_1hqms")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -261,7 +261,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
 
 [node name="pseudo2" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=813865913]
 layout_mode = 2
-text = "Password"
+text = "Mot de Passe"
 label_settings = SubResource("LabelSettings_hxsvn")
 
 [node name="LineEdit2" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
@@ -279,7 +279,7 @@ secret_character = "."
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 20
-text = "Forgot password?"
+text = "Mot de passe oublié"
 label_settings = SubResource("LabelSettings_dc6bf")
 horizontal_alignment = 2
 
@@ -331,7 +331,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_1ewyy")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
-text = "already registered?"
+text = "Vous voulez vous inscrire ?"
 label_settings = SubResource("LabelSettings_rsws6")
 horizontal_alignment = 1
 
@@ -347,7 +347,7 @@ theme_override_fonts/font = ExtResource("5_rgr1t")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ewyy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_21yao")
 theme_override_styles/hover = SubResource("StyleBoxFlat_m4w4u")
-text = "Sign in"
+text = "S'inscrire"
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
 [connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="bouton_connexion"]

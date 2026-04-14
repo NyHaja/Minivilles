@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dpmmcwfqqufi6"]
 
 [ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://script/scene/Popup/rules_panel.gd" id="1_07o7p"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="1_o4co6"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="2_bwkas"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="1_o4co6"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="2_bwkas"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_541gp"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
-[ext_resource type="FontFile" uid="uid://bprswygvdi7v7" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
-[ext_resource type="FontFile" uid="uid://c34qqu7cew8ab" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
+[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -104,7 +104,7 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=411881164]
 layout_mode = 2
-text = "Back"
+text = "Retour"
 label_settings = ExtResource("3_541gp")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -147,7 +147,7 @@ horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/VBoxContainer" unique_id=52051124]
 layout_mode = 2
-text = "Rules"
+text = "Règles"
 label_settings = SubResource("LabelSettings_nefu6")
 horizontal_alignment = 1
 
