@@ -133,5 +133,6 @@ func insert_guest(nickname: String):
 func _input(event):
 	# Appuie sur Espace / Entrée (l'action ui_accept par défaut) pour tester l'envoi
 	if event.is_action_pressed("ui_accept"):
-		send_historic(5,1,"TEST",1043,-1,100,1,2,2)
+		send_historic(5, 1, "TEST", 1043, -1, 100, 1, 2, 2)   
+		
 		

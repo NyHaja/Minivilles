@@ -9,11 +9,15 @@ var clients : Array[StreamPeerTCP] = []
 var request_queue : Array = [] 
 const MAX_REQUESTS_PER_FRAME = 10 
 
+# ---------------------------------------------------------
+# VARIABLES GLOBALES
+# ---------------------------------------------------------
 var active_sessions : Dictionary = {}
+var lobbies : Dictionary = {}
 
 func on_client_login_success(client_socket, player_id):
 	active_sessions[client_socket] = player_id
-	print("Joueur", player_id, "est maintenant lié à cette connexion.")
+	print("Joueur ", player_id, " est maintenant lié à cette connexion.")
 
 func _ready():
 	print("Démarrage du Game Server sur le port ", port, "...")
@@ -76,6 +80,7 @@ func route_request(client: StreamPeerTCP, data: Dictionary):
 		
 	var action = data["action"]
 	
+# ------------------- Authentification -------------------
 	match action:
 		"register":
 			handler_register(client, data)
@@ -86,14 +91,22 @@ func route_request(client: StreamPeerTCP, data: Dictionary):
 			handler_authentification(client,data)
 		"guest_player":
 			handler_guest_player(client,data)
-		_:
-			send_to_client(client, {"status": "error", "message": "Action non reconnue."})
-
+# ------------------- Lobby -----------------------------
+		"create_lobby":
+			handler_create_lobby(client, data)
+		"join_lobby":
+			handler_join_lobby(client, data)
+		"leave_lobby":
+			handler_leave_lobby(client, data)
+		"start_game":
+			handler_start_game(client, data)
 			
+		_:	# default
+			send_to_client(client, {"status": "error", "message": "Action non reconnue."})
 
 
 ## ====================================================
-## 1. LES HANDLERS (Préparation des données)
+## 1. LES HANDLERS_AUTHENTIFICATION (Préparation des données)
 ## ====================================================
 
 func handler_register(client: StreamPeerTCP, data: Dictionary):
@@ -146,18 +159,19 @@ func handler_guest_player(client : StreamPeerTCP,data : Dictionary) :
 	}
 
 	send_to_flask_api("guest_player","/guest/register",payload,client)
+	
 ## ====================================================
 ## 2. L'API FLASK FACTORISÉE (Le "Moteur" HTTP)
 ## ====================================================
 
 # Fonction unique pour envoyer des requêtes à Flask
-func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTCP):
+func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTCP, extra: Dictionary={}):
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	
-	http_request.request_completed.connect(_on_flask_response.bind(client, http_request, action_name))
+	http_request.request_completed.connect(_on_flask_response.bind(client, http_request, action_name, extra))
 	
-	var url = "http://192.168.100.125:5000" + endpoint
+	var url = "http://192.168.100.125:5000" + endpoint		# <- IP du serveur 1
 	var headers = ["Content-Type: application/json"]
 	var body = JSON.stringify(payload)
 	
@@ -165,7 +179,7 @@ func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionar
 
 
 # Fonction unique pour recevoir TOUTES les réponses de Flask
-func _on_flask_response(result, response_code, headers, body, client: StreamPeerTCP, http_node: HTTPRequest, action_name: String):
+func _on_flask_response(result, response_code, headers, body, client: StreamPeerTCP, http_node: HTTPRequest, action_name: String, extra: Dictionary={}):
 	http_node.queue_free() # Nettoyage
 	
 	if response_code == 0 or response_code >= 500:
@@ -182,7 +196,28 @@ func _on_flask_response(result, response_code, headers, body, client: StreamPeer
 			# On lie le socket au player_id dans le dictionnaire active_sessions
 			on_client_login_success(client, player_id)
 	# ---------------------------------------
-	
+	if action_name == "start_game" and flask_response.get("status") == "success":
+		var game_id = flask_response.get("game_id")
+		var lobby_id = extra.get("lobby_id", "")
+		if lobbies.has(lobby_id):
+			lobbies[lobby_id]["game_id"] = game_id
+			lobbies[lobby_id]['etat'] = "EN_JEU"
+			
+			var ordre_joueurs = []
+			for joueur in lobbies[lobby_id]["joueurs"]:
+				ordre_joueurs.append(active_sessions.get(joueur, "inconnu"))
+				
+			broadcast_lobby(lobby_id, {
+				"action_reply": "start_game",
+				"type": "game_demarre",
+				"status": "success",
+				"data": {
+					"game_id": lobby_id,
+					"ordre_joueurs": ordre_joueurs
+				}
+			})
+		return
+	# -----------------------------------------------------------------------
 	# On construit la réponse à renvoyer au jeu (client Godot)
 	var reponse_client = {
 		"action_reply": action_name, 
@@ -198,6 +233,8 @@ func _on_flask_response(result, response_code, headers, body, client: StreamPeer
 		reponse_client["player_id"] = flask_response["player_id"]
 	
 	send_to_client(client, reponse_client)
+	
+
 
 
 ## ====================================================
@@ -209,3 +246,263 @@ func send_to_client(client: StreamPeerTCP, data: Dictionary):
 		var json_string = JSON.stringify(data) + "\n"
 		client.put_data(json_string.to_utf8_buffer())
 		print("-> Réponse envoyée au client pour : ", data.get("action_reply", "inconnu"))
+		
+## ====================================================
+## 4. HANDLERS LOBBY
+## ====================================================
+
+# Génère un ID unique pour le lobby
+# ID = CODE[6]
+func generer_lobby_id() -> String:
+	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var code = ""
+	for i in range(6):
+		code +=alphabet[randi() % alphabet.length()]
+	return code
+	
+func generer_code_unique() -> String:
+	var code = generer_lobby_id()
+	while lobbies.has(code):
+		code = generer_lobby_id()
+	return code
+
+# Récupère le player_id lié à un client
+func get_player_id(client: StreamPeerTCP):
+	return active_sessions.get(client, null)
+
+# Notifie tous les joueurs d'un lobby que la partie va commencer
+func broadcast_lobby(lobby_id: String, data: Dictionary):
+	var lobby = lobbies[lobby_id]
+	for joueur in lobby["joueurs"]:
+		send_to_client(joueur, data)
+
+
+## ── CREATE LOBBY ─────────────────────────────────────
+func handler_create_lobby(client: StreamPeerTCP, data: Dictionary):
+	
+	# Vérifier que le joueur est connecté
+	var player_id = get_player_id(client)
+	if player_id == null:
+		send_to_client(client, {
+			"action_reply": "create_lobby",
+			"status": "error",
+			"message": "Vous devez être connecté pour créer un lobby."
+		})
+		return
+
+	# Récupérer les paramètres
+	var nom = data.get("nom", "Partie sans nom")
+	var max_joueurs = data.get("max_joueurs", 4)
+	var prive = data.get("prive", false)
+
+	# Générer un ID unique
+	var lobby_id = generer_code_unique()
+
+	# Créer le lobby en mémoire
+	lobbies[lobby_id] = {
+		"nom": nom,
+		"host": client,
+		"joueurs": [client],
+		"max_joueurs": max_joueurs,
+		"prive": prive,
+		"etat": "EN_ATTENTE"
+	}
+
+	print("[LOBBY] Lobby créé : ", lobby_id, " par joueur ", player_id)
+
+	# Répondre au créateur
+	send_to_client(client, {
+		"action_reply": "create_lobby",
+		"type": "lobby_cree",
+		"status": "success",
+		"data": {
+			"lobby_id": lobby_id,
+			"nom": nom,
+			"max_joueurs": max_joueurs,
+			"prive": prive,
+			"joueurs": [player_id]
+		}
+	})
+
+
+## ── JOIN LOBBY ───────────────────────────────────────
+func handler_join_lobby(client: StreamPeerTCP, data: Dictionary):
+
+	var player_id = get_player_id(client)
+	if player_id == null:
+		send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "Vous devez être connecté pour rejoindre un lobby."
+		})
+		return
+
+	var lobby_id = data.get("lobby_id", "")
+
+	# Vérifier que le lobby existe
+	if not lobbies.has(lobby_id):
+		send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "Lobby introuvable."
+		})
+		return
+
+	var lobby = lobbies[lobby_id]
+
+	# Vérifier que la partie n'a pas déjà commencé
+	if lobby["etat"] != "EN_ATTENTE":
+		send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "La partie a déjà commencé."
+		})
+		return
+
+	# Vérifier que le lobby n'est pas plein
+	if lobby["joueurs"].size() >= lobby["max_joueurs"]:
+		send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "Le lobby est plein."
+		})
+		return
+
+	# Vérifier que le joueur n'est pas déjà dans le lobby
+	if client in lobby["joueurs"]:
+		send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "Vous êtes déjà dans ce lobby."
+		})
+		return
+
+	# Ajouter le joueur
+	lobby["joueurs"].append(client)
+	print("[LOBBY] Joueur ", player_id, " a rejoint le lobby ", lobby_id)
+
+	# Construire la liste des joueurs
+	var liste_joueurs = []
+	for joueur in lobby["joueurs"]:
+		liste_joueurs.append(active_sessions.get(joueur, "inconnu"))
+
+	# Notifier tous les joueurs du lobby
+	broadcast_lobby(lobby_id, {
+		"action_reply": "join_lobby",
+		"type": "lobby_mis_a_jour",
+		"status": "success",
+		"data": {
+			"lobby_id": lobby_id,
+			"joueurs": liste_joueurs
+		}
+	})
+
+
+## ── LEAVE LOBBY ──────────────────────────────────────
+func handler_leave_lobby(client: StreamPeerTCP, data: Dictionary):
+
+	var player_id = get_player_id(client)
+	var lobby_id = data.get("lobby_id", "")
+
+	if not lobbies.has(lobby_id):
+		send_to_client(client, {
+			"action_reply": "leave_lobby",
+			"status": "error",
+			"message": "Lobby introuvable."
+		})
+		return
+
+	var lobby = lobbies[lobby_id]
+
+	# Retirer le joueur
+	lobby["joueurs"].erase(client)
+	print("[LOBBY] Joueur ", player_id, " a quitté le lobby ", lobby_id)
+
+	# Si le lobby est vide, le supprimer
+	if lobby["joueurs"].size() == 0:
+		lobbies.erase(lobby_id)
+		print("[LOBBY] Lobby ", lobby_id, " dissous (vide)")
+		return
+
+	# Si le host quitte, transférer au joueur suivant
+	if lobby["host"] == client:
+		lobby["host"] = lobby["joueurs"][0]
+		var nouveau_host_id = active_sessions.get(lobby["host"], "inconnu")
+		print("[LOBBY] Nouveau host : ", nouveau_host_id)
+
+	# Notifier les joueurs restants
+	var liste_joueurs = []
+	for joueur in lobby["joueurs"]:
+		liste_joueurs.append(active_sessions.get(joueur, "inconnu"))
+
+	broadcast_lobby(lobby_id, {
+		"action_reply": "leave_lobby",
+		"type": "lobby_mis_a_jour",
+		"status": "success",
+		"data": {
+			"lobby_id": lobby_id,
+			"joueurs": liste_joueurs
+		}
+	})
+
+
+## ── START GAME ───────────────────────────────────────
+func handler_start_game(client: StreamPeerTCP, data: Dictionary):
+
+	var player_id = get_player_id(client)
+	var lobby_id = data.get("lobby_id", "")
+
+	if not lobbies.has(lobby_id):
+		send_to_client(client, {
+			"action_reply": "start_game",
+			"status": "error",
+			"message": "Lobby introuvable."
+		})
+		return
+
+	var lobby = lobbies[lobby_id]
+
+	# Vérifier que c'est le host qui lance
+	if lobby["host"] != client:
+		send_to_client(client, {
+			"action_reply": "start_game",
+			"status": "error",
+			"message": "Seul le host peut lancer la partie."
+		})
+		return
+
+	# Vérifier le nombre minimum de joueurs
+	#if lobby["joueurs"].size() < 2:
+		#send_to_client(client, {
+			#"action_reply": "start_game",
+			#"status": "error",
+			#"message": "Il faut au moins 2 joueurs pour lancer la partie."
+		#})
+		#return
+# Envoyer à Flask pour créer la ligne dans le GAME
+	var payload = {
+		"player_id":player_id,
+		"player_type":"registered"
+	}
+	send_to_flask_api("start_game", "/game/create", payload, client, {"lobby_id": lobby_id})
+	
+
+func _on_start_game_response(result, response_code, headers, body, client : StreamPeerTCP, http_node: HTTPRequest, lobby_id: String):
+	http_node.queue_free()
+	
+	var flask_response = JSON.parse_string(body.get_string_from_utf8())
+	
+	if flask_response.get("status") != "success":
+		send_to_client(client, {
+			"action_reply": "start_game",
+			"status": "error",
+			"message": "Erreur création partie en BDD"
+		})
+		return
+		
+	# Stokcer le game_INT retourné par Flask
+	var game_id = flask_response.get("game_id")
+	lobbies[lobby_id]["game_id"] = game_id
+	lobbies[lobby_id]["etat"] = "EN_JEU"
+	
+	

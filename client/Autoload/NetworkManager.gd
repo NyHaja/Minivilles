@@ -24,6 +24,9 @@ var _connecte := false
 var _session_token := ""
 var _joueur_id := -1
 
+var _est_guest := false
+var _guest_id = -1
+
 # ------------------------------------
 #	INITIALISATION
 # ------------------------------------
@@ -38,6 +41,10 @@ func _connecter():
 		print("[NetworkManager] Erreur connexion : ", err)
 	else:
 		print("[NetworkManager] Connexion en cours vers ", HOST, ":", PORT)
+
+func set_guest(id : int):
+	_guest_id = id
+	_est_guest = true
 
 # ------------------------------------
 #	BOUCLE PRINCIPALE
@@ -111,3 +118,9 @@ func set_token(token: String):
 
 func set_joueur_id(id: int):
 	_joueur_id = id
+	
+func est_guest():
+	return 
+	
+func get_guest_id() -> int:
+	return _guest_id

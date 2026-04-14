@@ -10,10 +10,14 @@ config_version=5
 
 [application]
 
-config/name="Serveur"
+config/name="Client"
 run/main_scene="res://main_client.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NetworkManager="*uid://dwii3wdl3k8xh"
 
 [physics]
 
