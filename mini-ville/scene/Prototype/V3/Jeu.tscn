@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
 [ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="7_ju1ig"]
+[ext_resource type="Texture2D" uid="uid://drsy7vmyh4ujq" path="res://assets/UI/parametre_hover.png.png" id="7_u3wdh"]
+[ext_resource type="Texture2D" uid="uid://bj503fsn2kuay" path="res://assets/UI/parametre_normal.png" id="8_tcw7y"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
 [ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="10_417mv"]
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="11_2vk2f"]
@@ -16,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://b80b2lkm1gpkv" path="res://assets/UI/blank_red_button.png" id="16_2vk2f"]
 [ext_resource type="Texture2D" uid="uid://22upijbo801o" path="res://assets/UI/2Dice.png" id="16_u3wdh"]
 [ext_resource type="Texture2D" uid="uid://boiqp3n7u5iil" path="res://assets/UI/blank_red_button_hover.png" id="17_u3wdh"]
+[ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="19_tcw7y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua8b"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -30,10 +33,10 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 bg_color = Color(0, 0, 0, 0.8627451)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fiso1"]
-texture = ExtResource("16_2vk2f")
+texture = ExtResource("8_tcw7y")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dxqjm"]
-texture = ExtResource("17_u3wdh")
+texture = ExtResource("7_u3wdh")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_417mv"]
 texture = ExtResource("16_2vk2f")
@@ -111,6 +114,15 @@ texture = ExtResource("17_u3wdh")
 texture = ExtResource("16_2vk2f")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0xjma"]
+texture = ExtResource("17_u3wdh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyh2q"]
+bg_color = Color(0, 0, 0, 0.8627451)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4a53q"]
+texture = ExtResource("16_2vk2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yln80"]
 texture = ExtResource("17_u3wdh")
 
 [node name="Jeu" type="Node" unique_id=1592581662]
@@ -847,3 +859,84 @@ theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxTexture_kgc6u")
 theme_override_styles/hover = SubResource("StyleBoxTexture_0xjma")
 text = "Relancer les dés"
+
+[node name="Settings" type="Button" parent="." unique_id=597760815]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -94.965576
+offset_bottom = 81.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("6_mjl58")
+theme_override_font_sizes/font_size = 55
+theme_override_styles/normal = SubResource("StyleBoxTexture_fiso1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dxqjm")
+
+[node name="SettingsOverlay" type="PanelContainer" parent="." unique_id=1581681979]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fyh2q")
+
+[node name="HBoxContainer" type="VBoxContainer" parent="SettingsOverlay" unique_id=255608039]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 15
+
+[node name="Pause" type="Label" parent="SettingsOverlay/HBoxContainer" unique_id=1565681225]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78039217, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("19_tcw7y")
+theme_override_font_sizes/font_size = 100
+text = "Pause"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="SettingsOverlay/HBoxContainer" unique_id=1108823139]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Continuer" type="Button" parent="SettingsOverlay/HBoxContainer" unique_id=492979213]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 87)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("19_tcw7y")
+theme_override_font_sizes/font_size = 57
+theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
+text = "Continuer
+"
+
+[node name="MenuPrincipale" type="Button" parent="SettingsOverlay/HBoxContainer" unique_id=1458463191]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 87)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("19_tcw7y")
+theme_override_font_sizes/font_size = 57
+theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
+text = "Menu Principale"
+
+[node name="Quitter" type="Button" parent="SettingsOverlay/HBoxContainer" unique_id=714789440]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 87)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("19_tcw7y")
+theme_override_font_sizes/font_size = 57
+theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
+text = "Quitter
+"

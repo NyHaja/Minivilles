@@ -141,7 +141,7 @@ func set_badge_count(count: int) -> void:
 		badge = Label.new()
 		badge.name = "CountBadge"
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		badge.z_index = 5 
+		badge.show_behind_parent = false
 		
 		badge.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 		badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN

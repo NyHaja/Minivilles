@@ -80,7 +80,7 @@ var dice_textures = [
 @onready var give_opponents: HBoxContainer = %GiveOpponents
 @onready var btn_confirm_give: Button = %ConfirmGive
 @onready var demolish_panel: ColorRect = $DemolishPanel
-@onready var demolish_monuments: HBoxContainer = %DemolishMonuments
+@onready var demolish_mÉpicerieonuments: HBoxContainer = %DemolishMonuments
 @onready var btn_confirm_demolish: Button = %ConfirmDemolish
 @onready var buy_confirm_panel: ColorRect = %ConfirmCardBuyPanel
 @onready var card_preview: Control = %CardPreview
@@ -91,6 +91,11 @@ var dice_textures = [
 @onready var chalutier_roll: Button = %ChalutierRoll
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
+@onready var settings_button: Button = %Settings
+@onready var settings_overlay: PanelContainer = %SettingsOverlay
+@onready var continue_button: Button = %Continuer
+@onready var main_menu_button: Button = %MenuPrincipale
+@onready var settings_quit_button: Button = %Quitter
 
 var trade_target = null
 var trade_their_card_id: int = -1
@@ -133,10 +138,23 @@ func _ready() -> void:
 	remove_gold.pressed.connect(_on_add_gold_pressed.bind(-2))
 	btn_conserver.pressed.connect(func(): dice_decision_made.emit(false))
 	btn_relancer.pressed.connect(func(): dice_decision_made.emit(true))
+	settings_button.pressed.connect(func(): _on_settings_pressed())
+	continue_button.pressed.connect(func(): _on_continue_pressed())
+	main_menu_button.pressed.connect(func(): _on_quit_pressed())
+	settings_quit_button.pressed.connect(func(): get_tree().quit())
 	
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
+func _on_settings_pressed() -> void:
+	settings_overlay.move_to_front()
+	settings_overlay.show()
+	
+func _on_continue_pressed() -> void:
+	settings_overlay.hide()
+	
+	
+
 func _on_add_gold_pressed(amount: int) -> void:
 	print("Gold button clicked with amount: ", amount)
 	if current_player != null:
