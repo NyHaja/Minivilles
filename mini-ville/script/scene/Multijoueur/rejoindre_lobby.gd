@@ -170,7 +170,7 @@ func _creer_bande_lobby(code_lobby: String, temps_restant: String, is_private: b
 	lbl_temps.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var lbl_visibilite = Label.new()
-	lbl_visibilite.text = "Privée" if is_private else "Public"
+	lbl_visibilite.text = tr("Privée") if is_private else tr("Public")
 	lbl_visibilite.custom_minimum_size = Vector2(100, 0)
 	lbl_visibilite.size_flags_horizontal = Control.SIZE_SHRINK_END
 	lbl_visibilite.add_theme_font_override("font", load("res://Fonts/Exo_2/static/Exo2-BoldItalic.ttf"))

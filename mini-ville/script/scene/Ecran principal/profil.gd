@@ -3,7 +3,7 @@ extends Control
 const CONTENT = "CenterContainer/Card/VBoxCard/MarginContent/VBoxContent"
 
 func _ready() -> void:
-	#$BtnRetour.pressed.connect(_on_fermer)
+	$BtnRetour/Fleche.pressed.connect(_on_fermer)
 	get_node(CONTENT + "/BtnModifier").pressed.connect(_on_modifier)
 	get_node(CONTENT + "/BtnRow/BtnMotDePasse").pressed.connect(_on_mot_de_passe)
 	get_node(CONTENT + "/BtnRow/BtnDeconnexion").pressed.connect(_on_deconnexion)

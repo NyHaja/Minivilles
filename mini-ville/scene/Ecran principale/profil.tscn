@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cgy6f5o8vtdmt" path="res://script/scene/Ecran principal/profil.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cn6lhiosvojju" path="res://assets/Background/bg2.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="9_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="10_backp"]
 [ext_resource type="Texture2D" uid="uid://cw21gdhjicgct" path="res://assets/icon/icone_canard.png" id="3_avatar"]
 [ext_resource type="Texture2D" uid="uid://dvjstugda1lcq" path="res://assets/icon/profile_circle.png" id="4_cercle"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_font"]
@@ -11,12 +13,18 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 24
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0.168, 0.2, 0.486, 1)
+shadow_size = 1
+shadow_offset = Vector2(6, 7)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
 bg_color = Color(0, 0.698, 0.871, 1)
@@ -486,7 +494,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="CenterContainer" unique_id=99799936]
-custom_minimum_size = Vector2(800, 0)
+custom_minimum_size = Vector2(720, 830)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -502,28 +510,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 layout_mode = 2
 alignment = 1
 
-[node name="HeaderSpacer" type="Control" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=2125381682]
-custom_minimum_size = Vector2(60, 0)
-layout_mode = 2
-
 [node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=1117335878]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "MON PROFIL"
 label_settings = SubResource("LabelSettings_titre")
 horizontal_alignment = 1
-
-[node name="BtnFermer" type="Button" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=277087688]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.15, 0.15, 0.15, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxEmpty_trans")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_trans")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_trans")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_trans")
-text = "✕"
 
 [node name="MarginContent" type="MarginContainer" parent="CenterContainer/Card/VBoxCard" unique_id=1780507488]
 layout_mode = 2
@@ -732,3 +724,29 @@ theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_rouge")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_rouge")
 text = "DÉCONNEXION"
+
+[node name="BtnRetour" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 110.0
+offset_bottom = 155.0
+mouse_filter = 2
+theme_override_constants/separation = 5
+
+[node name="Fleche" type="TextureButton" parent="BtnRetour"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("9_back")
+texture_pressed = ExtResource("10_backp")
+texture_hover = ExtResource("10_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="BtnRetour"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("6_lbl")
+horizontal_alignment = 1

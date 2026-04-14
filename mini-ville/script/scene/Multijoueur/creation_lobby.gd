@@ -28,7 +28,7 @@ func _ready():
 
 func _on_switch_toggled(pressed: bool):
 	is_private = pressed
-	$SwitchContainer/LabelSwitch.text = "Privée" if pressed else "Publique"
+	$SwitchContainer/LabelSwitch.text = tr("Privée") if pressed else tr("Publique")
 
 
 func _on_duree_gauche():
