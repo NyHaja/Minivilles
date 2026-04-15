@@ -95,7 +95,7 @@ var dice_textures = [
 @onready var chalutier_roll: Button = %ChalutierRoll
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
-@onready var settings_button: Button = %Settings
+@onready var settings_button: TextureButton = %Settings
 @onready var settings_overlay: PanelContainer = %SettingsOverlay
 @onready var continue_button: Button = %Continuer
 @onready var main_menu_button: Button = %MenuPrincipale
@@ -514,7 +514,8 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		addTwo_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
 	
 	if action == "add2":
-		base_local_pos += Vector2(-50,0)
+		total += 2
+		base_local_pos += Vector2(-45,0)
 		addTwo_lbl.text = " + 2 "
 		addTwo_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) # Doré pour le bonus
 

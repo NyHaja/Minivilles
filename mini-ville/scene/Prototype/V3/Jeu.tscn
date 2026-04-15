@@ -38,6 +38,10 @@
 [ext_resource type="Texture2D" uid="uid://xoctkhbk4u3y" path="res://assets/Cards/Monuments/tour_radio_verso.png" id="26_4a53q"]
 [ext_resource type="Texture2D" uid="uid://tik68xgpd7y6" path="res://assets/UI/refaire_lancer_hover.png" id="26_o3cpr"]
 [ext_resource type="Texture2D" uid="uid://b4n1toe40id8m" path="res://assets/Cards/Monuments/parc_dattraction_verso.png" id="27_yln80"]
+[ext_resource type="Texture2D" uid="uid://cikuvt5og2fwd" path="res://assets/UI/Paramètres.png" id="28_cutg6"]
+[ext_resource type="Texture2D" uid="uid://cmtjjkmo1j4up" path="res://assets/UI/setting_button_hover.png" id="29_scawg"]
+[ext_resource type="Texture2D" uid="uid://c1xgp0wr15ioj" path="res://assets/UI/Règles.png" id="30_gmss7"]
+[ext_resource type="Texture2D" uid="uid://cm3a6fahoq7xs" path="res://assets/UI/rules_button_hover.png" id="31_nak6p"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_417mv"]
 bg_color = Color(0, 0, 0, 0.8627451)
@@ -632,6 +636,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_aqux4")
 text = "Retour"
 
 [node name="TurnOverlay" type="ColorRect" parent="." unique_id=93550791]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -753,20 +758,27 @@ layout_mode = 2
 texture_normal = ExtResource("25_haf45")
 texture_hover = ExtResource("26_o3cpr")
 
-[node name="Settings" type="Button" parent="." unique_id=597760815]
+[node name="Settings" type="TextureButton" parent="." unique_id=1189191782]
 unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -154.0
-offset_top = 42.0
-offset_right = -59.034424
-offset_bottom = 123.0
+offset_left = -301.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = 112.0
 grow_horizontal = 0
-theme_override_fonts/font = ExtResource("6_mjl58")
-theme_override_font_sizes/font_size = 55
-theme_override_styles/normal = SubResource("StyleBoxTexture_fiso1")
-theme_override_styles/hover = SubResource("StyleBoxTexture_dxqjm")
+texture_normal = ExtResource("28_cutg6")
+texture_hover = ExtResource("29_scawg")
+
+[node name="Rules" type="TextureButton" parent="." unique_id=2126397599]
+unique_name_in_owner = true
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 223.0
+offset_bottom = 112.0
+texture_normal = ExtResource("30_gmss7")
+texture_hover = ExtResource("31_nak6p")
 
 [node name="SettingsOverlay" type="PanelContainer" parent="." unique_id=1581681979]
 unique_name_in_owner = true
@@ -838,7 +850,6 @@ text = "Quitter
 
 [node name="MonumentOverlay" type="ColorRect" parent="." unique_id=1992552673]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -866,7 +877,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1971567093]
+[node name="EspaceGauche" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1971567093]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
@@ -878,8 +889,8 @@ size_flags_vertical = 4
 texture_normal = ExtResource("22_kgc6u")
 texture_hover = ExtResource("21_vf6uw")
 
-[node name="Control2" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=240940468]
-custom_minimum_size = Vector2(350, 0)
+[node name="EspaceEntreLesEléments" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=240940468]
+custom_minimum_size = Vector2(325, 0)
 layout_mode = 2
 
 [node name="Monuments" type="Label" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1179612424]
