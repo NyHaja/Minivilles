@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://bx7np4qhm2ck"]
 
 [ext_resource type="Script" uid="uid://dg4sm1ebtod2s" path="res://script/scene/Multijoueur/attente_lobby.gd" id="1_ox6yk"]
-[ext_resource type="Texture2D" uid="uid://0h56cl0cwlwg" path="res://assets/Background/bg_lobby.png" id="2_rre76"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_1rs2g"]
-[ext_resource type="FontFile" uid="uid://esvwa6ctkwib" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
-[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="5_gdpiv"]
-[ext_resource type="Texture2D" uid="uid://ky6a0ic0abmg" path="res://assets/icon/ProfilExemple.png" id="6_thxuj"]
+[ext_resource type="Texture2D" uid="uid://ck5psmkcnsie4" path="res://assets/Background/bg_lobby.png" id="2_rre76"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_1rs2g"]
+[ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_gdpiv"]
+[ext_resource type="Texture2D" uid="uid://bm03yu5sfbx1m" path="res://assets/icon/ProfilExemple.png" id="6_thxuj"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_c7hce"]
-[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_12xal"]
 [ext_resource type="Script" uid="uid://cm4xuafkpqwa" path="res://script/scene/Multijoueur/btn_pret_attente_lobby.gd" id="12_lrqwt"]
 [ext_resource type="Script" uid="uid://dn7rh2bjw3e5" path="res://script/scene/Popup/btn_parametres_attente_lobby.gd" id="14_kcgef"]
@@ -88,10 +88,11 @@ offset_bottom = 463.0
 theme_override_constants/separation = 19
 
 [node name="IconeDe" type="TextureRect" parent="DureeTourRow" unique_id=-1575583240]
-custom_minimum_size = Vector2(55, 54)
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("5_gdpiv")
+expand_mode = 1
 
 [node name="TexteDureeTour" type="Label" parent="DureeTourRow" unique_id=1857632490]
 layout_mode = 2
@@ -282,21 +283,26 @@ theme_override_styles/hover = ExtResource("11_12xal")
 theme_override_styles/focus = ExtResource("10_c7hce")
 text = "Commencer"
 
-[node name="BtnParametres" type="TextureButton" parent="." unique_id=1703829456]
-layout_mode = 0
-offset_left = 1671.0
-offset_top = 63.0
-offset_right = 1787.0
-offset_bottom = 179.0
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=674782378]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -225.0
+offset_top = 39.0
+offset_right = -61.0
+offset_bottom = 186.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="VBoxContainer" unique_id=1703829456]
+layout_mode = 2
+size_flags_horizontal = 4
 texture_normal = ExtResource("10_gdpiv")
 script = ExtResource("14_kcgef")
 
-[node name="TexteParametres" type="Label" parent="." unique_id=1703829457]
-layout_mode = 0
-offset_left = 1610.0
-offset_top = 183.0
-offset_right = 1849.0
-offset_bottom = 233.0
+[node name="TexteParametres" type="Label" parent="VBoxContainer" unique_id=1703829457]
+layout_mode = 2
 text = "Paramètres"
 label_settings = ExtResource("15_fnt2l")
 horizontal_alignment = 1

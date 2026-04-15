@@ -196,20 +196,19 @@ alignment = 1
 
 [node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1661583302]
 layout_mode = 2
-text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-Nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
-Eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident.
-Sunt in culpa qui officia deserunt mollit anim id est laborum.
-Curabitur pretium tincidunt lacus.
-Nulla gravida orci a odio.
-Nullam varius, turpis et commodo pharetra.
-Eros quam gravida nisl, id fringilla neque ante vel mi.
-Morbi interdum mollis sapien."
+text = "Minivilles Deluxe est un jeu de stratégie et de construction pour 2 à 4 joueurs. Le but est d'être le premier joueur à construire les 4 monuments de votre ville.
+Mise en place
+Chaque joueur commence avec 3 pièces, un champ de blé et une boulangerie. Les cartes de développement sont placées au centre de la table et sont accessibles à tous les joueurs.
+Déroulement d'un tour
+Un tour se déroule en 3 phases :
+La première phase est le lancer de dés. Le joueur actif lance un ou deux dés selon les monuments qu'il a construits. Le résultat détermine quelles cartes sont activées.
+La deuxième phase est la collecte des revenus. Les cartes sont activées selon le résultat des dés. Les cartes bleues rapportent des pièces à leur propriétaire à tout moment. Les cartes verts rapportent des pièces uniquement pendant le tour du propriétaire. Les cartes rouges permettent de voler des pièces aux autres joueurs. Les cartes violettes ont des effets spéciaux puissants.
+La troisième phase est la construction. Le joueur peut acheter et construire une carte de développement ou un monument en payant son coût en pièces.
+Les monuments
+Chaque ville possède 4 monuments uniques à construire. Certains monuments peuvent être construits en plusieurs étapes et offrent des bonus puissants une fois terminés.
+Fin de partie
+Le premier joueur à construire ses 4 monuments remporte la partie !"
 label_settings = SubResource("LabelSettings_07o7p")
-autowrap_mode = 2
+autowrap_mode = 3
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
