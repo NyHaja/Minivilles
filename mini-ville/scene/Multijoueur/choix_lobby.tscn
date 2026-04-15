@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="4_voudi"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="5_5d6vx"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="5_5e00k"]
+[ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://assets/icon/iconeparamètre.png" id="5_hover"]
 [ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="7_c443o"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_hgeqn"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="8_cmag3"]
@@ -59,7 +60,6 @@ theme_override_constants/separation = 5
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
 texture_normal = ExtResource("3_5e00k")
 texture_pressed = ExtResource("4_c443o")
 texture_hover = ExtResource("4_c443o")
@@ -83,6 +83,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 texture_normal = ExtResource("5_5e00k")
+texture_pressed = ExtResource("5_hover")
+texture_hover = ExtResource("5_hover")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("13_i8vfo")

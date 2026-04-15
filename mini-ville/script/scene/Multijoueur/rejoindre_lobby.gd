@@ -31,13 +31,9 @@ func _ready():
 	]
 	$PopupPanel/BtnRejoindre.pressed.connect(_on_rejoindre)
 	$PopupPanel/BtnFermer.pressed.connect(_fermer_popup)
+	$BtnRetour/Fleche.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
 	_actualiser_liste()
-
-
-func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if $BtnRetour.get_global_rect().has_point(event.position):
-			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn")
 
 
 func _init_styles():
