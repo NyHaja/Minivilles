@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bntbferfc67eh"]
 
+[ext_resource type="Script" uid="uid://mode_de_jeu01" path="res://script/scene/Ecran principal/mode_de_jeu.gd" id="0_mdj01"]
 [ext_resource type="Texture2D" uid="uid://c4k5thwvnrule" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
 [ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="2_31rsn"]
 [ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="3_anmlk"]
@@ -9,11 +10,11 @@
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_lprcw"]
 [ext_resource type="Script" uid="uid://bnd1nn86amgdg" path="res://script/scene/Local/btn_solo.gd" id="9_dmcf4"]
 [ext_resource type="Script" uid="uid://1jdhm04axmh1" path="res://script/scene/Local/btn_multi.gd" id="10_okktj"]
-[ext_resource type="Texture2D" uid="uid://bci2x7cew5q4" path="res://assets/icon/règles.png" id="11_nt4lc"]
-[ext_resource type="Script" uid="uid://bq0tdq8lvp6co" path="res://script/scene/Popup/btn_regles.gd" id="12_g5hcx"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="13_v37wi"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="14_fny1t"]
 [ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="15_mqpi4"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="16_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="17_backp"]
 
 [node name="Control" type="Control" unique_id=1166678645]
 layout_mode = 3
@@ -22,6 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("0_mdj01")
 
 [node name="Background" type="TextureRect" parent="." unique_id=1825588920]
 layout_mode = 1
@@ -34,62 +36,6 @@ texture = ExtResource("1_gtnaa")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Header" type="MarginContainer" parent="." unique_id=626700265]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 48.0
-offset_top = 3.0
-offset_right = -51.0
-offset_bottom = 181.0
-grow_horizontal = 2
-
-[node name="HeaderRow" type="HBoxContainer" parent="Header" unique_id=1265227652]
-layout_mode = 2
-
-[node name="ReglesWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=847073492]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_constants/separation = -20
-
-[node name="BtnRegles" type="TextureButton" parent="Header/HeaderRow/ReglesWrap" unique_id=1621742470]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_vertical = 3
-texture_normal = ExtResource("11_nt4lc")
-ignore_texture_size = true
-stretch_mode = 5
-script = ExtResource("12_g5hcx")
-
-[node name="TexteRegles" type="Label" parent="Header/HeaderRow/ReglesWrap" unique_id=853611786]
-layout_mode = 2
-size_flags_vertical = 6
-text = "Règles"
-label_settings = ExtResource("13_v37wi")
-horizontal_alignment = 1
-
-[node name="ParametresWrap" type="VBoxContainer" parent="Header/HeaderRow" unique_id=920821242]
-layout_mode = 2
-size_flags_horizontal = 10
-theme_override_constants/separation = -20
-
-[node name="BtnParametres" type="TextureButton" parent="Header/HeaderRow/ParametresWrap" unique_id=382097206]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-texture_normal = ExtResource("14_fny1t")
-ignore_texture_size = true
-stretch_mode = 5
-script = ExtResource("15_mqpi4")
-
-[node name="TexteParametres" type="Label" parent="Header/HeaderRow/ParametresWrap" unique_id=1191556903]
-layout_mode = 2
-size_flags_vertical = 6
-text = "Paramètres"
-label_settings = ExtResource("13_v37wi")
-horizontal_alignment = 1
-
 [node name="Content" type="VBoxContainer" parent="." unique_id=1530701729]
 layout_mode = 1
 anchors_preset = 15
@@ -99,6 +45,55 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
 alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Content" unique_id=1713461663]
+layout_mode = 2
+
+[node name="BtnRetour" type="VBoxContainer" parent="Content/HBoxContainer2" unique_id=100000050]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 0
+theme_override_constants/separation = 5
+
+[node name="Fleche" type="TextureButton" parent="Content/HBoxContainer2/BtnRetour" unique_id=1943198583]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture_normal = ExtResource("16_back")
+texture_pressed = ExtResource("17_backp")
+texture_hover = ExtResource("17_backp")
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="Content/HBoxContainer2/BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content/HBoxContainer2" unique_id=920821242]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = -20
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="Content/HBoxContainer2/VBoxContainer" unique_id=382097206]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture_normal = ExtResource("14_fny1t")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("15_mqpi4")
+
+[node name="TexteParametres" type="Label" parent="Content/HBoxContainer2/VBoxContainer" unique_id=1191556903]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Paramètres"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1
 
 [node name="Title" type="MarginContainer" parent="Content" unique_id=300086292]
 layout_mode = 2

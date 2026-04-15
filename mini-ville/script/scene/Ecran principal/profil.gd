@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func _on_fermer() -> void:
 	SoundManager.play_click()
-	get_tree().change_scene_to_file("res://scene/Ecran principale/player_screen.tscn")
+	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
 
 
 func _on_modifier() -> void:
@@ -24,4 +24,4 @@ func _on_mot_de_passe() -> void:
 
 func _on_deconnexion() -> void:
 	SoundManager.play_click()
-	get_tree().change_scene_to_file("res://scene/Ecran principale/player_screen.tscn")
+	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
