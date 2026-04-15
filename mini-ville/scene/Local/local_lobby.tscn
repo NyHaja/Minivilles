@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://bwsgp0xv8a83p"]
 
 [ext_resource type="Script" uid="uid://vj4ludw2mwdb" path="res://script/scene/Ecran principal/local_lobby.gd" id="1_3wfq1"]
-[ext_resource type="Texture2D" uid="uid://er7mwuj2sfck" path="res://assets/Background/bg.png" id="2_eisn6"]
+[ext_resource type="Texture2D" uid="uid://w4xl63u4e48n" path="res://assets/Background/bg.png" id="2_eisn6"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_p8n71"]
-[ext_resource type="Texture2D" uid="uid://c326uro26ibq0" path="res://assets/icon/dice.png" id="5_eisn6"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_eisn6"]
 [ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="6_vhivr"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_d7sa8"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_d7sa8"]
 [ext_resource type="Script" uid="uid://r80okf66ptxh" path="res://script/scene/Multijoueur/btn_fleche.gd" id="9_vrjxr"]
-[ext_resource type="Texture2D" uid="uid://bli0qo61j8ax3" path="res://assets/icon/chronometre.png" id="10_1tuen"]
-[ext_resource type="Texture2D" uid="uid://6bd48btrlugf" path="res://assets/icon/joueur.png" id="10_qqwuh"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="11_vus0f"]
-[ext_resource type="Texture2D" uid="uid://ky6a0ic0abmg" path="res://assets/icon/ProfilExemple.png" id="12_fprgg"]
+[ext_resource type="Texture2D" uid="uid://dulxo2tcqe74g" path="res://assets/icon/chronometre.png" id="10_1tuen"]
+[ext_resource type="Texture2D" uid="uid://b6rtifuh8un50" path="res://assets/icon/joueur.png" id="10_qqwuh"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="11_vus0f"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_yejr6"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_nmhnt"]
 
@@ -211,7 +210,7 @@ layout_mode = 0
 offset_left = 429.0
 offset_right = 520.0
 offset_bottom = 125.0
-texture = ExtResource("12_fprgg")
+texture = ExtResource("10_qqwuh")
 stretch_mode = 5
 
 [node name="Joueur4" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=554283715]
@@ -221,7 +220,7 @@ layout_mode = 0
 offset_left = 559.0
 offset_right = 650.0
 offset_bottom = 125.0
-texture = ExtResource("12_fprgg")
+texture = ExtResource("10_qqwuh")
 stretch_mode = 5
 
 [node name="ArrowDroiteJoueurs" type="TextureButton" parent="Content/JoueursRow" unique_id=463174624]
