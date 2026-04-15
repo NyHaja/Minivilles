@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dulxo2tcqe74g" path="res://assets/icon/chronometre.png" id="10_1tuen"]
 [ext_resource type="Texture2D" uid="uid://b6rtifuh8un50" path="res://assets/icon/joueur.png" id="10_qqwuh"]
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="11_vus0f"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="11_backp"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_yejr6"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_nmhnt"]
 
@@ -53,12 +54,14 @@ offset_bottom = 160.0
 mouse_filter = 0
 theme_override_constants/separation = 5
 
-[node name="Fleche" type="TextureRect" parent="BtnRetour" unique_id=100000051]
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=100000051]
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("11_vus0f")
+texture_normal = ExtResource("11_vus0f")
+texture_pressed = ExtResource("11_backp")
+texture_hover = ExtResource("11_backp")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
@@ -75,6 +78,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/separation = 15
 alignment = 1
 

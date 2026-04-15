@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://cfo0iiykc6iud" path="res://script/scene/Multijoueur/rejoindre_lobby.gd" id="1_rcr0h"]
 [ext_resource type="Texture2D" uid="uid://0h56cl0cwlwg" path="res://assets/Background/bg_lobby.png" id="2_sbngy"]
 [ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="3_rcr0h"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="3_backp"]
+[ext_resource type="Texture2D" uid="uid://kvqwb5inm5vu" path="res://assets/icon/iconeparamètre.png" id="5_hover"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_i2uor"]
 [ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="5_sbngy"]
 [ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="6_wubpy"]
@@ -98,12 +100,14 @@ offset_bottom = 160.0
 mouse_filter = 0
 theme_override_constants/separation = 5
 
-[node name="Fleche" type="TextureRect" parent="BtnRetour" unique_id=100000051]
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=100000051]
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("3_rcr0h")
+texture_normal = ExtResource("3_rcr0h")
+texture_pressed = ExtResource("3_backp")
+texture_hover = ExtResource("3_backp")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
@@ -120,6 +124,10 @@ offset_top = 48.0
 offset_right = 1852.0
 offset_bottom = 164.0
 texture_normal = ExtResource("5_sbngy")
+texture_pressed = ExtResource("5_hover")
+texture_hover = ExtResource("5_hover")
+ignore_texture_size = true
+stretch_mode = 5
 script = ExtResource("6_wubpy")
 
 [node name="TexteParametres" type="Label" parent="." unique_id=2020493256]

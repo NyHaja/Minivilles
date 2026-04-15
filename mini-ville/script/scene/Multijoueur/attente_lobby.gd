@@ -58,20 +58,9 @@ func _on_commencer_pressed():
 func _setup_joueur_click(joueur: Control, nom: String):
 	var icon = joueur.get_node("Icon")
 	icon.mouse_filter = Control.MOUSE_FILTER_STOP
-	icon.mouse_entered.connect(func():
-		var t = icon.create_tween()
-		t.tween_property(icon, "modulate", Color(1.3, 1.3, 1.3), 0.1))
-	icon.mouse_exited.connect(func():
-		var t = icon.create_tween()
-		t.tween_property(icon, "modulate", Color(1, 1, 1), 0.1))
 	icon.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				var t = icon.create_tween()
-				t.tween_property(icon, "modulate", Color(0.7, 0.7, 0.7), 0.05)
-			else:
-				var t = icon.create_tween()
-				t.tween_property(icon, "modulate", Color(1.3, 1.3, 1.3), 0.1)
+			if not event.pressed:
 				_ouvrir_stats(nom))
 
 

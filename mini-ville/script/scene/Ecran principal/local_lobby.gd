@@ -19,19 +19,8 @@ func _ready():
 	%ArrowGaucheJoueurs.pressed.connect(_on_joueurs_gauche)
 	%ArrowDroiteJoueurs.pressed.connect(_on_joueurs_droite)
 	%BtnLancer.pressed.connect(_on_lancer)
-	%BtnLancer.mouse_entered.connect(func():
-		var t = %BtnLancer.create_tween()
-		t.tween_property(%BtnLancer, "modulate", Color(1.3, 1.3, 1.3), 0.1))
-	%BtnLancer.mouse_exited.connect(func():
-		var t = %BtnLancer.create_tween()
-		t.tween_property(%BtnLancer, "modulate", Color(1, 1, 1), 0.1))
-	%BtnLancer.button_down.connect(func():
-		var t = %BtnLancer.create_tween()
-		t.tween_property(%BtnLancer, "modulate", Color(0.7, 0.7, 0.7), 0.05))
-	%BtnLancer.button_up.connect(func():
-		var t = %BtnLancer.create_tween()
-		t.tween_property(%BtnLancer, "modulate", Color(1, 1, 1), 0.1))
-	pass # retour géré dans _input
+	$BtnRetour/Fleche.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scene/Ecran principale/mode_de_jeu.tscn"))
 	_update_joueurs()
 
 
@@ -73,10 +62,6 @@ func _on_lancer():
 	get_tree().change_scene_to_file("res://scene/Prototype/V3/main.tscn")
 
 
-func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if $BtnRetour.get_global_rect().has_point(event.position):
-			get_tree().change_scene_to_file("res://scenes/ui/mode_de_jeu.tscn")
 
 
 func _update_joueurs():

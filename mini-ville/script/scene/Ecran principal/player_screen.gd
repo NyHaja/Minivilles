@@ -30,7 +30,9 @@ func _ready() -> void:
 	
 	$Header/header/rulebtn/TextureButton.pressed.connect(affiche_popup_rule)
 	$Header/header/settingbtn/TextureButton.pressed.connect(affiche_parametre)
-	
+	$Header/header/profilbtn/TextureButton2.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scene/Ecran principale/profil.tscn"))
+
 	$gameMode/playbtn.pressed.connect(func():
 		get_tree().change_scene_to_file("res://scene/Ecran principale/mode_de_jeu.tscn"))
 

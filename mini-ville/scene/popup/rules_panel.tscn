@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dpmmcwfqqufi6"]
 
 [ext_resource type="Script" uid="uid://c348pmq5jyxmm" path="res://script/scene/Popup/rules_panel.gd" id="1_07o7p"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="1_o4co6"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="2_bwkas"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="1_o4co6"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="2_bwkas"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_541gp"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
-[ext_resource type="FontFile" uid="uid://bprswygvdi7v7" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
-[ext_resource type="FontFile" uid="uid://c34qqu7cew8ab" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
+[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -104,7 +104,7 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=411881164]
 layout_mode = 2
-text = "Back"
+text = "Retour"
 label_settings = ExtResource("3_541gp")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -147,7 +147,7 @@ horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/VBoxContainer" unique_id=52051124]
 layout_mode = 2
-text = "Rules"
+text = "Règles"
 label_settings = SubResource("LabelSettings_nefu6")
 horizontal_alignment = 1
 
@@ -196,20 +196,19 @@ alignment = 1
 
 [node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1661583302]
 layout_mode = 2
-text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-Nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
-Eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident.
-Sunt in culpa qui officia deserunt mollit anim id est laborum.
-Curabitur pretium tincidunt lacus.
-Nulla gravida orci a odio.
-Nullam varius, turpis et commodo pharetra.
-Eros quam gravida nisl, id fringilla neque ante vel mi.
-Morbi interdum mollis sapien."
+text = "Minivilles Deluxe est un jeu de stratégie et de construction pour 2 à 4 joueurs. Le but est d'être le premier joueur à construire les 4 monuments de votre ville.
+Mise en place
+Chaque joueur commence avec 3 pièces, un champ de blé et une boulangerie. Les cartes de développement sont placées au centre de la table et sont accessibles à tous les joueurs.
+Déroulement d'un tour
+Un tour se déroule en 3 phases :
+La première phase est le lancer de dés. Le joueur actif lance un ou deux dés selon les monuments qu'il a construits. Le résultat détermine quelles cartes sont activées.
+La deuxième phase est la collecte des revenus. Les cartes sont activées selon le résultat des dés. Les cartes bleues rapportent des pièces à leur propriétaire à tout moment. Les cartes verts rapportent des pièces uniquement pendant le tour du propriétaire. Les cartes rouges permettent de voler des pièces aux autres joueurs. Les cartes violettes ont des effets spéciaux puissants.
+La troisième phase est la construction. Le joueur peut acheter et construire une carte de développement ou un monument en payant son coût en pièces.
+Les monuments
+Chaque ville possède 4 monuments uniques à construire. Certains monuments peuvent être construits en plusieurs étapes et offrent des bonus puissants une fois terminés.
+Fin de partie
+Le premier joueur à construire ses 4 monuments remporte la partie !"
 label_settings = SubResource("LabelSettings_07o7p")
-autowrap_mode = 2
+autowrap_mode = 3
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]

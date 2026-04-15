@@ -31,13 +31,9 @@ func _ready():
 	]
 	$PopupPanel/BtnRejoindre.pressed.connect(_on_rejoindre)
 	$PopupPanel/BtnFermer.pressed.connect(_fermer_popup)
+	$BtnRetour/Fleche.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
 	_actualiser_liste()
-
-
-func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if $BtnRetour.get_global_rect().has_point(event.position):
-			get_tree().change_scene_to_file("res://scenes/ui/choix_lobby.tscn")
 
 
 func _init_styles():
@@ -170,7 +166,7 @@ func _creer_bande_lobby(code_lobby: String, temps_restant: String, is_private: b
 	lbl_temps.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var lbl_visibilite = Label.new()
-	lbl_visibilite.text = "Privée" if is_private else "Public"
+	lbl_visibilite.text = tr("Privée") if is_private else tr("Public")
 	lbl_visibilite.custom_minimum_size = Vector2(100, 0)
 	lbl_visibilite.size_flags_horizontal = Control.SIZE_SHRINK_END
 	lbl_visibilite.add_theme_font_override("font", load("res://Fonts/Exo_2/static/Exo2-BoldItalic.ttf"))
@@ -197,7 +193,7 @@ func _creer_bande_lobby(code_lobby: String, temps_restant: String, is_private: b
 				_ouvrir_popup()
 			else:
 				get_tree().set_meta("lobby_code", code_lobby)
-				get_tree().change_scene_to_file("res://scenes/ui/attente_lobby.tscn"))
+				get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn"))
 
 	list.add_child(bande)
 
@@ -226,7 +222,7 @@ func _on_rejoindre():
 			break
 	if valide:
 		get_tree().set_meta("lobby_code", code)
-		get_tree().change_scene_to_file("res://scenes/ui/attente_lobby.tscn")
+		get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 	else:
 		_feedback_erreur()
 

@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://cy723vcb6wob3"]
 
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="1_771pm"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="2_rrmn3"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="1_771pm"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="2_rrmn3"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_fv8fc"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dyhst"]
-[ext_resource type="FontFile" uid="uid://bprswygvdi7v7" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_q6rvm"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="6_fe3jr"]
-[ext_resource type="FontFile" uid="uid://duiwby4dfs03n" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="7_gfe4b"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dyhst"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_q6rvm"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_fe3jr"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="7_gfe4b"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_gu3gm"]
 [ext_resource type="Script" uid="uid://xad4vf2w2rx2" path="res://script/scene/Popup/popup_signin.gd" id="99_sc_signin"]
 
@@ -161,7 +161,7 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=297333622]
 layout_mode = 2
-text = "Back"
+text = "Retour"
 label_settings = ExtResource("3_fv8fc")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -197,7 +197,7 @@ horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=69516452]
 layout_mode = 2
-text = "sign in"
+text = "S'inscrire"
 label_settings = SubResource("LabelSettings_dlvnj")
 horizontal_alignment = 1
 
@@ -258,7 +258,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
 
 [node name="password" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1915286508]
 layout_mode = 2
-text = "Password"
+text = "Mot de passe"
 label_settings = SubResource("LabelSettings_e3plc")
 
 [node name="field3" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1846263279]
@@ -274,7 +274,7 @@ secret_character = "."
 
 [node name="confirm" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1305234315]
 layout_mode = 2
-text = "confirm your password"
+text = "Confirmer votre mot de passe"
 label_settings = SubResource("LabelSettings_e3plc")
 
 [node name="field4" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=851104971]
@@ -305,7 +305,7 @@ theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxFlat_pfnv3")
 theme_override_styles/pressed = ExtResource("8_gu3gm")
 theme_override_styles/hover = ExtResource("8_gu3gm")
-text = "Sign in"
+text = "S'inscrire"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=550323486]
 layout_mode = 2
@@ -335,7 +335,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_ikalx")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
-text = "already registered?"
+text = "Vous avez déjà un compte ?"
 label_settings = SubResource("LabelSettings_q8cub")
 horizontal_alignment = 1
 
@@ -353,4 +353,4 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_bwasg")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_qc4td")
 theme_override_styles/hover = SubResource("StyleBoxFlat_papkj")
-text = "Connexion"
+text = "Se connecter"

@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cl142ptcxeqdo"]
 
 [ext_resource type="Script" uid="uid://bx0vpo3ta12ck" path="res://script/scene/Popup/popup_parametres.gd" id="1_sc"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
-[ext_resource type="FontFile" uid="uid://duiwby4dfs03n" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
-[ext_resource type="Texture2D" uid="uid://dai68kq41v4bn" path="res://assets/icon/backArrow.png" id="4_back"]
-[ext_resource type="Texture2D" uid="uid://dlrtio10s3o64" path="res://assets/icon/backArrowPress.png" id="5_backp"]
-[ext_resource type="Texture2D" uid="uid://bor17sgvxdsvw" path="res://assets/icon/settingicon.png" id="5_gy5cr"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="5_backp"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="5_gy5cr"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_ls"]
-[ext_resource type="Texture2D" uid="uid://b0wwhbe368ebe" path="res://assets/icon/Ellipse 32.png" id="8_gy5cr"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="8_gy5cr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -83,17 +83,13 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
-bg_color = Color(0.92, 0.92, 0.92, 1)
+bg_color = Color(0.8089983, 0.8089983, 0.8089982, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -142,7 +138,7 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=564738291]
 layout_mode = 2
-text = "Back"
+text = "Retour"
 label_settings = ExtResource("6_ls")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -308,9 +304,12 @@ theme_override_styles/separator = SubResource("StyleBoxFlat_rwmbq")
 layout_mode = 2
 
 [node name="BtnFR" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=847362916]
+custom_minimum_size = Vector2(250, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_a")
@@ -319,9 +318,12 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
 text = "Français"
 
 [node name="BtnEN" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=293847567]
+custom_minimum_size = Vector2(250, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
 theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
@@ -374,6 +376,8 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_a")
@@ -385,6 +389,8 @@ text = "Clair"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
@@ -396,6 +402,8 @@ text = "Sombre"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_fonts/font = ExtResource("3_exo")
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")

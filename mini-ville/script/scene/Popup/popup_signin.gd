@@ -15,4 +15,4 @@ func _on_back_pressed() -> void:
 
 
 func _on_signin() -> void:
-	get_tree().change_scene_to_file("res://scenes/player_screen.tscn")
+	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")

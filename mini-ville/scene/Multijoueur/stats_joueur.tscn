@@ -5,11 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://dfbit1y2e8qkp" path="res://assets/icon/profile_circle.png" id="3_8jhxm"]
 [ext_resource type="Texture2D" uid="uid://c01vrdnmxl84r" path="res://assets/icon/icone_canard.png" id="4_ihjb6"]
 [ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_uuut0"]
-[ext_resource type="Texture2D" uid="uid://dfo6k04nfjfq4" path="res://assets/ui/a supprimer/icone_de (2).png" id="6_1ycs3"]
+[ext_resource type="Texture2D" uid="uid://dfo6k04nfjfq4" path="res://assets/icon/dice.png" id="6_1ycs3"]
 [ext_resource type="FontFile" uid="uid://7t1xdrw3u75p" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBoldItalic.ttf" id="7_whm6u"]
 [ext_resource type="Texture2D" uid="uid://c8f7vi6g2sq5o" path="res://assets/icon/badge_legende.png" id="8_ddjav"]
-[ext_resource type="Texture2D" uid="uid://brnu4r2ax21cd" path="res://assets/ui/a supprimer/texte_legende.png" id="9_deoml"]
-[ext_resource type="Texture2D" uid="uid://bcuo8w3em402k" path="res://assets/ui/a supprimer/btn_retour_fleche.png" id="10_n2pix"]
+[ext_resource type="Texture2D" uid="uid://bcuo8w3em402k" path="res://assets/icon/fleche_droite.png" id="10_n2pix"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_nom"]
 font = ExtResource("5_uuut0")
@@ -107,11 +106,12 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="IcoDe1" type="TextureRect" parent="Content/StatsContainer/Stat1Row" unique_id=1649514672]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
 texture = ExtResource("6_1ycs3")
-stretch_mode = 5
+stretch_mode = 2
 
 [node name="StatJouees" type="Label" parent="Content/StatsContainer/Stat1Row" unique_id=1178760332]
 layout_mode = 2
@@ -124,11 +124,12 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="IcoDe2" type="TextureRect" parent="Content/StatsContainer/Stat2Row" unique_id=1588210196]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
 texture = ExtResource("6_1ycs3")
-stretch_mode = 5
+stretch_mode = 2
 
 [node name="StatGagnees" type="Label" parent="Content/StatsContainer/Stat2Row" unique_id=1688556221]
 layout_mode = 2
@@ -154,11 +155,10 @@ stretch_mode = 5
 [node name="LegendeTxtWrap" type="CenterContainer" parent="Content/RangContainer" unique_id=681162798]
 layout_mode = 2
 
-[node name="TexteLegende" type="TextureRect" parent="Content/RangContainer/LegendeTxtWrap" unique_id=64228140]
-custom_minimum_size = Vector2(200, 60)
+[node name="TexteLegende" type="Label" parent="Content/RangContainer/LegendeTxtWrap" unique_id=64228140]
 layout_mode = 2
-texture = ExtResource("9_deoml")
-stretch_mode = 5
+text = "Légende"
+label_settings = SubResource("LabelSettings_legende_txt")
 
 [node name="BtnRetour" type="VBoxContainer" parent="." unique_id=1582315584]
 layout_mode = 0
@@ -174,6 +174,7 @@ custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("10_n2pix")
+flip_h = true
 stretch_mode = 5
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=1531527407]
