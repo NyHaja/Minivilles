@@ -7,6 +7,7 @@ signal open_monuments_requested
 var player = null
 
 @onready var lbl_name: Label = %PlayerLabel
+@onready var monument_icons: GridContainer = %MonumentIconContainer
 @onready var lbl_gold: Label = %PlayerMoney
 @onready var btn_pass: TextureButton = get_node_or_null("%PasserLeTourButton")
 @onready var btn_monu: TextureButton = get_node_or_null("%MonumentButton")
@@ -23,36 +24,58 @@ var player = null
 const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
 func _ready() -> void:
+	# 1. On cache la TopBar et MonumentZone (ActiveDeckContainer reste visible !)
+	var top_bar = get_node_or_null("MainColumn/TopBar")
+	var monu_zone = get_node_or_null("MonumentZone")
+	if top_bar: top_bar.modulate.a = 0.0
+	if monu_zone: monu_zone.modulate.a = 0.0
+	
 	if btn_pass: btn_pass.pressed.connect(func(): pass_turn_requested.emit())
 	if btn_monu: btn_monu.pressed.connect(func(): open_monuments_requested.emit())
 	
-	# Correction : Forcer le centrage vertical du contenu du plateau 
 	var main_col = get_node_or_null("MainColumn")
 	if main_col:
 		main_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		main_col.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		main_col.set("alignment", BoxContainer.ALIGNMENT_CENTER)
 
+	# Pivot automatique uniquement pour la boîte de stats. 
+	# (On ne le fait plus pour la Grille des monuments, car on va faire tourner ses enfants)
+	if active_stats_box:
+		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
+
+# ----------------------------------------------------------------------
+# ROTATION (Sécurisée pour les Grilles)
+# ----------------------------------------------------------------------
 func _process(_delta: float) -> void:
+	var normalized_rot = wrapf(self.rotation, -PI, PI)
+	var target_rot = -self.rotation if abs(normalized_rot) > PI * 0.8 else 0.0
+
 	if active_stats_box and is_inside_tree():
-		active_stats_box.pivot_offset = active_stats_box.size / 2.0
+		active_stats_box.rotation = target_rot
 		
-		# On normalise la rotation pour qu'elle reste toujours strictement entre -PI et PI
-		var normalized_rot = wrapf(self.rotation, -PI, PI)
-		
-		# Si le plateau est en haut (rotation proche de 180° ou -180°)
-		if abs(normalized_rot) > PI * 0.8:
-			active_stats_box.rotation = -self.rotation
-		else:
-			active_stats_box.rotation = 0
-	
-	
+	# LA MAGIE EST ICI : On fait tourner chaque monument individuellement
+	# La grille, elle, ne bouge pas et reste parfaitement à sa place !
+	if monument_icons and is_inside_tree():
+		for icon in monument_icons.get_children():
+			if icon is Control: # On s'assure que c'est bien un élément d'interface
+				if icon.size != Vector2.ZERO:
+					icon.pivot_offset = icon.size / 2.0
+				icon.rotation = target_rot
+
+# ----------------------------------------------------------------------
+# SETUP ET APPARITION
+# ----------------------------------------------------------------------
 func setup(player_data, is_active_player: bool):
+	var top_bar = get_node_or_null("MainColumn/TopBar")
+	var monu_zone = get_node_or_null("MonumentZone")
+	if top_bar: top_bar.modulate.a = 0.0
+	if monu_zone: monu_zone.modulate.a = 0.0
+	
 	self.player = player_data
 	
-	# --- LOGIQUE DES MONUMENTS (déjà présente) ---
 	var monument_nodes = {
-		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AeroportUnbuild", "build": "AeroportBuild"},
+		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
 		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
 		Monument.MONUMENT_ID.Gare: {"unbuild": "GareUnbuild", "build": "GareBuild"},
 		Monument.MONUMENT_ID.Centre_Commercial: {"unbuild": "CentreCommercialUnbuild", "build": "CentreCommercialBuild"},
@@ -69,17 +92,19 @@ func setup(player_data, is_active_player: bool):
 		if unbuild_node: unbuild_node.visible = not is_built
 		if build_node: build_node.visible = is_built
 
-	# --- NOUVELLE LOGIQUE : CACHER LES BOUTONS ---
-	# On affiche les boutons 'Passer le tour' et 'Monuments' 
-	# UNIQUEMENT si c'est le tour de ce joueur.
-	if btn_pass:
-		btn_pass.visible = is_active_player
-	if btn_monu:
-		btn_monu.visible = is_active_player
+	if btn_pass: btn_pass.visible = is_active_player
+	if btn_monu: btn_monu.visible = is_active_player
 
 	update_info()
 	update_deck()
+	
+	var tween = create_tween()
+	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
+	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 
+# ----------------------------------------------------------------------
+# RESTE DE LA LOGIQUE
+# ----------------------------------------------------------------------
 func update_info() -> void:
 	if not player: return
 	lbl_name.text = player.username
@@ -94,8 +119,10 @@ func update_deck() -> void:
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
-			for child in anchor.get_children(): child.queue_free()
-	
+			for child in anchor.get_children(): 
+				anchor.remove_child(child)
+				child.queue_free()
+			
 	var pile_counts = {CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0}
 	var card_width = 156 
 	var card_height = 200
@@ -119,12 +146,9 @@ func update_deck() -> void:
 				var card_visual = CARD_SCENE.instantiate()
 				
 				anchor.add_child(card_visual)
-				
 				card_visual.setup_card(card_data, dir_suffix)
-				
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
-				
 				pile_counts[color] += 1
 
 	for color in piles:
@@ -142,10 +166,6 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
 	return prefix + clean_name
 
-
-
-
-
 func get_board_tooltip_direction() -> String:
 	var rot = wrapf(self.rotation, -PI, PI)
 	
@@ -158,24 +178,21 @@ func get_board_tooltip_direction() -> String:
 	else:
 		return "right"
 		
-# Dans PlayerBoard.gd
 func set_ui_visible(is_visible: bool) -> void:
 	var alpha = 1.0 if is_visible else 0.0
 	
 	if lbl_name: lbl_name.modulate.a = alpha
 	if lbl_gold: lbl_gold.modulate.a = alpha
 	if active_stats_box: active_stats_box.modulate.a = alpha
+	if monument_icons: monument_icons.modulate.a = alpha
 	
-	# UTILISATION DE SELF_MODULATE
-	# Cela cache le bouton, mais n'affectera pas l'animation des dés ajoutée en enfant
 	if btn_pass:
 		btn_pass.self_modulate.a = alpha
 		btn_pass.disabled = !is_visible
-		# Au cas où tu as un "Label" de texte à l'intérieur du bouton :
 		for child in btn_pass.get_children():
 			if child is CanvasItem and not child is TextureRect:
 				child.modulate.a = alpha
-		
+				
 	if btn_monu:
 		btn_monu.self_modulate.a = alpha
 		btn_monu.disabled = !is_visible

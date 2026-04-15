@@ -85,23 +85,24 @@ layout_mode = 2
 [node name="ActivePlayerStats" type="HBoxContainer" parent="MainColumn/TopBar" unique_id=1510555991]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MainColumn/TopBar/ActivePlayerStats" unique_id=1149468268]
+[node name="PlayerBadgeContainer" type="PanelContainer" parent="MainColumn/TopBar/ActivePlayerStats" unique_id=1149468268]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_l0rt3")
 
-[node name="PlayerButton" type="HBoxContainer" parent="MainColumn/TopBar/ActivePlayerStats/PanelContainer" unique_id=1365668469]
+[node name="PlayerButton" type="HBoxContainer" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer" unique_id=1365668469]
 layout_mode = 2
 
-[node name="ProfilePicture" type="TextureRect" parent="MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=990870191]
+[node name="ProfilePicture" type="TextureRect" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer/PlayerButton" unique_id=990870191]
 custom_minimum_size = Vector2(40, 20)
 layout_mode = 2
 texture = ExtResource("2_jujw4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PlayerLabel" type="Label" parent="MainColumn/TopBar/ActivePlayerStats/PanelContainer/PlayerButton" unique_id=183388474]
+[node name="PlayerLabel" type="Label" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer/PlayerButton" unique_id=183388474]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 10
@@ -214,7 +215,8 @@ texture_normal = ExtResource("7_8eqg2")
 texture_hover = ExtResource("11_n5cuu")
 stretch_mode = 4
 
-[node name="GridContainer" type="GridContainer" parent="MonumentZone/VBoxContainer" unique_id=1653480655]
+[node name="MonumentIconContainer" type="GridContainer" parent="MonumentZone/VBoxContainer" unique_id=1653480655]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -222,14 +224,14 @@ theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
 columns = 2
 
-[node name="PortUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1711790593]
+[node name="PortUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1711790593]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("12_jt8eb")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="PortBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1012147662]
+[node name="PortBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1012147662]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -237,14 +239,14 @@ texture = ExtResource("13_4hdk1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="GareUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1203057628]
+[node name="GareUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1203057628]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("13_n5cuu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GareBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=954299368]
+[node name="GareBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=954299368]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -252,14 +254,14 @@ texture = ExtResource("15_la7td")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CentreCommercialUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1233916748]
+[node name="CentreCommercialUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1233916748]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("14_8eqg2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CentreCommercialBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=19057803]
+[node name="CentreCommercialBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=19057803]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -267,14 +269,14 @@ texture = ExtResource("17_ltfdg")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ParcDattractionUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=2018283363]
+[node name="ParcDattractionUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=2018283363]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("15_hfg6g")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ParcDattractionBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=627310282]
+[node name="ParcDattractionBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=627310282]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -282,14 +284,14 @@ texture = ExtResource("19_uhn8a")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TourRadioUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=85634834]
+[node name="TourRadioUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=85634834]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("16_jt8eb")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TourRadioBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=2093488665]
+[node name="TourRadioBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=2093488665]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -297,14 +299,14 @@ texture = ExtResource("21_7cfod")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AéroportUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1631085147]
+[node name="AéroportUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1631085147]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("17_n5cuu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AéroportBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/GridContainer" unique_id=1281799716]
+[node name="AéroportBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1281799716]
 visible = false
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2

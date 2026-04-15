@@ -10,8 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="6_l0rt3"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_mjl58"]
 [ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="7_ju1ig"]
-[ext_resource type="Texture2D" uid="uid://cspoj0hqqc78f" path="res://assets/UI/parametre_hover.png.png" id="7_u3wdh"]
-[ext_resource type="Texture2D" uid="uid://dnf46qh5gsg72" path="res://assets/UI/parametre_normal.png" id="8_tcw7y"]
 [ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="9_417mv"]
 [ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="10_417mv"]
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="11_2vk2f"]
@@ -47,10 +45,10 @@
 bg_color = Color(0, 0, 0, 0.8627451)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fiso1"]
-texture = ExtResource("8_tcw7y")
+texture = ExtResource("16_2vk2f")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dxqjm"]
-texture = ExtResource("7_u3wdh")
+texture = ExtResource("17_u3wdh")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_417mv"]
 texture = ExtResource("16_2vk2f")
@@ -820,7 +818,7 @@ theme_override_fonts/font = ExtResource("19_tcw7y")
 theme_override_font_sizes/font_size = 57
 theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
 theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
-text = "Continuer
+text = "Reprendre la partie
 "
 
 [node name="MenuPrincipale" type="Button" parent="SettingsOverlay/HBoxContainer" unique_id=1458463191]
@@ -833,7 +831,7 @@ theme_override_fonts/font = ExtResource("19_tcw7y")
 theme_override_font_sizes/font_size = 57
 theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
 theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
-text = "Menu Principale"
+text = "Menu principal"
 
 [node name="Quitter" type="Button" parent="SettingsOverlay/HBoxContainer" unique_id=714789440]
 unique_name_in_owner = true
@@ -845,11 +843,12 @@ theme_override_fonts/font = ExtResource("19_tcw7y")
 theme_override_font_sizes/font_size = 57
 theme_override_styles/normal = SubResource("StyleBoxTexture_4a53q")
 theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
-text = "Quitter
+text = "Fermer le jeu
 "
 
 [node name="MonumentOverlay" type="ColorRect" parent="." unique_id=1992552673]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
