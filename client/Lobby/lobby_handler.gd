@@ -14,12 +14,12 @@ var joueurs := []		# déclare un tableau vide
 func _ready():
 	NetworkManager.message_recu.connect(_on_message)
 
-func _on_connecte():
-	NetworkManager.envoyer({
-		"action": "authentification",
-		"email": "hajar@gmail.Com",
-		"password":"mdp"
-	})
+#func _on_connecte():
+	#NetworkManager.envoyer({
+		#"action": "authentification",
+		#"email": "hajar@gmail.Com",
+		#"password":"mdp"
+	#})
 	
 
 func _on_message(data : Dictionary):

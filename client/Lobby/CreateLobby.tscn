@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cwbegnjp7or2k"]
 
-[ext_resource type="Script" uid="uid://b4r2tl07k3wmq" path="res://Lobby/scene.gd" id="1_4hnie"]
-[ext_resource type="Script" uid="uid://capsexgjolf2s" path="res://Lobby/lobby_handler.gd" id="1_wgokw"]
+[ext_resource type="Script" uid="uid://b4r2tl07k3wmq" path="res://Lobby/create_lobby.gd" id="1_3sipx"]
+[ext_resource type="Script" uid="uid://capsexgjolf2s" path="res://Lobby/lobby_handler.gd" id="2_jxemi"]
 
 [node name="CreateLobby" type="Control" unique_id=1509636319]
 layout_mode = 3
@@ -10,10 +10,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_4hnie")
+script = ExtResource("1_3sipx")
 
 [node name="LobbyHandler" type="Node" parent="." unique_id=1315000443]
-script = ExtResource("1_wgokw")
+script = ExtResource("2_jxemi")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=833204464]
 physics_interpolation_mode = 0
