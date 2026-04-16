@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://cntghkq123mhl"]
 
 [ext_resource type="Script" uid="uid://bgx2imxhnmx27" path="res://Lobby/join_lobby.gd" id="1_w2p64"]
-[ext_resource type="Script" uid="uid://capsexgjolf2s" path="res://Lobby/lobby_handler.gd" id="2_w2p64"]
 [ext_resource type="Texture2D" uid="uid://bdbipddem7pli" path="res://1027254.jpg" id="3_w2p64"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_smaw7"]
+font_color = Color(0.9147331, 0, 0.113309644, 1)
 
 [node name="JoinLobby" type="Control" unique_id=1509636319]
 layout_mode = 3
@@ -12,9 +14,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w2p64")
-
-[node name="LobbyHandler" type="Node" parent="." unique_id=1315000443]
-script = ExtResource("2_w2p64")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=4052418]
 layout_mode = 1
@@ -77,6 +76,21 @@ grow_horizontal = 2
 theme_override_colors/font_color = Color(0.0627451, 0.1882353, 1, 1)
 theme_override_font_sizes/font_size = 25
 text = "Rejoindre une partie"
+
+[node name="LabelErreur" type="Label" parent="." unique_id=483159390]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -124.0
+offset_top = 183.0
+offset_right = 124.0
+offset_bottom = 218.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.0627451, 0.1882353, 1, 1)
+theme_override_font_sizes/font_size = 25
+label_settings = SubResource("LabelSettings_smaw7")
+horizontal_alignment = 1
 
 [connection signal="pressed" from="HBoxContainer/retour" to="." method="_on_btn_retour_pressed"]
 [connection signal="pressed" from="HBoxContainer/rejoindre" to="." method="_on_btn_rejoindre_pressed"]

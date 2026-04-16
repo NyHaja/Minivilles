@@ -19,8 +19,8 @@ func _on_btn_rejoindre_pressed():
 	if code.length() != 6:
 		print("[JoinLobby] Code invalide - doit faire 6 caractères")
 		return
-	
-	$LobbyHandler.rejoindre_lobby(code)
+	$HBoxContainer/rejoindre.disabled = true
+	LobbyHandler.rejoindre_lobby(code)
 	
 func _on_btn_retour_pressed():
 	get_tree().change_scene_to_file("res://main_client.tscn")
@@ -35,13 +35,14 @@ func _on_message(data: Dictionary):
 	
 	# Erreur
 	if data.get("action_reply") == "join_lobby" and data.get("status") == "error":
-		var message = data.get("message", "Erreur inconnue")
-		print("[JoinLobby] Erreur : ", message)
+		$LabelErreur.text = data.get("message", "Erreur inconnue")
+		#print("[JoinLobby] Erreur : ", message)
+		$HBoxContainer/rejoindre.disabled = false
 
 func _on_lobby_rejoint(data: Dictionary):
-	var d = data.get("data", {})
-	var joueur = d.get("joueur", [])
-	print("[JoinLobby] Lobby rejoint ! Joueurs : ", joueur)
+	#var d = data.get("data", {})
+	#var joueur = d.get("joueur", [])
+	#print("[JoinLobby] Lobby rejoint ! Joueurs : ", joueur)
 	# TODO : affiche la liste des joueurs dans l'UI
 	# TODO  : change de scène vers la salle d'attente
 	get_tree().change_scene_to_file("res://Lobby/Lobby.tscn")
