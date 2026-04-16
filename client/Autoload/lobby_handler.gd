@@ -97,6 +97,7 @@ func _on_lobby_cree(data: Dictionary):
 func _on_lobby_mis_a_jour(data: Dictionary):
 	var d = data.get("data", {})
 	joueurs = d.get("joueurs", [])
+	lobby_id = d.get("lobby_id", lobby_id)
 	print("[LobbyHandler] Joueur : ", joueurs)
 	joueur_mis_a_jour.emit(joueurs)
 	# TODO : rafraîchir la liste des joueurs dans l'UI
