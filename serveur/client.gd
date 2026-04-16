@@ -1,8 +1,11 @@
 extends Node
 
 var tcp := StreamPeerTCP.new()
-var host = "185.155.93.105" # IP du bastion
-var port = 22000            # Port redirigé vers le port 10000 de ta VM-0
+#var host = "185.155.93.105" # IP du bastion
+#var port = 22000            # Port redirigé vers le port 10000 de ta VM-0
+
+var host = "127.0.0.1"
+var port = 10000
 
 func _ready():
 	print("--- DÉMARRAGE DU CLIENT ---")
@@ -11,25 +14,29 @@ func _ready():
 	
 	# On initie la connexion au serveur via le bastion
 	var err = tcp.connect_to_host(host, port)
+	print("Code retour connect_to_host = ", err)
 	if err != OK:
 		print("Erreur lors de la tentative de connexion : ", err)
 
 func _process(_delta):
-	# Il faut "poll" manuellement le flux TCP à chaque frame pour actualiser son état
 	tcp.poll()
-	
 	var status = tcp.get_status()
-	
-	# Si des données sont reçues depuis le serveur
+
+	if status == StreamPeerTCP.STATUS_CONNECTED:
+		pass
+	elif status == StreamPeerTCP.STATUS_CONNECTING:
+		pass
+	elif status == StreamPeerTCP.STATUS_ERROR:
+		print("Erreur TCP client")
+	elif status == StreamPeerTCP.STATUS_NONE:
+		pass
+
 	if status == StreamPeerTCP.STATUS_CONNECTED and tcp.get_available_bytes() > 0:
 		var bytes_to_read = tcp.get_available_bytes()
-		
-		# On utilise get_data pour éviter les erreurs de décodage
 		var data_array = tcp.get_data(bytes_to_read)
 		if data_array[0] == OK:
 			var response = data_array[1].get_string_from_utf8()
 			print("Réponse reçue du serveur : ", response)
-
 ## ----------------------------------------------------
 ## 1. REQUÊTE : ENREGISTREMENT D'UN JOUEUR 
 ## ----------------------------------------------------
@@ -133,5 +140,5 @@ func insert_guest(nickname: String):
 func _input(event):
 	# Appuie sur Espace / Entrée (l'action ui_accept par défaut) pour tester l'envoi
 	if event.is_action_pressed("ui_accept"):
-		send_historic(5,1,"TEST",1043,-1,100,1,2,2)
+		authentication("ton_mail@test.com", "ton_mdp")
 		
