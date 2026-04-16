@@ -17,8 +17,8 @@ func _ready():
 func _on_connecte():
 	NetworkManager.envoyer({
 		"action": "authentification",
-		"identifiant": "ton_email@test.com",
-		"mot_de_passe":"ton_mot_de_passe"
+		"email": "hajar@gmail.Com",
+		"password":"mdp"
 	})
 	
 
@@ -67,11 +67,11 @@ func lancer_partie():
 	if not est_host:
 		print("[LobbyHandler] Seul le host peut lancer la partie")
 		return
-	if joueurs.size() < 2:
-		print("[LobbyHandler] Il faut au moins 2 joueurs")
-		return
+	##if joueurs.size() < 2:
+		##print("[LobbyHandler] Il faut au moins 2 joueurs")
+		#return
 	NetworkManager.envoyer({
-		"action":"start_game",
+		"action":"create_game",
 		"token": NetworkManager.get_token(),
 		"lobby_id": lobby_id
 	})

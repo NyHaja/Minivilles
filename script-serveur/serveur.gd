@@ -91,6 +91,8 @@ func route_request(client: StreamPeerTCP, data: Dictionary):
 			handler_authentification(client,data)
 		"guest_player":
 			handler_guest_player(client,data)
+		"create_game":
+			handler_create_game(client,data)
 # ------------------- Lobby -----------------------------
 		"create_lobby":
 			handler_create_lobby(client, data)
@@ -98,8 +100,6 @@ func route_request(client: StreamPeerTCP, data: Dictionary):
 			handler_join_lobby(client, data)
 		"leave_lobby":
 			handler_leave_lobby(client, data)
-		"start_game":
-			handler_start_game(client, data)
 			
 		_:	# default
 			send_to_client(client, {"status": "error", "message": "Action non reconnue."})
@@ -146,8 +146,8 @@ func handler_historic(client: StreamPeerTCP, data: Dictionary):
 
 func handler_authentification(client :StreamPeerTCP, data : Dictionary) : 
 	var payload = {
-		"email" : data.get("identifiant",""),
-		"password" : data.get("mot_de_passe")
+		"email" : data.get("email",""),
+		"password" : data.get("password")
 	}
 
 	send_to_flask_api("authentification","/login",payload,client)
@@ -159,7 +159,20 @@ func handler_guest_player(client : StreamPeerTCP,data : Dictionary) :
 	}
 
 	send_to_flask_api("guest_player","/guest/register",payload,client)
+
+
+
+func handler_create_game(client:StreamPeerTCP,data : Dictionary): 
 	
+
+	var id = active_sessions[client]
+	
+	var payload = {
+		"player_id": id,
+		"player_type": "registered"
+	}
+	send_to_flask_api("create_game","/game/create",payload,client)
+
 ## ====================================================
 ## 2. L'API FLASK FACTORISÉE (Le "Moteur" HTTP)
 ## ====================================================
@@ -177,65 +190,70 @@ func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionar
 	
 	http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 
-
 # Fonction unique pour recevoir TOUTES les réponses de Flask
 func _on_flask_response(result, response_code, headers, body, client: StreamPeerTCP, http_node: HTTPRequest, action_name: String, extra: Dictionary={}):
 	http_node.queue_free() # Nettoyage
 	
+	# 1. Vérification des erreurs HTTP critiques
 	if response_code == 0 or response_code >= 500:
-		send_to_client(client, {"action_reply": action_name, "status": "error", "message": "Erreur serveur BDD."})
+		send_to_client(client, {"action_reply": action_name, "status": "error", "message": "Erreur serveur BDD (Code HTTP: " + str(response_code) + ")."})
 		return
 		
-	var flask_response = JSON.parse_string(body.get_string_from_utf8())
+	# 2. Récupération du texte brut
+	var raw_body = body.get_string_from_utf8()
+	var flask_response = JSON.parse_string(raw_body)
 	
-	# --- NOUVEAU : INTERCEPTION DU LOGIN ---
-	# Si l'action était l'authentification et que Flask renvoie un succès
+	# 3. SÉCURITÉ : Vérification que l'API a bien renvoyé du JSON valide
+	if flask_response == null:
+		print("[ERREUR CRITIQUE] L'API n'a pas renvoyé du JSON !")
+		print("Code HTTP : ", response_code)
+		print("Contenu brut reçu : ", raw_body) # <- C'est ça qui va t'aider à débugger Flask
+		
+		# On informe le client (Godot) que ça a planté sans faire crasher le serveur
+		send_to_client(client, {"action_reply": action_name, "status": "error", "message": "Format de réponse invalide depuis l'API."})
+		return
+	
+	# =========================================================
+	# 4. TRAITEMENT DES ACTIONS (Si le JSON est valide)
+	# =========================================================
+	
+	# --- INTERCEPTION DU LOGIN ---
 	if action_name == "authentification" and flask_response.get("status") == "success":
 		var player_id = flask_response.get("player_id")
 		if player_id != null:
 			# On lie le socket au player_id dans le dictionnaire active_sessions
 			on_client_login_success(client, player_id)
-	# ---------------------------------------
-	if action_name == "start_game" and flask_response.get("status") == "success":
+			
+	# --- INTERCEPTION DE LA CRÉATION DE PARTIE ---
+	elif action_name == "create_game" and flask_response.get("status") == "success":
 		var game_id = flask_response.get("game_id")
 		var lobby_id = extra.get("lobby_id", "")
+		
+		# Si on retrouve bien le lobby
 		if lobbies.has(lobby_id):
+			# On sauvegarde l'ID de la partie en base de données !
 			lobbies[lobby_id]["game_id"] = game_id
-			lobbies[lobby_id]['etat'] = "EN_JEU"
+			lobbies[lobby_id]["etat"] = "EN_JEU"
 			
 			var ordre_joueurs = []
 			for joueur in lobbies[lobby_id]["joueurs"]:
 				ordre_joueurs.append(active_sessions.get(joueur, "inconnu"))
 				
+			# On prévient tous les joueurs du lobby que la partie démarre
 			broadcast_lobby(lobby_id, {
-				"action_reply": "start_game",
+				"action_reply": "create_game",
 				"type": "game_demarre",
 				"status": "success",
 				"data": {
-					"game_id": lobby_id,
+					"game_id": game_id, # On renvoie aussi l'ID aux clients si besoin
 					"ordre_joueurs": ordre_joueurs
 				}
 			})
-		return
-	# -----------------------------------------------------------------------
-	# On construit la réponse à renvoyer au jeu (client Godot)
-	var reponse_client = {
-		"action_reply": action_name, 
-		"status": flask_response.get("status", "error"),
-		"message": flask_response.get("message", "Erreur inconnue.")
-	}
 	
-	# S'il y a des données additionnelles (ex: le player_id), on les transmet au client
-	if flask_response.has("data"):
-		reponse_client["data"] = flask_response["data"]
-		
-	if flask_response.has("player_id"):
-		reponse_client["player_id"] = flask_response["player_id"]
-	
-	send_to_client(client, reponse_client)
-	
-
-
+	# --- GESTION DES ERREURS RENVOYÉES PAR FLASK (Identifiants incorrects, etc.) ---
+	elif flask_response.get("status") == "error":
+		var erreur_msg = flask_response.get("message", "Erreur inconnue")
+		send_to_client(client, {"action_reply": action_name, "status": "error", "message": erreur_msg})
 
 ## ====================================================
 ## 3. ENVOI AU CLIENT GODOT
@@ -446,55 +464,15 @@ func handler_leave_lobby(client: StreamPeerTCP, data: Dictionary):
 	})
 
 
-## ── START GAME ───────────────────────────────────────
-func handler_start_game(client: StreamPeerTCP, data: Dictionary):
 
-	var player_id = get_player_id(client)
-	var lobby_id = data.get("lobby_id", "")
-
-	if not lobbies.has(lobby_id):
-		send_to_client(client, {
-			"action_reply": "start_game",
-			"status": "error",
-			"message": "Lobby introuvable."
-		})
-		return
-
-	var lobby = lobbies[lobby_id]
-
-	# Vérifier que c'est le host qui lance
-	if lobby["host"] != client:
-		send_to_client(client, {
-			"action_reply": "start_game",
-			"status": "error",
-			"message": "Seul le host peut lancer la partie."
-		})
-		return
-
-	# Vérifier le nombre minimum de joueurs
-	#if lobby["joueurs"].size() < 2:
-		#send_to_client(client, {
-			#"action_reply": "start_game",
-			#"status": "error",
-			#"message": "Il faut au moins 2 joueurs pour lancer la partie."
-		#})
-		#return
-# Envoyer à Flask pour créer la ligne dans le GAME
-	var payload = {
-		"player_id":player_id,
-		"player_type":"registered"
-	}
-	send_to_flask_api("start_game", "/game/create", payload, client, {"lobby_id": lobby_id})
-	
-
-func _on_start_game_response(result, response_code, headers, body, client : StreamPeerTCP, http_node: HTTPRequest, lobby_id: String):
+func _on_create_game_response(result, response_code, headers, body, client : StreamPeerTCP, http_node: HTTPRequest, lobby_id: String):
 	http_node.queue_free()
 	
 	var flask_response = JSON.parse_string(body.get_string_from_utf8())
 	
 	if flask_response.get("status") != "success":
 		send_to_client(client, {
-			"action_reply": "start_game",
+			"action_reply": "create_game",
 			"status": "error",
 			"message": "Erreur création partie en BDD"
 		})

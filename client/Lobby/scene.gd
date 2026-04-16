@@ -11,8 +11,8 @@ func _ready() -> void:
 func _on_connecte():
 	NetworkManager.envoyer({
 		"action": "authentification",
-		"identification": "ton_email@test.com",
-		"mot_de_passe": "tom_mot_de_passe"
+		"email": "hajar@gmail.Com",
+		"password": "mdp"
 	})
 
 # Bouton pour créer un lobby

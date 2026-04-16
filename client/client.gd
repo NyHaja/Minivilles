@@ -1,142 +1,87 @@
 extends Node
 
-var tcp := StreamPeerTCP.new()
-var host = "185.155.93.105" # IP du bastion
-var port = 22000            # Port redirigé vers le port 10000 de ta VM-0
+# On ne définit plus de variable TCP ici, c'est NetworkManager qui gère.
 
 func _ready():
-	print("--- DÉMARRAGE DU CLIENT ---")
-	print("ATTENTION : Clique bien dans la fenêtre du jeu avant d'appuyer sur Entrée/Espace !")
-	print("Tentative de connexion au serveur via le bastion...")
+	print("--- DÉMARRAGE DU CLIENT (Refactorisé) ---")
+	# On se connecte au signal du NetworkManager pour traiter les réponses
+	NetworkManager.message_recu.connect(_on_serveur_message_recu)
 	
-	# On initie la connexion au serveur via le bastion
-	var err = tcp.connect_to_host(host, port)
-	if err != OK:
-		print("Erreur lors de la tentative de connexion : ", err)
+	if NetworkManager.est_connecte():
+		print("Prêt à envoyer des requêtes.")
+	else:
+		print("En attente de connexion...")
 
-func _process(_delta):
-	# Il faut "poll" manuellement le flux TCP à chaque frame pour actualiser son état
-	tcp.poll()
+# Cette fonction sera appelée à chaque fois que le serveur envoie un JSON valide
+func _on_serveur_message_recu(data: Dictionary):
+	print("Réponse reçue du serveur : ", data)
 	
-	var status = tcp.get_status()
-	
-	# Si des données sont reçues depuis le serveur
-	if status == StreamPeerTCP.STATUS_CONNECTED and tcp.get_available_bytes() > 0:
-		var bytes_to_read = tcp.get_available_bytes()
-		
-		# On utilise get_data pour éviter les erreurs de décodage
-		var data_array = tcp.get_data(bytes_to_read)
-		if data_array[0] == OK:
-			var response = data_array[1].get_string_from_utf8()
-			print("Réponse reçue du serveur : ", response)
+	# Exemple de traitement selon l'action
+	if data.has("status"):
+		match data["status"]:
+			"success":
+				print("Action réussie !")
+			"error":
+				print("Erreur serveur : ", data.get("message", "Inconnue"))
 
 ## ----------------------------------------------------
 ## 1. REQUÊTE : ENREGISTREMENT D'UN JOUEUR 
 ## ----------------------------------------------------
 func send_register_request(pseudo: String, mot_de_passe: String, adresse_email: String, avatar_url: String):
-	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-		# On crée le dictionnaire qui correspond aux colonnes de ta table
-		var request_data = {
-			"action": "register",
-			"nickname": pseudo,
-			"password": mot_de_passe,
-			"email": adresse_email,
-			"avatar_url" : avatar_url
-		}
-		
-		# On n'oublie pas le délimiteur "\n"
-		var json_string = JSON.stringify(request_data) + "\n"
-		tcp.put_data(json_string.to_utf8_buffer())
-		print("Requête d'inscription envoyée pour : ", pseudo)
-	else:
-		print("Impossible d'envoyer : non connecté au serveur.")
-
+	var request_data = {
+		"action": "register",
+		"nickname": pseudo,
+		"password": mot_de_passe,
+		"email": adresse_email,
+		"avatar_url" : avatar_url
+	}
+	
+	# On utilise la méthode factorisée du NetworkManager
+	NetworkManager.envoyer(request_data)
+	print("Requête d'inscription envoyée pour : ", pseudo)
 
 ## ----------------------------------------------------
 ## 2. REQUÊTE : ENREGISTRER UNE ACTION DANS L'HISTORIQUE
 ## ----------------------------------------------------
 func send_historic(game_id: int, turn_number: int, action_type: String, player_id: int = -1, guest_id: int = -1, card_id: int = -1, monument_id: int = -1, dice_result: int = 0, amount_exchanged: int = 0):
-	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+	var request_data = {
+		"action": "historic",
+		"game_id": game_id,
+		"turn_number": turn_number,
+		"action_type": action_type,
+		"dice_result": dice_result,
+		"amount_exchanged": amount_exchanged
+	}
+	
+	if player_id > 0: request_data["player_id"] = player_id
+	if guest_id > 0: request_data["guest_id"] = guest_id
+	if card_id > 0: request_data["card_id"] = card_id
+	if monument_id > 0: request_data["monument_id"] = monument_id
 		
-		# Champs obligatoires (NOT NULL)
-		var request_data = {
-			"action": "historic",
-			"game_id": game_id,
-			"turn_number": turn_number,
-			"action_type": action_type,
-			"dice_result": dice_result,
-			"amount_exchanged": amount_exchanged
-		}
-		
-		# Champs optionnels (on ne les ajoute que s'ils sont valides)
-		if player_id > 0:
-			request_data["player_id"] = player_id
-		if guest_id > 0:
-			request_data["guest_id"] = guest_id
-		if card_id > 0:
-			request_data["card_id"] = card_id
-		if monument_id > 0:
-			request_data["monument_id"] = monument_id
-			
-		var json_string = JSON.stringify(request_data) + "\n"
-		tcp.put_data(json_string.to_utf8_buffer())
-		print("-> Événement historique envoyé : ", action_type)
-	else:
-		print("Impossible d'envoyer l'historique : non connecté.")
+	NetworkManager.envoyer(request_data)
+	print("-> Événement historique envoyé : ", action_type)
 
 ## ----------------------------------------------------
 ## 3. REQUÊTE : CREATION D'UNE PARTIE 
 ## ----------------------------------------------------
-
-func create_game() :
-	
-	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-		var request_data = {
-			"action": "create_game",
-			"status" : "waiting"
-			
-		}
-		var json_string = JSON.stringify(request_data) + "\n"
-		tcp.put_data(json_string.to_utf8_buffer())
-		print("Requête de création de partie envoyée.")
+func create_game():
+	var request_data = {
+		"action": "create_game",
+	}
+	NetworkManager.envoyer(request_data)
 
 ## ----------------------------------------------------
 ## 4. REQUÊTE : AUTHENTIFICATION 
 ## ----------------------------------------------------	
+func authentication(identifiant: String, mdp: String):
+	var request_data = {
+		"action" : "authentification",
+		"email": identifiant, 
+		"password": mdp
+	}
+	NetworkManager.envoyer(request_data)
 
-func authentication(identifiant:String, mdp:String) :
-	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-		var request_data = {
-			"action" : "authentification",
-			"identifiant": identifiant, 
-			"mot_de_passe": mdp
-		}
-		var json_string = JSON.stringify(request_data) + "\n"
-		tcp.put_data(json_string.to_utf8_buffer())
-		print("Requête d'authenfication envoyée")
-
-## ----------------------------------------------------
-## 5. REQUÊTE : PLAYING GUEST 
-## ----------------------------------------------------	
-
-func insert_guest(nickname: String): 
-	if tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-		var request_data = {
-			"action": "guest_player",
-			"nickname" : nickname
-		}
-		var json_string = JSON.stringify(request_data) + "\n"
-		tcp.put_data(json_string.to_utf8_buffer())
-		print("Requête pour le guest_player envoyée")
-
-		
 func _input(event):
-	# Appuie sur Espace / Entrée (l'action ui_accept par défaut) pour tester l'envoi
 	if event.is_action_pressed("ui_accept"):
-<<<<<<< Updated upstream
-		send_historic(5, 1, "TEST", 1043, -1, 100, 1, 2, 2)   
-		
-=======
-		send_register_request("haja","mdp","hajar@gmail.Com","hfjhfuh")
->>>>>>> Stashed changes
-		
+		# Test simple d'inscription
+		send_register_request("haja", "mdp", "hajar@gmail.com", "hfjhfuh")
