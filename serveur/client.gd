@@ -141,4 +141,5 @@ func _input(event):
 	# Appuie sur Espace / Entrée (l'action ui_accept par défaut) pour tester l'envoi
 	if event.is_action_pressed("ui_accept"):
 		authentication("ton_mail@test.com", "ton_mdp")
-		
+	if event.is_action_pressed("ui_select"):
+		send_historic(5, 1, "TEST", 1043, -1, 100, 1, 2, 2)

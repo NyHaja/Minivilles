@@ -178,11 +178,14 @@ func send_to_flask_api(action_name: String, endpoint: String, payload: Dictionar
 			return
 		
 		headers.append("Authorization: Bearer " + token)
+		print("TOKEN UTILISE -> ", token)
+		print("HEADERS -> ", headers)
 	
 	var body = JSON.stringify(payload)
 	http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	print("APPEL FLASK -> ", url)
 	print("BODY -> ", body)
+	
 
 # Fonction unique pour recevoir TOUTES les réponses de Flask
 func _on_flask_response(result, response_code, headers, body, client: StreamPeerTCP, http_node: HTTPRequest, action_name: String):
