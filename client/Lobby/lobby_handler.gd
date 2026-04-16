@@ -1,5 +1,8 @@
 extends Node
 
+signal joueur_mis_a_jour(joueurs: Array)
+signal lobby_creer_signal(lobby_id: String)
+
 # ----------------------------------------------------------------
 # VARIABLES
 # ----------------------------------------------------------------
@@ -67,9 +70,11 @@ func lancer_partie():
 	if not est_host:
 		print("[LobbyHandler] Seul le host peut lancer la partie")
 		return
-	##if joueurs.size() < 2:
-		##print("[LobbyHandler] Il faut au moins 2 joueurs")
-		#return
+		
+	if joueurs.size() < 2:
+		print("[LobbyHandler] Il faut au moins 2 joueurs")
+		return
+		
 	NetworkManager.envoyer({
 		"action":"create_game",
 		"token": NetworkManager.get_token(),
@@ -86,12 +91,14 @@ func _on_lobby_cree(data: Dictionary):
 	est_host = true
 	joueurs = d.get("joueurs", [])
 	print("[Lobbyhandler] Lobby créé : ", lobby_id)
+	lobby_creer_signal.emit(lobby_id)
 	# TODO : afficher le code loby dans l'UI
 	
 func _on_lobby_mis_a_jour(data: Dictionary):
 	var d = data.get("data", {})
 	joueurs = d.get("joueurs", [])
 	print("[LobbyHandler] Joueur : ", joueurs)
+	joueur_mis_a_jour.emit(joueurs)
 	# TODO : rafraîchir la liste des joueurs dans l'UI
 	
 func _on_game_demarre(data: Dictionary):

@@ -69,6 +69,8 @@ func _handle_create(client: StreamPeerTCP, data: Dictionary):
 			"joueurs":     [player_id]
 		}
 	})
+	
+	
 
 # ─────────────────────────────────────────
 # JOIN LOBBY
@@ -76,13 +78,21 @@ func _handle_create(client: StreamPeerTCP, data: Dictionary):
 func _handle_join(client: StreamPeerTCP, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
-	var lobby_id  = data.get("lobby_id", "")
+	var lobby_id  = data.get("lobby_id", "").strip_edges().to_upper()
 
 	if player_id == null:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
 			"status": "error",
 			"message": "Vous devez être connecté pour rejoindre un lobby."
+		})
+		return
+		
+	if lobby_id.length() !=6:
+		serveur.send_to_client(client, {
+			"action_reply": "join_lobby",
+			"status": "error",
+			"message": "Code invalide."
 		})
 		return
 
