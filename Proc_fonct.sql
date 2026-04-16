@@ -509,7 +509,7 @@ READS SQL DATA
 BEGIN
     DECLARE v_id INT DEFAULT -1;  
 
-    SELECT id INTO v_id
+    SELECT player_id INTO v_id
     FROM REGISTERED_PLAYER 
     WHERE email = p_email 
       AND password = p_password
