@@ -96,6 +96,7 @@ custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("1_o4co6")
 texture_pressed = ExtResource("2_bwkas")
 texture_hover = ExtResource("2_bwkas")
