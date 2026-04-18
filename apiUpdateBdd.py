@@ -55,43 +55,41 @@ def register():
     finally:
         cursor.close()
         conn.close()
-
-@app.route('/login', methods=['POST'])
-def login():
-    """F1. AUTHENTIFICATION D'UN JOUEUR"""
+@app.route('/get_auth_data', methods=['POST'])
+def get_auth_data():
+    """RÉCUPÈRE L'ID ET LE HASH POUR VÉRIFICATION SUR LE GAME SERVER"""
     data = request.json
+    email = data.get('email')
+    
     conn = get_db_connection()
     if not conn:
         return jsonify({"status": "error", "message": "Erreur serveur (BDD)"}), 500
-
+        
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "SELECT authenPlayer(%s, %s) AS player_id",
-            (data.get('email'), data.get('password'))
+            "SELECT id, password_hash FROM players WHERE email = %s",
+            (email,)
         )
         result = cursor.fetchone()
-        player_id = result[0] if result else -1
         
-        if player_id != -1:
+        if result:
             return jsonify({
                 "status": "success",
-                "message": "Authentification réussie",
-                "player_id": player_id
+                "player_id": result[0],
+                "password_hash": result[1] 
             })
         else:
             return jsonify({
-                "status": "error",
-                "message": "Identifiants incorrects"
-            }), 401
-
+                "status": "error", 
+                "message": "Utilisateur non trouvé"
+            }), 404
+            
     except Error as e:
         return jsonify({"status": "error", "message": str(e)}), 400
     finally:
         cursor.close()
         conn.close()
-
-
 # ============================================================================
 # P2 & F2. GESTION DES INVITÉS
 # ============================================================================
