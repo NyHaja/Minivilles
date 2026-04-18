@@ -68,7 +68,7 @@ def get_auth_data():
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "SELECT id, password_hash FROM players WHERE email = %s",
+            "SELECT player_id, password FROM REGISTERED_PLAYER WHERE email = %s",
             (email,)
         )
         result = cursor.fetchone()
