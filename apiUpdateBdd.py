@@ -2,8 +2,12 @@ from flask import Flask, request, jsonify
 import mysql.connector
 from mysql.connector import Error
 from datetime import datetime, timedelta
+import jwt
+import bcrypt
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "cle_super_secrete_a_changer"  # À changer en production
+# generer une clé avec : python3 -c "import secrets; print(secrets.token_hex(32))"
 
 # ============================================================================
 # 0. CONFIGURATION ET CONNEXION À LA BASE DE DONNÉES
@@ -25,6 +29,97 @@ def get_db_connection():
     except Error as e:
         print(f"Erreur de connexion MySQL: {e}")
         return None
+
+
+# ============================================================================
+# VERIFICATION DU TOKEN JWT
+# ============================================================================
+
+def verify_token(req):
+    """
+    Extrait et vérifie le JWT depuis le header Authorization.
+    Retourne (payload, None) si valide, ou (None, message_erreur) sinon.
+    """
+    auth_header = req.headers.get("Authorization", "")
+ 
+    if not auth_header.startswith("Bearer "):
+        return None, "Token manquant."
+ 
+    token = auth_header.split(" ", 1)[1]
+ 
+    try:
+        payload = jwt.decode(
+            token,
+            app.config["SECRET_KEY"],
+            algorithms=["HS256"]
+        )
+        return payload, None
+    except jwt.ExpiredSignatureError:
+        return None, "Token expiré."
+    except jwt.InvalidTokenError:
+        return None, "Token invalide."
+
+
+# ============================================================================
+# LOGIN
+# ============================================================================
+
+@app.route('/login', methods=['POST'])
+def login():
+    """CONNEXION D'UN JOUEUR — retourne un token JWT valable 3h"""
+    data = request.get_json()
+ 
+    if not data:
+        return jsonify({"status": "error", "message": "JSON manquant."}), 400
+ 
+    email    = data.get("email", "").strip()
+    password = data.get("password", "")
+ 
+    if not email or not password:
+        return jsonify({"status": "error", "message": "Email ou mot de passe manquant."}), 400
+ 
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+ 
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT player_id, password FROM REGISTERED_PLAYER WHERE email = %s",
+            (email,)
+        )
+        result = cursor.fetchone()
+    except Error as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+ 
+    if not result:
+        return jsonify({"status": "error", "message": "Email ou mot de passe incorrect."}), 401
+ 
+    player_id, password_hash = result
+ 
+    if not bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8")):
+        return jsonify({"status": "error", "message": "Email ou mot de passe incorrect."}), 401
+ 
+    access_token = jwt.encode(
+        {
+            "player_id": player_id,
+            "email":     email,
+            "exp":       datetime.utcnow() + timedelta(hours=3)
+        },
+        app.config["SECRET_KEY"],
+        algorithm="HS256"
+    )
+ 
+    return jsonify({
+        "status":       "success",
+        "message":      "Connexion réussie.",
+        "player_id":    player_id,
+        "access_token": access_token,
+        "expires_in":   10800
+    }), 200
 
 
 # ============================================================================
@@ -146,7 +241,11 @@ def check_guest_valid(guest_id):
 
 @app.route('/history/insert', methods=['POST'])
 def insert_history():
-    """INSERT GAME_HISTORY (Enregistrement d'une action)"""
+    """INSERT GAME_HISTORY (Enregistrement d'une action) - nécessite un token JWT valide"""
+    payload, error = verify_token(request)
+    if error:
+        return jsonify({"status": "error", "message": error}), 401
+    
     data = request.json
     conn = get_db_connection()
     if not conn:
