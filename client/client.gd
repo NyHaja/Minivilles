@@ -1,0 +1,88 @@
+extends Node
+
+# On ne définit plus de variable TCP ici, c'est NetworkManager qui gère.
+
+func _ready():
+	print("--- DÉMARRAGE DU CLIENT (Refactorisé) ---")
+	# On se connecte au signal du NetworkManager pour traiter les réponses
+	NetworkManager.message_recu.connect(_on_serveur_message_recu)
+	
+	if NetworkManager.est_connecte():
+		print("Prêt à envoyer des requêtes.")
+	else:
+		print("En attente de connexion...")
+
+# Cette fonction sera appelée à chaque fois que le serveur envoie un JSON valide
+func _on_serveur_message_recu(data: Dictionary):
+	print("Réponse reçue du serveur : ", data)
+	
+	# Exemple de traitement selon l'action
+	if data.has("status"):
+		match data["status"]:
+			"success":
+				print("Action réussie !")
+			"error":
+				print("Erreur serveur : ", data.get("message", "Inconnue"))
+
+## ----------------------------------------------------
+## 1. REQUÊTE : ENREGISTREMENT D'UN JOUEUR 
+## ----------------------------------------------------
+func send_register_request(pseudo: String, mot_de_passe: String, adresse_email: String, avatar_url: String):
+	var request_data = {
+		"action": "register",
+		"nickname": pseudo,
+		"password": mot_de_passe,
+		"email": adresse_email,
+		"avatar_url" : avatar_url
+	}
+	
+	# On utilise la méthode factorisée du NetworkManager
+	NetworkManager.envoyer(request_data)
+	print("Requête d'inscription envoyée pour : ", pseudo)
+
+## ----------------------------------------------------
+## 2. REQUÊTE : ENREGISTRER UNE ACTION DANS L'HISTORIQUE
+## ----------------------------------------------------
+func send_historic(game_id: int, turn_number: int, action_type: String, player_id: int = -1, guest_id: int = -1, card_id: int = -1, monument_id: int = -1, dice_result: int = 0, amount_exchanged: int = 0):
+	var request_data = {
+		"action": "historic",
+		"game_id": game_id,
+		"turn_number": turn_number,
+		"action_type": action_type,
+		"dice_result": dice_result,
+		"amount_exchanged": amount_exchanged
+	}
+	
+	if player_id > 0: request_data["player_id"] = player_id
+	if guest_id > 0: request_data["guest_id"] = guest_id
+	if card_id > 0: request_data["card_id"] = card_id
+	if monument_id > 0: request_data["monument_id"] = monument_id
+		
+	NetworkManager.envoyer(request_data)
+	print("-> Événement historique envoyé : ", action_type)
+
+## ----------------------------------------------------
+## 3. REQUÊTE : CREATION D'UNE PARTIE 
+## ----------------------------------------------------
+func create_game():
+	var request_data = {
+		"action": "create_game",
+	}
+	NetworkManager.envoyer(request_data)
+
+## ----------------------------------------------------
+## 4. REQUÊTE : AUTHENTIFICATION 
+## ----------------------------------------------------	
+func authentication(identifiant: String, mdp: String):
+	var request_data = {
+		"action" : "authentification",
+		"email": identifiant, 
+		"password": mdp
+	}
+	NetworkManager.envoyer(request_data)
+
+func _input(event):
+	if event.is_action_pressed("ui_accept"):
+		# Test simple d'inscription
+		authentication("atg230@gmail.com","test123")
+		
