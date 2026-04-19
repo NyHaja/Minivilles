@@ -53,13 +53,31 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTCP, h
 		})
 		return
 
-	# ── Interceptions spécifiques ──────────────
-
-	# Login réussi → lier le socket au player_id
-	if action_name == "authentification" and flask_response.get("status") == "success":
+	if action_name == "get_auth_data" and flask_response.get("status") == "success":
+		var stored_hash = flask_response.get("password_hash")
 		var player_id = flask_response.get("player_id")
-		if player_id != null:
+		var password_saisi = extra.get("password")
+
+		# Appel C# : on remonte au parent (Main) puis on descend vers Hasher
+		var is_valid = $"../Hasher".VerifyLogin(password_saisi, stored_hash)
+		
+		if is_valid:
+			print("Connexion réussie pour le joueur : ", player_id)
 			serveur.on_client_login_success(client, player_id)
+			serveur.send_to_client(client, {
+				"action_reply": "authentification",
+				"status": "reussie",
+				"message": "Go."
+			})
+		else:
+			print("Échec : Mot de passe incorrect")
+			# Envoi du message d'erreur au client
+			serveur.send_to_client(client, {
+				"action_reply": "authentification",
+				"status": "error",
+				"message": "Mot de passe incorrect."
+			})
+		return
 
 	# Partie créée → stocker le game_id et notifier les joueurs
 	elif action_name == "create_game" and flask_response.get("status") == "success":

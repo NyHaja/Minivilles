@@ -14,9 +14,12 @@ func handle(client: StreamPeerTCP, data: Dictionary):
 # REGISTER
 # ─────────────────────────────────────────
 func _handle_register(client: StreamPeerTCP, data: Dictionary):
+	var password_clair =  data.get("password", "")
+	
+	var password_hashe = $"../Hasher".PreparePasswordForDB(password_clair)	
 	var payload = {
 		"nickname":   data.get("nickname", ""),
-		"password":   data.get("password", ""),
+		"password": password_hashe,
 		"email":      data.get("email", ""),
 		"avatar_url": data.get("avatar_url", "")
 	}
@@ -26,11 +29,12 @@ func _handle_register(client: StreamPeerTCP, data: Dictionary):
 # LOGIN
 # ─────────────────────────────────────────
 func _handle_authentification(client: StreamPeerTCP, data: Dictionary):
-	var payload = {
-		"email":    data.get("email", ""),
-		"password": data.get("password", "")
-	}
-	$"../FlaskManager".send("authentification", "/login", payload, client)
+	var email = data.get("email", "")
+	var password_saisi = data.get("password","")
+	
+		
+	var payload = { "email": email }
+	$"../FlaskManager".send("get_auth_data", "/get_auth_data", payload, client,{"password": password_saisi})
 
 # ─────────────────────────────────────────
 # GUEST

@@ -84,4 +84,5 @@ func authentication(identifiant: String, mdp: String):
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
 		# Test simple d'inscription
-		send_register_request("haja", "mdp", "hajar@gmail.com", "hfjhfuh")
+		authentication("atg230@gmail.com","test123")
+		

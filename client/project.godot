@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 NetworkManager="*uid://dwii3wdl3k8xh"
 LobbyHandler="*uid://capsexgjolf2s"
 
+[dotnet]
+
+project/assembly_name="Client"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
