@@ -87,7 +87,24 @@ func _traiter_message(raw: String):
 	if json.parse(raw) != OK:
 		print("[NetworkManager] JSON invalide : ", raw)
 		return
-	message_recu.emit(json.get_data())
+	var data = json.get_data()
+
+# -> Stocker le token si login réussi
+	if data.get("action_reply") == "authentification" and data.get("status") == "success":
+		var token = data.get("access_token", "")
+		if token != "":
+			set_token(token)
+			set_joueur_id(int(data.get("player_id", -1)))
+			print("[NetworkManager] Token stocké, joueur : ", _joueur_id)
+			
+	if data.get("type") == "token_expire":
+		_session_token = ""
+		_joueur_id = -1
+		print("[NetworkManager] Session expirée, déconnexion.")
+	# Retourner à l'écran de login
+		get_tree().change_scene_to_file("res://main_client.tscn") # à adapter
+
+	message_recu.emit(data)
 	
 # ------------------------------------
 #	ENVOI

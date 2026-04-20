@@ -33,8 +33,10 @@ func _handle_authentification(client: StreamPeerTCP, data: Dictionary):
 	var password_saisi = data.get("password","")
 	
 		
-	var payload = { "email": email }
-	$"../FlaskManager".send("get_auth_data", "/get_auth_data", payload, client,{"password": password_saisi})
+	var payload = { "email": email, 
+					"password": password_saisi
+		}
+	$"../FlaskManager".send("login", "/login", payload, client,{"password": password_saisi})
 
 # ─────────────────────────────────────────
 # GUEST
@@ -49,7 +51,8 @@ func _handle_guest(client: StreamPeerTCP, data: Dictionary):
 # HISTORIC
 # ─────────────────────────────────────────
 func _handle_historic(client: StreamPeerTCP, data: Dictionary):
-	var raw_player_id = data.get("player_id", -1)
+	var serveur = get_parent()
+	var raw_player_id = serveur.get_player_id(client)
 	var raw_guest_id  = data.get("guest_id", -1)
 
 	var payload = {
@@ -63,4 +66,5 @@ func _handle_historic(client: StreamPeerTCP, data: Dictionary):
 		"card_id":         data.get("card_id", ""),
 		"monument_id":     data.get("monument_id", "")
 	}
-	$"../FlaskManager".send("historic", "/history/insert", payload, client)
+	var token = get_parent().get_token(client)
+	$"../FlaskManager".send("historic", "/history/insert", payload, client,{}, token)

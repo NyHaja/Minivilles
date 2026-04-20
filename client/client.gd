@@ -83,6 +83,14 @@ func authentication(identifiant: String, mdp: String):
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		# Test simple d'inscription
+		print("[CLIENT] 1. Envoi de l'authentification...")
 		authentication("atg230@gmail.com","test123")
+		
+		# On met le code en pause pendant 1.5 secondes
+		# Le temps que le serveur reçoive, demande à Flask, et te renvoie le "success"
+		print("[CLIENT] ... attente de la réponse du serveur ...")
+		await get_tree().create_timer(1.5).timeout 
+		
+		print("[CLIENT] 2. Envoi de l'action historique !")
+		send_historic(1,1,"buy card",-1,-1,100,1,2,2)
 		

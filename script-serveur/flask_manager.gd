@@ -8,15 +8,20 @@ const FLASK_URL = "http://192.168.100.125:5000"
 # ─────────────────────────────────────────
 # ENVOI VERS FLASK
 # ─────────────────────────────────────────
-func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTCP, extra: Dictionary = {}):
+func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTCP, extra: Dictionary = {}, token: String = ""):
 	var http = HTTPRequest.new()
 	add_child(http)
 	http.request_completed.connect(
 		_on_response.bind(client, http, action_name, extra)
 	)
+
+	var headers = ["Content-Type: application/json"]
+	if token != "":
+		headers.append("Authorization: Bearer " + token)
+
 	http.request(
 		FLASK_URL + endpoint,
-		["Content-Type: application/json"],
+		headers,
 		HTTPClient.METHOD_POST,
 		JSON.stringify(payload)
 	)
@@ -53,31 +58,44 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTCP, h
 		})
 		return
 
-	if action_name == "get_auth_data" and flask_response.get("status") == "success":
-		var stored_hash = flask_response.get("password_hash")
-		var player_id = flask_response.get("player_id")
-		var password_saisi = extra.get("password")
+	# --- GESTION DE L'EXPIRATION DU TOKEN ---
+	if response_code == 401:
+		serveur.send_to_client(client, {
+		"action_reply": action_name,
+		"status": "error",
+		"type": "token_expire",
+		"message": "Session expirée, veuillez vous reconnecter."})
+	# Nettoyer la session du joueur
+		serveur.active_sessions.erase(client)
+		serveur.active_tokens.erase(client)
+		return
+	# ----------------------------------------
 
-		# Appel C# : on remonte au parent (Main) puis on descend vers Hasher
-		var is_valid = $"../Hasher".VerifyLogin(password_saisi, stored_hash)
-		
-		if is_valid:
+	# --- GESTION DU LOGIN ---
+	if action_name == "login":
+		if flask_response.get("status") == "success":
+			var player_id = flask_response.get("player_id")
+			var access_token = flask_response.get("access_token")
+
 			print("Connexion réussie pour le joueur : ", player_id)
-			serveur.on_client_login_success(client, player_id)
+			# On passe le token au serveur pour qu'il le stocke en session
+			serveur.on_client_login_success(client, player_id, access_token)
+			
+			
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
-				"status": "reussie",
-				"message": "Go."
+				"status": "success",
+				"access_token": access_token
 			})
 		else:
-			print("Échec : Mot de passe incorrect")
-			# Envoi du message d'erreur au client
+			print("Échec : ", flask_response.get("message", "Email ou mot de passe incorrect"))
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
 				"status": "error",
-				"message": "Mot de passe incorrect."
+				"message": flask_response.get("message", "Email ou mot de passe incorrect.")
 			})
 		return
+	# ------------------------
 
 	# Partie créée → stocker le game_id et notifier les joueurs
 	elif action_name == "create_game" and flask_response.get("status") == "success":

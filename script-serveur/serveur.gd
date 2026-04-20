@@ -10,6 +10,7 @@ var request_queue : Array = []
 const MAX_REQUESTS_PER_FRAME = 10
 
 var active_sessions : Dictionary = {}
+var active_tokens : Dictionary = {}
 var lobbies : Dictionary = {}
 
 # ─────────────────────────────────────────
@@ -96,9 +97,13 @@ func send_to_client(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # UTILITAIRES
 # ─────────────────────────────────────────
-func on_client_login_success(client_socket, player_id):
+func on_client_login_success(client_socket, player_id, token: String = ""):
 	active_sessions[client_socket] = int(player_id)
-	print("Joueur ", int(player_id), " est maintenant lié à cette connexion.")
+	active_tokens[client_socket]   = token
+	print("Joueur ", int(player_id), " connecté avec token.")
+
+func get_token(client: StreamPeerTCP) -> String:
+	return active_tokens.get(client, "")
 
 func get_player_id(client: StreamPeerTCP):
 	return active_sessions.get(client, null)
