@@ -3,7 +3,7 @@ extends Node
 # ─────────────────────────────────────────
 # POINT D'ENTRÉE
 # ─────────────────────────────────────────
-func handle(client: StreamPeerTCP, data: Dictionary):
+func handle(client: StreamPeerTLS, data: Dictionary):
 	match data.get("action", ""):
 		"create_lobby": _handle_create(client, data)
 		"join_lobby":   _handle_join(client, data)
@@ -29,7 +29,7 @@ func generer_code_unique() -> String:
 # ─────────────────────────────────────────
 # CREATE LOBBY
 # ─────────────────────────────────────────
-func _handle_create(client: StreamPeerTCP, data: Dictionary):
+func _handle_create(client: StreamPeerTLS, data: Dictionary):
 	var serveur = get_parent()
 	var player_id = serveur.get_player_id(client)
 
@@ -75,7 +75,7 @@ func _handle_create(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # JOIN LOBBY
 # ─────────────────────────────────────────
-func _handle_join(client: StreamPeerTCP, data: Dictionary):
+func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
 	var lobby_id  = data.get("lobby_id", "").strip_edges().to_upper()
@@ -150,7 +150,7 @@ func _handle_join(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # LEAVE LOBBY
 # ─────────────────────────────────────────
-func _handle_leave(client: StreamPeerTCP, data: Dictionary):
+func _handle_leave(client: StreamPeerTLS, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
 	var lobby_id  = data.get("lobby_id", "")
@@ -193,7 +193,7 @@ func _handle_leave(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # START GAME
 # ─────────────────────────────────────────
-func _handle_start(client: StreamPeerTCP, data: Dictionary):
+func _handle_start(client: StreamPeerTLS, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
 	var lobby_id  = data.get("lobby_id", "")

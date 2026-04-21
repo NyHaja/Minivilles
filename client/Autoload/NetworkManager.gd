@@ -18,7 +18,9 @@ signal message_recu(data: Dictionary)
 # ------------------------------------
 #	VARIABLE INTERNES
 # ------------------------------------
-var tcp := StreamPeerTCP.new()
+var _tcp := StreamPeerTCP.new()
+var _tls := StreamPeerTLS.new() # <-- Le tunnel sécurisé
+
 var _buffer := ""
 var _connecte := false
 var _session_token := ""
@@ -34,13 +36,13 @@ func _ready() -> void:
 	print("[NetworkManager] Démarrage...")
 	_connecter()
 	
- # -> Établie la connexion TCP au serveur
+# -> Établie la connexion TCP brute au serveur
 func _connecter():
-	var err = tcp.connect_to_host(HOST, PORT)
+	var err = _tcp.connect_to_host(HOST, PORT)
 	if err != OK:
-		print("[NetworkManager] Erreur connexion : ", err)
+		print("[NetworkManager] Erreur connexion TCP : ", err)
 	else:
-		print("[NetworkManager] Connexion en cours vers ", HOST, ":", PORT)
+		print("[NetworkManager] Connexion TCP en cours vers ", HOST, ":", PORT)
 
 func set_guest(id : int):
 	_guest_id = id
@@ -49,22 +51,36 @@ func set_guest(id : int):
 # ------------------------------------
 #	BOUCLE PRINCIPALE
 # ------------------------------------
-# -> Surveille l'état TCP et lit les messages entrants
-func _process(delta):
-	tcp.poll()
-	var status = tcp.get_status()
-	if not _connecte and status == StreamPeerTCP.STATUS_CONNECTED:
+# -> Surveille l'état TCP/TLS et lit les messages entrants
+func _process(_delta):
+	# On doit "poll" les deux flux en permanence
+	_tcp.poll()
+	_tls.poll() 
+	
+	var tcp_status = _tcp.get_status()
+	var tls_status = _tls.get_status()
+
+	# 1. Si le TCP vient de se connecter, on lance le handshake TLS
+	if tcp_status == StreamPeerTCP.STATUS_CONNECTED and tls_status == StreamPeerTLS.STATUS_DISCONNECTED:
+		print("[NetworkManager] TCP Connecté ! Lancement de la sécurisation TLS...")
+		var options = TLSOptions.client_unsafe() # Accepte le certificat auto-signé de la VM
+		_tls.connect_to_stream(_tcp, HOST, options)
+
+	# 2. Une fois le TLS totalement connecté et sécurisé
+	if not _connecte and tls_status == StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = true
-		print("[NetworkManager] Connecté au serveur")
+		print("[NetworkManager] Connecté au serveur (Canal Sécurisé TLS) 🔒")
 		connecte.emit()
 		
-	if _connecte and status != StreamPeerTCP.STATUS_CONNECTED:
+	# 3. En cas de déconnexion TLS
+	if _connecte and tls_status != StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = false
 		print("[NetworkManager] Déconnecté du serveur")
 		deconnecte.emit()
 		
-	if _connecte and tcp.get_available_bytes() > 0:
-		var data_array = tcp.get_data(tcp.get_available_bytes())
+	# 4. Lecture des données chiffrées via TLS (au lieu de TCP)
+	if _connecte and _tls.get_available_bytes() > 0:
+		var data_array = _tls.get_data(_tls.get_available_bytes())
 		if data_array[0] == OK:
 			_buffer += data_array[1].get_string_from_utf8()
 			_traiter_buffer()
@@ -89,7 +105,7 @@ func _traiter_message(raw: String):
 		return
 	var data = json.get_data()
 
-# -> Stocker le token si login réussi
+	# -> Stocker le token si login réussi
 	if data.get("action_reply") == "authentification" and data.get("status") == "success":
 		var token = data.get("access_token", "")
 		if token != "":
@@ -101,7 +117,7 @@ func _traiter_message(raw: String):
 		_session_token = ""
 		_joueur_id = -1
 		print("[NetworkManager] Session expirée, déconnexion.")
-	# Retourner à l'écran de login
+		# Retourner à l'écran de login
 		get_tree().change_scene_to_file("res://main_client.tscn") # à adapter
 
 	message_recu.emit(data)
@@ -109,17 +125,18 @@ func _traiter_message(raw: String):
 # ------------------------------------
 #	ENVOI
 # ------------------------------------
-# -> Envoie un dictionnaire JSON au serveur
-func envoyer(data:Dictionary):
+# -> Envoie un dictionnaire JSON au serveur via le tunnel TLS
+func envoyer(data: Dictionary):
 	if not _connecte:
-		print("[NetworkManger] Impossible d'envoyer : non connecté")
+		print("[NetworkManager] Impossible d'envoyer : non connecté")
 		return
-	tcp.put_data((JSON.stringify(data) + "\n").to_utf8_buffer())
+	# On utilise _tls au lieu de tcp !
+	_tls.put_data((JSON.stringify(data) + "\n").to_utf8_buffer())
 	
 # ------------------------------------
 #	UTILITAIRES
 # ------------------------------------
-func est_connecte() ->bool:
+func est_connecte() -> bool:
 	return _connecte
 	
 # -> Retourne le token de session
@@ -128,8 +145,8 @@ func get_token() -> String:
 	
 func get_joueur_id() -> int:
 	return _joueur_id
-# -> Sauvegarde le token après login
 
+# -> Sauvegarde le token après login
 func set_token(token: String):
 	_session_token = token
 
@@ -137,7 +154,7 @@ func set_joueur_id(id: int):
 	_joueur_id = id
 	
 func est_guest():
-	return 
+	return _est_guest
 	
 func get_guest_id() -> int:
 	return _guest_id

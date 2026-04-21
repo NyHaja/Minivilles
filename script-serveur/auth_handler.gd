@@ -3,7 +3,7 @@ extends Node
 # ─────────────────────────────────────────
 # POINT D'ENTRÉE
 # ─────────────────────────────────────────
-func handle(client: StreamPeerTCP, data: Dictionary):
+func handle(client: StreamPeerTLS, data: Dictionary):
 	match data.get("action", ""):
 		"register":        _handle_register(client, data)
 		"authentification": _handle_authentification(client, data)
@@ -13,7 +13,7 @@ func handle(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # REGISTER
 # ─────────────────────────────────────────
-func _handle_register(client: StreamPeerTCP, data: Dictionary):
+func _handle_register(client: StreamPeerTLS, data: Dictionary):
 	var password_clair =  data.get("password", "")
 	
 	var password_hashe = $"../Hasher".PreparePasswordForDB(password_clair)	
@@ -28,7 +28,7 @@ func _handle_register(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # LOGIN
 # ─────────────────────────────────────────
-func _handle_authentification(client: StreamPeerTCP, data: Dictionary):
+func _handle_authentification(client: StreamPeerTLS, data: Dictionary):
 	var email = data.get("email", "")
 	var password_saisi = data.get("password","")
 	
@@ -41,7 +41,7 @@ func _handle_authentification(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # GUEST
 # ─────────────────────────────────────────
-func _handle_guest(client: StreamPeerTCP, data: Dictionary):
+func _handle_guest(client: StreamPeerTLS, data: Dictionary):
 	var payload = {
 		"nickname": data.get("nickname", "")
 	}
@@ -50,7 +50,7 @@ func _handle_guest(client: StreamPeerTCP, data: Dictionary):
 # ─────────────────────────────────────────
 # HISTORIC
 # ─────────────────────────────────────────
-func _handle_historic(client: StreamPeerTCP, data: Dictionary):
+func _handle_historic(client: StreamPeerTLS, data: Dictionary):
 	var serveur = get_parent()
 	var raw_player_id = serveur.get_player_id(client)
 	var raw_guest_id  = data.get("guest_id", -1)

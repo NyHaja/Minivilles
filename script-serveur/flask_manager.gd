@@ -8,7 +8,7 @@ const FLASK_URL = "http://192.168.100.125:5000"
 # ─────────────────────────────────────────
 # ENVOI VERS FLASK
 # ─────────────────────────────────────────
-func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTCP, extra: Dictionary = {}, token: String = ""):
+func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTLS, extra: Dictionary = {}, token: String = ""):
 	var http = HTTPRequest.new()
 	add_child(http)
 	http.request_completed.connect(
@@ -30,7 +30,7 @@ func send(action_name: String, endpoint: String, payload: Dictionary, client: St
 # ─────────────────────────────────────────
 # RÉCEPTION DES RÉPONSES FLASK
 # ─────────────────────────────────────────
-func _on_response(result, response_code, headers, body, client: StreamPeerTCP, http: HTTPRequest, action_name: String, extra: Dictionary = {}):
+func _on_response(result, response_code, headers, body, client: StreamPeerTLS, http: HTTPRequest, action_name: String, extra: Dictionary = {}):
 	http.queue_free()
 
 	var serveur = get_parent()
