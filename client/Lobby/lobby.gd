@@ -10,14 +10,12 @@ func _ready():
 	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
 	# ------------------------------------------------
 	#affiche le code du lobby
-	$HBoxContainer/lancer.visible = LobbyHandler.is_host()
+	#$HBoxContainer/lancer.visible = LobbyHandler.is_host()
 	
 	var lobby_id = LobbyHandler.get_lobby_id()
 	if lobby_id != "":
 		$LabelCode.text = lobby_id
 		_rafraichir_liste(LobbyHandler.get_joueurs())
-		
-	$HBoxContainer/lancer.visible = LobbyHandler.is_host()
 
 func _on_lobby_cree(lobby_id: String):
 	$LabelCode.text = lobby_id
@@ -29,14 +27,14 @@ func _on_lobby_cree(lobby_id: String):
 func _on_connecte():
 	NetworkManager.envoyer({
 		"action": "authentification",
-		"email": "hajar@gmail.Com",
-		"password": "mdp"
+		"email": "atg230@gmail.com",
+		"password": "test123"
 	})
 
 # Bouton pour créer un lobby
 func _on_btn_creer_lobby_pressed():
 	$HBoxContainer/creer.disabled = true  # éviter les doubles clics
-	LobbyHandler.creer_lobby("Partie", 4, false)
+	LobbyHandler.creer_lobby("Partie", 2, true)
 	
 # Bouton pour lancer la partie
 func _on_btn_lancer_pressed():
@@ -46,7 +44,7 @@ func _on_message(data: Dictionary):
 	match data.get("action_reply", ""):
 		"authentification":
 			if data.get("status") == "success":
-				print("[TEST] Login OK - joueur : ", data.get("played_id"))
+				print("[TEST] Login OK - joueur : ", data.get("player_id"))
 			else:
 				print("TEST Login échoué : ", data.get("message"))
 

@@ -94,3 +94,6 @@ func _input(event):
 		print("[CLIENT] 2. Envoi de l'action historique !")
 		send_historic(1,1,"buy card",-1,-1,100,1,2,2)
 		
+		#print("[CLIENT] ... Inscrire un nouveau joueur")
+		#send_register_request("jaja", "jaja123", "jaja@test.com", "http://jaja.com")
+		

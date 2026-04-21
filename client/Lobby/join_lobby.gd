@@ -9,8 +9,8 @@ func _ready() -> void:
 func _on_connecte():
 	NetworkManager.envoyer({
 		"action": "authentification",
-		"email": "testlobby@test.com",
-		"password": "test1234"
+		"email": "jaja@test.com",
+		"password": "jaja123"
 	})
 
 func _on_btn_rejoindre_pressed():
