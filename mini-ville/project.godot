@@ -26,6 +26,8 @@ SoundManager="*uid://bu5ukwdc2m6d"
 PlayerData="*res://script/scene/Multijoueur/player_data.gd"
 LocaleManager="*res://script/scene/Traduction/locale_manager.gd"
 LobbyManager="*res://script/scene/Multijoueur/lobby_manager.gd"
+NetworkManager="*uid://dwii3wdl3k8xh"
+LobbyHandler="*uid://capsexgjolf2s"
 
 [display]
 
