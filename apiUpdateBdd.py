@@ -235,6 +235,45 @@ def check_guest_valid(guest_id):
         conn.close()
 
 
+
+# ============================================================================
+# MOT DE PASSE OUBLIé
+# ============================================================================
+
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "JSON manquant."}), 400
+
+    email = data.get("email", "").strip()
+    if not email:
+        return jsonify({"status": "error", "message": "Email manquant."}), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT player_id FROM REGISTERED_PLAYER WHERE email = %s", (email,)
+        )
+        result = cursor.fetchone()
+    except Error as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+    # On retourne toujours success pour ne pas révéler si l'email existe
+    return jsonify({
+        "status": "success",
+        "message": "Si cet email existe, un lien de réinitialisation a été envoyé."
+    }), 200
+
+
 # ============================================================================
 # HISTORIQUE (EVENT SOURCING)
 # ============================================================================
