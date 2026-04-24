@@ -9,6 +9,7 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 		"authentification": _handle_authentification(client, data)
 		"guest_player":    _handle_guest(client, data)
 		"historic":        _handle_historic(client, data)
+		"forgot_password": _handle_forgot_password(client, data)
 
 # ─────────────────────────────────────────
 # REGISTER
@@ -46,6 +47,18 @@ func _handle_guest(client: StreamPeerTLS, data: Dictionary):
 		"nickname": data.get("nickname", "")
 	}
 	$"../FlaskManager".send("guest_player", "/guest/register", payload, client)
+
+
+
+# ─────────────────────────────────────────
+# FORGOT PASSWORD
+# ─────────────────────────────────────────
+func _handle_forgot_password(client: StreamPeerTLS, data: Dictionary):
+    var payload = {
+        "email": data.get("email", "")
+    }
+    $"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
+
 
 # ─────────────────────────────────────────
 # HISTORIC

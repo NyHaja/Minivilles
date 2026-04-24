@@ -96,4 +96,16 @@ func _input(event):
 		
 		#print("[CLIENT] ... Inscrire un nouveau joueur")
 		#send_register_request("jaja", "jaja123", "jaja@test.com", "http://jaja.com")
-		
+
+
+
+## ----------------------------------------------------
+## 5. REQUÊTE : MOT DE PASSE OUBLIé 
+## ----------------------------------------------------	
+func forgot_password(email: String):
+    var request_data = {
+        "action": "forgot_password",
+        "email": email
+    }
+    NetworkManager.envoyer(request_data)
+    print("Requête mot de passe oublié envoyée pour : ", email)
