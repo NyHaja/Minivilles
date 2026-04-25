@@ -275,6 +275,49 @@ def forgot_password():
 
 
 # ============================================================================
+# GET STATS JOUEUR PAR ID
+# ============================================================================
+
+@app.route('/player/<int:player_id>/stats', methods=['GET'])
+def get_player_stats(player_id):
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT player_id, nickname, avatar_url,
+                   wins_count, games_played_count, total_monuments_built
+            FROM REGISTERED_PLAYER
+            WHERE player_id = %s
+        """, (player_id,))
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({"status": "error", "message": "Joueur introuvable."}), 404
+
+        games = result[4]
+        winrate = round((result[3] / games * 100)) if games > 0 else 0
+
+        return jsonify({
+            "status":                "success",
+            "player_id":             result[0],
+            "nickname":              result[1],
+            "avatar_url":            result[2],
+            "wins_count":            result[3],
+            "games_played_count":    games,
+            "total_monuments_built": result[5],
+            "winrate":               winrate
+        }), 200
+
+    except Error as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+# ============================================================================
 # HISTORIQUE (EVENT SOURCING)
 # ============================================================================
 
