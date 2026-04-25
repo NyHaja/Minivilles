@@ -10,6 +10,7 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 		"guest_player":    _handle_guest(client, data)
 		"historic":        _handle_historic(client, data)
 		"forgot_password": _handle_forgot_password(client, data)
+		"get_stats": _handle_get_stats(client, data)
 
 # ─────────────────────────────────────────
 # REGISTER
@@ -58,6 +59,21 @@ func _handle_forgot_password(client: StreamPeerTLS, data: Dictionary):
         "email": data.get("email", "")
     }
     $"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
+
+
+# ─────────────────────────────────────────
+# GET STATS
+# ─────────────────────────────────────────
+func _handle_get_stats(client: StreamPeerTLS, data: Dictionary):
+    var player_id = data.get("player_id", get_parent().get_player_id(client))
+    if player_id == null:
+        get_parent().send_to_client(client, {
+            "action_reply": "get_stats",
+            "status": "error",
+            "message": "player_id manquant."
+        })
+        return
+    $"../FlaskManager".send_get("get_stats", "/player/" + str(player_id) + "/stats", client)
 
 
 # ─────────────────────────────────────────

@@ -109,3 +109,17 @@ func forgot_password(email: String):
     }
     NetworkManager.envoyer(request_data)
     print("Requête mot de passe oublié envoyée pour : ", email)
+
+## ----------------------------------------------------
+## 6. REQUÊTE : GET STATS
+## ----------------------------------------------------	
+# Pour soi-même :
+func get_my_stats():
+    NetworkManager.envoyer({"action": "get_stats"})
+
+# Pour un autre joueur :
+func get_player_stats(player_id: int):
+    NetworkManager.envoyer({
+        "action":    "get_stats",
+        "player_id": player_id
+    })

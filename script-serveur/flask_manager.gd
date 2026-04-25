@@ -6,7 +6,7 @@ extends Node
 const FLASK_URL = "http://192.168.100.125:5000"
 
 # ─────────────────────────────────────────
-# ENVOI VERS FLASK
+# ENVOI VERS FLASK (Méthode POST)
 # ─────────────────────────────────────────
 func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTLS, extra: Dictionary = {}, token: String = ""):
 	var http = HTTPRequest.new()
@@ -26,6 +26,26 @@ func send(action_name: String, endpoint: String, payload: Dictionary, client: St
 		JSON.stringify(payload)
 	)
 	print("[FLASK] -> Envoi vers ", endpoint, " | action : ", action_name)
+
+
+
+# ─────────────────────────────────────────
+# ENVOI VERS FLASK (Méthode GET)
+# ─────────────────────────────────────────
+func send_get(action_name: String, endpoint: String, client: StreamPeerTLS):
+    var http = HTTPRequest.new()
+    add_child(http)
+    http.request_completed.connect(
+        _on_response.bind(client, http, action_name, {})
+    )
+    http.request(
+        FLASK_URL + endpoint,
+        ["Content-Type: application/json"],
+        HTTPClient.METHOD_GET,
+        ""
+    )
+    print("[FLASK] -> GET vers ", endpoint, " | action : ", action_name)
+
 
 # ─────────────────────────────────────────
 # RÉCEPTION DES RÉPONSES FLASK
