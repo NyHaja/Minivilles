@@ -12,7 +12,7 @@ var has_constructed_this_turn: bool = false
 var last_d1: int = 0
 var last_d2: int = 0
 
-
+signal player_choice_received(choice_data: Dictionary)
 
 func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 	self.lobby_id = l_id
@@ -27,7 +27,7 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 		
 	print("[GameServer] Game initialized for lobby: ", lobby_id)
 	
-	
+	_broadcast_sync_state()
 	_broadcast_turn_start()
 
 func handle_client_message(player_id: int, data: Dictionary):
@@ -48,6 +48,8 @@ func handle_client_message(player_id: int, data: Dictionary):
 		"skip_turn":
 			_server_skip_phase()
 			
+		"purple_card_choice":
+			player_choice_received.emit(data)
 
 func _server_dice_phase(amount: int):
 	has_constructed_this_turn = false
@@ -93,9 +95,7 @@ func _server_resolve_dice(modifier: String, amount_rolled: int):
 	})
 	
 	_execute_effect_phase(current_roll_value)
-	
-	
-	
+
 func _execute_effect_phase(dice_value: int):
 	var current_player = players[currentPlayerIndex]
 	
@@ -107,11 +107,22 @@ func _execute_effect_phase(dice_value: int):
 		
 	current_player.activateEffect(CardColor.Type.GREEN, self, current_player)
 	
-	current_player.activateEffect(CardColor.Type.PURPLE, self, current_player)
+	await current_player.activateEffect(CardColor.Type.PURPLE, self, current_player)
 	
 	_broadcast_sync_state()
 
-
+func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Dictionary:
+	var active_player = players[currentPlayerIndex]
+	
+	_broadcast_to_lobby({
+		"action_reply": "request_purple_choice",
+		"active_player_id": active_player.id,
+		"choice_type": action_type,
+		"metadata": metadata
+	})
+	
+	var response = await self.player_choice_received
+	return response
 
 func _server_buy_phase(card_id: int):
 	var active_player = players[currentPlayerIndex]
@@ -146,6 +157,7 @@ func _server_build_phase(monument_id: int):
 				"action_reply": "game_over",
 				"winner_name": active_player.username
 			})
+			_record_match_history(active_player)
 		else:
 			_advance_turn()
 
@@ -156,11 +168,11 @@ func _server_skip_phase():
 		if active_player.monumentIsActive(Monument.MONUMENT_ID.Aeroport):
 			active_player.balance += 10
 			
+	if active_player.balance <= 2:
+		active_player.balance = 2
 	
 	_broadcast_sync_state()
 	_advance_turn()
-
-
 
 func _advance_turn():
 	if takes_bonus_turn:
@@ -169,8 +181,6 @@ func _advance_turn():
 		currentPlayerIndex = (currentPlayerIndex + 1) % players.size()
 		
 	_broadcast_turn_start()
-
-
 
 func _broadcast_turn_start():
 	var active_player = players[currentPlayerIndex]
@@ -185,25 +195,45 @@ func _broadcast_sync_state():
 	for p in players:
 		state_data[p.id] = {"balance": p.balance, "deck_size": p.deck.size()}
 		
+	var shop_data = {}
+	for slot in shop.shop:
+		if slot.id != -1 and slot.quantity > 0:
+			shop_data[slot.id] = slot.quantity
+			
 	_broadcast_to_lobby({
 		"action_reply": "sync_state",
-		"players": state_data
+		"players": state_data,
+		"shop": shop_data
 	})
 
 func _broadcast_to_lobby(payload: Dictionary):
 	var parent_server = get_parent()
 	if parent_server and parent_server.has_method("broadcast_lobby"):
-		parent_server.broadcast_lobby(lobby_id, payload)
+		parent_server.get_parent().broadcast_lobby(lobby_id, payload)
+
+func _record_match_history(winner: Player):
+	var parent_server = get_parent().get_parent()
+	var flask_manager = parent_server.get_node_or_null("FlaskManager")
+	
+	if flask_manager:
+		var game_db_id = parent_server.lobbies[lobby_id].get("game_id", "")
+		var payload = {
+			"game_id": game_db_id,
+			"turn_number": 999,
+			"action_type": "game_won",
+			"player_id": winner.id
+		}
+		
+		flask_manager.send("historic", "/history/insert", payload, null)
+		print("[GameServer] Victory saved to database for player: ", winner.username)
 
 func _get_players_counter_clockwise(reference: Player) -> Array:
 	var counter_clockwise_array = []
 	var start_index = players.find(reference)
 	var count = players.size()
-	
 	for i in range(1, count):
 		var current_index = (start_index - i + count) % count
 		counter_clockwise_array.append(players[current_index])
-		
 	return counter_clockwise_array
 
 func _verify_victory(player: Player) -> bool:

@@ -110,14 +110,34 @@ func activateEffect(color: int, game: GameServer, roller: Player) -> void:
 				if card.effect.peutActiver(game, self, roller):
 					for i in range(quantity):
 						
-						# We ONLY apply automatic effects right now. 
-						# Purple cards require a network state machine which we will build later!
-						if color != CardColor.Type.PURPLE:
-							card.effect.appliquer(game, self, roller)
-						else:
-							print("[Player] Skipping Purple card effect for now (Requires Network UI Wait State)")
+						if card.effect is EffectVolChoix:
+							var response = await game.request_player_choice("choose_player")
+							var target_id = response.get("target_id", -1)
+							var cible = _find_player_by_id(game.players, target_id)
+							card.effect.choisir_cible(cible)
+							
+						elif card.effect is EffectEchange:
+							var response = await game.request_player_choice("trade_cards")
+							game.carte_owner_pour_echange = response.get("my_card_id", -1)
+							game.adversaire_choisi_pour_echange = _find_player_by_id(game.players, response.get("target_id", -1))
+							game.carte_adversaire_pour_echange = response.get("target_card_id", -1)
+							
+						elif card.effect is EffectDemenagement:
+							var response = await game.request_player_choice("give_card")
+							game.carte_choisie_pour_don = response.get("my_card_id", -1)
+							game.adversaire_choisi_pour_don = _find_player_by_id(game.players, response.get("target_id", -1))
+							
+						elif card.effect is EffectDemolition:
+							var response = await game.request_player_choice("demolish_monument")
+							game.monument_choisi_pour_demolition = response.get("monument_id", -1)
 						
-						# Centre Commercial Bonus
+						card.effect.appliquer(game, self, roller)
+						
 						if card.icon == Icon.Type.BREAD and monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
 							self.receiveGold(1)
-							print(username, " gagne 1 pièce bonus (Centre Commercial) !")
+
+func _find_player_by_id(player_array: Array, target_id: int) -> Player:
+	for p in player_array:
+		if p.id == target_id:
+			return p
+	return null
