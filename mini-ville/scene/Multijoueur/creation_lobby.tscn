@@ -101,7 +101,10 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
 script = ExtResource("9_rxlvl")
 
 [node name="DureeDisplay" type="Control" parent="Content/DureeRow" unique_id=548797076]
@@ -133,7 +136,10 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
 flip_h = true
 script = ExtResource("9_rxlvl")
 
@@ -156,7 +162,10 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
 script = ExtResource("9_rxlvl")
 
 [node name="JoueursIcons" type="Control" parent="Content/JoueursRow" unique_id=1826243100]
@@ -206,8 +215,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("8_uy7m1")
-texture_pressed = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
 texture_hover = ExtResource("12_6cn7a")
 flip_h = true
 script = ExtResource("9_rxlvl")
@@ -219,6 +229,7 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(720, 110)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -264,7 +275,7 @@ layout_mode = 0
 offset_left = 1550.0
 offset_top = 370.0
 offset_right = 1880.0
-offset_bottom = 430.0
+offset_bottom = 505.0
 theme_override_constants/separation = 16
 alignment = 2
 
@@ -275,6 +286,7 @@ label_settings = SubResource("LabelSettings_titre_section")
 horizontal_alignment = 1
 
 [node name="Switch" type="CheckButton" parent="SwitchContainer" unique_id=200000005]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_vertical = 4
 

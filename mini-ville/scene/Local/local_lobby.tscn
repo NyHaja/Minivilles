@@ -9,8 +9,8 @@
 [ext_resource type="Script" uid="uid://r80okf66ptxh" path="res://script/scene/Multijoueur/btn_fleche.gd" id="9_vrjxr"]
 [ext_resource type="Texture2D" uid="uid://dulxo2tcqe74g" path="res://assets/icon/chronometre.png" id="10_1tuen"]
 [ext_resource type="Texture2D" uid="uid://b6rtifuh8un50" path="res://assets/icon/joueur.png" id="10_qqwuh"]
-[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="11_vus0f"]
 [ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="11_backp"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="11_vus0f"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_yejr6"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_nmhnt"]
 
@@ -44,32 +44,6 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_eisn6")
 stretch_mode = 6
-
-[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 20.0
-offset_right = 200.0
-offset_bottom = 160.0
-mouse_filter = 0
-theme_override_constants/separation = 5
-
-[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=100000051]
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 2
-size_flags_horizontal = 4
-texture_normal = ExtResource("11_vus0f")
-texture_pressed = ExtResource("11_backp")
-texture_hover = ExtResource("11_backp")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Retour"
-label_settings = ExtResource("4_p8n71")
-horizontal_alignment = 1
 
 [node name="Content" type="VBoxContainer" parent="." unique_id=1341341124]
 layout_mode = 1
@@ -127,6 +101,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11_vus0f")
 script = ExtResource("9_vrjxr")
 
@@ -159,6 +134,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11_vus0f")
 flip_h = true
 script = ExtResource("9_vrjxr")
@@ -182,6 +158,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11_vus0f")
 script = ExtResource("9_vrjxr")
 
@@ -232,6 +209,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(108, 81)
 layout_mode = 2
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11_vus0f")
 flip_h = true
 script = ExtResource("9_vrjxr")
@@ -243,6 +221,7 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(720, 110)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -256,3 +235,28 @@ theme_override_styles/pressed = ExtResource("14_nmhnt")
 theme_override_styles/hover = ExtResource("14_nmhnt")
 theme_override_styles/focus = ExtResource("13_yejr6")
 text = "Lancer la partie"
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
+layout_mode = 1
+offset_right = 150.0
+offset_bottom = 163.0
+mouse_filter = 0
+theme_override_constants/separation = -15
+
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=100000051]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("11_vus0f")
+texture_pressed = ExtResource("11_backp")
+texture_hover = ExtResource("11_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("4_p8n71")
+horizontal_alignment = 1

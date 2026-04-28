@@ -124,6 +124,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_default_cursor_shape = 2
 texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
@@ -156,6 +157,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_default_cursor_shape = 2
 texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
@@ -188,6 +190,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_default_cursor_shape = 2
 texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
@@ -220,6 +223,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_default_cursor_shape = 2
 texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
@@ -247,6 +251,7 @@ offset_left = 600.0
 offset_top = 854.0
 offset_right = 1319.0
 offset_bottom = 963.0
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -298,6 +303,7 @@ alignment = 1
 [node name="BtnParametres" type="TextureButton" parent="VBoxContainer" unique_id=1703829456]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("10_gdpiv")
 script = ExtResource("14_kcgef")
 

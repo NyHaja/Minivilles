@@ -10,6 +10,7 @@
 [ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="8_dix67"]
 [ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="9_xvepj"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_s5moy"]
+[ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="10_yhx0o"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_4otwt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6taj"]
@@ -71,11 +72,11 @@ shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
 shadow_size = 7
 shadow_offset = Vector2(4, 4)
 
-[sub_resource type="LabelSettings" id="LabelSettings_dc6bf"]
-font = ExtResource("8_dix67")
-font_size = 15
-font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
-outline_size = 5
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soe83"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhx0o"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_30pvr"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -259,35 +260,45 @@ theme_override_fonts/font = ExtResource("9_xvepj")
 theme_override_font_sizes/font_size = 35
 theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
 
-[node name="pseudo2" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=813865913]
+[node name="password" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=813865913]
 layout_mode = 2
 text = "Mot de Passe"
 label_settings = SubResource("LabelSettings_hxsvn")
 
 [node name="LineEdit2" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
 theme_override_font_sizes/font_size = 35
 theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
+text = "bnnbbbnb"
 secret = true
 secret_character = "."
 
-[node name="Label" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1934262966]
+[node name="Label" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1552366810]
 layout_mode = 2
 size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 20
-text = "Mot de passe oublié"
-label_settings = SubResource("LabelSettings_dc6bf")
-horizontal_alignment = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("10_yhx0o")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_soe83")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_yhx0o")
+text = "Mot de passe oublié ?"
 
 [node name="connexionbtn" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1313044634]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
 theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
@@ -338,6 +349,7 @@ horizontal_alignment = 1
 [node name="inscription" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
 theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)

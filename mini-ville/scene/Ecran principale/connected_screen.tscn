@@ -82,6 +82,7 @@ custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("8_2voyj")
 texture_pressed = ExtResource("8_2voyj")
 texture_hover = ExtResource("7_afk1k")
@@ -177,6 +178,7 @@ theme_override_constants/separation = 31
 
 [node name="playbtn" type="Button" parent="gameMode" unique_id=1300849190]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
 theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
