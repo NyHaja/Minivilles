@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://cwbegnjp7or2k"]
+
+[ext_resource type="Script" uid="uid://b4r2tl07k3wmq" path="res://Lobby/lobby.gd" id="1_6tm10"]
+[ext_resource type="Script" uid="uid://capsexgjolf2s" path="res://Autoload/lobby_handler.gd" id="2_jxemi"]
+[ext_resource type="Texture2D" uid="uid://cat5pu0nqhc7r" path="res://oYYBAFOzrWeAAqDAAAa7YKTPsTU699.jpg" id="3_6tm10"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tm10"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6tm10"]
+font_size = 40
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Lobby" type="Control" unique_id=1509636319]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6tm10")
+
+[node name="LobbyHandler" type="Node" parent="." unique_id=1315000443]
+script = ExtResource("2_jxemi")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=4052418]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_6tm10")
+expand_mode = 1
+
+[node name="LabelCode" type="Label" parent="." unique_id=291120639]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -124.0
+offset_right = 124.0
+offset_bottom = 35.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.0627451, 0.1882353, 1, 1)
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_6tm10")
+label_settings = SubResource("LabelSettings_6tm10")
+horizontal_alignment = 1
+
+[node name="ListeJoueurs" type="VBoxContainer" parent="." unique_id=594850943]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 191.0
+offset_right = 240.0
+offset_bottom = 218.0
+
+[node name="Label" type="Label" parent="ListeJoueurs" unique_id=1612891009]
+layout_mode = 2
+text = "Les joueurs participants"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="ListeJoueurs" unique_id=152157411]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListeJoueurs1" type="VBoxContainer" parent="ListeJoueurs/PanelContainer" unique_id=1552618237]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=833204464]
+physics_interpolation_mode = 0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -208.0
+offset_top = -44.0
+offset_right = 208.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="creer" type="Button" parent="HBoxContainer" unique_id=1942461313]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Créer une partie"
+
+[node name="lancer" type="Button" parent="HBoxContainer" unique_id=1090885007]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lancer la Partie"
+
+[connection signal="pressed" from="HBoxContainer/creer" to="." method="_on_btn_creer_lobby_pressed"]
+[connection signal="pressed" from="HBoxContainer/lancer" to="." method="_on_btn_lancer_pressed"]
