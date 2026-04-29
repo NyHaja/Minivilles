@@ -16,6 +16,7 @@ var asGuest = preload("res://scene/Ecran principale/guest_screen.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	NetworkManager.lancer_connexion_reseau()
 	popup_login = popup_login_scene.instantiate()
 	popup_rule = pop_rule_scene.instantiate()
 	popup_setting = pop_setting_scene.instantiate()

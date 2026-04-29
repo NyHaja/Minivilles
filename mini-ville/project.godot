@@ -22,10 +22,12 @@ buses/default_bus_layout="uid://cjihtogdq8orn"
 [autoload]
 
 GameData="*uid://43kqotfp2uyk"
-SoundManager="*uid://bu5ukwdc2m6d"
 PlayerData="*res://script/scene/Multijoueur/player_data.gd"
 LocaleManager="*res://script/scene/Traduction/locale_manager.gd"
 LobbyManager="*res://script/scene/Multijoueur/lobby_manager.gd"
+SoundManager="*uid://bu5ukwdc2m6d"
+NetworkManager="*uid://dwii3wdl3k8xh"
+Client="*uid://dyh5b0moyfuki"
 
 [display]
 

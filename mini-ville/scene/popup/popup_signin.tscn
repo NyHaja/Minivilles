@@ -137,6 +137,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -189.0
+offset_top = -81.0
+offset_right = -189.0
+offset_bottom = -81.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -229,12 +233,13 @@ theme_override_styles/separator = SubResource("StyleBoxLine_ikalx")
 layout_mode = 2
 theme_override_constants/separation = 13
 
-[node name="pseudo" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=502909678]
+[node name="pseudo_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=502909678]
 layout_mode = 2
 text = "pseudo"
 label_settings = SubResource("LabelSettings_e3plc")
 
-[node name="field1" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1758252983]
+[node name="pseudo" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1758252983]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
@@ -243,12 +248,13 @@ theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
 
-[node name="email" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1533472842]
+[node name="email_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1533472842]
 layout_mode = 2
 text = "email"
 label_settings = SubResource("LabelSettings_e3plc")
 
-[node name="field2" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1274627429]
+[node name="mail" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1274627429]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
@@ -257,12 +263,13 @@ theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
 
-[node name="password" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1915286508]
+[node name="password_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1915286508]
 layout_mode = 2
 text = "Mot de passe"
 label_settings = SubResource("LabelSettings_e3plc")
 
-[node name="field3" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1846263279]
+[node name="mdp" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1846263279]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
@@ -273,12 +280,13 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
 secret = true
 secret_character = "."
 
-[node name="confirm" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1305234315]
+[node name="confirm_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1305234315]
 layout_mode = 2
 text = "Confirmer votre mot de passe"
 label_settings = SubResource("LabelSettings_e3plc")
 
-[node name="field4" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=851104971]
+[node name="mdp_conf" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=851104971]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
 theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
@@ -292,7 +300,7 @@ secret_character = "."
 [node name="Control" type="Control" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=377824215]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=2044315211]
+[node name="inscrire" type="Button" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=2044315211]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -357,3 +365,10 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bwasg")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_qc4td")
 theme_override_styles/hover = SubResource("StyleBoxFlat_papkj")
 text = "Se connecter"
+
+[node name="errorMessage" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=774476612]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96024394, 0.0071524177, 0.039429467, 1)
+
+[connection signal="pressed" from="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2/inscrire" to="." method="_on_inscrire_pressed"]

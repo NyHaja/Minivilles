@@ -251,7 +251,8 @@ layout_mode = 2
 text = "pseudo/email"
 label_settings = SubResource("LabelSettings_hxsvn")
 
-[node name="LineEdit" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=204938136]
+[node name="mail_con" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=204938136]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
@@ -265,7 +266,8 @@ layout_mode = 2
 text = "Mot de Passe"
 label_settings = SubResource("LabelSettings_hxsvn")
 
-[node name="LineEdit2" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
+[node name="mdp_con" type="LineEdit" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=633083962]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
@@ -292,6 +294,11 @@ theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_soe83")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_yhx0o")
 text = "Mot de passe oublié ?"
+
+[node name="errorMessageLogin" type="Label" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1578971031]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.08627451, 0.06666667, 1)
 
 [node name="connexionbtn" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1313044634]
 custom_minimum_size = Vector2(100, 0)
@@ -363,4 +370,5 @@ text = "S'inscrire"
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
 [connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="bouton_connexion"]
+[connection signal="pressed" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="_on_connexionbtn_pressed"]
 [connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/inscription" to="." method="bouton_inscription"]
