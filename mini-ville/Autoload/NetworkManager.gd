@@ -29,6 +29,7 @@ var _buffer := ""
 var _connecte := false
 var _session_token := ""
 var _joueur_id := -1
+var _est_guest := false
 
 # ------------------------------------
 #	INITIALISATION & CONNEXION
@@ -136,3 +137,9 @@ func envoyer(data: Dictionary):
 func est_connecte() -> bool: return _connecte
 func get_token() -> String: return _session_token
 func get_joueur_id() -> int: return _joueur_id
+func connecter_guest(): _est_guest = true
+func est_guest()->bool: return _est_guest
+
+func set_token(token: String):
+	_session_token = token
+	_est_guest = false  # si on a un token, c'est pas un guest
