@@ -79,7 +79,7 @@ func _on_rejoindre_pressed():
 	if code.length() < 6:
 		_feedback_erreur()
 		return
-	$BtnRejoindre.disabled = true
+	$Panel/BtnRejoindre.disabled = true
 	LobbyHandler.rejoindre_lobby(code)
 
 
@@ -88,7 +88,7 @@ func _on_rejoindre_pressed():
 # ----------------------------------------------------------------
 func _on_message(data: Dictionary):
 	if data.get("type") == "lobby_erreur":
-		$BtnRejoindre.disabled = false
+		$Panel/BtnRejoindre.disabled = false
 		_feedback_erreur()
 
 func _on_lobby_rejoint(_joueurs: Array):

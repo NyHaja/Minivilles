@@ -94,9 +94,14 @@ func _on_auth_result(success: bool, _message: String) -> void:
 		# On attend 1 seconde avant de changer de scène
 		await get_tree().create_timer(1.0).timeout
 		
-		# Vérification après l'attente (le nœud peut avoir été quitté durant l'attente)
-		if is_inside_tree():
-			get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
+		if not is_inside_tree():
+			return
+		
+		# Cache Et supprime le popup avant de changer de scene
+		hide()
+		queue_free()
+		# Vérification après l'attente (le nœud peut avoir été quitté durant l'attente)	
+		get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
 	else:
 		# GESTION DES IDENTIFIANTS INCORRECTS
 		# On affiche systématiquement le message d'erreur générique
