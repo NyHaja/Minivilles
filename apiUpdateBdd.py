@@ -277,6 +277,7 @@ def forgot_password():
 # ============================================================================
 # GET STATS JOUEUR PAR ID
 # ============================================================================
+from datetime import datetime # N'oublie pas cet import en haut de ton fichier si tu ne l'as pas déjà !
 
 @app.route('/player/<int:player_id>/stats', methods=['GET'])
 def get_player_stats(player_id):
@@ -286,9 +287,11 @@ def get_player_stats(player_id):
 
     cursor = conn.cursor()
     try:
+        # 1. On ajoute email et created_at à la requête SQL
         cursor.execute("""
             SELECT player_id, nickname, avatar_url,
-                   wins_count, games_played_count, total_monuments_built
+                   wins_count, games_played_count, total_monuments_built,
+                   email, created_at
             FROM REGISTERED_PLAYER
             WHERE player_id = %s
         """, (player_id,))
@@ -299,7 +302,19 @@ def get_player_stats(player_id):
 
         games = result[4]
         winrate = round((result[3] / games * 100)) if games > 0 else 0
+        
+        # 2. Formatage de la date (sécurité au cas où elle serait nulle)
+        # result[7] correspond à 'created_at'
+        date_str = ""
+        if result[7]:
+            # Formate la date en "Jour/Mois/Année" (ex: 01/04/2026)
+            try:
+                date_str = result[7].strftime('%d/%m/%Y')
+            except AttributeError:
+                # Si c'est déjà une string (selon ton driver SQL), on la garde telle quelle
+                date_str = str(result[7])
 
+        # 3. On ajoute les champs dans la réponse JSON
         return jsonify({
             "status":                "success",
             "player_id":             result[0],
@@ -308,15 +323,16 @@ def get_player_stats(player_id):
             "wins_count":            result[3],
             "games_played_count":    games,
             "total_monuments_built": result[5],
+            "email":                 result[6],
+            "created_at":            date_str,
             "winrate":               winrate
         }), 200
 
-    except Error as e:
+    except Exception as e: # Remplacé par Exception générique pour éviter les crashs d'import
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
         cursor.close()
         conn.close()
-
 # ============================================================================
 # HISTORIQUE (EVENT SOURCING)
 # ============================================================================
