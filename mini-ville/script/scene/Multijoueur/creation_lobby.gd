@@ -20,16 +20,13 @@ func _ready():
 	%ArrowGaucheJoueurs.pressed.connect(_on_joueurs_gauche)
 	%ArrowDroiteJoueurs.pressed.connect(_on_joueurs_droite)
 	_update_joueurs()
-	$SwitchContainer/Switch.toggled.connect(_on_switch_toggled)
 	$VBoxContainer/backbtn.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
-
-
-func _on_switch_toggled(pressed: bool):
-	is_private = pressed
-	$SwitchContainer/LabelSwitch.text = tr("Privée") if pressed else tr("Publique")
-
+	
+	# ------------ signal ----------------------------
+	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
+	$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
 
 func _on_duree_gauche():
 	dur_index = (dur_index - 1 + durations.size()) % durations.size()
@@ -62,3 +59,17 @@ func _update_joueurs():
 		j.offset_right = j.offset_left + ICON_WIDTH
 		j.offset_top = ICON_Y_TOP
 		j.offset_bottom = ICON_Y_BOTTOM
+		
+
+func _on_lobby_cree(lobby_id: String):
+	#Navigue vers la salle d'attente en passant le lobby_id
+	get_tree().set_meta("tour_duration_index", dur_index)
+	get_tree().set_meta("nb_joueurs", nb_joueurs)
+	get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
+	
+	# Afficher le host dans la liste imédiatement
+	#_rafraichir_liste(LobbyHandler.get_joueurs())
+
+func _on_btn_creer_pressed():
+	$Content/BtnCreerWrap/BtnCreer.disabled = true
+	LobbyHandler.creer_lobby("Partie", nb_joueurs, is_private)

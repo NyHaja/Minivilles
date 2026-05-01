@@ -276,7 +276,6 @@ theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
 theme_override_font_sizes/font_size = 35
 theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
-text = "bnnbbbnb"
 secret = true
 secret_character = "."
 

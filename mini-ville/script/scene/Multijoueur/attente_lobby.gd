@@ -1,99 +1,146 @@
 extends Control
 
-var durations_seconds = [60, 120, 180, 300]
-var durations_text = ["1 min", "2 min", "3 min", "5 min"]
+const DURATIONS_TEXT = ["1 min", "2 min", "3 min", "5 min"]
 var remaining_seconds: int = 120
 
 var joueurs_prets: Array[bool] = [false, false, false, false]
 var nb_joueurs_actifs: int = 2
 
+@onready var label_code    = $LabelCode
+@onready var label_timer   = $LabelTimer
+@onready var label_duree   = $DureeTourRow/LabelDuree
+@onready var btn_pret      = $BtnPret
+@onready var btn_commencer = $BtnCommencer
+@onready var timer_chrono  = $TimerChrono
+var slots : Array = []
+
 
 func _ready():
-	$LabelCode.text = get_tree().get_meta("lobby_code", "A4HUI5")
+	
+	slots = [
+		$JoueursRow/Joueur1,
+		$JoueursRow/Joueur2,
+		$JoueursRow/Joueur3,
+		$JoueursRow/Joueur4,
+	]
+	# --- Signaux réseau ---
+	LobbyHandler.joueur_mis_a_jour.connect(_on_joueurs_mis_a_jour)
+	NetworkManager.message_recu.connect(_on_message)
+
+	# --- Affichage initial depuis LobbyHandler ---
+	label_code.text = LobbyHandler.get_lobby_id()
+
 	var dur_index = get_tree().get_meta("tour_duration_index", 1)
-	$DureeTourRow/LabelDuree.text = durations_text[dur_index]
-	_update_display()
-	nb_joueurs_actifs = get_tree().get_meta("nb_joueurs", 2)
-	$JoueursRow/Joueur1.visible = nb_joueurs_actifs >= 1
-	$JoueursRow/Joueur2.visible = nb_joueurs_actifs >= 2
-	$JoueursRow/Joueur3.visible = nb_joueurs_actifs >= 3
-	$JoueursRow/Joueur4.visible = nb_joueurs_actifs >= 4
-	_setup_joueur_click($JoueursRow/Joueur1, "Joueur 1")
-	_setup_joueur_click($JoueursRow/Joueur2, "Joueur 2")
-	_setup_joueur_click($JoueursRow/Joueur3, "Joueur 3")
-	_setup_joueur_click($JoueursRow/Joueur4, "Joueur 4")
-	$BtnPret.pressed.connect(_on_pret_pressed)
-	$BtnCommencer.pressed.connect(_on_commencer_pressed)
-	$TimerChrono.wait_time = 1.0
-	$TimerChrono.timeout.connect(_on_tick)
-	$TimerChrono.start()
+	label_duree.text = DURATIONS_TEXT[dur_index]
+	remaining_seconds = [60, 120, 180, 300][dur_index]
+
+	_rafraichir_slots(LobbyHandler.get_joueurs())
+
+	# --- Boutons ---
+	btn_pret.pressed.connect(_on_pret_pressed)
+	btn_commencer.pressed.connect(_on_commencer_pressed)
+	btn_commencer.visible = false
+
+	# Seul le host peut lancer
+	btn_commencer.visible = false
+	if not LobbyHandler.is_host():
+		btn_pret.text = "En attente..."
+		btn_pret.disabled = true
+
+	# --- Timer ---
+	timer_chrono.wait_time = 1.0
+	timer_chrono.timeout.connect(_on_tick)
+	timer_chrono.start()
 
 
+# ----------------------------------------------------------------
+# RÉSEAU → RÉCEPTION
+# ----------------------------------------------------------------
+func _on_message(data: Dictionary):
+	match data.get("type", ""):
+		"joueur_pret":
+			_on_joueur_pret_recu(data)
+		"tous_prets":
+			_on_tous_prets_recu()
+		"game_demarre":
+			# LobbyHandler gère la navigation, rien à faire ici
+			pass
+
+func _on_joueur_pret_recu(data: Dictionary):
+	var d = data.get("data", {})
+	var joueurs_prets: Array = d.get("joueurs_prets", [])
+	var joueurs = LobbyHandler.get_joueurs()
+	# Affiche le badge ReadyBadge sur chaque slot qui est prêt
+	for i in min(slots.size(), joueurs.size()):
+		var badge = slots[i].get_node_or_null("ReadyBadge")
+		if badge:
+			badge.visible = joueurs_prets.has(joueurs[i])
+
+func _on_tous_prets_recu():
+	# Le serveur confirme que tout le monde est prêt
+	if LobbyHandler.is_host():
+		btn_pret.visible = false
+		btn_commencer.visible = true
+
+
+# ----------------------------------------------------------------
+# RÉSEAU → ENVOI
+# ----------------------------------------------------------------
 func _on_pret_pressed():
-	# Toggle prêt pour le joueur local (joueur 1)
-	joueurs_prets[0] = !joueurs_prets[0]
-	$JoueursRow/Joueur1/ReadyBadge.visible = joueurs_prets[0]
-	_verifier_tous_prets()
-
-
-func _verifier_tous_prets():
-	var tous_prets = true
-	for i in range(nb_joueurs_actifs):
-		if not joueurs_prets[i]:
-			tous_prets = false
-			break
-	if tous_prets:
-		$BtnPret.visible = false
-		$BtnCommencer.visible = true
-	else:
-		$BtnPret.visible = true
-		$BtnCommencer.visible = false
-
+	NetworkManager.envoyer({
+		"action":"joueur_pret",
+		"token": NetworkManager.get_token(),
+		"lobby_id": LobbyHandler.get_lobby_id()
+	})
+	btn_pret.disabled = true
+	btn_pret.text = "Prêt ✓"
 
 func _on_commencer_pressed():
-	# TODO: lancer la scène de jeu
-	print("Lancement de la partie...")
+	LobbyHandler.lancer_partie()
+	btn_commencer.disabled = true  # anti double-clic
+	
+# ----------------------------------------------------------------
+# MISE À JOUR JOUEURS
+# ----------------------------------------------------------------
+func _on_joueurs_mis_a_jour(joueurs: Array):
+	_rafraichir_slots(joueurs)
+	
+func _rafraichir_slots(joueurs: Array):
+	for i in 4:
+		var slot = slots[i]
+		var occupe = i < joueurs.size()
+		slot.visible = occupe
+		if occupe:
+			var label = slot.get_node_or_null("LabelNom")
+			if label:
+				label.text = str(joueurs[i])
+			var badge = slot.get_node_or_null("ReadyBagde")
+			if badge:
+				badge.visible = false
 
-
-func _setup_joueur_click(joueur: Control, nom: String):
-	var icon = joueur.get_node("Icon")
-	icon.mouse_filter = Control.MOUSE_FILTER_STOP
-	icon.gui_input.connect(func(event):
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-			if not event.pressed:
-				_ouvrir_stats(nom))
-
-
-func _ouvrir_stats(nom: String):
-	var stats = load("res://scene/Multijoueur/stats_joueur.tscn").instantiate()
-	get_tree().root.add_child(stats)
-	stats.setup(
-		PlayerData.nom if PlayerData.is_logged_in() else nom,
-		PlayerData.parties_jouees,
-		PlayerData.parties_gagnees,
-		PlayerData.rang
-	)
-
-
+# ----------------------------------------------------------------
+# TIMER
+# ----------------------------------------------------------------
 func _on_tick():
 	remaining_seconds = max(0, remaining_seconds - 1)
 	_update_display()
 	if remaining_seconds == 0:
-		$TimerChrono.stop()
+		timer_chrono.stop()
+		# Temps écoulé → forcer le lancement si host
+		if LobbyHandler.is_host():
+			LobbyHandler.lancer_partie()
 
 
 func _update_display():
 	var m = remaining_seconds / 60
 	var s = remaining_seconds % 60
-	$LabelTimer.text = "%02d:%02d" % [m, s]
+	label_timer.text = "%02d:%02d" % [m, s]
 	if remaining_seconds <= 10:
-		# Rouge + clignotement rapide
-		$LabelTimer.modulate = Color(1, 0.15, 0.15, 1)
-		var t = $LabelTimer.create_tween()
-		t.tween_property($LabelTimer, "modulate:a", 0.3, 0.25)
-		t.tween_property($LabelTimer, "modulate:a", 1.0, 0.25)
+		label_timer.modulate = Color(1, 0.15, 0.15, 1)
+		var t = label_timer.create_tween()
+		t.tween_property(label_timer, "modulate:a", 0.3, 0.25)
+		t.tween_property(label_timer, "modulate:a", 1.0, 0.25)
 	elif remaining_seconds <= 30:
-		# Orange fixe
-		$LabelTimer.modulate = Color(1, 0.55, 0.1, 1)
+		label_timer.modulate = Color(1, 0.55, 0.1, 1)
 	else:
-		$LabelTimer.modulate = Color(1, 1, 1, 1)
+		label_timer.modulate = Color(1, 1, 1, 1)
