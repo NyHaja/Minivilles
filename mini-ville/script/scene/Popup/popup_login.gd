@@ -25,9 +25,6 @@ func _ready() -> void:
 	if NetworkManager.has_signal("auth_finished"):
 		if not NetworkManager.auth_finished.is_connected(_on_auth_result):
 			NetworkManager.auth_finished.connect(_on_auth_result)
-	
-	if not NetworkManager.message_recu.is_connected(_on_network_message_received):
-		NetworkManager.message_recu.connect(_on_network_message_received)
 
 # ------------------------------------
 #	NAVIGATION & UI
@@ -55,7 +52,6 @@ func bouton_inscription():
 #	LOGIQUE DE CONNEXION
 # ------------------------------------
 func _on_connexionbtn_pressed() -> void:
-	# Récupération sécurisée pour éviter les crashs 'null instance'
 	var mail_node = get_node_or_null("%mail_con")
 	var mdp_node = get_node_or_null("%mdp_con")
 	var err_node = get_node_or_null("%errorMessageLogin")
@@ -92,6 +88,7 @@ func _on_auth_result(success: bool, _message: String) -> void:
 	if success:
 		show_success("Connexion réussie !")
 		# On attend 1 seconde avant de changer de scène
+		
 		await get_tree().create_timer(1.0).timeout
 		
 		if not is_inside_tree():
@@ -107,11 +104,7 @@ func _on_auth_result(success: bool, _message: String) -> void:
 		# On affiche systématiquement le message d'erreur générique
 		show_error("Identifiants incorrects.")
 
-func _on_network_message_received(data: Dictionary):
-	if data.get("action_reply") == "authentification":
-		var status = data.get("status", "error")
-		# On appelle notre fonction de traitement
-		_on_auth_result(status == "success", "")
+
 
 # ------------------------------------
 #	UTILITAIRES DE MESSAGES SÉCURISÉS

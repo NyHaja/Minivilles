@@ -14,6 +14,7 @@ const PORT = 22000
 signal connecte
 signal deconnecte
 signal message_recu(data: Dictionary)
+signal stats_received(data: Dictionary)
 
 # Signaux pour l'interface (UI)
 signal auth_finished(success: bool, message: String)
@@ -103,7 +104,7 @@ func _traiter_message(raw: String):
 	if action == "authentification":
 		if status == "success":
 			_session_token = data.get("access_token", "")
-			_joueur_id = int(data.get("player_id", -1))
+			_joueur_id = data.get("player_id","")
 			# On émet le signal déclaré en haut
 			auth_finished.emit(true, "Connexion réussie")
 		else:
@@ -117,6 +118,11 @@ func _traiter_message(raw: String):
 		else:
 			var clean_error = _parse_sql_error(message)
 			register_finished.emit(false, clean_error)
+	elif action == "get_stats":
+		if status == "success":
+			stats_received.emit(data)
+		else:
+			print("[NetworkManager] Erreur lors de la récupération des stats : ", message)
 
 	# Envoi du message brut pour les autres scripts
 	message_recu.emit(data)

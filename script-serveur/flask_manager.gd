@@ -33,18 +33,18 @@ func send(action_name: String, endpoint: String, payload: Dictionary, client: St
 # ENVOI VERS FLASK (Méthode GET)
 # ─────────────────────────────────────────
 func send_get(action_name: String, endpoint: String, client: StreamPeerTLS):
-    var http = HTTPRequest.new()
-    add_child(http)
-    http.request_completed.connect(
-        _on_response.bind(client, http, action_name, {})
-    )
-    http.request(
-        FLASK_URL + endpoint,
-        ["Content-Type: application/json"],
-        HTTPClient.METHOD_GET,
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(
+		_on_response.bind(client, http, action_name, {})
+	)
+	http.request(
+		FLASK_URL + endpoint,
+		["Content-Type: application/json"],
+		HTTPClient.METHOD_GET,
         ""
-    )
-    print("[FLASK] -> GET vers ", endpoint, " | action : ", action_name)
+	)
+	print("[FLASK] -> GET vers ", endpoint, " | action : ", action_name)
 
 
 # ─────────────────────────────────────────
@@ -105,7 +105,8 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
 				"status": "success",
-				"access_token": access_token
+				"access_token": access_token,
+				"player_id" : player_id
 			})
 		else:
 			print("Échec : ", flask_response.get("message", "Email ou mot de passe incorrect"))
@@ -116,6 +117,32 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			})
 		return
 	# ------------------------
+	# --- GESTION DES STATISTIQUES (GET_STATS) ---
+	elif action_name == "get_stats":
+		if flask_response.get("status") == "success":
+			# On prépare le dictionnaire avec toutes les stats reçues de l'API Flask
+			serveur.send_to_client(client, {
+				"action_reply":          "get_stats",
+				"status":                "success",
+				"player_id":             flask_response.get("player_id"),
+				"nickname":              flask_response.get("nickname"),
+				"email":                 flask_response.get("email"),
+				"created_at":            flask_response.get("created_at"),
+				"avatar_url":            flask_response.get("avatar_url"),
+				"wins_count":            flask_response.get("wins_count"),
+				"games_played_count":    flask_response.get("games_played_count"),
+				"total_monuments_built": flask_response.get("total_monuments_built"),
+				"winrate":               flask_response.get("winrate")
+			})
+		else:
+			# Gestion de l'erreur si le joueur n'existe pas en BDD
+			serveur.send_to_client(client, {
+				"action_reply": "get_stats",
+				"status": "error",
+				"message": flask_response.get("message", "Impossible de récupérer les stats.")
+			})
+		return
+	# --------------------------------------------
 
 	# Partie créée → stocker le game_id et notifier les joueurs
 	elif action_name == "create_game" and flask_response.get("status") == "success":
