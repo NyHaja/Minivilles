@@ -4,6 +4,8 @@ from mysql.connector import Error
 from datetime import datetime, timedelta
 import jwt
 import bcrypt
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "cle_super_secrete_a_changer"  # À changer en production
@@ -277,7 +279,6 @@ def forgot_password():
 # ============================================================================
 # GET STATS JOUEUR PAR ID
 # ============================================================================
-from datetime import datetime # N'oublie pas cet import en haut de ton fichier si tu ne l'as pas déjà !
 
 @app.route('/player/<int:player_id>/stats', methods=['GET'])
 def get_player_stats(player_id):
