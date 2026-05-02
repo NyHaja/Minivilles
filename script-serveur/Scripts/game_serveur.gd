@@ -193,7 +193,12 @@ func _broadcast_turn_start():
 func _broadcast_sync_state():
 	var state_data = {}
 	for p in players:
-		state_data[p.id] = {"balance": p.balance, "deck_size": p.deck.size()}
+		state_data[p.id] = {
+			"balance": p.balance, 
+			"deck": p.deck, 
+			"username": p.username,
+			"monuments": p.monumentArray
+		}
 		
 	var shop_data = {}
 	for slot in shop.shop:

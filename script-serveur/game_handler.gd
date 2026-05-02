@@ -9,7 +9,6 @@ const GameServerScene = preload("res://Scripts/game_serveur.gd")
 func start_new_game(lobby_id: String, players: Array):
 	print("[GameHandler] Spawning new game instance for lobby: ", lobby_id)
 	
-	# Create a brand new GameServer node
 	var new_game = GameServerScene.new()
 	add_child(new_game)
 	
