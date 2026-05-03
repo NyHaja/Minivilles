@@ -6,10 +6,24 @@ import jwt
 import bcrypt
 from datetime import datetime
 
+import smtplib
+import secrets
+import random
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "cle_super_secrete_a_changer"  # À changer en production
 # generer une clé avec : python3 -c "import secrets; print(secrets.token_hex(32))"
+
+EMAIL_CONFIG = {
+    "sender":   "miniville.noreply@gmail.com",
+    "password": "mfui jzpg kefc aosb"
+}
+
+# Format : { "email": {"code": "483921", "expires_at": datetime} }
+reset_codes = {}
 
 # ============================================================================
 # 0. CONFIGURATION ET CONNEXION À LA BASE DE DONNÉES
@@ -31,6 +45,41 @@ def get_db_connection():
     except Error as e:
         print(f"Erreur de connexion MySQL: {e}")
         return None
+
+
+
+# ============================================================================
+# ENVOI DU CODE DE REINITIALISATION
+# ============================================================================
+def send_reset_email(email: str, code: str):
+    """Envoie un email avec le code de réinitialisation à 6 chiffres."""
+    msg = MIMEMultipart()
+    msg["From"]    = EMAIL_CONFIG["sender"]
+    msg["To"]      = email
+    msg["Subject"] = "Minivilles — Code de réinitialisation"
+
+    body = f"""
+    Bonjour,
+
+    Voici votre code de réinitialisation de mot de passe : {code}
+
+    Ce code est valable 15 minutes.
+    Si vous n'avez pas demandé de réinitialisation, ignorez cet email.
+
+    L'équipe Minivilles
+    """
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(EMAIL_CONFIG["sender"], EMAIL_CONFIG["password"])
+            server.sendmail(EMAIL_CONFIG["sender"], email, msg.as_string())
+        print(f"[EMAIL] Code envoyé à {email}")
+        return True
+    except Exception as e:
+        print(f"[EMAIL] Erreur envoi : {e}")
+        return False
 
 
 # ============================================================================
@@ -269,11 +318,86 @@ def forgot_password():
         cursor.close()
         conn.close()
 
-    # On retourne toujours success pour ne pas révéler si l'email existe
+    if result:
+        # gen code à 6 chiffres
+        code = str(random.randint(100000, 999999))
+
+        # stocker en mem - expiration 15min
+        reset_codes[email] = {
+            "code":       code,
+            "expires_at": datetime.utcnow() + timedelta(minutes=15)
+        }
+
+        send_reset_email(email, code)
+        print(f"[RESET] Code généré pour {email} : {code}")
+
+    # Toujours success pour ne pas révéler si l'email existe
     return jsonify({
-        "status": "success",
-        "message": "Si cet email existe, un lien de réinitialisation a été envoyé."
+        "status":  "success",
+        "message": "Si cet email existe, un code a été envoyé."
     }), 200
+
+
+# ============================================================================
+# VERIF DU CODE DE REINITAILISATION
+# ============================================================================
+@app.route('/verify_reset_code', methods=['POST'])
+def verify_reset_code():
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "JSON manquant."}), 400
+
+    email        = data.get("email", "").strip()
+    code         = data.get("code", "").strip()
+    new_password = data.get("new_password", "")
+
+    if not email or not code or not new_password:
+        return jsonify({"status": "error", "message": "Champs manquants."}), 400
+
+    # verif que code existe en mem
+    if email not in reset_codes:
+        return jsonify({"status": "error", "message": "Aucune demande de reset pour cet email."}), 400
+
+    stored = reset_codes[email]
+
+    # verif expiration
+    if datetime.utcnow() > stored["expires_at"]:
+        del reset_codes[email]
+        return jsonify({"status": "error", "message": "Code expiré."}), 400
+
+    # verif code
+    if stored["code"] != code:
+        return jsonify({"status": "error", "message": "Code incorrect."}), 400
+
+    # Code valide -> hasher le nouveau mot de passe et mettre à jour en BDD
+    new_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "UPDATE REGISTERED_PLAYER SET password = %s WHERE email = %s",
+            (new_hash, email)
+        )
+        conn.commit()
+    except Error as e:
+        conn.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+    # suppr code utilisé
+    del reset_codes[email]
+
+    return jsonify({
+        "status":  "success",
+        "message": "Mot de passe mis à jour avec succès."
+    }), 200
+
 
 
 # ============================================================================
