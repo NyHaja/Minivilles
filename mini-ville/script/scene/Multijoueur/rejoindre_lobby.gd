@@ -42,9 +42,9 @@ func _ready():
 	# --- Boutons ---
 	$Panel/BtnRejoindre.pressed.connect(_on_rejoindre_pressed)
 	$Panel/BtnFermer.pressed.connect(func():
-		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 	$BtnRetour/Fleche.pressed.connect(func():
-		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 
 	_update_boxes()
 

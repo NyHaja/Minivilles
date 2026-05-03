@@ -1,33 +1,44 @@
 extends Control
 
+# ----------------------------------------------------------------
+# CONFIGURATION
+# ----------------------------------------------------------------
 const DURATIONS_TEXT = ["1 min", "2 min", "3 min", "5 min"]
+const MIN_JOUEURS = 2
+
+# ----------------------------------------------------------------
+# STATE
+# ----------------------------------------------------------------
 var remaining_seconds: int = 120
+var nb_prets: int = 0
+var slots: Array = []
 
-var joueurs_prets: Array[bool] = [false, false, false, false]
-var nb_joueurs_actifs: int = 2
-
+# ----------------------------------------------------------------
+# NŒUDS
+# ----------------------------------------------------------------
 @onready var label_code    = $LabelCode
 @onready var label_timer   = $LabelTimer
 @onready var label_duree   = $DureeTourRow/LabelDuree
 @onready var btn_pret      = $BtnPret
 @onready var btn_commencer = $BtnCommencer
 @onready var timer_chrono  = $TimerChrono
-var slots : Array = []
 
-
+# ----------------------------------------------------------------
+# INITIALISATION
+# ----------------------------------------------------------------
 func _ready():
-	
 	slots = [
 		$JoueursRow/Joueur1,
 		$JoueursRow/Joueur2,
 		$JoueursRow/Joueur3,
 		$JoueursRow/Joueur4,
 	]
+
 	# --- Signaux réseau ---
 	LobbyHandler.joueur_mis_a_jour.connect(_on_joueurs_mis_a_jour)
 	NetworkManager.message_recu.connect(_on_message)
 
-	# --- Affichage initial depuis LobbyHandler ---
+	# --- Affichage initial ---
 	label_code.text = LobbyHandler.get_lobby_id()
 
 	var dur_index = get_tree().get_meta("tour_duration_index", 1)
@@ -41,17 +52,13 @@ func _ready():
 	btn_commencer.pressed.connect(_on_commencer_pressed)
 	btn_commencer.visible = false
 
-	# Seul le host peut lancer
-	btn_commencer.visible = false
 	if not LobbyHandler.is_host():
-		btn_pret.text = "En attente..."
+		#btn_pret.text = "En attente du host ..."
 		btn_pret.disabled = true
-
 	# --- Timer ---
 	timer_chrono.wait_time = 1.0
 	timer_chrono.timeout.connect(_on_tick)
 	timer_chrono.start()
-
 
 # ----------------------------------------------------------------
 # RÉSEAU → RÉCEPTION
@@ -63,48 +70,88 @@ func _on_message(data: Dictionary):
 		"tous_prets":
 			_on_tous_prets_recu()
 		"game_demarre":
-			# LobbyHandler gère la navigation, rien à faire ici
-			pass
+			pass  # LobbyHandler gère la navigation
 
 func _on_joueur_pret_recu(data: Dictionary):
 	var d = data.get("data", {})
-	var joueurs_prets: Array = d.get("joueurs_prets", [])
+	var prets: Array = d.get("joueurs_prets", [])
 	var joueurs = LobbyHandler.get_joueurs()
-	# Affiche le badge ReadyBadge sur chaque slot qui est prêt
+	nb_prets = prets.size()
+
+	# Met à jour les badges visuels
 	for i in min(slots.size(), joueurs.size()):
-		var badge = slots[i].get_node_or_null("ReadyBadge")
+		var badge = slots[i].get_node_or_null("ReadyBadge")  # ← faute corrigée
 		if badge:
-			badge.visible = joueurs_prets.has(joueurs[i])
+			if prets.has(joueurs[i]):
+				_afficher_badge(badge)
+			else:
+				badge.visible = false
+
+	# Met à jour le compteur sur le bouton Lancer (host uniquement)
+	if LobbyHandler.is_host() and btn_commencer.visible:
+		var total = joueurs.size()
+		var assez_de_joueurs = total >= MIN_JOUEURS
+		var tous_prets = nb_prets >= total
+		
+		if assez_de_joueurs and tous_prets:
+			btn_commencer.disabled = false
+			btn_commencer.text = "Lancer la partie !"
+		elif not assez_de_joueurs:
+			btn_commencer.disabled = true
+			btn_commencer.text = "Minimum %d joueurs requis" % MIN_JOUEURS
+		else:
+			btn_commencer.disabled = true
+			btn_commencer.text = "En attente... (%d/%d)" % [nb_prets, total]
+
+
+func _afficher_badge(badge: Node):
+	badge.visible = true
+	badge.modulate.a = 0.0
+	var t = badge.create_tween()
+	t.tween_property(badge, "modulate:a", 1.0, 0.3)
+	t.parallel().tween_property(badge, "scale", Vector2(1.2, 1.2), 0.15)
+	t.tween_property(badge, "scale", Vector2(1.0, 1.0), 0.15)
 
 func _on_tous_prets_recu():
-	# Le serveur confirme que tout le monde est prêt
 	if LobbyHandler.is_host():
 		btn_pret.visible = false
 		btn_commencer.visible = true
-
+		# Active seulement si assez de joueurs
+		var assez = LobbyHandler.get_joueurs().size() >= MIN_JOUEURS
+		btn_commencer.disabled = not assez
+		btn_commencer.text = "Lancer la partie !" if assez else "Minimum %d joueurs requis" % MIN_JOUEURS
 
 # ----------------------------------------------------------------
 # RÉSEAU → ENVOI
 # ----------------------------------------------------------------
 func _on_pret_pressed():
 	NetworkManager.envoyer({
-		"action":"joueur_pret",
+		"action": "joueur_pret",
 		"token": NetworkManager.get_token(),
 		"lobby_id": LobbyHandler.get_lobby_id()
 	})
 	btn_pret.disabled = true
 	btn_pret.text = "Prêt ✓"
 
+	# Host → cache Prêt, montre Lancer (désactivé jusqu'à ce que tous soient prêts)
+	if LobbyHandler.is_host():
+		btn_pret.visible = false
+		btn_commencer.visible = true
+		var total = LobbyHandler.get_joueurs().size()
+		var assez = total >= MIN_JOUEURS
+		btn_commencer.disabled = true  # toujours désactivé ici, attend que tous soient prêts
+		btn_commencer.text = "En attente... (1/%d)" % total if assez else "Minimum %d joueurs requis" % MIN_JOUEURS
+
 func _on_commencer_pressed():
 	LobbyHandler.lancer_partie()
 	btn_commencer.disabled = true  # anti double-clic
-	
+
 # ----------------------------------------------------------------
 # MISE À JOUR JOUEURS
 # ----------------------------------------------------------------
 func _on_joueurs_mis_a_jour(joueurs: Array):
 	_rafraichir_slots(joueurs)
-	
+
 func _rafraichir_slots(joueurs: Array):
 	for i in 4:
 		var slot = slots[i]
@@ -114,9 +161,9 @@ func _rafraichir_slots(joueurs: Array):
 			var label = slot.get_node_or_null("LabelNom")
 			if label:
 				label.text = str(joueurs[i])
-			var badge = slot.get_node_or_null("ReadyBagde")
+			var badge = slot.get_node_or_null("ReadyBadge")  # ← faute corrigée
 			if badge:
-				badge.visible = false
+				badge.visible = false  # reset, mis à jour par _on_joueur_pret_recu
 
 # ----------------------------------------------------------------
 # TIMER
@@ -126,10 +173,8 @@ func _on_tick():
 	_update_display()
 	if remaining_seconds == 0:
 		timer_chrono.stop()
-		# Temps écoulé → forcer le lancement si host
 		if LobbyHandler.is_host():
 			LobbyHandler.lancer_partie()
-
 
 func _update_display():
 	var m = remaining_seconds / 60

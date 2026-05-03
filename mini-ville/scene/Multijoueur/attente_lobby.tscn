@@ -9,7 +9,6 @@
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_c7hce"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_12xal"]
-[ext_resource type="Script" uid="uid://cm4xuafkpqwa" path="res://script/scene/Multijoueur/btn_pret_attente_lobby.gd" id="12_lrqwt"]
 [ext_resource type="Script" uid="uid://dn7rh2bjw3e5" path="res://script/scene/Popup/btn_parametres_attente_lobby.gd" id="14_kcgef"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="15_fnt2l"]
 
@@ -246,12 +245,18 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BtnPret" type="Button" parent="." unique_id=-1730928379]
-layout_mode = 0
-offset_left = 600.0
-offset_top = 854.0
-offset_right = 1319.0
-offset_bottom = 963.0
-mouse_default_cursor_shape = 2
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -538.0
+offset_top = -213.0
+offset_right = 539.0
+offset_bottom = -86.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -259,13 +264,12 @@ theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.1490196
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("3_1rs2g")
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 70
 theme_override_styles/normal = ExtResource("10_c7hce")
 theme_override_styles/pressed = ExtResource("11_12xal")
 theme_override_styles/hover = ExtResource("11_12xal")
 theme_override_styles/focus = ExtResource("10_c7hce")
-text = "Prêt"
-script = ExtResource("12_lrqwt")
+text = "En attente du host..."
 
 [node name="BtnCommencer" type="Button" parent="." unique_id=100000013]
 visible = false

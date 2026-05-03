@@ -1,8 +1,6 @@
 extends Control
 
 # Popup login
-var popup_login_scene = preload("res://scene/popup/popup_login.tscn")
-var popup_login
 
 # Popup rules and settings
 var pop_rule_scene = preload("res://scene/popup/rules_panel.tscn")
@@ -14,11 +12,9 @@ var popup_setting
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	popup_login = popup_login_scene.instantiate()
 	popup_rule = pop_rule_scene.instantiate()
 	popup_setting = pop_setting_scene.instantiate()
 	
-	add_child(popup_login)
 	add_child(popup_rule)
 	add_child(popup_setting)
 	
