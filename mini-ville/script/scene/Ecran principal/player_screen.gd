@@ -1,13 +1,5 @@
 extends Control
 
-<<<<<<< HEAD
-# Popup login
-=======
-# Popups existants
-var popup_login_scene = preload("res://scene/popup/popup_login.tscn")
-var popup_login
->>>>>>> 6eef5824de995839b2578e5490739cb121145655
-
 var pop_rule_scene = preload("res://scene/popup/rules_panel.tscn")
 var popup_rule
 
@@ -21,14 +13,10 @@ func _ready() -> void:
 	popup_rule = pop_rule_scene.instantiate()
 	popup_setting = pop_setting_scene.instantiate()
 	
-<<<<<<< HEAD
-=======
 	
 	if NetworkManager.has_signal("stats_received"):
 		NetworkManager.stats_received.connect(_on_stats_received)
 	
-	add_child(popup_login)
->>>>>>> 6eef5824de995839b2578e5490739cb121145655
 	add_child(popup_rule)
 	add_child(popup_setting)
 	

@@ -16,17 +16,15 @@ func _ready() -> void:
 	if btn_insc:
 		btn_insc.pressed.connect(bouton_inscription)
 
-<<<<<<< HEAD
 	# Un seul signal suffit — _on_network_message_received gère tout
 	if not NetworkManager.message_recu.is_connected(_on_network_message_received):
 		NetworkManager.message_recu.connect(_on_network_message_received)
-=======
+
 	# 4. ÉCOUTER LE NETWORK MANAGER
 	# On s'assure d'écouter les signaux du NetworkManager (Singleton)
 	if NetworkManager.has_signal("auth_finished"):
 		if not NetworkManager.auth_finished.is_connected(_on_auth_result):
 			NetworkManager.auth_finished.connect(_on_auth_result)
->>>>>>> 6eef5824de995839b2578e5490739cb121145655
 
 
 func _on_back_pressed() -> void:
@@ -83,11 +81,8 @@ func _on_auth_result(success: bool) -> void:
 
 	if success:
 		show_success("Connexion réussie !")
-<<<<<<< HEAD
-=======
+
 		# On attend 1 seconde avant de changer de scène
-		
->>>>>>> 6eef5824de995839b2578e5490739cb121145655
 		await get_tree().create_timer(1.0).timeout
 
 		if not is_inside_tree():
@@ -100,10 +95,6 @@ func _on_auth_result(success: bool) -> void:
 		_traitement_en_cours = false  # permet de réessayer
 		show_error("Identifiants incorrects.")
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6eef5824de995839b2578e5490739cb121145655
 
 func show_error(msg: String):
 	var node = get_node_or_null("%errorMessageLogin")

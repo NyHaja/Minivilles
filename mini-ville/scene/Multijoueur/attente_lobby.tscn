@@ -128,7 +128,6 @@ texture = ExtResource("6_thxuj")
 stretch_mode = 5
 
 [node name="ReadyBadge" type="Panel" parent="JoueursRow/Joueur1" unique_id=100000002]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -269,7 +268,6 @@ theme_override_styles/normal = ExtResource("10_c7hce")
 theme_override_styles/pressed = ExtResource("11_12xal")
 theme_override_styles/hover = ExtResource("11_12xal")
 theme_override_styles/focus = ExtResource("10_c7hce")
-text = "En attente du host..."
 
 [node name="BtnCommencer" type="Button" parent="." unique_id=100000013]
 visible = false

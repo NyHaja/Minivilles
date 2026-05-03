@@ -53,7 +53,7 @@ func _ready():
 	btn_commencer.visible = false
 
 	if not LobbyHandler.is_host():
-		#btn_pret.text = "En attente du host ..."
+		btn_pret.text = "En attente du host ..."
 		btn_pret.disabled = true
 	# --- Timer ---
 	timer_chrono.wait_time = 1.0
