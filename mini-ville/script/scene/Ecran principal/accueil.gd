@@ -73,3 +73,4 @@ func guest_mode() -> void:
 	
 func _on_popup_back():
 	$gameMode.show()
+	
