@@ -29,7 +29,8 @@ var game
 
 # --- GESTION DU SHOP ---
 
-@onready var shop_board = %ShopBoard
+@onready var shop_popup: CanvasLayer = %ShopPopup
+@onready var shop_button: TextureButton = %ShopButton
 
 var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var active_boards: Array = []
@@ -112,7 +113,8 @@ var selected_shop_card_id: int = -1
 const MONUMENT_SLOT_SCENE = preload("res://scene/table/MonumentSlot.tscn")
 
 func _ready() -> void:
-	shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
+	shop_button.pressed.connect(_on_shop_button_pressed)
+	shop_popup.shop_card_clicked.connect(_on_shop_card_clicked)
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(_on_roll_2_pressed)
 	
@@ -227,7 +229,7 @@ func RefreshBasicInfo(current_game) -> void:
 	else:
 		active_boards = boards.duplicate()
 	
-	shop_board.update_shop(test_shop)
+	shop_popup.update_shop(test_shop)
 	update_all_boards()
 	
 	if not is_game_initialized:
@@ -588,7 +590,10 @@ func set_actions_enabled(can_act: bool) -> void:
 	for board in boards:
 		if is_instance_valid(board): board.set_actions_enabled(can_act)
 	
-	if is_instance_valid(shop_board): shop_board.set_actions_enabled(can_act)
+	if is_instance_valid(shop_popup): shop_popup.set_actions_enabled(can_act)
+
+func _on_shop_button_pressed() -> void:
+	shop_popup.open(test_shop)
 
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
@@ -1093,37 +1098,44 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		var image_node = preview_card.get_node_or_null("Visual")
 		
 		if image_node and image_node is TextureButton:
-			if FileAccess.file_exists(path_basis): 
-				image_node.texture_normal = load(path_basis)
-			
+			var tex = load(path_basis)
+			if tex:
+				image_node.texture_normal = tex
+		
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			
 			image_node.ignore_texture_size = true
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-			
+
 		preview_card.custom_minimum_size = Vector2(234, 300)
 		preview_card.size = Vector2(234, 300)
-		
+
 		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
-		if internal_tooltip: 
+		if internal_tooltip:
 			internal_tooltip.hide()
-			
+
 		%CardPreview.add_child(preview_card)
-		
-		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png" 
-		
-		if tip_path != "" and FileAccess.file_exists(tip_path):
-			%TooltipImage.texture = load(tip_path)
-			%TooltipImage.show()
-		elif tip_path != "" and FileAccess.file_exists(placeholder_path):
-			%TooltipImage.texture = load(placeholder_path)
-			%TooltipImage.show()
+
+		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
+
+		if tip_path != "":
+			var tip_tex = load(tip_path)
+			if tip_tex:
+				%TooltipImage.texture = tip_tex
+				%TooltipImage.show()
+			else:
+				var placeholder_tex = load(placeholder_path)
+				if placeholder_tex:
+					%TooltipImage.texture = placeholder_tex
+					%TooltipImage.show()
+				else:
+					%TooltipImage.hide()
 		else:
 			%TooltipImage.hide()
 
 		buy_confirm_panel.move_to_front()
 		buy_confirm_panel.show()
+		shop_popup.close()
 
 func _on_confirm_buy_shop_pressed() -> void:
 	buy_confirm_panel.hide()
