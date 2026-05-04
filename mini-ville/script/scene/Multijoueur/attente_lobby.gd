@@ -4,7 +4,8 @@ extends Control
 # CONFIGURATION
 # ----------------------------------------------------------------
 const DURATIONS_TEXT = ["1 min", "2 min", "3 min", "5 min"]
-const MIN_JOUEURS = 2
+const MIN_JOUEURS = 2	
+var max_joueurs_lobby: int = 4
 
 # ----------------------------------------------------------------
 # STATE
@@ -105,18 +106,21 @@ func _rafraichir_slots(joueurs: Array):
 		_update_btn_commencer(joueurs.size())
 	
 func _update_label_attente(nb_actuels: int, max_joueurs: int):
-	# si tu es les host
-	if LobbyHandler.is_host() and nb_actuels < max_joueurs:
-		label_attente.text = "En attente joueur %d/%d" % [nb_actuels, max_joueurs]
-	# si tu es un joueur
-	elif not LobbyHandler.is_host():
+	if not LobbyHandler.is_host():
+		# Joueur non-host : toujours "En attente du host..."
+		label_attente.visible = true
 		label_attente.text = "En attente du host..."
-	# si le nombre de joueur dans le lobby = max joueur
-	if nb_actuels >= max_joueurs:
+	elif nb_actuels >= max_joueurs:
+		# Host + lobby plein : cache le label
 		label_attente.visible = false
+	else:
+		# Host + lobby pas encore plein : affiche le compteur
+		label_attente.visible = true
+		label_attente.text = "En attente joueur %d/%d" % [nb_actuels, max_joueurs]
+	
 
 func _update_btn_commencer(nb_joueurs: int):
-	if nb_joueurs >= MIN_JOUEURS:
+	if nb_joueurs >= max_joueurs_lobby:
 		btn_commencer.visible = true
 		btn_commencer.text = "Lancer la partie"
 	else:

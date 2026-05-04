@@ -22,7 +22,7 @@ func _ready():
 	_update_joueurs()
 	$VBoxContainer/backbtn.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_lobby.tscn"))
+			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 	
 	# ------------ signal ----------------------------
 	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
