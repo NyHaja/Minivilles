@@ -105,3 +105,13 @@ func get_player_stats(player_id: int):
 		"action":    "get_stats",
 		"player_id": player_id
 	})
+	
+## ----------------------------------------------------
+## 7. REQUÊTE : Deconnexion 
+## ----------------------------------------------------	
+
+func logout(): 
+	var request_data = {
+		"action": "logout"
+	}
+	NetworkManager.envoyer(request_data)

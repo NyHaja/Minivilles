@@ -480,3 +480,5 @@ size_flags_horizontal = 4
 text = "Retour"
 label_settings = ExtResource("6_lbl")
 horizontal_alignment = 1
+
+[connection signal="pressed" from="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/BtnRow/BtnDeconnexion" to="." method="_on_btn_deconnexion_pressed"]

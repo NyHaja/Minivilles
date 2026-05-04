@@ -143,6 +143,28 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			})
 		return
 	# --------------------------------------------
+# --- GESTION DU LOGOUT ---
+	elif action_name == "logout":
+		if flask_response.get("status") == "success":
+			print("Déconnexion confirmée par Flask pour un client.")
+			
+			# Nettoyer la session du joueur de la mémoire du Game Server
+			serveur.active_sessions.erase(client)
+			serveur.active_tokens.erase(client)
+			
+			serveur.send_to_client(client, {
+				"action_reply": "logout",
+				"status": "success",
+				"message": "Déconnexion réussie."
+			})
+		else:
+			serveur.send_to_client(client, {
+				"action_reply": "logout",
+				"status": "error",
+				"message": flask_response.get("message", "Erreur lors de la déconnexion.")
+			})
+		return
+	# ------------------------
 
 	# Partie créée → stocker le game_id et notifier les joueurs
 	elif action_name == "create_game" and flask_response.get("status") == "success":

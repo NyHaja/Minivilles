@@ -111,7 +111,7 @@ func route_request(client: StreamPeerTLS, data: Dictionary): # Type changé ici
 	var action = data["action"]
 	match action:
 		# Auth
-		"register", "authentification", "guest_player", "historic", "forgot_password", "get_stats":
+		"register", "authentification", "guest_player", "historic", "forgot_password", "get_stats", "logout":
 			$AuthHandler.handle(client, data)
 		# Lobby
 		"create_lobby", "join_lobby", "leave_lobby", "create_game":

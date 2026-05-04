@@ -11,6 +11,7 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 		"historic":        _handle_historic(client, data)
 		"forgot_password": _handle_forgot_password(client, data)
 		"get_stats": _handle_get_stats(client, data)
+		"logout":          _handle_logout(client, data)
 
 # ─────────────────────────────────────────
 # REGISTER
@@ -39,7 +40,23 @@ func _handle_authentification(client: StreamPeerTLS, data: Dictionary):
 					"password": password_saisi
 		}
 	$"../FlaskManager".send("login", "/login", payload, client,{"password": password_saisi})
+	
+# ─────────────────────────────────────────
+# LOGOUT
+# ─────────────────────────────────────────
 
+func _handle_logout(client: StreamPeerTLS, _data: Dictionary):
+	var token = get_parent().get_token(client)
+	
+	if token == "":
+		get_parent().send_to_client(client, {
+			"action_reply": "logout",
+			"status": "error",
+			"message": "Aucun token trouvé, vous êtes déjà déconnecté."
+		})
+		return
+		
+	$"../FlaskManager".send("logout", "/logout", {}, client, {}, token)
 # ─────────────────────────────────────────
 # GUEST
 # ─────────────────────────────────────────

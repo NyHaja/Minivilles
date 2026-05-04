@@ -65,3 +65,7 @@ func _on_mot_de_passe() -> void:
 func _on_deconnexion() -> void:
 	if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
 	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
+
+
+func _on_btn_deconnexion_pressed() -> void:
+	Client.logout()
