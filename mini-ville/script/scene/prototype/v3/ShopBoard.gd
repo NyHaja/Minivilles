@@ -29,13 +29,15 @@ func update_shop(shop_data) -> void:
 			var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 			var path_hover = "res://assets/Cards/Hover/" + clean_name + "_2.png"
 			
-			if FileAccess.file_exists(path_basis):
+			var tex_normal = load(path_basis)
+			if tex_normal:
 				card_visual = CARD_SCENE.instantiate()
 				var image_node = card_visual.get_node_or_null("Visual")
 				if image_node is TextureButton:
-					image_node.texture_normal = load(path_basis)
-					if FileAccess.file_exists(path_hover):
-						image_node.texture_hover = load(path_hover)
+					image_node.texture_normal = tex_normal
+					var tex_hover = load(path_hover)
+					if tex_hover:
+						image_node.texture_hover = tex_hover
 					
 					image_node.ignore_texture_size = true
 					image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED

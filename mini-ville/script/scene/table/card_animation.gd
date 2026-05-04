@@ -93,21 +93,23 @@ func setup_card(card_data, dir: String = "top"):
 	var card_name = card_data.get_name()
 	var card_color = card_data.get_color()
 	var clean_name = get_clean_file_name(card_name, card_color)
-	
+
 	var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-	if FileAccess.file_exists(path_basis):
-		visual.texture_normal = load(path_basis)
-		
+	var tex = load(path_basis)
+	if tex:
+		visual.texture_normal = tex
+
 	var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_" + dir + ".png"
-	var placeholder = "res://assets/Tooltips/tooltip_marché_fruit_et_légume_" + dir + ".png"
-	
-	if FileAccess.file_exists(tip_path):
-		tooltip.texture = load(tip_path)
-	elif FileAccess.file_exists(placeholder):
-		tooltip.texture = load(placeholder)
-		
+	var tip_tex = load(tip_path)
+	if tip_tex:
+		tooltip.texture = tip_tex
+	else:
+		var placeholder = "res://assets/Tooltips/tooltip_marché_fruit_et_légume_" + dir + ".png"
+		var placeholder_tex = load(placeholder)
+		if placeholder_tex:
+			tooltip.texture = placeholder_tex
+
 	current_tooltip_dir = dir
-	
 	if tooltip.texture:
 		tooltip.pivot_offset = tooltip.texture.get_size() / 2.0
 
