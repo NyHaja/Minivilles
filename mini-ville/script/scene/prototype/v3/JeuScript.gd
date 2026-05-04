@@ -16,7 +16,7 @@ var current_player
 var test_shop
 var game
 
-@onready var middle_area: HBoxContainer = $CenterBoard
+@onready var middle_area: HBoxContainer = get_node_or_null("CenterBoard")
 
 # --- GESTION DES JOUEURS ---
 @onready var table_pivot: Control = $TablePivot
@@ -28,10 +28,11 @@ var game
 ]
 
 # --- GESTION DU SHOP ---
-@onready var shop_board = %ShopBoard
+@onready var shop_popup: CanvasLayer = %ShopPopup
+@onready var shop_button: TextureButton = %ShopButton
 
 # --- CAMERA ET ANIMATIONS ---
-@onready var camera: Camera2D = $Camera2D
+@onready var camera: Camera2D = get_node_or_null("Camera2D")
 const CARD_ANIMATION_SCENE = preload("res://scene/table/card_animation.tscn")
 
 var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
@@ -67,23 +68,23 @@ var dice_textures = [
 ]
 
 @onready var monument_menu: ColorRect = %MonumentOverlay
-@onready var close_menu: Button = %CloseButton 
+@onready var close_menu: TextureButton = %closeButton 
 @onready var cards_monuments_container = $MonumentOverlay/MainContainer/CardsMonumentsContainer
-@onready var victory_screen: ColorRect = $VictoryScreen
+@onready var victory_screen: PanelContainer = $VictoryScreen
 @onready var lbl_winner_name: Label = %LblWinnerName
 @onready var btn_quit: Button = %ReturnToMenu 
 @onready var yes_no_panel: ColorRect = %YesNoPanel
 @onready var lbl_question: Label = %LblQuestion
 @onready var btn_yes: Button = %BtnYes
 @onready var btn_no: Button = %BtnNo
-@onready var choose_player_panel: ColorRect = $ChoosePlayerPanel
+@onready var choose_player_panel: PanelContainer = $ChoosePlayerPanel
 @onready var player_buttons_container: HBoxContainer = %PlayerButtonsContainer
-@onready var trade_panel: ColorRect = $TradePanel
+@onready var trade_panel: PanelContainer = $TradePanel
 @onready var trade_opponents: HBoxContainer = %TradeOpponents
 @onready var trade_their_cards: HFlowContainer = %TradeTheirCards
 @onready var trade_my_cards: HFlowContainer = %TradeMyCards
 @onready var btn_confirm_trade: Button = %ConfirmTrade
-@onready var give_panel: ColorRect = $GiveCardPanel
+@onready var give_panel: PanelContainer = $GiveCardPanel
 @onready var give_my_cards: HFlowContainer = %GiveMyCards
 @onready var give_opponents: HBoxContainer = %GiveOpponents
 @onready var btn_confirm_give: Button = %ConfirmGive
@@ -96,10 +97,10 @@ var dice_textures = [
 @onready var cancel_card_buy: Button = %CancelCardBuy
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
-@onready var settings_button: Button = %Settings
-@onready var settings_overlay: ColorRect = %SettingsOverlay
+@onready var settings_button: TextureButton = %Settings
+@onready var settings_overlay: PanelContainer = %SettingsOverlay
 @onready var continue_button: Button = %Continuer
-@onready var main_menu_button: Button = %MenuPrincipal
+@onready var main_menu_button: Button = %MenuPrincipale
 @onready var settings_quit_button: Button = %Quitter
 
 var trade_target = null
@@ -119,7 +120,8 @@ func get_lang_folder() -> String:
 	return "French"
 
 func _ready() -> void:
-	shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
+	shop_button.pressed.connect(_on_shop_button_pressed)
+	shop_popup.shop_card_clicked.connect(_on_shop_card_clicked)
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(_on_roll_2_pressed)
 	
@@ -163,9 +165,6 @@ func _ready() -> void:
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
-	if btn_overlay_roll_1: btn_overlay_roll_1.text = tr("LANCER_1_DE")
-	if btn_overlay_roll_2: btn_overlay_roll_2.text = tr("LANCER_2_DES")
-	if settings_button: settings_button.text = tr("PARAMETRES")
 	if continue_button: continue_button.text = tr("CONTINUER")
 	if main_menu_button: main_menu_button.text = tr("MENU_PRINCIPAL")
 	if settings_quit_button: settings_quit_button.text = tr("QUITTER")
@@ -237,7 +236,7 @@ func RefreshBasicInfo(current_game) -> void:
 	else:
 		active_boards = boards.duplicate()
 	
-	shop_board.update_shop(test_shop)
+	shop_popup.update_shop(test_shop)
 	
 	# --- Logique d'illusion pour l'animation de pioche ---
 	if pending_shop_animation_index != -1:
@@ -246,7 +245,7 @@ func RefreshBasicInfo(current_game) -> void:
 			
 		await get_tree().process_frame 
 		
-		var grid = shop_board.grid_container
+		var grid = shop_popup.shop_board.grid_container
 		if pending_shop_animation_index < grid.get_child_count():
 			var new_slot = grid.get_child(pending_shop_animation_index)
 			var image_node = new_slot.get_node_or_null("Visual")
@@ -630,7 +629,10 @@ func set_actions_enabled(can_act: bool) -> void:
 	for board in boards:
 		if is_instance_valid(board): board.set_actions_enabled(can_act)
 	
-	if is_instance_valid(shop_board): shop_board.set_actions_enabled(can_act)
+	if is_instance_valid(shop_popup): shop_popup.set_actions_enabled(can_act)
+
+func _on_shop_button_pressed() -> void:
+	shop_popup.open(test_shop)
 
 func _on_roll_1_pressed() -> void: dice_amount_chosen.emit(1)
 func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
@@ -1221,28 +1223,22 @@ func _on_shop_card_clicked(card_id: int) -> void:
 
 		var card_color = card_data.get_color()
 		# --- LA CORRECTION EST ICI ---
-		# On demande directement au shop_board de nous donner le bon nom ! 
-		clean_name = shop_board.get_clean_file_name(card_name, card_color)
+		# On demande directement au shop_popup.shop_board de nous donner le bon nom ! 
+		clean_name = get_clean_file_name(card_name, card_color)
 		path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
 		tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
 		
-		var _tex = load(path_basis)
-		if _tex:
-			%CardPreview.texture = _tex
-		else:
-			print("🔴 ERREUR : Impossible de charger l'image -> ", path_basis)
-		
 		var placeholder_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_vert_marché_de_fruits_et_légumes.png"
-		
+
 		if tip_path != "":
-			var _tip_tex = load(tip_path)
-			if _tip_tex:
-				%TooltipImage.texture = _tip_tex
+			var tip_tex = load(tip_path)
+			if tip_tex:
+				%TooltipImage.texture = tip_tex
 				%TooltipImage.show()
 			else:
-				var _placeholder_tex = load(placeholder_path)
-				if _placeholder_tex:
-					%TooltipImage.texture = _placeholder_tex
+				var placeholder_tex = load(placeholder_path)
+				if placeholder_tex:
+					%TooltipImage.texture = placeholder_tex
 					%TooltipImage.show()
 				else:
 					%TooltipImage.hide()
@@ -1251,6 +1247,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 
 		buy_confirm_panel.move_to_front()
 		buy_confirm_panel.show()
+		shop_popup.close()
 
 func _on_confirm_buy_shop_pressed() -> void:
 	if not game or not game.CHOICE: return
@@ -1296,8 +1293,8 @@ func _on_confirm_buy_shop_pressed() -> void:
 			animer_erreur_argent(active_boards[p_idx_err])
 		
 		if not is_monument:
-			if is_instance_valid(shop_board) and is_instance_valid(shop_board.last_clicked_slot):
-				animer_erreur_carte_shop(shop_board.last_clicked_slot)
+			if is_instance_valid(shop_popup.shop_board) and is_instance_valid(shop_popup.shop_board.last_clicked_slot):
+				animer_erreur_carte_shop(shop_popup.shop_board.last_clicked_slot)
 		
 		# 3. PAS DE SHAKE (le "return" bloque la suite de la fonction)
 		return 
@@ -1360,14 +1357,14 @@ func _on_confirm_buy_shop_pressed() -> void:
 						quantity_in_shop = int(slot[1]) if typeof(slot) == TYPE_ARRAY else int(slot.get("quantity"))
 						break
 		
-		if is_instance_valid(shop_board):
+		if is_instance_valid(shop_popup.shop_board):
 			if quantity_in_shop > 1:
 				pending_shop_animation_index = -1
-				var shop_slot = shop_board.last_clicked_slot
+				var shop_slot = shop_popup.shop_board.last_clicked_slot
 				if is_instance_valid(shop_slot) and shop_slot.has_method("set_badge_count"):
 					shop_slot.set_badge_count(quantity_in_shop - 1)
 			else:
-				pending_shop_animation_index = shop_board.last_clicked_index
+				pending_shop_animation_index = shop_popup.shop_board.last_clicked_index
 		
 		await animer_achat_vers_main(selected_shop_card_id, quantity_in_shop)
 		
@@ -1379,8 +1376,8 @@ func _on_confirm_buy_shop_pressed() -> void:
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
 	buy_confirm_panel.hide()
-	if is_instance_valid(shop_board) and shop_board.has_method("clear_selection"):
-		shop_board.clear_selection()
+	if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.has_method("clear_selection"):
+		shop_popup.shop_board.clear_selection()
 
 func ask_chalutier_roll(player_name: String) -> int:
 	while turn_overlay.visible or result_overlay.visible:
@@ -1681,12 +1678,12 @@ func animer_pioche_vers_shop(target_slot: Control, texture_recto: Texture2D) -> 
 	dummy.queue_free()
 	
 func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1) -> void:
-	if not is_instance_valid(shop_board.last_clicked_slot): return
+	if not is_instance_valid(shop_popup.shop_board.last_clicked_slot): return
 	
 	var p_idx = game.playerArray.find(current_player)
 	var target_board = active_boards[p_idx] 
 	
-	var shop_slot = shop_board.last_clicked_slot
+	var shop_slot = shop_popup.shop_board.last_clicked_slot
 	var visual_node = shop_slot.get_node_or_null("Visual")
 	
 	var card_data = CardFactory.get_card(card_id)
@@ -1831,8 +1828,8 @@ func animer_erreur_carte_shop(slot_node: Control) -> void:
 	tween.tween_property(visual, "modulate", Color.WHITE, 0.3).set_delay(0.2)
 	
 	# Nettoyage de la sélection
-	if is_instance_valid(shop_board) and shop_board.has_method("clear_selection"):
-		tween.tween_callback(func(): shop_board.clear_selection())
+	if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.has_method("clear_selection"):
+		tween.tween_callback(func(): shop_popup.shop_board.clear_selection())
 	
 func animer_erreur_argent(board_visuel: PlayerBoard) -> void:
 	var label_argent = board_visuel.lbl_gold
