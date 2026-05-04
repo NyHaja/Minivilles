@@ -86,28 +86,56 @@ def send_reset_email(email: str, code: str):
 # VERIFICATION DU TOKEN JWT
 # ============================================================================
 
-def verify_token(req):
-    """
-    Extrait et vérifie le JWT depuis le header Authorization.
-    Retourne (payload, None) si valide, ou (None, message_erreur) sinon.
-    """
-    auth_header = req.headers.get("Authorization", "")
- 
-    if not auth_header.startswith("Bearer "):
-        return None, "Token manquant."
- 
+## Gestion de la connexion pour invalider le token 
+@app.route('/logout', methods=['POST'])
+def logout():
+    # 1. Vérifier si le token est valide avant de le révoquer
+    payload, error = verify_token(request)
+    if error:
+        return jsonify({"message": error}), 401
+    
+    # 2. Récupérer le token depuis le header
+    auth_header = request.headers.get("Authorization")
     token = auth_header.split(" ", 1)[1]
- 
-    try:
-        payload = jwt.decode(
-            token,
-            app.config["SECRET_KEY"],
-            algorithms=["HS256"]
-        )
-        return payload, None
-    except jwt.ExpiredSignatureError:
-        return None, "Token expiré."
-    except jwt.InvalidTokenError:
+    
+    # 3. Insérer le token dans la BDD sur le Serveur 1
+    # (Remplace ceci par ta logique de requête SQL habituelle)
+    inserer_dans_blacklist_bdd(token) 
+    
+    return jsonify({"message": "Déconnexion réussie."}), 200
+
+
+def verify_token(req):    
+    """    
+    Extrait et vérifie le JWT depuis le header Authorization.    
+    Retourne (payload, None) si valide, ou (None, message_erreur) sinon.    
+    """    
+    auth_header = req.headers.get("Authorization", "")     
+    if not auth_header.startswith("Bearer "):        
+        return None, "Token manquant."     
+        
+    token = auth_header.split(" ", 1)[1]     
+    
+    # --- NOUVELLE ÉTAPE : Vérification de la Blacklist ---
+    # Ici, tu fais une requête SQL vers ton Serveur 1
+    cursor.execute("""
+    SELECT id FROM token_blacklist WHERE token = %s 
+    """, (token))
+
+    blacklist_entry = cursor.fetchone()
+    if blacklist_entry is not None:
+        return None, "Token révoqué (utilisateur déconnecté)."
+
+    try:        
+        payload = jwt.decode(            
+            token,            
+            app.config["SECRET_KEY"],            
+            algorithms=["HS256"]        
+        )        
+        return payload, None    
+    except jwt.ExpiredSignatureError:        
+        return None, "Token expiré."    
+    except jwt.InvalidTokenError:        
         return None, "Token invalide."
 
 
