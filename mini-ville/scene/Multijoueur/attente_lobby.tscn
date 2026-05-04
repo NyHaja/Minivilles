@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
 [ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_gdpiv"]
 [ext_resource type="Texture2D" uid="uid://bm03yu5sfbx1m" path="res://assets/icon/ProfilExemple.png" id="6_thxuj"]
+[ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="9_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_c7hce"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_12xal"]
@@ -35,6 +36,10 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_pr2nv"]
+font = ExtResource("9_gdpiv")
+font_size = 60
 
 [node name="Control" type="Control" unique_id=-1447803706]
 layout_mode = 3
@@ -82,8 +87,8 @@ vertical_alignment = 1
 layout_mode = 0
 offset_left = 506.0
 offset_top = 383.0
-offset_right = 1562.0
-offset_bottom = 463.0
+offset_right = 1387.0
+offset_bottom = 483.0
 theme_override_constants/separation = 19
 
 [node name="IconeDe" type="TextureRect" parent="DureeTourRow" unique_id=-1575583240]
@@ -243,19 +248,23 @@ text = "✓"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BtnPret" type="Button" parent="." unique_id=-1730928379]
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=1744885136]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -538.0
-offset_top = -213.0
-offset_right = 539.0
-offset_bottom = -86.0
+offset_left = -386.0
+offset_top = -233.0
+offset_right = 386.0
+offset_bottom = -106.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="BtnPret" type="Button" parent="VBoxContainer2" unique_id=-1730928379]
+visible = false
+layout_mode = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -269,13 +278,15 @@ theme_override_styles/pressed = ExtResource("11_12xal")
 theme_override_styles/hover = ExtResource("11_12xal")
 theme_override_styles/focus = ExtResource("10_c7hce")
 
-[node name="BtnCommencer" type="Button" parent="." unique_id=100000013]
+[node name="Attente" type="Label" parent="VBoxContainer2" unique_id=1596263550]
+layout_mode = 2
+text = "En Attente de joueur "
+label_settings = SubResource("LabelSettings_pr2nv")
+horizontal_alignment = 1
+
+[node name="BtnCommencer" type="Button" parent="VBoxContainer2" unique_id=100000013]
 visible = false
-layout_mode = 0
-offset_left = 600.0
-offset_top = 854.0
-offset_right = 1319.0
-offset_bottom = 963.0
+layout_mode = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
