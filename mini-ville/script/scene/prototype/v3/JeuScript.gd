@@ -509,9 +509,10 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		
 	result_lbl.add_theme_font_size_override("font_size", 34) 
 	addTwo_lbl.add_theme_font_size_override("font_size", 34)
-	if FileAccess.file_exists("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"):
-		result_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
-		addTwo_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
+	var _font = load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf")
+	if _font:
+		result_lbl.add_theme_font_override("font", _font)
+		addTwo_lbl.add_theme_font_override("font", _font)
 	
 	if action == "add2":
 		total += 2
@@ -626,8 +627,9 @@ func update_monument_menu(is_demolish_mode: bool = false):
 			
 		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
 		
-		if FileAccess.file_exists(tex_path):
-			tex_rect.texture = load(tex_path)
+		var _tex = load(tex_path)
+		if _tex:
+			tex_rect.texture = _tex
 			
 		# --- GESTION DU BOUTON (Achat direct) ---
 		for conn in build_btn.pressed.get_connections():
@@ -712,8 +714,9 @@ func ask_choose_player(owner_player, all_players: Array):
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
 				
 			vbox.add_child(profile_tex)
 			
@@ -790,8 +793,9 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
 			vbox.add_child(profile_tex)
 			
 			var name_label = RichTextLabel.new()
@@ -847,8 +851,9 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
 			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			if FileAccess.file_exists(path):
-				card_btn.texture_normal = load(path)
+			var _card_tex = load(path)
+			if _card_tex:
+				card_btn.texture_normal = _card_tex
 			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -923,8 +928,9 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
 			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			if FileAccess.file_exists(path):
-				card_btn.texture_normal = load(path)
+			var _card_tex = load(path)
+			if _card_tex:
+				card_btn.texture_normal = _card_tex
 			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -999,8 +1005,9 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
 			vbox.add_child(profile_tex)
 			
 			var name_label = RichTextLabel.new()
@@ -1093,12 +1100,12 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		var image_node = preview_card.get_node_or_null("Visual")
 		
 		if image_node and image_node is TextureButton:
-			if FileAccess.file_exists(path_basis): 
-				image_node.texture_normal = load(path_basis)
+			var _tex = load(path_basis)
+			if _tex:
+				image_node.texture_normal = _tex
 			
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			
 			image_node.ignore_texture_size = true
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
@@ -1106,19 +1113,25 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		preview_card.size = Vector2(234, 300)
 		
 		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
-		if internal_tooltip: 
+		if internal_tooltip:
 			internal_tooltip.hide()
 			
 		%CardPreview.add_child(preview_card)
 		
-		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png" 
+		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
 		
-		if tip_path != "" and FileAccess.file_exists(tip_path):
-			%TooltipImage.texture = load(tip_path)
-			%TooltipImage.show()
-		elif tip_path != "" and FileAccess.file_exists(placeholder_path):
-			%TooltipImage.texture = load(placeholder_path)
-			%TooltipImage.show()
+		if tip_path != "":
+			var _tip_tex = load(tip_path)
+			if _tip_tex:
+				%TooltipImage.texture = _tip_tex
+				%TooltipImage.show()
+			else:
+				var _placeholder_tex = load(placeholder_path)
+				if _placeholder_tex:
+					%TooltipImage.texture = _placeholder_tex
+					%TooltipImage.show()
+				else:
+					%TooltipImage.hide()
 		else:
 			%TooltipImage.hide()
 
