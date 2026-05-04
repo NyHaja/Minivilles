@@ -54,7 +54,7 @@ func _ready():
 	# --- Boutons Lancer visible seulement pour le host ---
 	#btn_pret.pressed.connect(_on_pret_pressed)
 	btn_commencer.pressed.connect(_on_commencer_pressed)
-	btn_commencer.visible = LobbyHandler.is_host()
+	btn_commencer.visible = false
 
 	# --- Timer ---
 	timer_chrono.wait_time = 1.0
@@ -105,18 +105,22 @@ func _rafraichir_slots(joueurs: Array):
 		_update_btn_commencer(joueurs.size())
 	
 func _update_label_attente(nb_actuels: int, max_joueurs: int):
-	if LobbyHandler.is_host():
+	# si tu es les host
+	if LobbyHandler.is_host() and nb_actuels < max_joueurs:
 		label_attente.text = "En attente joueur %d/%d" % [nb_actuels, max_joueurs]
-	else :
+	# si tu es un joueur
+	elif not LobbyHandler.is_host():
 		label_attente.text = "En attente du host..."
+	# si le nombre de joueur dans le lobby = max joueur
+	if nb_actuels >= max_joueurs:
+		label_attente.visible = false
 
 func _update_btn_commencer(nb_joueurs: int):
 	if nb_joueurs >= MIN_JOUEURS:
-		btn_commencer.disabled = false
-		btn_commencer.text = "Lancer la partie ! (% joueurs)" % nb_joueurs
+		btn_commencer.visible = true
+		btn_commencer.text = "Lancer la partie"
 	else:
-		btn_commencer.disabled = true
-		btn_commencer.text = "En attente d'un joueur...(%d/%d)" % [nb_joueurs, MIN_JOUEURS]
+		btn_commencer.visible = false
 
 
 # ----------------------------------------------------------------

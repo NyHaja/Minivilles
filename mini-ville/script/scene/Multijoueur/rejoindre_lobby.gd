@@ -41,11 +41,13 @@ func _ready():
 
 	# --- Boutons ---
 	$Panel/BtnRejoindre.pressed.connect(_on_rejoindre_pressed)
-	$Panel/BtnFermer.pressed.connect(func():
+	$Panel/BtnAnnuler.pressed.connect(func():
 		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 	$BtnRetour/Fleche.pressed.connect(func():
 		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 
+	$Panel/LabelErreur.visible = false
+	
 	_update_boxes()
 
 
@@ -77,9 +79,10 @@ func _update_boxes():
 # ----------------------------------------------------------------
 func _on_rejoindre_pressed():
 	if code.length() < 6:
-		_feedback_erreur()
+		_feedback_erreur("Veuillez entrer le code complet")
 		return
 	$Panel/BtnRejoindre.disabled = true
+	$Panel/LabelErreur.visible = false
 	LobbyHandler.rejoindre_lobby(code)
 
 
@@ -87,9 +90,13 @@ func _on_rejoindre_pressed():
 # RÉSEAU → RÉCEPTION
 # ----------------------------------------------------------------
 func _on_message(data: Dictionary):
-	if data.get("type") == "lobby_erreur":
-		$Panel/BtnRejoindre.disabled = false
-		_feedback_erreur()
+	match data.get("type", ""):
+		"lobby_erreur":
+			$Panel/BtnRejoindre.disabled = false
+			_feedback_erreur("Ce lobby n'existe pas.")
+		"lobby_plein":
+			$Panel/BtnRejoindre.disabled = false
+			_feedback_erreur("Ce lobby est plein.")
 
 func _on_lobby_rejoint(_joueurs: Array):
 	# Lobby rejoint avec succès → salle d'attente
@@ -100,9 +107,15 @@ func _on_lobby_rejoint(_joueurs: Array):
 # ----------------------------------------------------------------
 # FEEDBACK ERREUR
 # ----------------------------------------------------------------
-func _feedback_erreur():
+func _feedback_erreur(message: String):
+	# Affiche le message en rouge
+	$Panel/LabelErreur.text = message
+	$Panel/LabelErreur.visible = true
+	
 	for panel in panels:
 		panel.add_theme_stylebox_override("panel", style_error)
+	
+	# Animation secousse
 	var pos_origine = position
 	var tween = create_tween()
 	tween.tween_property(self, "position", pos_origine + Vector2(-12, 0), 0.05)
@@ -111,11 +124,13 @@ func _feedback_erreur():
 	tween.tween_property(self, "position", pos_origine + Vector2(  8, 0), 0.05)
 	tween.tween_property(self, "position", pos_origine, 0.05)
 	await tween.finished
-	for i in 6:
-		panels[i].add_theme_stylebox_override(
-			"panel",
-			style_filled if i < code.length() else style_empty
-		)
+	#for i in 6:
+		#panels[i].add_theme_stylebox_override(
+			#"panel",
+			#style_filled if i < code.length() else style_empty
+		#)
+	code = ""
+	_update_boxes()
 
 
 # ----------------------------------------------------------------
