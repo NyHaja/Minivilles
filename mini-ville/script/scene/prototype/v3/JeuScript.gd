@@ -16,7 +16,7 @@ var current_player
 var test_shop
 var game
 
-@onready var middle_area: HBoxContainer = get_node_or_null("CenterBoard")
+@onready var middle_area: HBoxContainer = $Shop
 
 # --- GESTION DES JOUEURS ---
 @onready var table_pivot: Control = $TablePivot
@@ -28,12 +28,9 @@ var game
 ]
 
 # --- GESTION DU SHOP ---
+
 @onready var shop_popup: CanvasLayer = %ShopPopup
 @onready var shop_button: TextureButton = %ShopButton
-
-# --- CAMERA ET ANIMATIONS ---
-@onready var camera: Camera2D = get_node_or_null("Camera2D")
-const CARD_ANIMATION_SCENE = preload("res://scene/table/card_animation.tscn")
 
 var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var active_boards: Array = []
@@ -42,23 +39,22 @@ var active_boards: Array = []
 var currently_displayed_player = null
 var is_game_initialized: bool = false
 var is_rotating: bool = false
-var pending_shop_animation_index: int = -1
 signal rotation_finished
-@onready var click_blocker: ColorRect = get_node_or_null("ClickBlocker") 
 
 # Overlays et Menus
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = %LblTurnAnnouncement
 
-@onready var btn_overlay_roll_1: Button = $TurnOverlay/VBoxContainer/HBoxContainer/Roll1Die
-@onready var btn_overlay_roll_2: Button = $TurnOverlay/VBoxContainer/HBoxContainer/Roll2Dices
+# On pointe vers les nouveaux noms dans le TurnOverlay
+@onready var btn_overlay_roll_1: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/Roll1Die
+@onready var btn_overlay_roll_2: TextureButton = $TurnOverlay/VBoxContainer/HBoxContainer/Roll2Dices
 
 var result_overlay: ColorRect
 var die_1: TextureRect
 var die_2: TextureRect
-var btn_conserver: Button
-var btn_relancer: Button
-var btn_add_2: Button
+var btn_conserver: TextureButton
+var btn_relancer: TextureButton
+var btn_add_2: TextureButton # <-- Ajout de la variable pour ton nouveau bouton
 var mini_dice_array: Array = []
 
 var dice_textures = [
@@ -68,7 +64,7 @@ var dice_textures = [
 ]
 
 @onready var monument_menu: ColorRect = %MonumentOverlay
-@onready var close_menu: Button = %CloseButton 
+@onready var close_menu: TextureButton = %closeButton # Utilise l'Unique Name que tu as défini
 @onready var cards_monuments_container = $MonumentOverlay/MainContainer/CardsMonumentsContainer
 @onready var victory_screen: PanelContainer = $VictoryScreen
 @onready var lbl_winner_name: Label = %LblWinnerName
@@ -89,12 +85,15 @@ var dice_textures = [
 @onready var give_opponents: HBoxContainer = %GiveOpponents
 @onready var btn_confirm_give: Button = %ConfirmGive
 @onready var demolish_panel: ColorRect = $DemolishPanel
-@onready var demolish_monuments: HBoxContainer = %DemolishMonuments
+@onready var demolish_mÉpicerieonuments: HBoxContainer = %DemolishMonuments
 @onready var btn_confirm_demolish: Button = %ConfirmDemolish
 @onready var buy_confirm_panel: ColorRect = %ConfirmCardBuyPanel
 @onready var card_preview: Control = %CardPreview
 @onready var confirm_card_buy: Button = %ConfirmCardBuy
 @onready var cancel_card_buy: Button = %CancelCardBuy
+@onready var chalutier_panel: PanelContainer = %ChalutierPanel
+@onready var lbl_chalutier_result: RichTextLabel = %LblChalutierResult
+@onready var chalutier_roll: Button = %ChalutierRoll
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
 @onready var settings_button: TextureButton = %Settings
@@ -112,12 +111,6 @@ var demolish_monu_id: int = -1
 var selected_shop_card_id: int = -1
 
 const MONUMENT_SLOT_SCENE = preload("res://scene/table/MonumentSlot.tscn")
-
-func get_lang_folder() -> String:
-	# Récupère la langue actuelle (ex: "fr", "en", "en_US")
-	if TranslationServer.get_locale().begins_with("en"):
-		return "English"
-	return "French"
 
 func _ready() -> void:
 	shop_button.pressed.connect(_on_shop_button_pressed)
@@ -149,14 +142,13 @@ func _ready() -> void:
 	%CancelCardBuy.pressed.connect(_on_cancel_buy_shop_pressed)
 	add_gold.pressed.connect(_on_add_gold_pressed.bind(5))
 	remove_gold.pressed.connect(_on_add_gold_pressed.bind(-2))
-	
+	# On relie les 3 boutons à notre signal texte
 	if btn_conserver: 
 		btn_conserver.pressed.connect(func(): dice_decision_made.emit("keep"))
 	if btn_relancer: 
 		btn_relancer.pressed.connect(func(): dice_decision_made.emit("reroll"))
 	if btn_add_2: 
 		btn_add_2.pressed.connect(func(): dice_decision_made.emit("add2"))
-		
 	settings_button.pressed.connect(func(): _on_settings_pressed())
 	continue_button.pressed.connect(func(): _on_continue_pressed())
 	main_menu_button.pressed.connect(func(): _on_quit_pressed())
@@ -165,25 +157,19 @@ func _ready() -> void:
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
-	if continue_button: continue_button.text = tr("CONTINUER")
-	if main_menu_button: main_menu_button.text = tr("MENU_PRINCIPAL")
-	if settings_quit_button: settings_quit_button.text = tr("QUITTER")
-	
 func _on_settings_pressed() -> void:
 	settings_overlay.move_to_front()
 	settings_overlay.show()
 	
 func _on_continue_pressed() -> void:
 	settings_overlay.hide()
+	
+	
 
 func _on_add_gold_pressed(amount: int) -> void:
+	print("Gold button clicked with amount: ", amount)
 	if current_player != null:
 		current_player.balance = max(0, current_player.balance + amount)
-		
-		var active_idx = game.playerArray.find(current_player)
-		if active_idx != -1 and is_instance_valid(active_boards[active_idx]):
-			animer_gain_gold(active_boards[active_idx], amount)
-			
 		update_all_boards()
 
 func _on_window_resized() -> void:
@@ -196,25 +182,31 @@ func _on_window_resized() -> void:
 		table_pivot.position = Vector2.ZERO
 	
 	if middle_area:
-		middle_area.set_anchors_preset(Control.PRESET_CENTER)
-		middle_area.add_theme_constant_override("separation", 20)
-		middle_area.reset_size()
-		middle_area.pivot_offset = middle_area.size / 2.0
-		middle_area.scale = Vector2(0.8, 0.8)
+			# On laisse Godot gérer le centrage automatiquement via l'ancre
+			middle_area.set_anchors_preset(Control.PRESET_CENTER)
+			middle_area.add_theme_constant_override("separation", 20)
+			
+			# On force la mise à jour de la taille pour que le pivot soit parfait
+			middle_area.reset_size()
+			
+			# On place le pivot exactement au milieu pour que la réduction se fasse depuis le centre
+			middle_area.pivot_offset = middle_area.size / 2.0
+			middle_area.scale = Vector2(0.8, 0.8)
+		
+		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
 	
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
-					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
+					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
 	for ov in overlays:
 		if is_instance_valid(ov):
 			ov.size = screen_size
 			ov.position = Vector2.ZERO
 			
 	if is_game_initialized:
-		positionner_plateaux(false)
-
+		positionner_plateaux(false) 
 
 func _force_overlays_to_front() -> void:
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
 	for overlay in overlays:
 		if is_instance_valid(overlay): overlay.z_index = 100 
 
@@ -238,35 +230,6 @@ func RefreshBasicInfo(current_game) -> void:
 		active_boards = boards.duplicate()
 	
 	shop_popup.update_shop(test_shop)
-	
-	# --- Logique d'illusion pour l'animation de pioche ---
-	if pending_shop_animation_index != -1:
-		if is_instance_valid(click_blocker):
-			click_blocker.show()
-			
-		await get_tree().process_frame 
-		
-		var grid = shop_popup.shop_board.grid_container
-		if pending_shop_animation_index < grid.get_child_count():
-			var new_slot = grid.get_child(pending_shop_animation_index)
-			var image_node = new_slot.get_node_or_null("Visual")
-			
-			if image_node:
-				var new_tex = null
-				if image_node is TextureButton:
-					new_tex = image_node.texture_normal
-				elif image_node is TextureRect:
-					new_tex = image_node.texture
-				
-				if new_tex:
-					await animer_pioche_vers_shop(new_slot, new_tex)
-					await get_tree().create_timer(0.6).timeout
-		
-		pending_shop_animation_index = -1
-		
-		if is_instance_valid(click_blocker):
-			click_blocker.hide()
-			
 	update_all_boards()
 	
 	if not is_game_initialized:
@@ -277,6 +240,8 @@ func RefreshBasicInfo(current_game) -> void:
 		
 	set_actions_enabled(false) 
 
+
+		
 func update_all_boards() -> void:
 	for b in boards: b.hide()
 	for i in range(game.playerCount):
@@ -292,7 +257,7 @@ func _find_dice_ui_nodes() -> void:
 	
 	btn_conserver = find_child("ConserverLeRésultat", true, false)
 	btn_relancer = find_child("RefaireLeLancer", true, false)
-	btn_add_2 = find_child("Ajouter2AuRésultat", true, false) 
+	btn_add_2 = find_child("Ajouter2AuRésultat", true, false) # <-- Trouve ton nouveau bouton
 
 func positionner_plateaux(animate: bool = true) -> void:
 	if not game or game.playerCount == 0: return
@@ -305,10 +270,9 @@ func positionner_plateaux(animate: bool = true) -> void:
 
 	var tween = null
 	
+	# --- CORRECTION ICI ---
 	if animate:
-		if is_instance_valid(click_blocker): 
-			click_blocker.show()
-			
+		# On ne cache l'interface QUE s'il y a une animation (changement de tour)
 		for board in active_boards:
 			if is_instance_valid(board) and board.has_method("set_ui_visible"):
 				board.set_ui_visible(false)
@@ -316,21 +280,24 @@ func positionner_plateaux(animate: bool = true) -> void:
 		is_rotating = true
 		set_actions_enabled(false)
 		tween = get_tree().create_tween().set_parallel(true)
-		tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 
 	for p_idx in range(game.playerCount):
 		var board = active_boards[p_idx]
 		if not is_instance_valid(board): continue
 		
+		# On annule toute taille forcée précédente
 		board.custom_minimum_size = Vector2(0, 0)
+		# On force Godot à serrer la "boîte" au plus près des cartes
 		board.reset_size()
 		
 		var real_size = board.size
-		var b_h = real_size.y 
+		var b_h = real_size.y # On utilise la vraie hauteur générée
 		
 		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
 		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
 		
+		# Le pivot est maintenant le vrai centre visuel !
 		board.pivot_offset = real_size / 2.0
 
 		var diff = (p_idx - active_idx)
@@ -370,6 +337,8 @@ func positionner_plateaux(animate: bool = true) -> void:
 			var move_circular = func(t: float, b: Control, s_ang: float, t_ang: float):
 				var current_ang = lerp(s_ang, t_ang, t)
 				var target_center = c + Vector2(cos(current_ang)*rx, sin(current_ang)*ry)
+				
+				# Mise à jour du pivot en temps réel si la taille du deck évolue
 				b.pivot_offset = b.size / 2.0
 				b.position = target_center - b.pivot_offset
 			
@@ -386,11 +355,10 @@ func positionner_plateaux(animate: bool = true) -> void:
 		await tween.finished
 		await get_tree().create_timer(0.2).timeout
 		is_rotating = false
-		if is_instance_valid(click_blocker): 
-			click_blocker.hide()
 		rotation_finished.emit()
 
 func waitForDiceRoll() -> int:
+	# Masquage total avant l'annonce 
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(false)
@@ -403,12 +371,13 @@ func waitForDiceRoll() -> int:
 	mini_dice_array.clear()
 	
 	var nom = current_player.username
-	var prefix = tr("Tour de ")
-	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()):
-		prefix = tr("Tour d' ")
+	var prefix = "Tour de "
+	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()): 
+		prefix = "Tour d' "
 		
 	lbl_turn_announcement.text = prefix + nom
 	
+	# --- GESTION STRICTE DU BOUTON GARE ---
 	var has_gare = false
 	if current_player.has_method("monumentIsActive"):
 		has_gare = current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
@@ -418,9 +387,11 @@ func waitForDiceRoll() -> int:
 			btn_overlay_roll_2.visible = true
 			btn_overlay_roll_2.disabled = false
 		else:
+			# Cache TOTALEMENT le bouton pour ne pas prendre de place
 			btn_overlay_roll_2.visible = false
 			btn_overlay_roll_2.disabled = true
-			
+	# --------------------------------------
+	
 	turn_overlay.move_to_front()
 	turn_overlay.show()
 	set_actions_enabled(false) 
@@ -428,21 +399,26 @@ func waitForDiceRoll() -> int:
 	var amount = await dice_amount_chosen
 	turn_overlay.hide()
 	
+	# On retourne la valeur, l'UI reste masquée pour le moment (réapparaîtra dans showResult)
 	return amount
 
 func showResult(d1: int, d2: int, can_reroll: bool = false) -> String:
 	var amount = 1 if d2 == 0 else 2
+	
 	var action = await play_dice_animation(amount, d1, d2, can_reroll)
 	
+	# On ne quitte direct que si on relance. "add2" et "keep" affichent le plateau.
 	if action == "reroll":
 		return action
 	
+	# --- RÉAPPARITION FINALE ---
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(true)
-			board.setup(board.player_data, board.player_data == current_player)
+			board.setup(board.player, board.player == current_player)
 	
 	set_actions_enabled(true)
+	
 	return action
 
 func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_reroll: bool = false) -> String:
@@ -458,36 +434,24 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	die_1.show()
 	if die_2: die_2.visible = (amount == 2)
 	
-	die_1.pivot_offset = die_1.size / 2.0
-	if die_2:
-		die_2.pivot_offset = die_2.size / 2.0
-	
+	# --- 1. ROULEMENT DES DÉS (Aucun texte n'est affiché) ---
 	var frames = 15
 	var delay = 0.05 
-	
 	for i in range(frames):
 		die_1.texture = dice_textures[randi() % 6]
-		die_1.rotation_degrees = randf_range(-25, 25)
-		
-		if amount == 2 and die_2: 
-			die_2.texture = dice_textures[randi() % 6]
-			die_2.rotation_degrees = randf_range(-25, 25)
-			
+		if amount == 2 and die_2: die_2.texture = dice_textures[randi() % 6]
 		await get_tree().create_timer(delay).timeout
 		if i > frames - 4: delay += 0.05 
 		
-	die_1.rotation_degrees = 0.0
 	die_1.texture = dice_textures[final_d1 - 1]
-	
-	if amount == 2 and die_2: 
-		die_2.rotation_degrees = 0.0
-		die_2.texture = dice_textures[final_d2 - 1]
+	if amount == 2 and die_2: die_2.texture = dice_textures[final_d2 - 1]
 	
 	var total = final_d1 + final_d2
 	var has_port = false
 	if current_player and current_player.has_method("monumentIsActive"):
 		has_port = current_player.monumentIsActive(Monument.MONUMENT_ID.Port)
 		
+	# On affiche juste les boutons de décision
 	if btn_conserver: btn_conserver.show(); btn_conserver.disabled = false
 	if btn_relancer: btn_relancer.visible = can_reroll; btn_relancer.disabled = false
 	if btn_add_2: btn_add_2.visible = (has_port and total >= 10); btn_add_2.disabled = false
@@ -498,9 +462,7 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		result_overlay.hide()
 		return action 
 	
-	is_rotating = true 
-	if is_instance_valid(click_blocker): click_blocker.show()
-	
+	# --- 2. DÉCOLLAGE DES DÉS ---
 	var start_pos_1 = die_1.global_position
 	var start_size_1 = die_1.size
 	
@@ -536,7 +498,7 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		
 	var anim_duration = 0.6 
 	var target_scale = Vector2(0.2, 0.2)
-	var base_local_pos = Vector2(-105, -2)
+	var base_local_pos = Vector2(-105, 7)
 	var ecart_entre_des = 45 
 	
 	var target_local_pos_1 = base_local_pos
@@ -549,19 +511,18 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		
 	result_lbl.add_theme_font_size_override("font_size", 34) 
 	addTwo_lbl.add_theme_font_size_override("font_size", 34)
-	var _font = load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf")
-	if _font:
-		result_lbl.add_theme_font_override("font", _font)
-		addTwo_lbl.add_theme_font_override("font", _font)
+	if FileAccess.file_exists("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"):
+		result_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
+		addTwo_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
 	
 	if action == "add2":
 		total += 2
 		base_local_pos += Vector2(-45,0)
 		addTwo_lbl.text = " + 2 "
-		addTwo_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) 
+		addTwo_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0)) # Doré pour le bonus
 
 	result_lbl.text += " = " + str(total)
-	result_lbl.add_theme_color_override("font_color", Color.WHITE) 
+	result_lbl.add_theme_color_override("font_color", Color.WHITE) # Blanc normal
 	
 	if amount == 2:
 		base_local_pos += Vector2(-20,0)
@@ -576,36 +537,35 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 		tween.tween_property(dummy_2, "position", target_local_pos_2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(dummy_2, "scale", target_scale, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		
+	# On attend sagement que les dés atterrissent
 	await tween.finished
 	
+	# --- 3. APPARITION DU TEXTE ("= X") UNIQUEMENT ICI ---
+
 	if action == "add2":
 		target_btn.add_child(addTwo_lbl)
 		addTwo_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des-5, -5)
 		base_local_pos += Vector2(50, 0)
 	
 	target_btn.add_child(result_lbl)
+	
+	# Positionnement : On décale le texte vers la droite en fonction de `espace_a_droite_des_des`
+
 	result_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des, -5)
 	
+	# Apparition douce en fondu
 	result_lbl.modulate.a = 0.0
-	if action == "add2": addTwo_lbl.modulate.a = 0.0
-		
-	var fade_tween = get_tree().create_tween().set_parallel(true)
+	var fade_tween = get_tree().create_tween()
 	fade_tween.tween_property(result_lbl, "modulate:a", 1.0, 0.2)
 	if action == "add2":
 		fade_tween.tween_property(addTwo_lbl, "modulate:a", 1.0, 0.2)
-	
-	await fade_tween.finished
 		
+	
+	# On ajoute le texte à l'array pour qu'il soit détruit au tour suivant
 	mini_dice_array.append(result_lbl) 
 	if action == "add2":
-		mini_dice_array.append(addTwo_lbl)
-			
-	is_rotating = false
-	if is_instance_valid(click_blocker): click_blocker.hide()
+			mini_dice_array.append(addTwo_lbl) 
 	
-	# --- AJOUT ICI : DÉCLENCHEMENT DE LA RÉSOLUTION ---
-	# On utilise la variable 'total' calculée plus haut dans ta fonction
-		
 	return action
 
 func ask_yes_no(question: String) -> bool:
@@ -641,14 +601,14 @@ func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 func update_monument_menu(is_demolish_mode: bool = false):
 	var target_player = self.current_player 
 	
-	# Ajout du coût ("cost") directement dans le mapping pour une sécurité absolue
+	# Mapping précis : ID -> Nom du Noeud -> Nom de l'image (sans _verso/_recto)
 	var monument_map = {
-		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "port", "cost": 2},
-		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "gare", "cost": 4},
-		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "centre_commercial", "cost": 10},
-		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "parc_dattraction", "cost": 16},
-		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "tour_radio", "cost": 22},
-		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "aéroport", "cost": 30}
+		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "PORT"},
+		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "Gare"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "Centre_commercial"},
+		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "PARC_DATTRACTION"},
+		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "TOUR_RADIO"},
+		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "Aéroport"}
 	}
 	
 	for m_id in monument_map:
@@ -661,83 +621,39 @@ func update_monument_menu(is_demolish_mode: bool = false):
 		
 		var is_built = target_player.monumentIsActive(m_id)
 		
+		# --- GESTION DU VISUEL (Recto/Verso) ---
+		# Respecte la casse de tes fichiers (ex: PORT_VERSO.png vs Gare_verso.png)
 		var state = ""
 		if data["file"] == data["file"].to_upper():
 			state = "RECTO" if is_built else "VERSO"
 		else:
 			state = "recto" if is_built else "verso"
 			
-		var tex_path = "res://assets/Cards/" + get_lang_folder() + "/" + "Monuments/" + data["file"] + "_" + state + ".png"
-		var _tex = load(tex_path)
-		if _tex:
-			tex_rect.texture = _tex
-		else:
-			print("🔴 ERREUR IMAGE : Godot ne trouve pas ce fichier -> ", tex_path)
+		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
+		
+		if FileAccess.file_exists(tex_path):
+			tex_rect.texture = load(tex_path)
 			
+		# --- GESTION DU BOUTON (Achat direct) ---
 		for conn in build_btn.pressed.get_connections():
 			build_btn.pressed.disconnect(conn.callable)
 			
 		if is_demolish_mode:
-			if is_built:
-				build_btn.modulate.a = 1.0 
-				build_btn.disabled = false
-			else:
-				build_btn.modulate.a = 0.0 
-				build_btn.disabled = true
-			build_btn.pressed.connect(func(id=m_id): demolish_completed.emit(id))
+			build_btn.visible = is_built
+			build_btn.pressed.connect(func(): demolish_completed.emit(m_id))
 		else:
-			if is_built:
-				build_btn.modulate.a = 0.0 
-				build_btn.disabled = true
-			else:
-				build_btn.modulate.a = 1.0 
-				build_btn.disabled = false
+			build_btn.visible = not is_built 
 			
-			# ==========================================
-			# ACHAT DIRECT DEPUIS LE BOUTON (Plus de panel d'achat)
-			# ==========================================
-			build_btn.pressed.connect(func(id=m_id, cost=data["cost"]):
-				
-				# --- 1. ERREUR : Pas assez d'argent ---
-				if current_player.balance < cost:
-					monument_menu.hide()
-					await get_tree().create_timer(0.15).timeout
-					
-					var p_idx = game.playerArray.find(current_player)
-					if p_idx != -1:
-						animer_erreur_argent(active_boards[p_idx])
-					return # On arrête tout
-					
-				# --- 2. SUCCÈS : Achat validé ---
-				monument_menu.hide() 
-				
-				if is_instance_valid(click_blocker):
-					click_blocker.z_index = 4096
-					click_blocker.show()
-					
-				var p_idx = game.playerArray.find(current_player)
-				var board_visuel = active_boards[p_idx]
-				
-				# On simule visuellement la perte d'argent
-				if board_visuel.get("lbl_gold"):
-					board_visuel.lbl_gold.text = str(current_player.balance - cost)
-				animer_gain_gold(board_visuel, -cost)
-				
-				# Pause pour voir l'argent monter, PUIS le shake
-				await get_tree().create_timer(0.4).timeout
-				animer_shake_ecran(20.0, 0.4) 
-				await get_tree().create_timer(0.5).timeout
-				
-				if is_instance_valid(click_blocker):
-					click_blocker.hide()
-					
-				# On informe le backend (c'est LUI qui va modifier les vraies données et passer le tour)
-				action_selected.emit([game.CHOICE.Build_MONUMENT, id]) 
+			# ACHAT DIRECT SANS OVERLAY
+			build_btn.pressed.connect(func():
+				monument_menu.hide() # Ferme le menu des monuments
+				action_selected.emit([game.CHOICE.Build_MONUMENT, m_id]) # Déclenche l'achat dans la logique
 			)
 		
 func _on_construct_clicked(m_id):
 	_on_shop_card_clicked(m_id) 
-	%ConfirmCardBuy.text = tr("CONSTRUIRE")
+	
+	%ConfirmCardBuy.text = "CONSTRUIRE"
 
 func _on_open_monuments_pressed() -> void:
 	update_monument_menu()
@@ -746,8 +662,10 @@ func _on_open_monuments_pressed() -> void:
 
 func _on_close_menu_pressed() -> void: monument_menu.hide()
 
+
 func _on_skip_pressed() -> void:
 	if game and game.CHOICE: action_selected.emit([game.CHOICE.SKIP, 0])
+
 
 func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
@@ -759,6 +677,7 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
 	return prefix + clean_name
+
 
 func ask_choose_player(owner_player, all_players: Array):
 	choose_player_panel.move_to_front()
@@ -783,19 +702,11 @@ func ask_choose_player(owner_player, all_players: Array):
 			btn.add_theme_stylebox_override("hover", hover_style)
 			btn.add_theme_stylebox_override("pressed", style)
 			
-			btn.mouse_entered.connect(func():
-				var tween = get_tree().create_tween()
-				tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.1)
-			)
-			btn.mouse_exited.connect(func():
-				var tween = get_tree().create_tween()
-				tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
-			)
-			
 			var vbox = VBoxContainer.new()
 			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 			vbox.add_theme_constant_override("separation", 10)
+			
 			vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE 
 			btn.add_child(vbox)
 			
@@ -806,9 +717,8 @@ func ask_choose_player(owner_player, all_players: Array):
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			var _avatar_tex = load(avatar_path)
-			if _avatar_tex:
-				profile_tex.texture = _avatar_tex
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
 				
 			vbox.add_child(profile_tex)
 			
@@ -819,14 +729,15 @@ func ask_choose_player(owner_player, all_players: Array):
 			name_label.custom_minimum_size = Vector2(120, 40)
 			
 			var icon_path = "res://assets/UI/coin.png" 
+			
 			var bbcode_text = "[center]" + p.username + "\n[color=gold]" + str(p.balance) + "[/color] [img=13]" + icon_path + "[/img][/center]"
 			
 			name_label.text = bbcode_text
 			vbox.add_child(name_label)
 			
 			btn.pressed.connect(func(): _on_player_chosen(p))
-			player_buttons_container.add_child(btn)
 			
+			player_buttons_container.add_child(btn)
 	var chosen_target = await player_chosen
 	choose_player_panel.hide()
 	return chosen_target
@@ -840,7 +751,7 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 	trade_my_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	trade_their_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	btn_confirm_trade.disabled = true
-	btn_confirm_trade.text = tr("Sélectionnez les cartes à échanger")
+	btn_confirm_trade.text = "Sélectionnez les cartes à échanger"
 	trade_target = null
 	trade_their_card_id = -1
 	trade_my_card_id = -1
@@ -854,7 +765,7 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			var btn = Button.new()
 			btn.custom_minimum_size = Vector2(130, 180)
 			btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-			btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN 
+			btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN # <--- ADD THIS
 			btn.pivot_offset = Vector2(65, 90)
 			
 			var style = StyleBoxFlat.new()
@@ -871,17 +782,6 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			btn.add_theme_stylebox_override("hover", hover_style)
 			btn.add_theme_stylebox_override("pressed", style)
 			
-			btn.mouse_entered.connect(func():
-				if btn.modulate != Color(0.4, 0.4, 0.4): 
-					var tween = get_tree().create_tween()
-					tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.1)
-			)
-			btn.mouse_exited.connect(func():
-				if btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween()
-					tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
-			)
-			
 			var vbox = VBoxContainer.new()
 			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -895,9 +795,8 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			var _avatar_tex = load(avatar_path)
-			if _avatar_tex:
-				profile_tex.texture = _avatar_tex
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
 			vbox.add_child(profile_tex)
 			
 			var name_label = RichTextLabel.new()
@@ -911,13 +810,14 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			
 			btn.pressed.connect(func():
 				_on_trade_opponent_selected(p)
+				
 				for child in trade_opponents.get_children():
 					if child == btn:
-						child.modulate = Color(1.0, 1.0, 1.0)
-						child.scale = Vector2(1.0, 1.0)
-					else:
 						child.modulate = Color(0.4, 0.4, 0.4)
 						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			trade_opponents.add_child(btn)
 
@@ -944,17 +844,16 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 			var card_btn = TextureButton.new()
 			card_btn.custom_minimum_size = Vector2(130, 180) 
 			card_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-			card_btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+			card_btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN # <--- ADD THIS
 			card_btn.pivot_offset = Vector2(65, 90)
 			
 			card_btn.ignore_texture_size = true
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-			var _card_tex = load(path)
-			if _card_tex:
-				card_btn.texture_normal = _card_tex
+			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			if FileAccess.file_exists(path):
+				card_btn.texture_normal = load(path)
 			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -975,23 +874,9 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 			
 			var hover_style = style.duplicate()
 			hover_style.border_color = Color(1, 1, 1, 1)
-			hover_style.shadow_color = Color(1.0, 1.0, 1.0, 0.6)
-			hover_style.shadow_size = 20
 			
-			card_btn.mouse_entered.connect(func(): 
-				outline.add_theme_stylebox_override("panel", hover_style)
-				if card_btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween().set_parallel(true)
-					tween.tween_property(card_btn, "scale", Vector2(1.05, 1.05), 0.1)
-					tween.tween_property(card_btn, "rotation", deg_to_rad(3), 0.1)
-			)
-			card_btn.mouse_exited.connect(func(): 
-				outline.add_theme_stylebox_override("panel", style)
-				if card_btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween().set_parallel(true)
-					tween.tween_property(card_btn, "scale", Vector2(1.0, 1.0), 0.1)
-					tween.tween_property(card_btn, "rotation", 0.0, 0.1)
-			)
+			card_btn.mouse_entered.connect(func(): outline.add_theme_stylebox_override("panel", hover_style))
+			card_btn.mouse_exited.connect(func(): outline.add_theme_stylebox_override("panel", style))
 			
 			card_btn.pressed.connect(func():
 				if is_mine: trade_my_card_id = card_id
@@ -1001,11 +886,11 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 				
 				for child in container.get_children():
 					if child == card_btn:
-						child.modulate = Color(1.0, 1.0, 1.0)
-						child.scale = Vector2(1.0, 1.0)
-					else:
 						child.modulate = Color(0.4, 0.4, 0.4)
 						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			
 			container.add_child(card_btn)
@@ -1013,16 +898,15 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
-		btn_confirm_trade.text = tr("Confirmer")
+		btn_confirm_trade.text = "Confirmer!"
 
-func _on_confirm_trade_pressed() -> void: 
-	trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
+func _on_confirm_trade_pressed() -> void: trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
 func ask_give_card(owner_player, all_players: Array) -> Array:
 	give_panel.move_to_front()
 	give_panel.show()
 	btn_confirm_give.disabled = true
-	btn_confirm_give.text = tr("Sélectionnez une carte et un adversaire")
+	btn_confirm_give.text = "Sélectionnez une carte et un adversaire"
 	give_target = null
 	give_card_id = -1
 	
@@ -1043,10 +927,9 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-			var _card_tex = load(path)
-			if _card_tex:
-				card_btn.texture_normal = _card_tex
+			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			if FileAccess.file_exists(path):
+				card_btn.texture_normal = load(path)
 			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1067,23 +950,9 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			
 			var hover_style = style.duplicate()
 			hover_style.border_color = Color(1, 1, 1, 1)
-			hover_style.shadow_color = Color(1.0, 1.0, 1.0, 0.6)
-			hover_style.shadow_size = 20
 			
-			card_btn.mouse_entered.connect(func(): 
-				outline.add_theme_stylebox_override("panel", hover_style)
-				if card_btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween().set_parallel(true)
-					tween.tween_property(card_btn, "scale", Vector2(1.05, 1.05), 0.1)
-					tween.tween_property(card_btn, "rotation", deg_to_rad(3), 0.1)
-			)
-			card_btn.mouse_exited.connect(func(): 
-				outline.add_theme_stylebox_override("panel", style)
-				if card_btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween().set_parallel(true)
-					tween.tween_property(card_btn, "scale", Vector2(1.0, 1.0), 0.1)
-					tween.tween_property(card_btn, "rotation", 0.0, 0.1)
-			)
+			card_btn.mouse_entered.connect(func(): outline.add_theme_stylebox_override("panel", hover_style))
+			card_btn.mouse_exited.connect(func(): outline.add_theme_stylebox_override("panel", style))
 			
 			card_btn.pressed.connect(func():
 				give_card_id = card_id
@@ -1091,11 +960,11 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 				
 				for child in give_my_cards.get_children():
 					if child == card_btn:
-						child.modulate = Color(1.0, 1.0, 1.0)
-						child.scale = Vector2(1.0, 1.0)
-					else:
 						child.modulate = Color(0.4, 0.4, 0.4)
 						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			
 			give_my_cards.add_child(card_btn)
@@ -1105,6 +974,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			var btn = Button.new()
 			btn.custom_minimum_size = Vector2(130, 180)
 			btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			
 			btn.pivot_offset = Vector2(65, 90)
 			
 			var style = StyleBoxFlat.new()
@@ -1121,17 +991,6 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			btn.add_theme_stylebox_override("hover", hover_style)
 			btn.add_theme_stylebox_override("pressed", style)
 			
-			btn.mouse_entered.connect(func():
-				if btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween()
-					tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.1)
-			)
-			btn.mouse_exited.connect(func():
-				if btn.modulate != Color(0.4, 0.4, 0.4):
-					var tween = get_tree().create_tween()
-					tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
-			)
-			
 			var vbox = VBoxContainer.new()
 			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -1145,9 +1004,8 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			var _avatar_tex = load(avatar_path)
-			if _avatar_tex:
-				profile_tex.texture = _avatar_tex
+			if FileAccess.file_exists(avatar_path):
+				profile_tex.texture = load(avatar_path)
 			vbox.add_child(profile_tex)
 			
 			var name_label = RichTextLabel.new()
@@ -1165,11 +1023,11 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 				
 				for child in give_opponents.get_children():
 					if child == btn:
-						child.modulate = Color(1.0, 1.0, 1.0)
-						child.scale = Vector2(1.0, 1.0)
-					else:
 						child.modulate = Color(0.4, 0.4, 0.4)
 						child.scale = Vector2(0.9, 0.9)
+					else:
+						child.modulate = Color(1.0, 1.0, 1.0)
+						child.scale = Vector2(1.0, 1.0)
 			)
 			give_opponents.add_child(btn)
 
@@ -1180,7 +1038,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
-		btn_confirm_give.text = tr("Confirmer")
+		btn_confirm_give.text = "Confirmer"
 
 func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
@@ -1215,32 +1073,68 @@ func _on_confirm_demolish_pressed() -> void: demolish_completed.emit(demolish_mo
 func _on_shop_card_clicked(card_id: int) -> void:
 	selected_shop_card_id = card_id
 	var card_data = CardFactory.get_card(card_id)
+	
+	for child in %CardPreview.get_children(): 
+		child.queue_free()
 		
 	if card_data != null:
+		const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
+		var preview_card = CARD_SCENE.instantiate()
+		
 		var card_name = card_data.get_name()
 		var clean_name = ""
 		var path_basis = ""
-		var tip_path = ""		
-
-		var card_color = card_data.get_color()
-		# --- LA CORRECTION EST ICI ---
-		# On demande directement au shop_popup.shop_board de nous donner le bon nom ! 
-		clean_name = get_clean_file_name(card_name, card_color)
-		path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-		tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
+		var tip_path = ""
 		
-		var placeholder_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_vert_marché_de_fruits_et_légumes.png"
+		if card_data is Monument:
+			clean_name = get_clean_file_name(card_name)
+			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
+		else:
+			var card_color = card_data.get_color()
+			clean_name = get_clean_file_name(card_name, card_color)
+			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+		
+		var image_node = preview_card.get_node_or_null("Visual")
+		
+		if image_node and image_node is TextureButton:
+			var tex = load(path_basis)
+			if tex:
+				image_node.texture_normal = tex
+		
+			image_node.disabled = true
+			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			image_node.ignore_texture_size = false
+			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+
+		var screen = get_viewport().get_visible_rect().size
+		var preview_w = screen.x * 0.18
+		var preview_h = preview_w * 1.28
+		preview_card.custom_minimum_size = Vector2(preview_w, preview_h)
+		preview_card.size = Vector2(preview_w, preview_h)
+		%CardPreview.custom_minimum_size = Vector2(preview_w, preview_h)
+		%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_w * 0.6)
+
+		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
+		if internal_tooltip:
+			internal_tooltip.hide()
+
+		%CardPreview.add_child(preview_card)
+
+		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
 
 		if tip_path != "":
 			var tip_tex = load(tip_path)
 			if tip_tex:
 				%TooltipImage.texture = tip_tex
 				%TooltipImage.show()
+				%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 			else:
 				var placeholder_tex = load(placeholder_path)
 				if placeholder_tex:
 					%TooltipImage.texture = placeholder_tex
 					%TooltipImage.show()
+					%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 				else:
 					%TooltipImage.hide()
 		else:
@@ -1251,140 +1145,27 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		shop_popup.close()
 
 func _on_confirm_buy_shop_pressed() -> void:
-	if not game or not game.CHOICE: return
-
-	var card_data = CardFactory.get_card(selected_shop_card_id)
-	if card_data == null: return
-	
-	# ==========================================
-	# 1. IDENTIFICATION ET COÛT INFAILLIBLES
-	# ==========================================
-	var is_monument = (selected_shop_card_id >= 22 and selected_shop_card_id <= 27)
-	var cost = 0
-	
-	if is_monument:
-		match selected_shop_card_id:
-			22: cost = 4
-			23: cost = 10
-			24: cost = 16
-			25: cost = 22
-			26: cost = 2
-			27: cost = 30
-	else:
-		if card_data.has_method("get_cost"): 
-			cost = card_data.get_cost()
-		elif card_data.get("cost") != null:
-			cost = card_data.get("cost")
-	
-	# ==========================================
-	# 2. LOGIQUE D'ERREUR (Pas assez d'argent)
-	# ==========================================
-	if current_player.balance < cost:
-		# 1. Le panel se ferme
-		buy_confirm_panel.hide()
-		
-		if is_monument and is_instance_valid(monument_menu):
-			monument_menu.hide()
-			
-		await get_tree().create_timer(0.15).timeout
-		
-		# 2. L'animation d'erreur d'argent se joue
-		var p_idx_err = game.playerArray.find(current_player)
-		if p_idx_err != -1:
-			animer_erreur_argent(active_boards[p_idx_err])
-		
-		if not is_monument:
-			if is_instance_valid(shop_popup.shop_board) and is_instance_valid(shop_popup.shop_board.last_clicked_slot):
-				animer_erreur_carte_shop(shop_popup.shop_board.last_clicked_slot)
-		
-		# 3. PAS DE SHAKE (le "return" bloque la suite de la fonction)
-		return 
-
-	# ==========================================
-	# 3. ACHAT RÉUSSI (Le joueur a l'argent)
-	# ==========================================
-	
-	# 1. Le panel se ferme immédiatement
 	buy_confirm_panel.hide()
-	if is_monument and is_instance_valid(monument_menu):
-		monument_menu.hide() 
 	
-	if is_instance_valid(click_blocker): 
-		click_blocker.z_index = 4096 
-		click_blocker.show()
+	if game and game.CHOICE:
+		var card_data = CardFactory.get_card(selected_shop_card_id)
 		
-	var p_idx = game.playerArray.find(current_player)
-	var board_visuel = active_boards[p_idx]
-	
-	if is_monument:
-		# A. Mise à jour de la carte en Recto 
-		current_player.monumentArray[selected_shop_card_id] = true
-		
-		# B. On refresh le board AVANT de toucher à l'or visuel !
-		update_all_boards() 
-		
-		# C. On force le texte à baisser (sinon le refresh précédent remet l'ancien prix)
-		if board_visuel.get("lbl_gold"):
-			board_visuel.lbl_gold.text = str(current_player.balance - cost)
-		
-		# D. L'animation de perte de gold se joue...
-		animer_gain_gold(board_visuel, -cost)
-		
-		# E. PUIS on attend que la pièce décolle pour lancer le tremblement...
-		await get_tree().create_timer(0.5).timeout 
-		
-		# F. Le shake de l'écran se déclenche !
-		animer_shake_ecran(20.0, 0.4) 
-		await get_tree().create_timer(0.6).timeout 
-		
-		if is_instance_valid(click_blocker): click_blocker.hide()
-		
-		action_selected.emit([game.CHOICE.Build_MONUMENT, selected_shop_card_id])
-		
-	else:
-		# Logique pour les établissements classiques (cartes du centre)
-		if board_visuel.get("lbl_gold"):
-			board_visuel.lbl_gold.text = str(current_player.balance - cost)
+		if card_data is Monument:
+			monument_menu.hide() 
 			
-		animer_gain_gold(board_visuel, -cost)
-		
-		var quantity_in_shop = 1
-		if is_instance_valid(test_shop):
-			var shop_array = test_shop.get("shop")
-			if shop_array:
-				for slot in shop_array:
-					var c_id = int(slot[0]) if typeof(slot) == TYPE_ARRAY else int(slot.get("id"))
-					if c_id == selected_shop_card_id:
-						quantity_in_shop = int(slot[1]) if typeof(slot) == TYPE_ARRAY else int(slot.get("quantity"))
-						break
-		
-		if is_instance_valid(shop_popup.shop_board):
-			if quantity_in_shop > 1:
-				pending_shop_animation_index = -1
-				var shop_slot = shop_popup.shop_board.last_clicked_slot
-				if is_instance_valid(shop_slot) and shop_slot.has_method("set_badge_count"):
-					shop_slot.set_badge_count(quantity_in_shop - 1)
-			else:
-				pending_shop_animation_index = shop_popup.shop_board.last_clicked_index
-		
-		await animer_achat_vers_main(selected_shop_card_id, quantity_in_shop)
-		
-		await get_tree().create_timer(0.5).timeout
-		if is_instance_valid(click_blocker): click_blocker.hide()
-		
-		action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+			action_selected.emit([game.CHOICE.Build_MONUMENT, selected_shop_card_id])
+		else:
+			action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
 
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
 	buy_confirm_panel.hide()
-	if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.has_method("clear_selection"):
-		shop_popup.shop_board.clear_selection()
 
 func ask_chalutier_roll(player_name: String) -> int:
 	while turn_overlay.visible or result_overlay.visible:
 		await get_tree().create_timer(0.1).timeout
 
-	lbl_turn_announcement.text = tr("Chalutier de ") + player_name
+	lbl_turn_announcement.text = "Chalutier de " + player_name
 	
 	if btn_overlay_roll_1: btn_overlay_roll_1.hide()
 	if btn_overlay_roll_2: 
@@ -1404,7 +1185,8 @@ func ask_chalutier_roll(player_name: String) -> int:
 	var total = d1 + d2
 	
 	var result_title = result_overlay.get_node("VBoxContainer/LblResultTitle")
-	result_title.text = tr("Prise de ") + player_name + "!"
+	result_title.text = "Prise de " + player_name + "!"
+	
 	result_overlay.move_to_front()
 	result_overlay.show()
 	
@@ -1457,8 +1239,9 @@ func ask_chalutier_roll(player_name: String) -> int:
 	btn_rtlabel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	btn_rtlabel.fit_content = true
 	
+	
 	var icon_path = "res://assets/UI/coin.png"
-	btn_rtlabel.text ="[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=48]" + tr("RECUPERER") + " [color=gold]" + str(total) + "[/color] [img=48]" + icon_path + "[/img][/font_size][/font][/center]"
+	btn_rtlabel.text ="[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=48]Récupérer [color=gold]" + str(total) + "[/color] [img=48]" + icon_path + "[/img][/font_size][/font][/center]"
 	
 	btn_vbox.add_child(btn_rtlabel)
 	
@@ -1469,21 +1252,21 @@ func ask_chalutier_roll(player_name: String) -> int:
 	
 	claim_btn.queue_free() 
 	result_overlay.hide()
-	result_title.text = tr("Résultat du lancer")
+	result_title.text = "Résultat du lancer" 
 	
 	return total
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	lbl_winner_name.text = "🏆 " + winner_name + " " + tr("GAGNE!")
+	lbl_winner_name.text = "🏆 " + winner_name + " GAGNE!"
 	victory_screen.move_to_front()
 	victory_screen.show()
 	
 func _on_quit_pressed() -> void: get_tree().change_scene_to_file("res://scene/Ecran principale/accueil.tscn")
 
+
+
 func _unhandled_key_input(event: InputEvent) -> void:
-	if is_rotating: return 
-	
 	if event is InputEventKey and event.pressed and not event.echo:
 		
 		if event.keycode == KEY_1:
@@ -1528,556 +1311,3 @@ func _unhandled_key_input(event: InputEvent) -> void:
 					if not turn_overlay.visible and not result_overlay.visible:
 						_on_skip_pressed()
 						get_viewport().set_input_as_handled()
-
-# ==============================================================================
-# ======================== BOÎTE À OUTILS: ANIMATIONS JUICY ====================
-# ==============================================================================
-
-func _setup_tooltip_glows() -> void:
-	var tooltip = get_node_or_null("%TooltipImage")
-	if tooltip: appliquer_halo_tooltip(tooltip)
-	
-	var preview = get_node_or_null("%CardPreview")
-	if preview: preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-func appliquer_halo_tooltip(node: Control) -> void:
-	if not node or node.has_node("TooltipGlow"): return
-	var p = Panel.new()
-	p.name = "TooltipGlow"
-	p.set_anchors_preset(Control.PRESET_FULL_RECT)
-	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	p.show_behind_parent = true
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0,0,0,0)
-	style.shadow_color = Color(1.0, 0.84, 0.0, 0.5)
-	style.shadow_size = 40
-	style.set_corner_radius_all(10)
-	p.add_theme_stylebox_override("panel", style)
-	node.add_child(p)
-
-func animer_gain_gold(cible_node: Control, montant: int) -> void:
-	if montant == 0: return
-	
-	var float_text = RichTextLabel.new()
-	float_text.bbcode_enabled = true
-	float_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	float_text.fit_content = true
-	float_text.autowrap_mode = TextServer.AUTOWRAP_OFF # CRUCIAL : empêche l'étirement
-	float_text.z_index = 100 
-	
-	var color = "gold" if montant > 0 else "red"
-	var sign_str = "+" if montant > 0 else ""
-	var icon_path = "res://assets/UI/coin.png"
-	
-	float_text.text = "[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=60][color=" + color + "]" + sign_str + str(montant) + "[/color] [img=60]" + icon_path + "[/img][/font_size][/font][/center]"
-	
-	add_child(float_text) 
-	
-	# On cible spécifiquement le Label de l'or (%PlayerMoney) du board plutôt que le centre global
-	var anchor_pos = cible_node.global_position + (cible_node.size / 2.0)
-	if cible_node.get("lbl_gold"):
-		anchor_pos = cible_node.lbl_gold.global_position
-		
-	float_text.global_position = anchor_pos - Vector2(50, 20)
-	float_text.scale = Vector2.ZERO
-	float_text.pivot_offset = float_text.size / 2.0 # On utilise la taille réelle calculée
-	
-	# On garde la rotation du board cible pour que le texte soit lisible pour le joueur !
-	float_text.rotation = cible_node.rotation
-	
-	var tween = get_tree().create_tween().set_parallel(true)
-	tween.tween_property(float_text, "scale", Vector2(1.0, 1.0), 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	
-	# Mouvement vers le HAUT relatif à la rotation
-	var move_offset = Vector2(0, -120).rotated(cible_node.rotation)
-	tween.tween_property(float_text, "global_position", float_text.global_position + move_offset, 1.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	
-	tween.tween_property(float_text, "modulate:a", 0.0, 0.5).set_delay(1.0)
-	
-	await tween.finished
-	float_text.queue_free()
-
-func animer_shake_ecran(intensite: float = 15.0, duree: float = 0.3) -> void:
-	if not is_instance_valid(camera): return 
-	
-	var original_offset = camera.offset 
-	var tween = get_tree().create_tween()
-	var steps = int(duree / 0.05)
-	
-	for i in range(steps):
-		var offset = Vector2(randf_range(-intensite, intensite), randf_range(-intensite, intensite))
-		tween.tween_property(camera, "offset", offset, 0.05).set_trans(Tween.TRANS_SINE)
-		
-	tween.tween_property(camera, "offset", original_offset, 0.05)
-
-func animer_activation_carte(carte_node: Control) -> void:
-	if not is_instance_valid(carte_node): return
-	
-	var original_scale = carte_node.scale
-	carte_node.pivot_offset = carte_node.size / 2.0
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(carte_node, "scale", original_scale * 1.25, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(carte_node, "scale", original_scale, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-
-func animer_pioche_vers_shop(target_slot: Control, texture_recto: Texture2D) -> void:
-	var deck_node = get_node_or_null("CenterBoard/Deck")
-	if not is_instance_valid(deck_node) or not is_instance_valid(target_slot): 
-		return
-		
-	target_slot.modulate.a = 0.0
-	
-	var visual_node = target_slot.get_node_or_null("Visual")
-	if not is_instance_valid(visual_node):
-		visual_node = target_slot # Sécurité au cas où
-
-	var dummy = TextureRect.new()
-	dummy.texture = preload("res://assets/UI/dos_card.png")
-	dummy.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	dummy.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED 
-	
-	# Dimensions exactes de la carte finale
-	dummy.size = visual_node.size 
-	dummy.pivot_offset = dummy.size / 2.0
-	dummy.z_index = 150 
-	
-	# Point de départ centré sur le deck
-	var start_pos = deck_node.global_position + (deck_node.size / 2.0) - dummy.pivot_offset
-	dummy.global_position = start_pos
-	add_child(dummy)
-	
-	var anim_duration = 0.6
-	# Cible exacte : la position globale du visuel
-	var target_pos = visual_node.global_position
-	
-	var tween_arc = get_tree().create_tween().set_parallel(true)
-	tween_arc.tween_property(dummy, "global_position:x", target_pos.x, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	
-	var drop_offset = 150.0
-	var lowest_y = max(deck_node.global_position.y, target_pos.y) + drop_offset
-	
-	var tween_y = get_tree().create_tween()
-	tween_y.tween_property(dummy, "global_position:y", lowest_y, anim_duration / 2.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween_y.tween_property(dummy, "global_position:y", target_pos.y, anim_duration / 2.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	
-	tween_arc.tween_property(dummy, "rotation_degrees", -360.0, anim_duration).set_trans(Tween.TRANS_CUBIC)
-	
-	await tween_arc.finished
-	
-	var flip_tween = get_tree().create_tween()
-	flip_tween.tween_property(dummy, "scale:x", 0.0, 0.15).set_trans(Tween.TRANS_SINE)
-	flip_tween.tween_callback(func(): 
-		dummy.texture = texture_recto 
-		dummy.rotation_degrees = 0.0
-	)
-	flip_tween.tween_property(dummy, "scale:x", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
-	
-	await flip_tween.finished
-	
-	if is_instance_valid(target_slot):
-		target_slot.modulate.a = 1.0
-	dummy.queue_free()
-	
-func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1) -> void:
-	if not is_instance_valid(shop_popup.shop_board.last_clicked_slot): return
-	
-	var p_idx = game.playerArray.find(current_player)
-	var target_board = active_boards[p_idx] 
-	
-	var shop_slot = shop_popup.shop_board.last_clicked_slot
-	var visual_node = shop_slot.get_node_or_null("Visual")
-	
-	var card_data = CardFactory.get_card(card_id)
-	var color = card_data.get_color()
-	var pile_cible = target_board.piles[color]
-	var anchor = pile_cible.get_node_or_null("Anchor")
-	
-	var card_width = 156 
-	var stack_gap = 25
-	var current_count = anchor.get_child_count() if anchor else 0
-	
-	pile_cible.custom_minimum_size.x = card_width + (current_count * stack_gap)
-	
-	var target_pos = pile_cible.global_position
-	if is_instance_valid(anchor):
-		var offset_local = Vector2(current_count * stack_gap, 0.0).rotated(target_board.rotation)
-		target_pos = anchor.global_position + offset_local
-	
-	var dummy = CARD_ANIMATION_SCENE.instantiate()
-	add_child(dummy) 
-	dummy.setup_card(card_data, target_board.get_board_tooltip_direction())
-	dummy.z_index = 4000
-	dummy.top_level = true 
-	
-	dummy.global_position = visual_node.global_position if visual_node else shop_slot.global_position
-	dummy.scale = Vector2(0.75, 0.75)
-	
-	# --- MODIFICATION ICI ---
-	# On ne cache la vraie carte du shop QUE si c'est le dernier exemplaire !
-	if visual_node and quantity_in_shop <= 1: 
-		visual_node.modulate.a = 0.0
-	
-	var anim_duration = 0.6
-	var tween = get_tree().create_tween().set_parallel(true)
-	tween.tween_property(dummy, "global_position", target_pos, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(dummy, "scale", Vector2(1.0, 1.0), anim_duration).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(dummy, "rotation", target_board.rotation, anim_duration).set_trans(Tween.TRANS_CUBIC)
-	
-	await tween.finished
-	
-	if is_instance_valid(anchor):
-		dummy.get_parent().remove_child(dummy)
-		anchor.add_child(dummy)
-		dummy.top_level = false
-		dummy.position = Vector2(current_count * stack_gap, 0)
-		dummy.rotation = 0
-		
-func declencher_animations_activation(activations: Array) -> void:
-	if activations.is_empty(): return
-	
-	# 1. BLOCAGE TOTAL des interactions pour la durée du spectacle
-	if is_instance_valid(click_blocker):
-		click_blocker.z_index = 4096
-		click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-		click_blocker.show() 
-		
-	# 2. PHASE DE MONTÉE : Toutes les cartes s'élèvent ensemble
-	var montee_tweens = []
-	for data in activations:
-		var c = data.get("carte_visuelle")
-		if is_instance_valid(c) and c.has_method("animer_montee"):
-			montee_tweens.append(c.animer_montee())
-			
-	if not montee_tweens.is_empty():
-		await montee_tweens[0].finished # On attend qu'elles soient au sommet
-		
-	# 3. PHASE D'EFFETS : On exécute les fonctions de gain (or, vol, etc.)
-	for data in activations:
-		var effet = data.get("effet_callable")
-		if effet is Callable and effet.is_valid():
-			effet.call()
-			
-	# Pause de "Juice" : on laisse le temps de voir les gains s'envoler
-	await get_tree().create_timer(1.2).timeout 
-	
-	# 4. PHASE DE DESCENTE : Tout le monde redescend
-	var descente_tweens = []
-	for data in activations:
-		var c = data.get("carte_visuelle")
-		if is_instance_valid(c) and c.has_method("animer_descente"):
-			descente_tweens.append(c.animer_descente())
-			
-	if not descente_tweens.is_empty():
-		await descente_tweens[0].finished
-		
-	# 5. LIBÉRATION : Le jeu peut reprendre
-	if is_instance_valid(click_blocker):
-		click_blocker.hide()
-		
-# À ajouter en haut avec les autres variables
-var file_animations_activations : Array = []
-
-func notifier_activation(joueur, card_id: int, balance_changes: Dictionary = {}):
-	var p_idx = game.playerArray.find(joueur) 
-	if p_idx == -1: return 
-	
-	var board_visuel = active_boards[p_idx] 
-	var noeud_carte = board_visuel.get_card_node(card_id) 
-	
-	# On stocke l'animation pour plus tard 
-	file_animations_activations.append({ 
-		"carte_visuelle": noeud_carte, 
-		"effet_callable": func(): 
-			
-			# 1. Lancer les animations de texte volant pour tous les joueurs touchés
-			for p in balance_changes:
-				var amount = balance_changes[p]
-				var target_idx = game.playerArray.find(p)
-				if target_idx != -1 and is_instance_valid(active_boards[target_idx]):
-					animer_gain_gold(active_boards[target_idx], amount)
-					
-					# 2. Rafraîchir UNIQUEMENT l'étiquette d'argent du plateau touché
-					# (On utilise update_info() et surtout pas update_all_boards() pour ne pas casser la carte actuellement en train de léviter !)
-					active_boards[target_idx].update_info() 
-	})
-
-# Cette fonction lance le spectacle (appelée par Game.gd)
-func executer_animations_collectees():
-	if not file_animations_activations.is_empty():
-		await declencher_animations_activation(file_animations_activations)
-		file_animations_activations.clear() # On vide la file après
-		
-func animer_erreur_carte_shop(slot_node: Control) -> void:
-	# On cherche le visuel ou le halo dans le slot du shop
-	var visual = slot_node.get_node_or_null("Visual")
-	if not visual: return
-	
-	var tween = create_tween()
-	
-	# On passe en rouge vif
-	tween.tween_property(visual, "modulate", Color(2.0, 0.3, 0.3), 0.1)
-	
-	# Petite vibration de la carte de gauche à droite
-	var orig_pos = visual.position
-	for i in range(4):
-		var side = 5 if i % 2 == 0 else -5
-		tween.tween_property(visual, "position:x", orig_pos.x + side, 0.05)
-	
-	tween.tween_property(visual, "position:x", orig_pos.x, 0.05)
-	
-	# Retour à la normale (blanc/transparent)
-	tween.tween_property(visual, "modulate", Color.WHITE, 0.3).set_delay(0.2)
-	
-	# Nettoyage de la sélection
-	if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.has_method("clear_selection"):
-		tween.tween_callback(func(): shop_popup.shop_board.clear_selection())
-	
-func animer_erreur_argent(board_visuel: PlayerBoard) -> void:
-	var label_argent = board_visuel.lbl_gold
-	if not label_argent: return
-	
-	# On crée un clignotement rapide en rouge
-	var tween = create_tween()
-	label_argent.modulate = Color.RED
-	
-	# Tremblement léger du texte (Optionnel mais sympa)
-	var original_pos = label_argent.position
-	tween.tween_property(label_argent, "position:x", original_pos.x + 5, 0.05)
-	tween.tween_property(label_argent, "position:x", original_pos.x - 5, 0.05)
-	tween.tween_property(label_argent, "position:x", original_pos.x, 0.05)
-	
-	# Retour à la couleur normale (Blanc)
-	tween.tween_property(label_argent, "modulate", Color.WHITE, 0.3).set_delay(0.2)
-	
-func animer_echange_cartes(joueur1, id_carte1: int, joueur2, id_carte2: int) -> void:
-	var p1_idx = game.playerArray.find(joueur1)
-	var p2_idx = game.playerArray.find(joueur2)
-	
-	if p1_idx == -1 or p2_idx == -1: return
-	
-	var board1 = active_boards[p1_idx]
-	var board2 = active_boards[p2_idx]
-	
-	var noeud1 = board1.get_card_node(id_carte1)
-	var noeud2 = board2.get_card_node(id_carte2)
-	
-	if not is_instance_valid(noeud1) or not is_instance_valid(noeud2): return
-	
-	var card_data1 = CardFactory.get_card(id_carte1)
-	var card_data2 = CardFactory.get_card(id_carte2)
-	
-	var p1_color = card_data1.get_color()
-	var p2_color = card_data2.get_color()
-	
-	var card_width = 156
-	var stack_gap = 25
-	var anim_duration = 0.8
-	
-	# --- 1. CALCUL DES DELTAS ---
-	var b1_deltas = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
-	var b2_deltas = { CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0 }
-	
-	b1_deltas[p1_color] -= 1
-	b1_deltas[p2_color] += 1
-	b2_deltas[p2_color] -= 1
-	b2_deltas[p1_color] += 1
-	
-	var tween = get_tree().create_tween().set_parallel(true)
-	
-	# --- 2. ANIMATION FLUIDE DES FONDS DE COULEUR ---
-	var animer_fond_pile = func(board: PlayerBoard, color: int, delta: int):
-		if delta == 0: return 
-		
-		var pile = board.piles[color]
-		var anchor = pile.get_node_or_null("Anchor")
-		var current_count = anchor.get_child_count() if anchor else 0
-		
-		var final_count = max(0, current_count + delta)
-		var visual_count = max(1, final_count)
-		
-		var target_width = card_width + ((visual_count - 1) * stack_gap)
-		tween.tween_property(pile, "custom_minimum_size:x", target_width, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-
-	animer_fond_pile.call(board1, p1_color, b1_deltas[p1_color])
-	if p1_color != p2_color: animer_fond_pile.call(board1, p2_color, b1_deltas[p2_color])
-	
-	animer_fond_pile.call(board2, p1_color, b2_deltas[p1_color])
-	if p1_color != p2_color: animer_fond_pile.call(board2, p2_color, b2_deltas[p2_color])
-
-	# --- 2.5 GLISSEMENT DES CARTES RESTANTES (Correction du clipping !) ---
-	var glisser_cartes_restantes = func(noeud_carte_partante):
-		var anchor = noeud_carte_partante.get_parent()
-		if is_instance_valid(anchor):
-			var index_partant = noeud_carte_partante.get_index()
-			for i in range(anchor.get_child_count()):
-				var child = anchor.get_child(i)
-				# Toutes les cartes visuellement "derrière" celle qui part reculent d'un cran
-				if i > index_partant:
-					var nouvelle_pos_x = child.position.x - stack_gap
-					tween.tween_property(child, "position:x", nouvelle_pos_x, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-
-	glisser_cartes_restantes.call(noeud1)
-	glisser_cartes_restantes.call(noeud2)
-
-	# --- 3. CALCUL DES POSITIONS D'ARRIVÉE ---
-	var get_target_pos = func(target_board: PlayerBoard, color: int, delta: int):
-		var pile = target_board.piles[color]
-		var anchor = pile.get_node_or_null("Anchor")
-		var current_count = anchor.get_child_count() if anchor else 0
-		
-		var final_count = max(0, current_count + delta)
-		var landing_index = max(0, final_count - 1)
-		
-		var target_pos = pile.global_position
-		if is_instance_valid(anchor):
-			var offset_local = Vector2(landing_index * stack_gap, 0.0).rotated(target_board.rotation)
-			target_pos = anchor.global_position + offset_local
-		return target_pos
-		
-	var end_pos1 = get_target_pos.call(board2, p1_color, b2_deltas[p1_color])
-	var end_pos2 = get_target_pos.call(board1, p2_color, b1_deltas[p2_color])
-
-	# --- 4. CRÉATION DES DUMMIES ET DÉPART ---
-	var start_pos1 = noeud1.global_position
-	var start_pos2 = noeud2.global_position
-	var rot1 = board1.rotation
-	var rot2 = board2.rotation
-	
-	var dummy1 = CARD_ANIMATION_SCENE.instantiate()
-	var dummy2 = CARD_ANIMATION_SCENE.instantiate()
-	add_child(dummy1)
-	add_child(dummy2)
-	
-	dummy1.setup_card(card_data1, board1.get_board_tooltip_direction())
-	dummy2.setup_card(card_data2, board2.get_board_tooltip_direction())
-	
-	dummy1.z_index = 4000
-	dummy2.z_index = 4000
-	dummy1.top_level = true
-	dummy2.top_level = true
-	
-	dummy1.global_position = start_pos1
-	dummy1.rotation = rot1
-	dummy2.global_position = start_pos2
-	dummy2.rotation = rot2
-	
-	noeud1.modulate.a = 0.0
-	noeud2.modulate.a = 0.0
-	
-	if is_instance_valid(click_blocker): click_blocker.show()
-	
-	# --- 5. ANIMATION DE VOL ---
-	tween.tween_property(dummy1, "global_position", end_pos1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(dummy1, "rotation", rot2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(dummy2, "global_position", end_pos2, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(dummy2, "rotation", rot1, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	
-	tween.tween_property(dummy1, "scale", Vector2(1.2, 1.2), anim_duration / 2.0).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(dummy1, "scale", Vector2(1.0, 1.0), anim_duration / 2.0).set_delay(anim_duration / 2.0)
-	tween.tween_property(dummy2, "scale", Vector2(1.2, 1.2), anim_duration / 2.0).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(dummy2, "scale", Vector2(1.0, 1.0), anim_duration / 2.0).set_delay(anim_duration / 2.0)
-	
-	await tween.finished
-	
-	# --- 6. TRANSFERT ET NETTOYAGE ---
-	var transfer_to_board = func(dummy: Control, target_board: PlayerBoard, card_data, delta: int):
-		var color = card_data.get_color()
-		var anchor = target_board.piles[color].get_node_or_null("Anchor")
-		if is_instance_valid(anchor):
-			var current_count = anchor.get_child_count()
-			var final_count = max(0, current_count + delta)
-			var landing_index = max(0, final_count - 1)
-
-			dummy.get_parent().remove_child(dummy)
-			anchor.add_child(dummy)
-			dummy.top_level = false
-			dummy.position = Vector2(landing_index * stack_gap, 0)
-			dummy.rotation = 0
-			dummy.setup_card(card_data, target_board.get_board_tooltip_direction())
-
-	transfer_to_board.call(dummy1, board2, card_data1, b2_deltas[p1_color])
-	transfer_to_board.call(dummy2, board1, card_data2, b1_deltas[p2_color])
-	
-	if is_instance_valid(click_blocker): click_blocker.hide()
-	
-func animer_don_carte(donneur, id_carte: int, receveur) -> void:
-	var p1_idx = game.playerArray.find(donneur)
-	var p2_idx = game.playerArray.find(receveur)
-	
-	if p1_idx == -1 or p2_idx == -1: return
-	
-	var board_source = active_boards[p1_idx]
-	var board_cible = active_boards[p2_idx]
-	
-	var noeud_carte = board_source.get_card_node(id_carte)
-	if not is_instance_valid(noeud_carte): return
-	
-	var card_data = CardFactory.get_card(id_carte)
-	var color = card_data.get_color()
-	
-	var card_width = 156
-	var stack_gap = 25
-	var anim_duration = 0.8
-	
-	var tween = get_tree().create_tween().set_parallel(true)
-	
-	# --- 1. RÉTRÉCIR LA ZONE SOURCE ET GLISSER LES CARTES ---
-	var pile_source = board_source.piles[color]
-	var anchor_source = pile_source.get_node_or_null("Anchor")
-	var count_source = anchor_source.get_child_count() if anchor_source else 0
-	
-	var target_w_source = card_width + ((max(1, max(0, count_source - 1)) - 1) * stack_gap)
-	tween.tween_property(pile_source, "custom_minimum_size:x", target_w_source, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	
-	if is_instance_valid(anchor_source):
-		var index_partant = noeud_carte.get_index()
-		for i in range(anchor_source.get_child_count()):
-			var child = anchor_source.get_child(i)
-			if i > index_partant:
-				tween.tween_property(child, "position:x", child.position.x - stack_gap, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-
-	# --- 2. AGRANDIR LA ZONE CIBLE ---
-	var pile_cible = board_cible.piles[color]
-	var anchor_cible = pile_cible.get_node_or_null("Anchor")
-	var count_cible = anchor_cible.get_child_count() if anchor_cible else 0
-	
-	var target_w_cible = card_width + (count_cible * stack_gap)
-	tween.tween_property(pile_cible, "custom_minimum_size:x", target_w_cible, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-
-	# --- 3. CALCUL DE LA POSITION D'ARRIVÉE ---
-	var end_pos = pile_cible.global_position
-	if is_instance_valid(anchor_cible):
-		var offset_local = Vector2(count_cible * stack_gap, 0.0).rotated(board_cible.rotation)
-		end_pos = anchor_cible.global_position + offset_local
-
-	# --- 4. CRÉATION DU DUMMY ---
-	var dummy = CARD_ANIMATION_SCENE.instantiate()
-	add_child(dummy)
-	dummy.setup_card(card_data, board_source.get_board_tooltip_direction())
-	dummy.z_index = 4000
-	dummy.top_level = true
-	dummy.global_position = noeud_carte.global_position
-	dummy.rotation = board_source.rotation
-	
-	noeud_carte.modulate.a = 0.0
-	if is_instance_valid(click_blocker): click_blocker.show()
-
-	# --- 5. ANIMATION DE VOL ---
-	tween.tween_property(dummy, "global_position", end_pos, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(dummy, "rotation", board_cible.rotation, anim_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	
-	tween.tween_property(dummy, "scale", Vector2(1.2, 1.2), anim_duration / 2.0).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(dummy, "scale", Vector2(1.0, 1.0), anim_duration / 2.0).set_delay(anim_duration / 2.0)
-
-	await tween.finished
-
-	# --- 6. INTÉGRATION CIBLE ---
-	if is_instance_valid(anchor_cible):
-		dummy.get_parent().remove_child(dummy)
-		anchor_cible.add_child(dummy)
-		dummy.top_level = false
-		dummy.position = Vector2(count_cible * stack_gap, 0)
-		dummy.rotation = 0
-		dummy.setup_card(card_data, board_cible.get_board_tooltip_direction())
-
-	if is_instance_valid(click_blocker): click_blocker.hide()
