@@ -86,7 +86,6 @@ def send_reset_email(email: str, code: str):
 # VERIFICATION DU TOKEN JWT
 # ============================================================================
 
-## Gestion de la connexion pour invalider le token 
 @app.route('/logout', methods=['POST'])
 def logout():
     # 1. Vérifier si le token est valide avant de le révoquer
@@ -98,12 +97,24 @@ def logout():
     auth_header = request.headers.get("Authorization")
     token = auth_header.split(" ", 1)[1]
     
-    # 3. Insérer le token dans la BDD sur le Serveur 1
-    # (Remplace ceci par ta logique de requête SQL habituelle)
-    inserer_dans_blacklist_bdd(token) 
+    try:
+        cursor.execute(
+            """
+            INSERT INTO token_blacklist (token, revoked_at) 
+            VALUES (%s, NOW())
+            """, 
+            (token,)
+        )
+        
+        # Valider la transaction
+        conn.commit() 
+        
+    except Exception as e:
+        print(f"Erreur lors de l'insertion dans la blacklist : {e}")
+        conn.rollback() # Annuler en cas de problème
+        return jsonify({"message": "Erreur interne du serveur lors de la déconnexion."}), 500
     
     return jsonify({"message": "Déconnexion réussie."}), 200
-
 
 def verify_token(req):    
     """    
