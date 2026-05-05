@@ -10,6 +10,7 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 		"guest_player":    _handle_guest(client, data)
 		"historic":        _handle_historic(client, data)
 		"forgot_password": _handle_forgot_password(client, data)
+		"verify_reset_code":  _handle_verify_reset_code(client, data)
 		"get_stats": _handle_get_stats(client, data)
 		"logout":          _handle_logout(client, data)
 
@@ -77,6 +78,18 @@ func _handle_forgot_password(client: StreamPeerTLS, data: Dictionary):
 	}
 	$"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
 
+
+
+# ─────────────────────────────────────────
+# VERIFY RESET CODE
+# ─────────────────────────────────────────
+func _handle_verify_reset_code(client: StreamPeerTLS, data: Dictionary):
+	var payload = {
+		"email":        data.get("email", ""),
+		"code":         data.get("code", ""),
+		"new_password": data.get("new_password", "")
+	}
+	$"../FlaskManager".send("verify_reset_code", "/verify_reset_code", payload, client)
 
 # ─────────────────────────────────────────
 # GET STATS
