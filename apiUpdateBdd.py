@@ -140,7 +140,7 @@ def verify_token(req):
     # Ici, tu fais une requête SQL vers ton Serveur 1
     cursor.execute("""
     SELECT id FROM token_blacklist WHERE token = %s 
-    """, (token))
+    """, (token,))
 
     blacklist_entry = cursor.fetchone()
     if blacklist_entry is not None:
