@@ -96,7 +96,11 @@ def logout():
     # 2. Récupérer le token depuis le header
     auth_header = request.headers.get("Authorization")
     token = auth_header.split(" ", 1)[1]
-    
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)"}), 500
+
+    cursor = conn.cursor()
     try:
         cursor.execute(
             """
@@ -125,7 +129,12 @@ def verify_token(req):
     if not auth_header.startswith("Bearer "):        
         return None, "Token manquant."     
         
-    token = auth_header.split(" ", 1)[1]     
+    token = auth_header.split(" ", 1)[1] 
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Erreur serveur (BDD)"}), 500
+
+    cursor = conn.cursor()    
     
     # --- NOUVELLE ÉTAPE : Vérification de la Blacklist ---
     # Ici, tu fais une requête SQL vers ton Serveur 1
