@@ -72,7 +72,14 @@ func _ready() -> void:
 	network_client = GameClient.new()
 	network_client.gameplayScreen = self
 	add_child(network_client)
+	
 	my_player_id = NetworkManager.get_joueur_id()
+	var game_id = get_tree().get_meta("game_id", 0)
+	var ordre_joueurs = get_tree().get_meta("ordre_joueurs", [])
+	
+	# Passe les infos à GameClient
+	network_client.game_id = game_id
+	network_client.ordre_joueurs = ordre_joueurs
 	
 	_find_dice_ui_nodes()
 	_force_overlays_to_front()
