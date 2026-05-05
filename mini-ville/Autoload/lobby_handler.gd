@@ -104,9 +104,13 @@ func _on_lobby_mis_a_jour(data: Dictionary):
 	
 func _on_game_demarre(data: Dictionary):
 	var d = data.get("data", {})
-	var game_id = d.get("game_id", "")
-	print("[LobbyHandler] Partie lancér : ", game_id)
-	get_tree().change_scene_to_file("res://main_client.tscn") # A MODIFIER =============================
+	var game_id = d.get("game_id", 0)
+	var ordre_joueurs = d.get("ordre_joueurs", [])
+	
+	get_tree().set_meta("game_id", game_id)
+	get_tree().set_meta("ordre_joueurs", ordre_joueurs)
+	print("[LobbyHandler] Partie lancer : ", game_id)
+	get_tree().change_scene_to_file("res://scene/Prototype/V3/jeu_multi.tscn") # A MODIFIER =============================
 	
 func _on_lobby_erreur(data: Dictionary):
 	var message = data.get("message", "Erreur inconnue")
