@@ -1104,11 +1104,16 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			image_node.ignore_texture_size = true
+			image_node.ignore_texture_size = false
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
-		preview_card.custom_minimum_size = Vector2(234, 300)
-		preview_card.size = Vector2(234, 300)
+		var screen = get_viewport().get_visible_rect().size
+		var preview_w = screen.x * 0.18
+		var preview_h = preview_w * 1.28
+		preview_card.custom_minimum_size = Vector2(preview_w, preview_h)
+		preview_card.size = Vector2(preview_w, preview_h)
+		%CardPreview.custom_minimum_size = Vector2(preview_w, preview_h)
+		%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_w * 0.6)
 
 		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
 		if internal_tooltip:
@@ -1123,11 +1128,13 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			if tip_tex:
 				%TooltipImage.texture = tip_tex
 				%TooltipImage.show()
+				%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 			else:
 				var placeholder_tex = load(placeholder_path)
 				if placeholder_tex:
 					%TooltipImage.texture = placeholder_tex
 					%TooltipImage.show()
+					%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 				else:
 					%TooltipImage.hide()
 		else:

@@ -570,14 +570,12 @@ theme_override_constants/separation = 20
 
 [node name="CardPreview" type="Control" parent="ConfirmCardBuyPanel/CenterContainer/MainBox" unique_id=855202235]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(234, 300)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="TooltipImage" type="TextureRect" parent="ConfirmCardBuyPanel/CenterContainer/MainBox" unique_id=855495132]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(216, 134)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
