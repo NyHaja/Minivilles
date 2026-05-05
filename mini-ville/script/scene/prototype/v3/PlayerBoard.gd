@@ -4,7 +4,7 @@ class_name PlayerBoard
 signal pass_turn_requested
 signal open_monuments_requested
 
-var player_data: Dictionary = {}
+var player_data = null
 
 @onready var lbl_name: Label = %PlayerLabel
 @onready var monument_icons: GridContainer = %MonumentIconContainer
@@ -100,20 +100,65 @@ func setup_network(data: Dictionary, is_active_player: bool):
 	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 
+# Setup pour partie locale
+
+func setup(player_data, is_active_player: bool):
+	var top_bar = get_node_or_null("MainColumn/TopBar")
+	var monu_zone = get_node_or_null("MonumentZone")
+	if top_bar: top_bar.modulate.a = 0.0
+	if monu_zone: monu_zone.modulate.a = 0.0
+	
+	self.player_data = player_data
+	
+	var monument_nodes = {
+		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
+		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
+		Monument.MONUMENT_ID.Gare: {"unbuild": "GareUnbuild", "build": "GareBuild"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"unbuild": "CentreCommercialUnbuild", "build": "CentreCommercialBuild"},
+		Monument.MONUMENT_ID.Parc: {"unbuild": "ParcDattractionUnbuild", "build": "ParcDattractionBuild"},
+		Monument.MONUMENT_ID.Radio: {"unbuild": "TourRadioUnbuild", "build": "TourRadioBuild"}
+	}
+
+	for m_id in monument_nodes:
+		var info = monument_nodes[m_id]
+		var unbuild_node = find_child(info["unbuild"], true, false)
+		var build_node = find_child(info["build"], true, false)
+		var is_built = player_data.monumentIsActive(m_id)
+		
+		if unbuild_node: unbuild_node.visible = not is_built
+		if build_node: build_node.visible = is_built
+
+	if btn_pass: btn_pass.visible = is_active_player
+	if btn_monu: btn_monu.visible = is_active_player
+
+	update_info()
+	update_deck()
+	
+	var tween = create_tween()
+	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
+	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
+
 # ----------------------------------------------------------------------
 # RESTE DE LA LOGIQUE
 # ----------------------------------------------------------------------
 func update_info() -> void:
-	if player_data.is_empty(): return
-	lbl_name.text = player_data.get("username", "Unknown")
-	lbl_gold.text = str(player_data.get("balance", 0))
+	if player_data == null: return
+	
+	if player_data is Dictionary:
+		if player_data.is_empty(): return
+		lbl_name.text = player_data.get("username", "Unknown")
+		lbl_gold.text = str(player_data.get("balance", 0))
+	else:
+		lbl_name.text = player_data.username
+		lbl_gold.text = str(player_data.balance)
 
 func set_actions_enabled(can_act: bool) -> void:
 	if btn_pass: btn_pass.disabled = !can_act
 	if btn_monu: btn_monu.disabled = !can_act
 
 func update_deck() -> void:
-	if player_data.is_empty(): return
+	if player_data == null: return
+	
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
@@ -126,7 +171,11 @@ func update_deck() -> void:
 	var card_height = 200
 	var stack_gap = 25 
 	
-	var deck_array = player_data.get("deck", [])
+	var deck_array = []
+	if player_data is Dictionary:
+		deck_array = player_data.get("deck", [])
+	else:
+		deck_array = player_data.deck
 	
 	for instance in deck_array:
 		if typeof(instance) != TYPE_ARRAY: continue
@@ -149,6 +198,10 @@ func update_deck() -> void:
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
 				pile_counts[color] += 1
+
+	for color in piles:
+		var count = pile_counts[color]
+		if count > 0: piles[color].custom_minimum_size.x = card_width + ((count - 1) * stack_gap)
 
 	for color in piles:
 		var count = pile_counts[color]

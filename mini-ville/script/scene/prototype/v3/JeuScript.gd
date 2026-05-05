@@ -90,9 +90,6 @@ var dice_textures = [
 @onready var card_preview: Control = %CardPreview
 @onready var confirm_card_buy: Button = %ConfirmCardBuy
 @onready var cancel_card_buy: Button = %CancelCardBuy
-@onready var chalutier_panel: PanelContainer = %ChalutierPanel
-@onready var lbl_chalutier_result: RichTextLabel = %LblChalutierResult
-@onready var chalutier_roll: Button = %ChalutierRoll
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
 @onready var settings_button: TextureButton = %Settings
@@ -194,7 +191,7 @@ func _on_window_resized() -> void:
 		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
 	
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
-					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
 	for ov in overlays:
 		if is_instance_valid(ov):
 			ov.size = screen_size
@@ -204,7 +201,7 @@ func _on_window_resized() -> void:
 		positionner_plateaux(false) 
 
 func _force_overlays_to_front() -> void:
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
 	for overlay in overlays:
 		if is_instance_valid(overlay): overlay.z_index = 100 
 
@@ -413,7 +410,7 @@ func showResult(d1: int, d2: int, can_reroll: bool = false) -> String:
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(true)
-			board.setup(board.player, board.player == current_player)
+			board.setup(board.player_data, board.player_data == current_player)
 	
 	set_actions_enabled(true)
 	
