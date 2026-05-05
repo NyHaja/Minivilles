@@ -100,8 +100,8 @@ func _rafraichir_slots(joueurs: Array):
 			if badge:
 				_afficher_badge(badge)
 	
-	var max_joueurs = get_tree().get_meta("nb_joueurs", 4)
-	_update_label_attente(joueurs.size(), max_joueurs)
+	max_joueurs_lobby = get_tree().get_meta("nb_joueurs", 4)
+	_update_label_attente(joueurs.size(), max_joueurs_lobby)
 	if LobbyHandler.is_host():
 		_update_btn_commencer(joueurs.size())
 	
