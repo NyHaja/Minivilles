@@ -83,6 +83,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if player_id == null:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "joueur_non_connectee",
 			"status": "error",
 			"message": "Vous devez être connecté pour rejoindre un lobby."
 		})
@@ -91,6 +92,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby_id.length() !=6:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type":"code_incomplet",
 			"status": "error",
 			"message": "Code invalide."
 		})
@@ -99,6 +101,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if not serveur.lobbies.has(lobby_id):
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "lobby_erreur",
 			"status": "error",
 			"message": "Lobby introuvable."
 		})
@@ -109,6 +112,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby["etat"] != "EN_ATTENTE":
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "partie_commencee",
 			"status": "error",
 			"message": "La partie a déjà commencé."
 		})
@@ -117,6 +121,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby["joueurs"].size() >= lobby["max_joueurs"]:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "lobby_plein",
 			"status": "error",
 			"message": "Le lobby est plein."
 		})
@@ -125,6 +130,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if client in lobby["joueurs"]:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "joueur_deja_connecte",
 			"status": "error",
 			"message": "Vous êtes déjà dans ce lobby."
 		})
