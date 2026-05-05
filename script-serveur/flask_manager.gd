@@ -176,8 +176,14 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			serveur.lobbies[lobby_id]["etat"]    = "EN_JEU"
 
 			var ordre_joueurs = []
+			var game_players: Array = []
+			
 			for joueur in serveur.lobbies[lobby_id]["joueurs"]:
-				ordre_joueurs.append(serveur.active_sessions.get(joueur, "inconnu"))
+				var p_id = serveur.active_sessions.get(joueur, "inconnu")
+				ordre_joueurs.append(p_id)
+				
+				var new_player = Player.new(str(p_id), p_id, 3)
+				game_players.append(new_player)
 
 			serveur.broadcast_lobby(lobby_id, {
 				"action_reply": "create_game",
@@ -188,6 +194,9 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 					"ordre_joueurs": ordre_joueurs
 				}
 			})
+			
+			serveur.get_node("GameHandler").start_new_game(lobby_id, game_players)
+			
 		return
 
 	# ── Réponse générique pour les autres actions ──

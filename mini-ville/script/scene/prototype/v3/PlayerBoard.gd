@@ -4,7 +4,7 @@ class_name PlayerBoard
 signal pass_turn_requested
 signal open_monuments_requested
 
-var player = null
+var player_data: Dictionary = {}
 
 @onready var lbl_name: Label = %PlayerLabel
 @onready var monument_icons: GridContainer = %MonumentIconContainer
@@ -24,7 +24,6 @@ var player = null
 const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
 func _ready() -> void:
-	# 1. On cache la TopBar et MonumentZone (ActiveDeckContainer reste visible !)
 	var top_bar = get_node_or_null("MainColumn/TopBar")
 	var monu_zone = get_node_or_null("MonumentZone")
 	if top_bar: top_bar.modulate.a = 0.0
@@ -39,8 +38,6 @@ func _ready() -> void:
 		main_col.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		main_col.set("alignment", BoxContainer.ALIGNMENT_CENTER)
 
-	# Pivot automatique uniquement pour la boîte de stats. 
-	# (On ne le fait plus pour la Grille des monuments, car on va faire tourner ses enfants)
 	if active_stats_box:
 		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
 
@@ -54,25 +51,25 @@ func _process(_delta: float) -> void:
 	if active_stats_box and is_inside_tree():
 		active_stats_box.rotation = target_rot
 		
-	# LA MAGIE EST ICI : On fait tourner chaque monument individuellement
-	# La grille, elle, ne bouge pas et reste parfaitement à sa place !
 	if monument_icons and is_inside_tree():
 		for icon in monument_icons.get_children():
-			if icon is Control: # On s'assure que c'est bien un élément d'interface
+			if icon is Control: 
 				if icon.size != Vector2.ZERO:
 					icon.pivot_offset = icon.size / 2.0
 				icon.rotation = target_rot
 
 # ----------------------------------------------------------------------
-# SETUP ET APPARITION
+# NEW SETUP: Reads from a Network Dictionary instead of a Player object!
 # ----------------------------------------------------------------------
-func setup(player_data, is_active_player: bool):
+func setup_network(data: Dictionary, is_active_player: bool):
 	var top_bar = get_node_or_null("MainColumn/TopBar")
 	var monu_zone = get_node_or_null("MonumentZone")
 	if top_bar: top_bar.modulate.a = 0.0
 	if monu_zone: monu_zone.modulate.a = 0.0
 	
-	self.player = player_data
+	self.player_data = data
+	
+	var monument_array = data.get("monuments", {}) 
 	
 	var monument_nodes = {
 		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
@@ -87,7 +84,8 @@ func setup(player_data, is_active_player: bool):
 		var info = monument_nodes[m_id]
 		var unbuild_node = find_child(info["unbuild"], true, false)
 		var build_node = find_child(info["build"], true, false)
-		var is_built = player_data.monumentIsActive(m_id)
+		
+		var is_built = monument_array.get(str(m_id), false) 
 		
 		if unbuild_node: unbuild_node.visible = not is_built
 		if build_node: build_node.visible = is_built
@@ -106,16 +104,16 @@ func setup(player_data, is_active_player: bool):
 # RESTE DE LA LOGIQUE
 # ----------------------------------------------------------------------
 func update_info() -> void:
-	if not player: return
-	lbl_name.text = player.username
-	lbl_gold.text = str(player.balance)
+	if player_data.is_empty(): return
+	lbl_name.text = player_data.get("username", "Unknown")
+	lbl_gold.text = str(player_data.get("balance", 0))
 
 func set_actions_enabled(can_act: bool) -> void:
 	if btn_pass: btn_pass.disabled = !can_act
 	if btn_monu: btn_monu.disabled = !can_act
 
 func update_deck() -> void:
-	if not player: return
+	if player_data.is_empty(): return
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
@@ -128,14 +126,16 @@ func update_deck() -> void:
 	var card_height = 200
 	var stack_gap = 25 
 	
-	for instance in player.deck:
+	var deck_array = player_data.get("deck", [])
+	
+	for instance in deck_array:
 		if typeof(instance) != TYPE_ARRAY: continue
-		var card_id = instance[0]
-		var quantity = instance[1]
-		var card_data = CardFactory.get_card(card_id)
+		var card_id = int(instance[0])
+		var quantity = int(instance[1])
+		var card_data_obj = CardFactory.get_card(card_id)
 		
-		if card_data != null:
-			var color = card_data.get_color()
+		if card_data_obj != null:
+			var color = card_data_obj.get_color()
 			var target_pile = piles[color]
 			var anchor = target_pile.get_node_or_null("Anchor")
 			if not anchor: continue
@@ -144,9 +144,8 @@ func update_deck() -> void:
 			
 			for i in range(quantity):
 				var card_visual = CARD_SCENE.instantiate()
-				
 				anchor.add_child(card_visual)
-				card_visual.setup_card(card_data, dir_suffix)
+				card_visual.setup_card(card_data_obj, dir_suffix)
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
 				pile_counts[color] += 1
@@ -168,15 +167,10 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 
 func get_board_tooltip_direction() -> String:
 	var rot = wrapf(self.rotation, -PI, PI)
-	
-	if abs(rot) < 0.5:
-		return "top"
-	elif abs(rot) > 2.5:
-		return "bottom"
-	elif rot > 0.5:
-		return "left"
-	else:
-		return "right"
+	if abs(rot) < 0.5: return "top"
+	elif abs(rot) > 2.5: return "bottom"
+	elif rot > 0.5: return "left"
+	else: return "right"
 		
 func set_ui_visible(is_visible: bool) -> void:
 	var alpha = 1.0 if is_visible else 0.0

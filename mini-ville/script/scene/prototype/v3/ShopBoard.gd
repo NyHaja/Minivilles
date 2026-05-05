@@ -10,16 +10,20 @@ const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 var shop_card_w = 117
 var shop_card_h = 150
 
-func update_shop(shop_data) -> void:
+func update_network_shop(shop_data_dict: Dictionary) -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
 		
-	var max_cards = min(shop_data.shop.size(), 9)
+	var card_ids = shop_data_dict.keys()
+	var max_cards = min(card_ids.size(), 9)
 		
 	for i in range(max_cards):
-		var slot = shop_data.shop[i]
+		var card_id_str = card_ids[i]
+		var card_id = int(card_id_str)
+		var quantity = shop_data_dict[card_id_str]
+		
 		var card_visual
-		var card_data = CardFactory.get_card(slot.id)
+		var card_data = CardFactory.get_card(card_id)
 		
 		if card_data != null:
 			var card_name = card_data.get_name()
@@ -42,23 +46,23 @@ func update_shop(shop_data) -> void:
 					image_node.ignore_texture_size = true
 					image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 					
-					image_node.pressed.connect(func(): shop_card_clicked.emit(slot.id))
+					image_node.pressed.connect(func(): shop_card_clicked.emit(card_id))
 
 				card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
 				card_visual.size = Vector2(shop_card_w, shop_card_h)
 				
 				if card_visual.has_method("set_badge_count"):
-					card_visual.set_badge_count(slot.quantity)
+					card_visual.set_badge_count(quantity)
 			
 			else:
 				card_visual = Button.new()
 				
 				var fallback_text = str(card_data.get_activation_num()) + "\n" + card_name
-				if slot.quantity > 1:
-					fallback_text += "\n(x" + str(slot.quantity) + ")"
+				if quantity > 1:
+					fallback_text += "\n(x" + str(quantity) + ")"
 					
 				card_visual.text = fallback_text
-				card_visual.pressed.connect(func(): shop_card_clicked.emit(slot.id))
+				card_visual.pressed.connect(func(): shop_card_clicked.emit(card_id))
 				
 				card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
 				card_visual.size = Vector2(shop_card_w, shop_card_h)
@@ -81,9 +85,6 @@ func update_shop(shop_data) -> void:
 				card_visual.add_theme_stylebox_override("hover", hover_style)
 
 			grid_container.add_child(card_visual)
-
-
-
 
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""

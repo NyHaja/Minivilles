@@ -116,6 +116,9 @@ func route_request(client: StreamPeerTLS, data: Dictionary): # Type changé ici
 		# Lobby
 		"create_lobby", "join_lobby", "leave_lobby", "create_game":
 			$LobbyHandler.handle(client, data)
+		# Game
+		"game_action":
+			$GameHandler.handle(client, data)
 		_:
 			send_to_client(client, {"status": "error", "message": "Action non reconnue."})
 
