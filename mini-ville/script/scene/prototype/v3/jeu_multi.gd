@@ -137,7 +137,7 @@ func update_network_shop(shop_data: Dictionary):
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	lbl_winner_name.text = "🏆 " + winner_name + " GAGNE!"
+	lbl_winner_name.text = "🏆 " + winner_name + " " + tr("GAGNE!")
 	victory_screen.move_to_front()
 	victory_screen.show()
 
@@ -217,7 +217,7 @@ func ask_choose_player() -> int:
 		
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(130, 180)
-		btn.text = data.get("username", "Joueur " + str(p_id)) + "\nOr: " + str(data.get("balance", 0))
+		btn.text = data.get("username", tr("Joueur ") + str(p_id)) + "\n" + tr("Or: ") + str(data.get("balance", 0))
 		btn.pressed.connect(func(): player_chosen.emit(p_id))
 		player_buttons_container.add_child(btn)
 		

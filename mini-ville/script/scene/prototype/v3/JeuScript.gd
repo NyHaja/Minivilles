@@ -369,9 +369,9 @@ func waitForDiceRoll() -> int:
 	mini_dice_array.clear()
 	
 	var nom = current_player.username
-	var prefix = "Tour de "
-	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()): 
-		prefix = "Tour d' "
+	var prefix = tr("Tour de ")
+	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()):
+		prefix = tr("Tour d' ")
 		
 	lbl_turn_announcement.text = prefix + nom
 	
@@ -650,7 +650,7 @@ func update_monument_menu(is_demolish_mode: bool = false):
 func _on_construct_clicked(m_id):
 	_on_shop_card_clicked(m_id) 
 	
-	%ConfirmCardBuy.text = "CONSTRUIRE"
+	%ConfirmCardBuy.text = tr("CONSTRUIRE")
 
 func _on_open_monuments_pressed() -> void:
 	update_monument_menu()
@@ -749,7 +749,7 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 	trade_my_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	trade_their_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	btn_confirm_trade.disabled = true
-	btn_confirm_trade.text = "Sélectionnez les cartes à échanger"
+	btn_confirm_trade.text = tr("Sélectionnez les cartes à échanger")
 	trade_target = null
 	trade_their_card_id = -1
 	trade_my_card_id = -1
@@ -898,7 +898,7 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
-		btn_confirm_trade.text = "Confirmer!"
+		btn_confirm_trade.text = tr("Confirmer")
 
 func _on_confirm_trade_pressed() -> void: trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
@@ -906,7 +906,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 	give_panel.move_to_front()
 	give_panel.show()
 	btn_confirm_give.disabled = true
-	btn_confirm_give.text = "Sélectionnez une carte et un adversaire"
+	btn_confirm_give.text = tr("Sélectionnez une carte et un adversaire")
 	give_target = null
 	give_card_id = -1
 	
@@ -1040,7 +1040,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
-		btn_confirm_give.text = "Confirmer"
+		btn_confirm_give.text = tr("Confirmer")
 
 func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
@@ -1159,7 +1159,7 @@ func ask_chalutier_roll(player_name: String) -> int:
 	while turn_overlay.visible or result_overlay.visible:
 		await get_tree().create_timer(0.1).timeout
 
-	lbl_turn_announcement.text = "Chalutier de " + player_name
+	lbl_turn_announcement.text = tr("Chalutier de ") + player_name
 	
 	if btn_overlay_roll_1: btn_overlay_roll_1.hide()
 	if btn_overlay_roll_2: 
@@ -1179,7 +1179,7 @@ func ask_chalutier_roll(player_name: String) -> int:
 	var total = d1 + d2
 	
 	var result_title = result_overlay.get_node("VBoxContainer/LblResultTitle")
-	result_title.text = "Prise de " + player_name + "!"
+	result_title.text = tr("Prise de ") + player_name + "!"
 	
 	result_overlay.move_to_front()
 	result_overlay.show()
@@ -1246,13 +1246,13 @@ func ask_chalutier_roll(player_name: String) -> int:
 	
 	claim_btn.queue_free() 
 	result_overlay.hide()
-	result_title.text = "Résultat du lancer" 
+	result_title.text = tr("Résultat du lancer")
 	
 	return total
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	lbl_winner_name.text = "🏆 " + winner_name + " GAGNE!"
+	lbl_winner_name.text = "🏆 " + winner_name + " " + tr("GAGNE!")
 	victory_screen.move_to_front()
 	victory_screen.show()
 	

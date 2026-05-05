@@ -37,7 +37,7 @@ func _handle_turn_started(data: Dictionary):
 	
 	if gameplayScreen:
 		gameplayScreen.set_actions_enabled(is_my_turn)
-		gameplayScreen.lbl_turn_announcement.text = "Tour de " + active_name
+		gameplayScreen.lbl_turn_announcement.text = tr("Tour de ") + active_name
 		if is_my_turn and gameplayScreen.turn_overlay:
 			gameplayScreen.turn_overlay.show()
 		elif gameplayScreen.turn_overlay:

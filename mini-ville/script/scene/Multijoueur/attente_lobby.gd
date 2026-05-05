@@ -78,7 +78,7 @@ func _on_pret_pressed():
 		var total = LobbyHandler.get_joueurs().size()
 		var assez = total >= MIN_JOUEURS
 		btn_commencer.disabled = true  # toujours désactivé ici, attend que tous soient prêts
-		btn_commencer.text = "En attente... (1/%d)" % total if assez else "Minimum %d joueurs requis" % MIN_JOUEURS
+		btn_commencer.text = tr("En attente... (1/%d)") % total if assez else tr("Minimum %d joueurs requis") % MIN_JOUEURS
 
 
 # ----------------------------------------------------------------
@@ -109,20 +109,20 @@ func _update_label_attente(nb_actuels: int, max_joueurs: int):
 	if not LobbyHandler.is_host():
 		# Joueur non-host : toujours "En attente du host..."
 		label_attente.visible = true
-		label_attente.text = "En attente du host..."
+		label_attente.text = tr("En attente du host...")
 	elif nb_actuels >= max_joueurs:
 		# Host + lobby plein : cache le label
 		label_attente.visible = false
 	else:
 		# Host + lobby pas encore plein : affiche le compteur
 		label_attente.visible = true
-		label_attente.text = "En attente joueur %d/%d" % [nb_actuels, max_joueurs]
+		label_attente.text = tr("En attente joueur %d/%d") % [nb_actuels, max_joueurs]
 	
 
 func _update_btn_commencer(nb_joueurs: int):
 	if nb_joueurs >= max_joueurs_lobby:
 		btn_commencer.visible = true
-		btn_commencer.text = "Lancer la partie"
+		btn_commencer.text = tr("Lancer la partie")
 	else:
 		btn_commencer.visible = false
 
