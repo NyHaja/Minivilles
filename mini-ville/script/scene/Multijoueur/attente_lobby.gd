@@ -1,5 +1,10 @@
 extends Control
 
+
+# -------------- Popup -----------------------------
+var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
+var popup_setting
+
 # ----------------------------------------------------------------
 # CONFIGURATION
 # ----------------------------------------------------------------
@@ -61,7 +66,18 @@ func _ready():
 	timer_chrono.wait_time = 1.0
 	timer_chrono.timeout.connect(_on_tick)
 	timer_chrono.start()
+	
+	# --- Paramètre ----
+	popup_setting = pop_setting_scene.instantiate()
+	add_child(popup_setting)
+	popup_setting.hide()
 
+	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
+
+func affiche_parametre():
+	SoundManager.play_click()
+	#$Content/gameMode.hide()
+	popup_setting.show()
 # ----------------------------------------------------------------
 # RÉSEAU → ENVOI
 # ----------------------------------------------------------------

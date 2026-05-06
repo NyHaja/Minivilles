@@ -13,7 +13,6 @@
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="13_v37wi"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="14_fny1t"]
 [ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="14_hover"]
-[ext_resource type="Script" uid="uid://btjy2f3fivf6f" path="res://script/scene/Popup/btn_parametres.gd" id="15_mqpi4"]
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="16_back"]
 [ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="17_backp"]
 
@@ -133,8 +132,8 @@ layout_mode = 0
 offset_left = 30.0
 offset_top = -3.0
 offset_right = 200.0
-offset_bottom = 179.0
-theme_override_constants/separation = 5
+offset_bottom = 158.0
+theme_override_constants/separation = -17
 
 [node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=1943198583]
 custom_minimum_size = Vector2(150, 150)
@@ -153,25 +152,30 @@ text = "Retour"
 label_settings = ExtResource("13_v37wi")
 horizontal_alignment = 1
 
-[node name="BtnParametres" type="TextureButton" parent="." unique_id=382097206]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=266904920]
 layout_mode = 0
-offset_left = 1737.0
-offset_top = 20.0
-offset_right = 1853.0
-offset_bottom = 136.0
+offset_left = 1773.0
+offset_top = 30.0
+offset_right = 1886.0
+offset_bottom = 162.0
+size_flags_horizontal = 10
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="VBoxContainer" unique_id=583147940]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
 texture_normal = ExtResource("14_fny1t")
 texture_pressed = ExtResource("14_hover")
 texture_hover = ExtResource("14_hover")
 ignore_texture_size = true
 stretch_mode = 5
-script = ExtResource("15_mqpi4")
 
-[node name="TexteParametres" type="Label" parent="." unique_id=1191556903]
-layout_mode = 0
-offset_left = 1676.0
-offset_top = 143.0
-offset_right = 1915.0
-offset_bottom = 183.0
+[node name="TexteParametres" type="Label" parent="VBoxContainer" unique_id=319804220]
+layout_mode = 2
+size_flags_vertical = 2
 text = "Paramètres"
 label_settings = ExtResource("13_v37wi")
 horizontal_alignment = 1

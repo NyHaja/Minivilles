@@ -37,11 +37,7 @@ func _ready() -> void:
 	$gameMode/loginbtn.pressed.connect(affiche_popup_login)
 	$Header/header/settingbtn/TextureButton.pressed.connect(affiche_parametre)
 # Musique de fond du jeu
-	SoundManager.music_player
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	#SoundManager.music_player
 
 #------------- HEADER --------------
 
