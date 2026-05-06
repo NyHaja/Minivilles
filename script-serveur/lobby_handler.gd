@@ -232,7 +232,7 @@ func _handle_start(client: StreamPeerTLS, data: Dictionary):
 
 	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
 
-	$"../FlaskManager".send("create_game", "/game/start", {
+	$"../FlaskManager".send("create_game", "/game/create", {
 		"player_id":   player_id,
 		"player_type": "registered"
 	}, client, {"lobby_id": lobby_id})

@@ -5,7 +5,6 @@ const CONTENT = "CenterContainer/Card/VBoxCard/MarginContent/VBoxContent"
 func _ready() -> void:
 	var btn_deconnexion = $CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/BtnDeconnexion
 	$BtnRetour/Fleche.pressed.connect(_on_fermer)
-	btn_deconnexion.pressed.connect(_on_deconnexion)
 
 
 # ------------------------------------
@@ -55,16 +54,9 @@ func _on_fermer() -> void:
 	if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
 	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
 
-#func _on_modifier() -> void:
-	#if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
-#
-#func _on_mot_de_passe() -> void:
-	#if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
-
-func _on_deconnexion() -> void:
-	if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
-	get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
 
 
 func _on_btn_deconnexion_pressed() -> void:
 	Client.logout()
+	if typeof(SoundManager) != TYPE_NIL: SoundManager.play_click()
+	get_tree().change_scene_to_file("res://scene/Ecran principale/accueil.tscn")

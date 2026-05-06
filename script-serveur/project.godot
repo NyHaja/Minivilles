@@ -14,6 +14,10 @@ config/name="Serveur"
 run/main_scene="uid://ciypuwyya4i48"
 config/features=PackedStringArray("4.6")
 
+[autoload]
+
+GameServeur="*uid://6w7gq7uun0q7"
+
 [dotnet]
 
 project/assembly_name="Serveur"
