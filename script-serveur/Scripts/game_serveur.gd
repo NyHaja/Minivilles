@@ -33,7 +33,7 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 func handle_client_message(player_id: int, data: Dictionary):
 	var active_player = players[currentPlayerIndex]
 	
-	if active_player.id != player_id:
+	if int(active_player.id) != int(player_id):
 		return 
 		
 	match data.get("game_action", ""):
