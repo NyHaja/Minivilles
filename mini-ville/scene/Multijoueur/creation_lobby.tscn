@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="12_6cn7a"]
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_v5av7"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_70pqk"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="14_q5v2b"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="15_uy7m1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_titre_section"]
 font = ExtResource("7_cx3lq")
@@ -247,8 +249,8 @@ text = "Créer"
 layout_mode = 1
 offset_top = 15.0
 offset_right = 202.0
-offset_bottom = 230.0
-theme_override_constants/separation = -17
+offset_bottom = 171.0
+theme_override_constants/separation = -16
 
 [node name="backbtn" type="TextureButton" parent="VBoxContainer" unique_id=28496431]
 custom_minimum_size = Vector2(150, 150)
@@ -267,6 +269,34 @@ text = "Retour"
 label_settings = ExtResource("3_y76a8")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="settingbtn" type="VBoxContainer" parent="." unique_id=1591054281]
+layout_mode = 0
+offset_left = 1753.0
+offset_top = 43.0
+offset_right = 1866.0
+offset_bottom = 181.0
+size_flags_horizontal = 10
+theme_override_constants/separation = 10
+
+[node name="TextureButton" type="TextureButton" parent="settingbtn" unique_id=1283499797]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("14_q5v2b")
+texture_pressed = ExtResource("14_q5v2b")
+texture_hover = ExtResource("15_uy7m1")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="settingbtn" unique_id=1352925110]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("7_cx3lq")
+text = "Paramètres"
+label_settings = ExtResource("3_y76a8")
+horizontal_alignment = 1
 
 [connection signal="pressed" from="Content/BtnCreerWrap/BtnCreer" to="." method="_on_btn_creer_pressed"]
 [connection signal="pressed" from="VBoxContainer/backbtn" to="." method="_on_back_pressed"]

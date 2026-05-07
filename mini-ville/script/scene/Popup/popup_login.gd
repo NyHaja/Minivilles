@@ -5,7 +5,7 @@ signal on_back
 var _traitement_en_cours := false  # garde-fou anti-double appel
 
 func _ready() -> void:
-	if has_node("Panel/VBoxContainer/backbtn"):
+	if not $Panel/VBoxContainer/backbtn.pressed.is_connected(_on_back_pressed):
 		$Panel/VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
 
 	var btn_con = get_node_or_null("%connexionbtn")

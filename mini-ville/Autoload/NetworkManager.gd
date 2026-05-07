@@ -63,11 +63,16 @@ func _process(_delta):
 	if tcp_status == StreamPeerTCP.STATUS_CONNECTED and tls_status == StreamPeerTLS.STATUS_DISCONNECTED:
 		var options = TLSOptions.client_unsafe()
 		_tls.connect_to_stream(_tcp, HOST, options)
+		return
+		
+	if tls_status == StreamPeerTLS.STATUS_HANDSHAKING or tls_status == StreamPeerTLS.STATUS_CONNECTED:
+		_tls.poll()
 
 	# 2. Status de connexion
 	if not _connecte and tls_status == StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = true
 		connecte.emit()
+		print("[NetworkManager] Connecté en TLS !")
 		
 	if _connecte and tls_status != StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = false

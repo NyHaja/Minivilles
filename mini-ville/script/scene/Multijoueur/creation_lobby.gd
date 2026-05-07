@@ -12,6 +12,9 @@ const ICON_Y_TOP = 0.0
 const ICON_Y_BOTTOM = 125.0
 const CENTER_X = 280.0
 
+var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
+var popup_setting
+
 func _ready():
 
 	%LabelDuree.text = durations[dur_index]
@@ -27,6 +30,16 @@ func _ready():
 	# ------------ signal ----------------------------
 	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
 	$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
+	
+	popup_setting = pop_setting_scene.instantiate()
+	
+	add_child(popup_setting)
+	popup_setting.hide()
+	$settingbtn/TextureButton.pressed.connect(affiche_parametre)
+	
+func affiche_parametre():
+	SoundManager.play_click()
+	popup_setting.show()	
 
 func _on_duree_gauche():
 	dur_index = (dur_index - 1 + durations.size()) % durations.size()

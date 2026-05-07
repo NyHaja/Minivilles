@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dg4sm1ebtod2s" path="res://script/scene/Multijoueur/attente_lobby.gd" id="1_ox6yk"]
 [ext_resource type="Texture2D" uid="uid://ck5psmkcnsie4" path="res://assets/Background/bg_lobby.png" id="2_rre76"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_1rs2g"]
+[ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="3_pr2nv"]
 [ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="4_hq665"]
 [ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_gdpiv"]
 [ext_resource type="Texture2D" uid="uid://bm03yu5sfbx1m" path="res://assets/icon/ProfilExemple.png" id="6_thxuj"]
@@ -10,11 +11,10 @@
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="10_c7hce"]
 [ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="10_gdpiv"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="11_12xal"]
-[ext_resource type="Script" uid="uid://dn7rh2bjw3e5" path="res://script/scene/Popup/btn_parametres_attente_lobby.gd" id="14_kcgef"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="15_fnt2l"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_code"]
-font = ExtResource("3_1rs2g")
+font = ExtResource("3_pr2nv")
 font_size = 120
 outline_size = 6
 outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
@@ -69,7 +69,7 @@ offset_left = 544.0
 offset_top = 60.0
 offset_right = 1376.0
 offset_bottom = 250.0
-text = "A4HUI5"
+text = "CODE01"
 label_settings = SubResource("LabelSettings_code")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -319,7 +319,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("10_gdpiv")
-script = ExtResource("14_kcgef")
 
 [node name="TexteParametres" type="Label" parent="VBoxContainer" unique_id=1703829457]
 layout_mode = 2

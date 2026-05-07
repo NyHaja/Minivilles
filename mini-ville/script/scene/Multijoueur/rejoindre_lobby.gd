@@ -11,6 +11,9 @@ var style_filled := StyleBoxFlat.new()
 var style_empty  := StyleBoxFlat.new()
 var style_error  := StyleBoxFlat.new()
 
+var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
+var popup_setting
+
 @onready var btn_rejoindre = $Panel/BtnRejoindre
 @onready var label_erreur = $Panel/LabelErreur
 
@@ -52,6 +55,17 @@ func _ready():
 	label_erreur.visible = false
 	
 	_update_boxes()
+	
+	popup_setting = pop_setting_scene.instantiate()
+	add_child(popup_setting)
+	popup_setting.hide()
+
+	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
+	
+func affiche_parametre():
+	SoundManager.play_click()
+	#$Content/gameMode.hide()
+	popup_setting.show()
 
 
 # ----------------------------------------------------------------
