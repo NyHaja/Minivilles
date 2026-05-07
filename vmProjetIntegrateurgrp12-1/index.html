@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minivilles — Le jeu</title>
+  <style>
+    :root {
+      --bleu: #00b2de;
+      --rouge: #c83926;
+      --bleu-fonce: #2b337c;
+      --blanc: #ffffff;
+      --fond: #0d1b3e;
+    }
+
+    @font-face {
+      font-family: 'EricaOne';
+      src: url('EricaOne-Regular.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Exo2Bold';
+      src: url('Exo2-ExtraBold.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Exo2Italic';
+      src: url('Exo2-BlackItalic.ttf') format('truetype');
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Exo2Bold', 'Segoe UI', sans-serif;
+      background: var(--fond) url('images/bg.png') center/cover fixed;
+      color: #222;
+    }
+
+    /* LANGUE */
+    #lang-toggle {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 999;
+      display: flex;
+      gap: 8px;
+    }
+    #lang-toggle button {
+      background: var(--blanc);
+      border: 2px solid var(--bleu);
+      color: var(--bleu-fonce);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    #lang-toggle button.active {
+      background: var(--bleu);
+      color: white;
+    }
+
+    /* HERO */
+    .hero {
+      background: transparent;
+      color: white;
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+    .hero h1 {
+      font-family: 'EricaOne', sans-serif;
+      font-size: 96px;
+      letter-spacing: 4px;
+      color: var(--rouge);
+      text-shadow:
+        -3px -3px 0 #fff,
+         3px -3px 0 #fff,
+        -3px  3px 0 #fff,
+         3px  3px 0 #fff,
+         5px  6px 0 rgba(0,0,0,0.4);
+    }
+    .hero .subtitle {
+      font-size: 22px;
+      margin-top: 12px;
+      opacity: 0.9;
+    }
+    .hero .badges {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .btn-download {
+      display: inline-block;
+      margin-top: 36px;
+      background: var(--rouge);
+      color: white;
+      padding: 16px 44px;
+      border-radius: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-download:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    }
+    .btn-download span { font-size: 14px; display: block; opacity: 0.85; margin-top: 2px; }
+
+    /* SECTIONS */
+    section {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+    section h2 {
+      font-family: 'EricaOne', sans-serif;
+      font-size: 34px;
+      color: var(--rouge);
+      margin-bottom: 20px;
+      text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
+    }
+    section p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #fff;
+    }
+
+    /* CARDS INFOS */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+    .info-card {
+      background: var(--bleu);
+      border-radius: 40px;
+      padding: 28px 20px;
+      text-align: center;
+      border: 5px solid white;
+      box-shadow: 6px 7px 0 var(--bleu-fonce);
+    }
+    .info-card .icon { font-size: 36px; margin-bottom: 10px; }
+    .info-card h3 { font-family: 'EricaOne', sans-serif; font-size: 18px; color: var(--rouge); margin-bottom: 6px; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; }
+    .info-card p { font-size: 15px; color: white; }
+
+    /* REGLES */
+    .steps {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--bleu);
+      border-radius: 20px;
+      padding: 20px;
+      border: 4px solid white;
+      box-shadow: 4px 5px 0 var(--bleu-fonce);
+    }
+    .step-num {
+      min-width: 44px;
+      height: 44px;
+      background: white;
+      color: var(--rouge);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      font-family: 'EricaOne', sans-serif;
+    }
+    .step-text h3 { font-family: 'EricaOne', sans-serif; font-size: 17px; color: var(--rouge); margin-bottom: 4px; text-shadow: -1px -1px 0 #fff, 1px 1px 0 #fff; }
+    .step-text p { font-size: 15px; color: white; }
+
+    /* GALERIE */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .gallery img:hover { transform: scale(1.03); }
+
+    /* MONUMENTS */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+    .cards-grid img {
+      height: 200px;
+      border-radius: 10px;
+      box-shadow: 4px 5px 0 var(--bleu-fonce);
+      border: 3px solid white;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .cards-grid img:hover { transform: scale(1.08) rotate(-2deg); }
+
+    /* DOWNLOAD SECTION */
+    .download-section {
+      background: var(--bleu);
+      border-top: 5px solid white;
+      border-bottom: 5px solid white;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+      margin-top: 60px;
+    }
+    .download-section h2 { font-family: 'EricaOne', sans-serif; color: var(--rouge); border: none; padding: 0; font-size: 36px; text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff; }
+    .download-section p { color: white; font-size: 18px; margin-top: 10px; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 24px;
+      background: var(--bleu-fonce);
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      border-top: 4px solid white;
+    }
+
+    /* LANGUE hidden */
+    .fr, .en { display: none; }
+    body.lang-fr .fr { display: block; }
+    body.lang-fr .fr-inline { display: inline; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    .fr-inline, .en-inline { display: none; }
+
+    /* lightbox */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+    #lightbox-close {
+      position: absolute;
+      top: 20px; right: 28px;
+      color: white; font-size: 36px;
+      cursor: pointer; font-weight: bold;
+    }
+  </style>
+</head>
+<body class="lang-fr">
+
+<!-- Sélecteur de langue -->
+<div id="lang-toggle">
+  <button onclick="setLang('fr')" id="btn-fr" class="active">FR</button>
+  <button onclick="setLang('en')" id="btn-en">EN</button>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Minivilles</h1>
+  <p class="subtitle">
+    <span class="fr">Le jeu de stratégie urbaine pour 2 à 4 joueurs</span>
+    <span class="en">The urban strategy game for 2 to 4 players</span>
+  </p>
+  <a href="#" class="btn-download">
+    <span class="fr">📥 Télécharger l'APK</span>
+    <span class="en">📥 Download APK</span>
+    <span class="fr-inline" style="font-size:13px; display:block; opacity:0.8;">Bientôt disponible</span>
+    <span class="en-inline" style="font-size:13px; display:block; opacity:0.8;">Coming soon</span>
+  </a>
+</div>
+
+<!-- PRÉSENTATION -->
+<section>
+  <div class="fr">
+    <h2>🏙️ Qu'est-ce que Minivilles ?</h2>
+    <p>Minivilles est un jeu de stratégie et de gestion urbaine pour 2 à 4 joueurs, à partir de 7 ans. Construisez votre ville en achetant des cartes Établissements, développez votre économie et soyez le premier à bâtir les 6 Monuments pour remporter la victoire !</p>
+    <p style="margin-top: 12px;">Basé sur le célèbre jeu de plateau <strong>Machi Koro</strong>, Minivilles vous offre une expérience de jeu riche en stratégie, en interaction et en rebondissements — maintenant disponible sur Android en mode local ou en ligne.</p>
+  </div>
+  <div class="en">
+    <h2>🏙️ What is Minivilles?</h2>
+    <p>Minivilles is a strategy and city-building game for 2 to 4 players, ages 7 and up. Build your city by purchasing Establishment cards, grow your economy and be the first to construct all 6 Monuments to win!</p>
+    <p style="margin-top: 12px;">Based on the popular board game <strong>Machi Koro</strong>, Minivilles delivers a rich experience full of strategy, player interaction and surprises — now available on Android in local or online mode.</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="icon"><img src="images/icons/2dice.png" alt="dés" style="width:48px;height:48px;object-fit:contain;"/></div>
+      <h3 class="fr">Lancez les dés</h3>
+      <h3 class="en">Roll the Dice</h3>
+      <p class="fr">Chaque tour, lancez un ou deux dés et déclenchez les effets de vos établissements.</p>
+      <p class="en">Each turn, roll one or two dice and trigger your establishments' effects.</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">🏪</div>
+      <h3 class="fr">Construisez votre ville</h3>
+      <h3 class="en">Build Your City</h3>
+      <p class="fr">Achetez des cartes Établissements pour développer votre économie et maximiser vos revenus.</p>
+      <p class="en">Purchase Establishment cards to grow your economy and maximize income.</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">🏆</div>
+      <h3 class="fr">Gagnez la partie</h3>
+      <h3 class="en">Win the Game</h3>
+      <p class="fr">Le premier joueur à construire ses 6 Monuments remporte la victoire !</p>
+      <p class="en">The first player to build all 6 Monuments wins the game!</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">📱</div>
+      <h3 class="fr">Mode local & en ligne</h3>
+      <h3 class="en">Local & Online Mode</h3>
+      <p class="fr">Jouez avec vos amis sur le même appareil ou affrontez des joueurs en ligne.</p>
+      <p class="en">Play with friends on the same device or compete against online players.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RÈGLES -->
+<section>
+  <div class="fr"><h2>📖 Comment jouer ?</h2></div>
+  <div class="en"><h2>📖 How to Play?</h2></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <h3 class="fr">Mise en place</h3>
+        <h3 class="en">Setup</h3>
+        <p class="fr">Chaque joueur commence avec un Champ de blé et une Boulangerie, ainsi que 6 Monuments face cachée. Vous recevez 3 pièces pour démarrer.</p>
+        <p class="en">Each player starts with a Wheat Field and a Bakery, plus 6 face-down Monuments. You receive 3 coins to start.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <h3 class="fr">Lancez les dés</h3>
+        <h3 class="en">Roll the Dice</h3>
+        <p class="fr">Lancez le ou les dés. Tous les joueurs possédant des établissements correspondant au résultat reçoivent leurs revenus. L'ordre de résolution : rouge → vert → bleu → violet.</p>
+        <p class="en">Roll the dice. All players with matching establishments collect income. Resolution order: red → green → blue → purple.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <h3 class="fr">Construisez</h3>
+        <h3 class="en">Build</h3>
+        <p class="fr">Achetez un établissement ou un Monument en payant la banque. Vous ne pouvez construire qu'une seule carte par tour.</p>
+        <p class="en">Buy one establishment or Monument by paying the bank. You can only build one card per turn.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <h3 class="fr">Victoire</h3>
+        <h3 class="en">Victory</h3>
+        <p class="fr">Le premier joueur à avoir construit ses 5 Monuments gagne instantanément la partie !</p>
+        <p class="en">The first player to have built their 5 Monuments instantly wins the game!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONUMENTS -->
+<section>
+  <div class="fr"><h2>🏛️ Les 6 Monuments</h2></div>
+  <div class="en"><h2>🏛️ The 6 Monuments</h2></div>
+  <div class="cards-grid">
+    <img src="images/cards/monuments/gare_recto.png" alt="Gare" onclick="openLightbox(this)"/>
+    <img src="images/cards/monuments/centre_commercial_recto.png" alt="Centre Commercial" onclick="openLightbox(this)"/>
+    <img src="images/cards/monuments/parc_dattraction_recto.png" alt="Parc d'Attractions" onclick="openLightbox(this)"/>
+    <img src="images/cards/monuments/port_recto.png" alt="Port" onclick="openLightbox(this)"/>
+    <img src="images/cards/monuments/tour_radio_recto.png" alt="Tour Radio" onclick="openLightbox(this)"/>
+    <img src="images/cards/monuments/aeroport_recto.png" alt="Aéroport" onclick="openLightbox(this)"/>
+  </div>
+</section>
+
+<!-- CARTES ÉTABLISSEMENTS -->
+<section>
+  <div class="fr"><h2>🏪 Les Établissements</h2></div>
+  <div class="en"><h2>🏪 The Establishments</h2></div>
+  <div class="cards-grid">
+    <img src="images/cards/etablissement/bleu_chalutier_1.png" alt="Chalutier" onclick="openLightbox(this)"/>
+    <img src="images/cards/etablissement/rouge_pizzeria_1.png" alt="Pizzeria" onclick="openLightbox(this)"/>
+    <img src="images/cards/etablissement/rouge_restaurant_1.png" alt="Restaurant" onclick="openLightbox(this)"/>
+    <img src="images/cards/etablissement/rouge_moonster_soda_1.png" alt="Moonster Soda" onclick="openLightbox(this)"/>
+    <img src="images/cards/etablissement/vert_entreprise_travaux_1.png" alt="Entreprise de Travaux Publics" onclick="openLightbox(this)"/>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section>
+  <div class="gallery">
+    <img src="images/screen_its_my_turn.png" alt="Écran de jeu" onclick="openLightbox(this)"/>
+    <img src="images/screen_shop.png" alt="Boutique" onclick="openLightbox(this)"/>
+    <img src="images/screen_cards_active.png" alt="Cartes actives" onclick="openLightbox(this)"/>
+    <img src="images/screen_monuments.png" alt="Monuments" onclick="openLightbox(this)"/>
+    <img src="images/login_screen_1920x1080.png" alt="Connexion" onclick="openLightbox(this)"/>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<div class="download-section">
+  <h2 class="fr">Prêt à jouer ?</h2>
+  <h2 class="en">Ready to Play?</h2>
+  <p class="fr">Téléchargez Minivilles gratuitement sur Android.</p>
+  <p class="en">Download Minivilles for free on Android.</p>
+  <a href="#" class="btn-download" style="margin-top: 24px;">
+    <span class="fr">📥 Télécharger l'APK</span>
+    <span class="en">📥 Download APK</span>
+    <span class="fr-inline" style="font-size:13px; display:block; opacity:0.8; margin-top:4px;">Bientôt disponible</span>
+    <span class="en-inline" style="font-size:13px; display:block; opacity:0.8; margin-top:4px;">Coming soon</span>
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Minivilles — <span class="fr-inline">Projet Intégrateur — Université de Strasbourg</span><span class="en-inline">Integration Project — University of Strasbourg</span></p>
+  <p style="margin-top:6px; font-size:12px;"><span class="fr-inline">Basé sur Machi Koro de Masao Suganuma</span><span class="en-inline">Based on Machi Koro by Masao Suganuma</span></p>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-fr').className = lang === 'fr' ? 'active' : '';
+    document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
+  }
+  function openLightbox(img) {
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+</script>
+</body>
+</html>
