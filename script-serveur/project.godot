@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Serveur"
 run/main_scene="uid://ciypuwyya4i48"
-config/features=PackedStringArray("4.6")
+config/features=PackedStringArray("4.6", "C#")
 
 [autoload]
 

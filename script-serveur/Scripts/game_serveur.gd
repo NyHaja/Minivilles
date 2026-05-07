@@ -212,9 +212,9 @@ func _broadcast_sync_state():
 	})
 
 func _broadcast_to_lobby(payload: Dictionary):
-	var parent_server = get_parent()
-	if parent_server and parent_server.has_method("broadcast_lobby"):
-		parent_server.get_parent().broadcast_lobby(lobby_id, payload)
+	var serveur = get_parent().get_parent()
+	if serveur and serveur.has_method("broadcast_lobby"):
+		serveur.broadcast_lobby(lobby_id, payload)
 
 func _record_match_history(winner: Player):
 	var parent_server = get_parent().get_parent()
