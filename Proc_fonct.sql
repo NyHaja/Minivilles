@@ -397,6 +397,10 @@ BEGIN
             SET MESSAGE_TEXT = 'Type de joueur invalide.';
     END IF;
 
+    UPDATE GAME
+    SET status = 'finished', ended_at = NOW()
+    WHERE game_id = p_game_id;
+
     COMMIT;
 END //
 
