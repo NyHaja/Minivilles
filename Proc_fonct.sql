@@ -220,7 +220,7 @@ BEGIN
     START TRANSACTION;
 
     -- Créer la partie
-    INSERT INTO GAME (played_at) VALUES (NOW());
+    INSERT INTO GAME (played_at,status) VALUES (NOW(),"in progress");
     SET v_game_id = LAST_INSERT_ID();
 
     -- Ajouter le créateur comme premier participant
