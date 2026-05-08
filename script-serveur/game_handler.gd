@@ -22,6 +22,13 @@ func start_new_game(lobby_id: String, players: Array):
 func handle(client: StreamPeerTLS, data: Dictionary):
 	var lobby_id = data.get("lobby_id", "")
 	
+	if lobby_id == "":
+		var serveur = get_parent()
+		for l_id in serveur.lobbies.keys():
+			if client in serveur.lobbies[l_id]["joueurs"]:
+				lobby_id = l_id
+				break
+
 	if active_games.has(lobby_id):
 		var player_id = get_parent().get_player_id(client) 
 		
