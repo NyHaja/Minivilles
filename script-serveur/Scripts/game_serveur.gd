@@ -30,11 +30,16 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 	_broadcast_sync_state()
 	_broadcast_turn_start()
 
-func handle_client_message(player_id: int, data: Dictionary):
+func handle_client_message(player_id, data: Dictionary):
 	var active_player = players[currentPlayerIndex]
 	
-	if int(active_player.id) != int(player_id):
+	print("[GameServer] Received action '", data.get("game_action", "unknown"), "' from network ID: ", player_id)
+	
+	if int(float(active_player.id)) != int(float(player_id)):
+		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", player_id)
 		return 
+		
+	print("[GameServer] ACCEPTED: Processing action...")
 		
 	match data.get("game_action", ""):
 		"roll_dice":
@@ -47,7 +52,6 @@ func handle_client_message(player_id: int, data: Dictionary):
 			_server_build_phase(data.get("monument_id", -1))
 		"skip_turn":
 			_server_skip_phase()
-			
 		"purple_card_choice":
 			player_choice_received.emit(data)
 
