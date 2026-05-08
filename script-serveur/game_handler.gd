@@ -19,7 +19,7 @@ func start_new_game(lobby_id: String, players: Array):
 # ─────────────────────────────────────────
 # 2. ROUTE ACTIONS TO THE CORRECT GAME
 # ─────────────────────────────────────────
-func handle(client: StreamPeerTCP, data: Dictionary):
+func handle(client: StreamPeerTLS, data: Dictionary):
 	var lobby_id = data.get("lobby_id", "")
 	
 	if active_games.has(lobby_id):
