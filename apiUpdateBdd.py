@@ -339,51 +339,42 @@ def check_guest_valid(guest_id):
 # MOT DE PASSE OUBLIé
 # ============================================================================
 
-
 @app.route('/forgot_password', methods=['POST'])
 def forgot_password():
     data = request.get_json()
-    if not data:
-        return jsonify({"status": "error", "message": "JSON manquant."}), 400
+    if not data: return jsonify({"status": "error", "message": "JSON manquant."}), 400
 
     email = data.get("email", "").strip()
-    if not email:
-        return jsonify({"status": "error", "message": "Email manquant."}), 400
+    if not email: return jsonify({"status": "error", "message": "Email manquant."}), 400
 
     conn = get_db_connection()
-    if not conn:
-        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+    if not conn: return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
 
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "SELECT player_id FROM REGISTERED_PLAYER WHERE email = %s", (email,)
-        )
-        result = cursor.fetchone()
+        # Vérifier si le joueur existe
+        cursor.execute("SELECT player_id FROM REGISTERED_PLAYER WHERE email = %s", (email,))
+        if cursor.fetchone():
+            code = str(random.randint(100000, 999999))
+            expires_at = datetime.utcnow() + timedelta(minutes=15)
+
+            # Insertion ou mise à jour du code dans la nouvelle table
+            cursor.execute("""
+                INSERT INTO password_resets (email, code, expires_at) 
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE code = VALUES(code), expires_at = VALUES(expires_at)
+            """, (email, code, expires_at))
+            
+            conn.commit()
+            send_reset_email(email, code)
+            print(f"[RESET] Code {code} stocké en BDD pour {email}")
+
+        return jsonify({"status": "success", "message": "Si cet email existe, un code a été envoyé."}), 200
     except Error as e:
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
         cursor.close()
         conn.close()
-
-    if result:
-        # gen code à 6 chiffres
-        code = str(random.randint(100000, 999999))
-
-        # stocker en mem - expiration 15min
-        reset_codes[email] = {
-            "code":       code,
-            "expires_at": datetime.utcnow() + timedelta(minutes=15)
-        }
-
-        send_reset_email(email, code)
-        print(f"[RESET] Code généré pour {email} : {code}")
-
-    # Toujours success pour ne pas révéler si l'email existe
-    return jsonify({
-        "status":  "success",
-        "message": "Si cet email existe, un code a été envoyé."
-    }), 200
 
 
 # ============================================================================
@@ -392,60 +383,47 @@ def forgot_password():
 @app.route('/verify_reset_code', methods=['POST'])
 def verify_reset_code():
     data = request.get_json()
-    if not data:
-        return jsonify({"status": "error", "message": "JSON manquant."}), 400
-
-    email        = data.get("email", "").strip()
-    code         = data.get("code", "").strip()
+    email = data.get("email", "").strip()
+    code = data.get("code", "").strip()
     new_password = data.get("new_password", "")
 
-    if not email or not code or not new_password:
-        return jsonify({"status": "error", "message": "Champs manquants."}), 400
-
-    # verif que code existe en mem
-    if email not in reset_codes:
-        return jsonify({"status": "error", "message": "Aucune demande de reset pour cet email."}), 400
-
-    stored = reset_codes[email]
-
-    # verif expiration
-    if datetime.utcnow() > stored["expires_at"]:
-        del reset_codes[email]
-        return jsonify({"status": "error", "message": "Code expiré."}), 400
-
-    # verif code
-    if stored["code"] != code:
-        return jsonify({"status": "error", "message": "Code incorrect."}), 400
-
-    # Code valide -> hasher le nouveau mot de passe et mettre à jour en BDD
-    new_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
     conn = get_db_connection()
-    if not conn:
-        return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
+    if not conn: return jsonify({"status": "error", "message": "Erreur serveur (BDD)."}), 500
 
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "UPDATE REGISTERED_PLAYER SET password = %s WHERE email = %s",
-            (new_hash, email)
-        )
+        # 1. Récupérer le code stocké en BDD
+        cursor.execute("SELECT code, expires_at FROM password_resets WHERE email = %s", (email,))
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({"status": "error", "message": "Aucune demande de reset trouvée."}), 400
+
+        stored_code, expires_at = result
+
+        # 2. Vérifications (Code et Expiration)
+        if datetime.utcnow() > expires_at:
+            return jsonify({"status": "error", "message": "Code expiré."}), 400
+
+        if stored_code != code:
+            return jsonify({"status": "error", "message": "Code incorrect."}), 400
+
+        # 3. Code valide : Hasher et mettre à jour le MDP du joueur
+        new_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        cursor.execute("UPDATE REGISTERED_PLAYER SET password = %s WHERE email = %s", (new_hash, email))
+        
+        # 4. Supprimer le code utilisé de la table password_resets
+        cursor.execute("DELETE FROM password_resets WHERE email = %s", (email,))
+        
         conn.commit()
+        return jsonify({"status": "success", "message": "Mot de passe mis à jour !"}), 200
+
     except Error as e:
         conn.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
     finally:
         cursor.close()
         conn.close()
-
-    # suppr code utilisé
-    del reset_codes[email]
-
-    return jsonify({
-        "status":  "success",
-        "message": "Mot de passe mis à jour avec succès."
-    }), 200
-
 
 
 # ============================================================================
