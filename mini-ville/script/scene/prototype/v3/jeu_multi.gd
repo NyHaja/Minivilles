@@ -19,6 +19,7 @@ signal rotation_finished
 @onready var table_pivot: Control = $TablePivot
 @onready var boards: Array = [$TablePivot/BoardJoueurBas, $TablePivot/BoardJoueurGauche, $TablePivot/BoardJoueurHaut, $TablePivot/BoardJoueurDroite]
 @onready var shop_board = %ShopBoard
+var active_boards: Array = []
 
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = %LblTurnAnnouncement
@@ -69,11 +70,12 @@ var give_card_id: int = -1
 var selected_shop_card_id: int = -1
 
 func _ready() -> void:
-	network_client = GameClient.new()
+	print(">>> JeuMulti _ready() called!")
+	network_client = get_node("/root/Game_Client")
 	network_client.gameplayScreen = self
-	add_child(network_client)
 	
 	my_player_id = NetworkManager.get_joueur_id()
+	network_client.my_player_id = my_player_id
 	
 	_find_dice_ui_nodes()
 	_force_overlays_to_front()
@@ -100,12 +102,22 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_on_window_resized)
 	_on_window_resized.call_deferred()
 
+	NetworkManager.message_recu.connect(_on_network_message)
+
+	await get_tree().process_frame
+	if not network_client.cached_sync_data.is_empty():
+		print(">>> DEBUG: Applying cached game state!")
+		var cached = network_client.cached_sync_data.duplicate()
+		network_client.cached_sync_data.clear()
+		_on_network_message(cached)
+
 func set_actions_enabled(can_act: bool) -> void:
 	for board in boards:
 		if is_instance_valid(board): board.set_actions_enabled(can_act)
 	if is_instance_valid(shop_board): shop_board.set_actions_enabled(can_act)
 
 func update_network_boards(players_data: Dictionary):
+	print("[JeuMulti] update_network_boards called with ", players_data.size(), " players")
 	latest_players_data = players_data
 	
 	var player_ids = players_data.keys()
@@ -115,12 +127,21 @@ func update_network_boards(players_data: Dictionary):
 		player_ids.erase(my_id_str)
 		player_ids.push_front(my_id_str) 
 		
+	active_boards.clear()
+	var p_count = player_ids.size()
+	if p_count == 2:
+		active_boards = [boards[0], boards[2]]
+	elif p_count == 3:
+		active_boards = [boards[0], boards[1], boards[2]]
+	else:
+		active_boards = boards.duplicate()
+		
 	for b in boards:
 		b.hide()
 		
-	for i in range(player_ids.size()):
-		if i < boards.size():
-			var board = boards[i]
+	for i in range(p_count):
+		if i < active_boards.size():
+			var board = active_boards[i]
 			var p_id = player_ids[i]
 			var data = players_data[p_id]
 			
@@ -129,6 +150,10 @@ func update_network_boards(players_data: Dictionary):
 			if board.has_method("setup_network"):
 				var is_me = (p_id == my_id_str)
 				board.setup_network(data, is_me)
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	positionner_plateaux()
 
 func update_network_shop(shop_data: Dictionary):
 	latest_shop_data = shop_data
@@ -311,3 +336,69 @@ func _on_window_resized() -> void:
 		table_pivot.size = screen_size
 		table_pivot.pivot_offset = screen_size / 2.0
 		table_pivot.position = Vector2.ZERO
+		
+func positionner_plateaux() -> void:
+	var active_count = latest_players_data.size()
+	print(">>> DEBUG: positionner_plateaux running! active_count = ", active_count)
+	
+	if active_count == 0: 
+		print(">>> DEBUG: FAIL! No players found in dictionary.")
+		return
+
+	var screen_size = get_viewport().get_visible_rect().size
+	var c = screen_size / 2.0
+	var margin = 40 
+
+	for p_idx in range(active_count):
+		if p_idx >= active_boards.size(): continue
+		
+		var board = active_boards[p_idx] 
+		
+		if not is_instance_valid(board): continue
+
+		var real_size = board.size
+		# Fallback to known design size if layout hasn't computed yet
+		if real_size.x < 10 or real_size.y < 10:
+			real_size = Vector2(818, 264)
+		var b_h = real_size.y
+		
+		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
+		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+		
+		board.pivot_offset = real_size / 2.0
+
+		var target_angle = 0.0 
+		var target_rot = 0.0   
+
+		if active_count == 2:
+			if p_idx == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif p_idx == 1: target_angle = -PI/2.0; target_rot = PI
+		elif active_count == 3:
+			if p_idx == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif p_idx == 1: target_angle = PI; target_rot = PI/2.0
+			elif p_idx == 2: target_angle = -PI/2.0; target_rot = PI
+		else:
+			if p_idx == 0: target_angle = PI/2.0; target_rot = 0.0
+			elif p_idx == 1: target_angle = PI; target_rot = PI/2.0
+			elif p_idx == 2: target_angle = -PI/2.0; target_rot = PI
+			elif p_idx == 3: target_angle = 0.0; target_rot = -PI/2.0
+
+		var target_center = c + Vector2(cos(target_angle)*rx, sin(target_angle)*ry)
+		board.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+		board.position = target_center - board.pivot_offset
+		board.rotation = target_rot
+		
+		print(">>> Board ", p_idx, " → pos: ", board.position, " rot: ", board.rotation, " size: ", real_size)
+		
+		
+func _on_network_message(data: Dictionary) -> void:
+	print("[JeuMulti] _on_network_message: ", data.get("action_reply", "?"))
+	var action = data.get("action_reply", "")
+	print("[JeuMulti] Message reçu : ", action)
+	match action:
+		"sync_state":
+			print("[JeuMulti] sync_state — ", data.get("players", {}).keys().size(), " joueur(s)")
+			update_network_boards(data.get("players", {}))
+			update_network_shop(data.get("shop", {}))
+		"game_over":
+			show_victory_screen(data.get("winner_name", "Un joueur"))
