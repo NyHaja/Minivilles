@@ -23,16 +23,25 @@ var player = null
 
 const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
+# ----------------------------------------------------------------------
+# UTILITAIRE DÉTECTION ÉCRAN
+# ----------------------------------------------------------------------
+func _is_phone() -> bool:
+	var s = get_viewport().get_visible_rect().size
+	var small_side = min(s.x, s.y)
+	var large_side = max(s.x, s.y)
+	var ratio = large_side / small_side
+	return small_side < 1400 and ratio > 1.8
+
 func _ready() -> void:
-	# 1. On cache la TopBar et MonumentZone (ActiveDeckContainer reste visible !)
 	var top_bar = get_node_or_null("MainColumn/TopBar")
 	var monu_zone = get_node_or_null("MonumentZone")
 	if top_bar: top_bar.modulate.a = 0.0
 	if monu_zone: monu_zone.modulate.a = 0.0
-	
+
 	if btn_pass: btn_pass.pressed.connect(func(): pass_turn_requested.emit())
 	if btn_monu: btn_monu.pressed.connect(func(): open_monuments_requested.emit())
-	
+
 	var main_col = get_node_or_null("MainColumn")
 	if main_col:
 		main_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -42,32 +51,40 @@ func _ready() -> void:
 	if active_stats_box:
 		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
 
-	if OS.has_feature("android") or OS.has_feature("ios"):
+	# Marge supplémentaire sur téléphone uniquement
+	if _is_phone():
 		monu_zone = get_node_or_null("MonumentZone")
 		if monu_zone:
 			monu_zone.add_theme_constant_override("margin_bottom", 60)
 
 # ----------------------------------------------------------------------
-# ROTATION (Sécurisée pour les Grilles)
+# ROTATION
 # ----------------------------------------------------------------------
-
 func _process(_delta: float) -> void:
 	var normalized_rot = wrapf(self.rotation, -PI, PI)
 	var target_rot = -self.rotation if abs(normalized_rot) > PI * 0.8 else 0.0
 
 	if active_stats_box and is_inside_tree():
 		active_stats_box.rotation = target_rot
-		
-	if monument_icons and is_inside_tree():
-		var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
-		monument_icons.columns = 2 if is_sideways else 3
-		monument_icons.rotation = 0.0
 
-		for icon in monument_icons.get_children():
-			if icon is Control:
-				if icon.size != Vector2.ZERO:
-					icon.pivot_offset = icon.size / 2.0
-				icon.rotation = target_rot
+	if monument_icons and is_inside_tree():
+		if _is_phone():
+			# Téléphone : rotation de la grille entière + colonnes adaptatives
+			var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
+			monument_icons.columns = 2 if is_sideways else 3
+			monument_icons.rotation = 0.0
+			for icon in monument_icons.get_children():
+				if icon is Control:
+					if icon.size != Vector2.ZERO:
+						icon.pivot_offset = icon.size / 2.0
+					icon.rotation = target_rot
+		else:
+			# Tablette : rotation individuelle des icônes, grille fixe
+			for icon in monument_icons.get_children():
+				if icon is Control:
+					if icon.size != Vector2.ZERO:
+						icon.pivot_offset = icon.size / 2.0
+					icon.rotation = target_rot
 
 # ----------------------------------------------------------------------
 # SETUP ET APPARITION
@@ -77,9 +94,9 @@ func setup(player_data, is_active_player: bool):
 	var monu_zone = get_node_or_null("MonumentZone")
 	if top_bar: top_bar.modulate.a = 0.0
 	if monu_zone: monu_zone.modulate.a = 0.0
-	
+
 	self.player = player_data
-	
+
 	var monument_nodes = {
 		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
 		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
@@ -94,7 +111,6 @@ func setup(player_data, is_active_player: bool):
 		var unbuild_node = find_child(info["unbuild"], true, false)
 		var build_node = find_child(info["build"], true, false)
 		var is_built = player_data.monumentIsActive(m_id)
-		
 		if unbuild_node: unbuild_node.visible = not is_built
 		if build_node: build_node.visible = is_built
 
@@ -103,12 +119,10 @@ func setup(player_data, is_active_player: bool):
 
 	update_info()
 	update_deck()
-	
+
 	var tween = create_tween()
 	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
-
-
 
 # ----------------------------------------------------------------------
 # RESTE DE LA LOGIQUE
@@ -127,29 +141,37 @@ func update_deck() -> void:
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
-			for child in anchor.get_children(): 
+			for child in anchor.get_children():
 				anchor.remove_child(child)
 				child.queue_free()
-			
-	var pile_counts = {CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0}
-	var card_width = 156 
+
+	# Tailles fixes identiques pour les deux versions
+	# Le rendu visuel différent vient du scale appliqué dans JeuScript
+	var card_width = 156
 	var card_height = 200
-	var stack_gap = 25 
-	
+	var stack_gap = 25
+
+	var pile_counts = {
+		CardColor.Type.BLUE: 0,
+		CardColor.Type.GREEN: 0,
+		CardColor.Type.RED: 0,
+		CardColor.Type.PURPLE: 0
+	}
+
 	for instance in player.deck:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = instance[0]
 		var quantity = instance[1]
 		var card_data = CardFactory.get_card(card_id)
-		
+
 		if card_data != null:
 			var color = card_data.get_color()
 			var target_pile = piles[color]
 			var anchor = target_pile.get_node_or_null("Anchor")
 			if not anchor: continue
-			
+
 			var dir_suffix = get_board_tooltip_direction()
-			
+
 			for i in range(quantity):
 				var card_visual = CARD_SCENE.instantiate()
 				anchor.add_child(card_visual)
@@ -161,6 +183,7 @@ func update_deck() -> void:
 	for color in piles:
 		var count = pile_counts[color]
 		if count > 0: piles[color].custom_minimum_size.x = card_width + ((count - 1) * stack_gap)
+
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""
 	match color:
@@ -174,7 +197,6 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 
 func get_board_tooltip_direction() -> String:
 	var rot = wrapf(self.rotation, -PI, PI)
-	
 	if abs(rot) < 0.5:
 		return "top"
 	elif abs(rot) > 2.5:
@@ -183,22 +205,22 @@ func get_board_tooltip_direction() -> String:
 		return "left"
 	else:
 		return "right"
-		
+
 func set_ui_visible(is_visible: bool) -> void:
 	var alpha = 1.0 if is_visible else 0.0
-	
+
 	if lbl_name: lbl_name.modulate.a = alpha
 	if lbl_gold: lbl_gold.modulate.a = alpha
 	if active_stats_box: active_stats_box.modulate.a = alpha
 	if monument_icons: monument_icons.modulate.a = alpha
-	
+
 	if btn_pass:
 		btn_pass.self_modulate.a = alpha
 		btn_pass.disabled = !is_visible
 		for child in btn_pass.get_children():
 			if child is CanvasItem and not child is TextureRect:
 				child.modulate.a = alpha
-				
+
 	if btn_monu:
 		btn_monu.self_modulate.a = alpha
 		btn_monu.disabled = !is_visible
