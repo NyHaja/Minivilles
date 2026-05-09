@@ -39,14 +39,18 @@ func _ready() -> void:
 		main_col.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		main_col.set("alignment", BoxContainer.ALIGNMENT_CENTER)
 
-	# Pivot automatique uniquement pour la boîte de stats. 
-	# (On ne le fait plus pour la Grille des monuments, car on va faire tourner ses enfants)
 	if active_stats_box:
 		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
+
+	if OS.has_feature("android") or OS.has_feature("ios"):
+		monu_zone = get_node_or_null("MonumentZone")
+		if monu_zone:
+			monu_zone.add_theme_constant_override("margin_bottom", 60)
 
 # ----------------------------------------------------------------------
 # ROTATION (Sécurisée pour les Grilles)
 # ----------------------------------------------------------------------
+
 func _process(_delta: float) -> void:
 	var normalized_rot = wrapf(self.rotation, -PI, PI)
 	var target_rot = -self.rotation if abs(normalized_rot) > PI * 0.8 else 0.0
@@ -54,11 +58,13 @@ func _process(_delta: float) -> void:
 	if active_stats_box and is_inside_tree():
 		active_stats_box.rotation = target_rot
 		
-	# LA MAGIE EST ICI : On fait tourner chaque monument individuellement
-	# La grille, elle, ne bouge pas et reste parfaitement à sa place !
 	if monument_icons and is_inside_tree():
+		var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
+		monument_icons.columns = 2 if is_sideways else 3
+		monument_icons.rotation = 0.0
+
 		for icon in monument_icons.get_children():
-			if icon is Control: # On s'assure que c'est bien un élément d'interface
+			if icon is Control:
 				if icon.size != Vector2.ZERO:
 					icon.pivot_offset = icon.size / 2.0
 				icon.rotation = target_rot
@@ -102,6 +108,8 @@ func setup(player_data, is_active_player: bool):
 	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 
+
+
 # ----------------------------------------------------------------------
 # RESTE DE LA LOGIQUE
 # ----------------------------------------------------------------------
@@ -144,7 +152,6 @@ func update_deck() -> void:
 			
 			for i in range(quantity):
 				var card_visual = CARD_SCENE.instantiate()
-				
 				anchor.add_child(card_visual)
 				card_visual.setup_card(card_data, dir_suffix)
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
@@ -154,7 +161,6 @@ func update_deck() -> void:
 	for color in piles:
 		var count = pile_counts[color]
 		if count > 0: piles[color].custom_minimum_size.x = card_width + ((count - 1) * stack_gap)
-
 func get_clean_file_name(card_name: String, color: int) -> String:
 	var prefix = ""
 	match color:

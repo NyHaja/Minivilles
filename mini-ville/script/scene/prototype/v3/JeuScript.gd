@@ -157,6 +157,7 @@ func _ready() -> void:
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
 	
+	
 func _on_settings_pressed() -> void:
 	settings_overlay.move_to_front()
 	settings_overlay.show()
@@ -180,21 +181,30 @@ func _on_window_resized() -> void:
 		table_pivot.size = screen_size
 		table_pivot.pivot_offset = screen_size / 2.0
 		table_pivot.position = Vector2.ZERO
-	
-	if middle_area:
-			# On laisse Godot gérer le centrage automatiquement via l'ancre
+
+	# Scale global sur mobile
+	if OS.has_feature("android") or OS.has_feature("ios"):
+		var ref_height = 600.0
+		var global_scale = clamp(screen_size.y / ref_height, 0.3, 2.0)
+		if table_pivot:
+			table_pivot.scale = Vector2(global_scale, global_scale)
+		if middle_area:
+			middle_area.scale = Vector2(0.7, 0.7)
 			middle_area.set_anchors_preset(Control.PRESET_CENTER)
-			middle_area.add_theme_constant_override("separation", 20)
-			
-			# On force la mise à jour de la taille pour que le pivot soit parfait
 			middle_area.reset_size()
-			
-			# On place le pivot exactement au milieu pour que la réduction se fasse depuis le centre
 			middle_area.pivot_offset = middle_area.size / 2.0
+	else:
+		if table_pivot:
+			table_pivot.scale = Vector2(1.0, 1.0)
+
+	if middle_area:
+		middle_area.set_anchors_preset(Control.PRESET_CENTER)
+		middle_area.add_theme_constant_override("separation", 20)
+		middle_area.reset_size()
+		middle_area.pivot_offset = middle_area.size / 2.0
+		if not (OS.has_feature("android") or OS.has_feature("ios")):
 			middle_area.scale = Vector2(0.8, 0.8)
-		
-		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
-	
+
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
 					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
 	for ov in overlays:
@@ -203,7 +213,9 @@ func _on_window_resized() -> void:
 			ov.position = Vector2.ZERO
 			
 	if is_game_initialized:
-		positionner_plateaux(false) 
+		positionner_plateaux(false)
+	
+
 
 func _force_overlays_to_front() -> void:
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
@@ -266,13 +278,19 @@ func positionner_plateaux(animate: bool = true) -> void:
 
 	var screen_size = get_viewport().get_visible_rect().size
 	var c = screen_size / 2.0
-	var margin = 40 
+	var margin = 40
+	if OS.has_feature("android") or OS.has_feature("ios"):
+		margin = 80
+
+	var scale_factor = 1.0
+	if OS.has_feature("android") or OS.has_feature("ios"):
+		scale_factor = clamp(screen_size.y / 600.0, 0.3, 2.0)
+
+
 
 	var tween = null
 	
-	# --- CORRECTION ICI ---
 	if animate:
-		# On ne cache l'interface QUE s'il y a une animation (changement de tour)
 		for board in active_boards:
 			if is_instance_valid(board) and board.has_method("set_ui_visible"):
 				board.set_ui_visible(false)
@@ -286,18 +304,18 @@ func positionner_plateaux(animate: bool = true) -> void:
 		var board = active_boards[p_idx]
 		if not is_instance_valid(board): continue
 		
-		# On annule toute taille forcée précédente
 		board.custom_minimum_size = Vector2(0, 0)
-		# On force Godot à serrer la "boîte" au plus près des cartes
 		board.reset_size()
 		
 		var real_size = board.size
-		var b_h = real_size.y # On utilise la vraie hauteur générée
+		var b_h = real_size.y
+
+		var rx = (screen_size.x / 2.0) - (b_h * scale_factor / 2.0) - margin
+		var ry = (screen_size.y / 2.0) - (b_h * scale_factor / 2.0) - margin
 		
-		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
-		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+		if OS.has_feature("android") or OS.has_feature("ios"):
+			rx = rx * 0.60
 		
-		# Le pivot est maintenant le vrai centre visuel !
 		board.pivot_offset = real_size / 2.0
 
 		var diff = (p_idx - active_idx)
@@ -319,6 +337,12 @@ func positionner_plateaux(animate: bool = true) -> void:
 			elif diff == 2: target_angle = -PI/2.0; target_rot = PI
 			elif diff == 3: target_angle = 0.0; target_rot = -PI/2.0
 
+		if OS.has_feature("android") or OS.has_feature("ios"):
+			if diff == 0:
+				board.scale = Vector2(1.0, 1.0)
+			else:
+				board.scale = Vector2(0.7, 0.7)
+
 		if animate:
 			var start_angle = player_angles[p_idx]
 			var current_rot = board.rotation
@@ -337,8 +361,6 @@ func positionner_plateaux(animate: bool = true) -> void:
 			var move_circular = func(t: float, b: Control, s_ang: float, t_ang: float):
 				var current_ang = lerp(s_ang, t_ang, t)
 				var target_center = c + Vector2(cos(current_ang)*rx, sin(current_ang)*ry)
-				
-				# Mise à jour du pivot en temps réel si la taille du deck évolue
 				b.pivot_offset = b.size / 2.0
 				b.position = target_center - b.pivot_offset
 			
