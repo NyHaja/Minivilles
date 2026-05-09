@@ -8,6 +8,7 @@ var is_my_turn: bool = false
 var current_lobby_id = LobbyHandler.get_lobby_id()
 
 var cached_sync_data: Dictionary = {}
+var cached_turn_data: Dictionary = {}
 
 func _ready():
 	NetworkManager.message_recu.connect(_on_server_message)
@@ -34,9 +35,12 @@ func _on_server_message(data: Dictionary):
 			_handle_purple_choice(data)
 
 func _handle_turn_started(data: Dictionary):
+	if not gameplayScreen or not is_instance_valid(gameplayScreen):
+		cached_turn_data = data
+		return
+	
 	var active_id = data.get("active_player_id", -1)
 	var active_name = data.get("player_name", "Inconnu")
-	
 	is_my_turn = (int(active_id) == int(my_player_id))
 	
 	if gameplayScreen and is_instance_valid(gameplayScreen):
@@ -56,7 +60,7 @@ func _handle_turn_started(data: Dictionary):
 				var my_data = gameplayScreen.latest_players_data.get(str(my_player_id), {})
 				var my_monuments = my_data.get("monuments", {})
 				
-				var has_gare = my_monuments.get("2", false) or my_monuments.get(2, false)
+				var has_gare = my_monuments.get("22", false) or my_monuments.get(22, false)
 				gameplayScreen.btn_overlay_roll_2.visible = has_gare
 
 func _handle_dice_rolled(data: Dictionary):
@@ -67,11 +71,12 @@ func _handle_dice_rolled(data: Dictionary):
 	if gameplayScreen and is_instance_valid(gameplayScreen):
 		if gameplayScreen.turn_overlay:
 			gameplayScreen.turn_overlay.hide()
-			
-		var modifier = await gameplayScreen.showResult(d1, d2, false) 
 		
 		if is_my_turn:
+			var modifier = await gameplayScreen.showResult(d1, d2, false)
 			request_resolve_dice(modifier, amount_rolled)
+		else:
+			await gameplayScreen.showResult(d1, d2, false, true)
 
 func _handle_sync_state(data: Dictionary):
 	print("[GameClient] _handle_sync_state called. gameplayScreen valid: ", gameplayScreen and is_instance_valid(gameplayScreen))
@@ -88,6 +93,9 @@ func _handle_sync_state(data: Dictionary):
 		print("[GameClient] Caught sync_state during loading screen!")
 
 func _handle_purple_choice(data: Dictionary):
+	if int(data.get("active_player_id", -1)) != int(my_player_id):
+		return
+		
 	if not gameplayScreen or not is_instance_valid(gameplayScreen): return
 	
 	var choice_type = data.get("choice_type", "")

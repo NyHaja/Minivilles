@@ -96,25 +96,19 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 		if flask_response.get("status") == "success":
 			var player_id = flask_response.get("player_id")
 			var access_token = flask_response.get("access_token")
-
-			print("Connexion réussie pour le joueur : ", player_id)
-			# On passe le token au serveur pour qu'il le stocke en session
 			serveur.on_client_login_success(client, player_id, access_token)
-			
-			
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
 				"status": "success",
 				"access_token": access_token,
-				"player_id" : player_id
+				"player_id": player_id
 			})
-		else:
-			print("Échec : ", flask_response.get("message", "Email ou mot de passe incorrect"))
-			serveur.send_to_client(client, {
-				"action_reply": "authentification",
-				"status": "error",
-				"message": flask_response.get("message", "Email ou mot de passe incorrect.")
-			})
+
+			var http_nick = HTTPRequest.new()
+			add_child(http_nick)
+			http_nick.request_completed.connect(_on_nickname_fetched.bind(client, http_nick))
+			http_nick.request(FLASK_URL + "/player/" + str(int(float(player_id))) + "/stats",
+				["Content-Type: application/json"], HTTPClient.METHOD_GET, "")
 		return
 	# ------------------------
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
@@ -179,10 +173,11 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			var game_players: Array = []
 			
 			for joueur in serveur.lobbies[lobby_id]["joueurs"]:
-				var p_id = serveur.active_sessions.get(joueur, "inconnu")
+				var p_id = serveur.active_sessions.get(joueur, -1)
+				var nickname = serveur.active_nicknames.get(joueur, str(p_id))
 				ordre_joueurs.append(p_id)
-				
-				var new_player = Player.new(str(p_id), p_id, 3)
+
+				var new_player = Player.new(nickname, int(float(p_id)), 3)
 				game_players.append(new_player)
 
 			serveur.broadcast_lobby(lobby_id, {
@@ -214,3 +209,15 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 		reponse["guest_id"] = flask_response["guest_id"]
 
 	serveur.send_to_client(client, reponse)
+	
+func _on_nickname_fetched(result, code, _headers, body, client: StreamPeerTLS, http: HTTPRequest):
+	http.queue_free()
+	if code != 200: return
+	var data = JSON.parse_string(body.get_string_from_utf8())
+	if data == null: return
+	if data.get("status") == "success":
+		var nickname = data.get("nickname", "")
+		var serveur = get_parent()
+		if nickname != "" and serveur.active_sessions.has(client):
+			serveur.active_nicknames[client] = nickname
+			print("[FlaskManager] Nickname stored: ", nickname)

@@ -9,6 +9,13 @@ var current_roll_value: int = 0
 var takes_bonus_turn: bool = false
 var has_constructed_this_turn: bool = false
 
+var carte_owner_pour_echange = null
+var adversaire_choisi_pour_echange = null
+var carte_adversaire_pour_echange = null
+var carte_choisie_pour_don = null
+var adversaire_choisi_pour_don = null
+var monument_choisi_pour_demolition: int = -1
+
 var last_d1: int = 0
 var last_d2: int = 0
 
@@ -118,12 +125,14 @@ func _execute_effect_phase(dice_value: int):
 func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Dictionary:
 	var active_player = players[currentPlayerIndex]
 	
-	_broadcast_to_lobby({
-		"action_reply": "request_purple_choice",
-		"active_player_id": active_player.id,
-		"choice_type": action_type,
-		"metadata": metadata
-	})
+	var serveur = get_parent().get_parent()
+	if serveur and serveur.has_method("send_to_player"):
+		serveur.send_to_player(int(active_player.id), {
+			"action_reply": "request_purple_choice",
+			"active_player_id": active_player.id,
+			"choice_type": action_type,
+			"metadata": metadata
+		})
 	
 	var response = await self.player_choice_received
 	return response
