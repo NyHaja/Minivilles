@@ -19,6 +19,9 @@ func _ready() -> void:
 func _on_message(data: Dictionary):
 	match data.get("action_reply", ""):
 		"guest_player": _on_guest_cree(data)
+		"authentification":
+			if data.get("status") == "success":
+				reset() # remet est_guest à false  quand login réussi
 		
 # ----------------------------------------------------------------
 # ACTIONS JOUEUR -> SERVEUR
@@ -60,7 +63,7 @@ func _on_guest_cree(data: Dictionary):
 		est_guest = true
 		print("[GuestHandler] Guest créé :", guest_nickname, " (id : ", guest_id, ")")
 		# Aller vers l'écran de rejoindre lobby
-		get_tree().change_scene_to_file("res://main_client.tscn")
+		get_tree().change_scene_to_file("res://scene/Ecran principale/guest_screen.tscn")
 	else:
 		var raison = data.get("message", "Erreur inconnue")
 		print("[GuestHandler] Erreur création guest : ", raison)

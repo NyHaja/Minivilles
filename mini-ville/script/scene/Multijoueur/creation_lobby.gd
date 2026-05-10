@@ -29,7 +29,7 @@ func _ready():
 	
 	# ------------ signal ----------------------------
 	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
-	$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
+	#$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
 	
 	popup_setting = pop_setting_scene.instantiate()
 	
@@ -85,4 +85,4 @@ func _on_lobby_cree(lobby_id: String):
 
 func _on_btn_creer_pressed():
 	$Content/BtnCreerWrap/BtnCreer.disabled = true
-	LobbyHandler.creer_lobby("Partie", nb_joueurs, is_private)
+	LobbyHandler.creer_lobby("Partie", nb_joueurs)

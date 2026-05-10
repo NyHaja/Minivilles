@@ -65,7 +65,37 @@ func affiche_popup_login() -> void:
 #bouton pour jouer en mode invité
 func guest_mode() -> void:
 	SoundManager.play_click()
-	get_tree().change_scene_to_packed(asGuest)
+	#get_tree().change_scene_to_packed(asGuest)
+	_afficher_popup_nickname()
+	
+func _afficher_popup_nickname():
+# Popup simple avec un champ texte pour le pseudo
+	var dialog = AcceptDialog.new()
+	dialog.title = "Mode invité"
+
+	var vbox = VBoxContainer.new()
+	var label = Label.new()
+	label.text = "Entrez votre pseudo :"
+	var input = LineEdit.new()
+	input.placeholder_text = "Pseudo"
+	input.max_length = 20
+
+	vbox.add_child(label)
+	vbox.add_child(input)
+	dialog.add_child(vbox)
+
+	add_child(dialog)
+	dialog.popup_centered()
+
+	dialog.confirmed.connect(func():
+		var nickname = input.text.strip_edges()
+		if nickname == "":
+			return
+		$gameMode.hide()
+		GuestHandler.creer_guest(nickname)
+		dialog.queue_free()
+	)
+	dialog.canceled.connect(func(): dialog.queue_free())
 	
 func _on_popup_back():
 	$gameMode.show()

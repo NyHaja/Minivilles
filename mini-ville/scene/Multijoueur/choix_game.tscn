@@ -13,7 +13,44 @@
 [ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="8_cmag3"]
 [ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="9_8lebm"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="11_geu4v"]
-[ext_resource type="PackedScene" uid="uid://cl142ptcxeqdo" path="res://scene/popup/popup_parametres.tscn" id="14_w5wc1"]
+[ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="14_dqbsl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ap4bs"]
+bg_color = Color(0.6052743, 0.6052743, 0.6052743, 1)
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mgvv6"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jp5mq"]
+font = ExtResource("14_dqbsl")
+font_size = 30
+outline_size = 11
+outline_color = Color(0, 0.69803923, 0.87058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06vsb"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4okt"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
 
 [node name="Choixlobby" type="Control" unique_id=2096883175]
 layout_mode = 3
@@ -181,8 +218,56 @@ theme_override_styles/hover = ExtResource("9_8lebm")
 theme_override_styles/focus = ExtResource("8_cmag3")
 text = "Rejoindre"
 
-[node name="Popup_parametres" parent="." unique_id=728934651 instance=ExtResource("14_w5wc1")]
+[node name="PanelConnexionRequise" type="PanelContainer" parent="." unique_id=942971021]
 visible = false
 layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -425.0
+offset_top = 29.5
+offset_right = 421.5
+offset_bottom = 330.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ap4bs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelConnexionRequise" unique_id=299891236]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Label" type="Label" parent="PanelConnexionRequise/VBoxContainer" unique_id=1293516871]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_mgvv6")
+text = "Vous devez être connecté pour créer une partie"
+label_settings = SubResource("LabelSettings_jp5mq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelConnexionRequise/VBoxContainer" unique_id=2135992221]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="BtnSeConnecter" type="Button" parent="PanelConnexionRequise/VBoxContainer/HBoxContainer" unique_id=1748382755]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("14_dqbsl")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_06vsb")
+text = "Se Connecter"
+
+[node name="BtnFermer" type="Button" parent="PanelConnexionRequise/VBoxContainer/HBoxContainer" unique_id=1980009726]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("14_dqbsl")
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = SubResource("StyleBoxFlat_f4okt")
+text = "Fermer"
 
 [connection signal="pressed" from="HBoxContainer2/VBoxContainer/BtnParametres" to="." method="affiche_parametre"]
+[connection signal="pressed" from="Content/gameMode/BtnCreerWrap/BtnCreer" to="." method="_on_btn_creer_pressed"]
