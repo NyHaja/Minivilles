@@ -3,7 +3,7 @@ extends Node
 # ----------------------------------------------------------------
 # VARIABLES
 # ----------------------------------------------------------------
-var guest_id := -1
+var guest_id = -1
 var guest_nickname := ""
 var est_guest := false
 
@@ -55,7 +55,11 @@ func jouer_local():
 # ----------------------------------------------------------------
 func _on_guest_cree(data: Dictionary):
 	if data.get("status") == "success":
-		guest_id =data.get("guest_id", -1)
+		var raw_id = data.get("guest_id", null)
+		if raw_id == null:
+			print("[GuestHandler] Erreur : guest_id manquant dans la réponse")
+			return
+		guest_id = int(raw_id)  # ← conversion explicite
 		# Sauvegarder dans NetworkManager
 		NetworkManager.set_guest(guest_id)
 		
