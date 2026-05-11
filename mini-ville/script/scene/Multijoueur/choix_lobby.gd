@@ -6,6 +6,8 @@ var popup_setting
 var pop_login_scene = preload("res://scene/popup/popup_login.tscn")
 var popup_login
 
+@onready var connexion_requise = $PanelConnexionRequise
+
 func _ready():
 	# print("[choix_lobby] _ready() appelé depuis : ", get_stack())
 	$Content/gameMode/BtnRejoindreWrap/BtnRejoindre.pressed.connect(func(): 
@@ -20,6 +22,7 @@ func _ready():
 	add_child(popup_setting)
 	popup_setting.hide()
 	popup_login.hide()
+	connexion_requise.hide()
 	
 func affiche_parametre():
 	SoundManager.play_click()

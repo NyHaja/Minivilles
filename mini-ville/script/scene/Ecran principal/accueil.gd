@@ -14,6 +14,8 @@ var popup_setting
 #Mode as Guest
 var asGuest = preload("res://scene/Ecran principale/guest_screen.tscn")
 
+@onready var popup_guest = $PanelPseudoGuest
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	NetworkManager.lancer_connexion_reseau()
@@ -28,11 +30,13 @@ func _ready() -> void:
 	popup_setting.hide()
 	popup_rule.hide()
 	popup_login.hide()
+	popup_guest.hide()
 	
 	popup_login.on_back.connect(_on_popup_back)
 	popup_rule.on_back.connect(_on_popup_back)
 	popup_setting.on_back.connect(_on_popup_back)
 	
+	# Connecte tous les boutons
 	$Header/header/rulebtn/TextureButton.pressed.connect(affiche_popup_rule)
 	$gameMode/loginbtn.pressed.connect(affiche_popup_login)
 	$Header/header/settingbtn/TextureButton.pressed.connect(affiche_parametre)
@@ -45,11 +49,13 @@ func _ready() -> void:
 func affiche_popup_rule():
 	SoundManager.play_click()
 	$gameMode.hide()
+	$PanelPseudoGuest.hide()
 	popup_rule.show()
 	
 func affiche_parametre():
 	SoundManager.play_click()
 	$gameMode.hide()
+	$PanelPseudoGuest.hide()
 	popup_setting.show()
 	
 	
@@ -66,36 +72,22 @@ func affiche_popup_login() -> void:
 func guest_mode() -> void:
 	SoundManager.play_click()
 	#get_tree().change_scene_to_packed(asGuest)
-	_afficher_popup_nickname()
+	$gameMode.hide()
+	#popup_guest.get_node("LineEdit").text = ""  # vide le champ
+	popup_guest.show()
 	
-func _afficher_popup_nickname():
-# Popup simple avec un champ texte pour le pseudo
-	var dialog = AcceptDialog.new()
-	dialog.title = "Mode invité"
+func _on_guest_ok_pressed():
+	var nickname = $PanelPseudoGuest/VBoxContainer/LineEdit.text.strip_edges()
+	if nickname == "":
+		return  # ignore si vide
+	$gameMode.hide()
+	GuestHandler.creer_guest(nickname)
+	popup_guest.queue_free()
 
-	var vbox = VBoxContainer.new()
-	var label = Label.new()
-	label.text = "Entrez votre pseudo :"
-	var input = LineEdit.new()
-	input.placeholder_text = "Pseudo"
-	input.max_length = 20
 
-	vbox.add_child(label)
-	vbox.add_child(input)
-	dialog.add_child(vbox)
-
-	add_child(dialog)
-	dialog.popup_centered()
-
-	dialog.confirmed.connect(func():
-		var nickname = input.text.strip_edges()
-		if nickname == "":
-			return
-		$gameMode.hide()
-		GuestHandler.creer_guest(nickname)
-		dialog.queue_free()
-	)
-	dialog.canceled.connect(func(): dialog.queue_free())
+func _on_guest_fermer_pressed():
+	popup_guest.hide()
+	$gameMode.show()
 	
 func _on_popup_back():
 	$gameMode.show()
