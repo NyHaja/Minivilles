@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://cjnbgoja88851"]
 
 [ext_resource type="Script" uid="uid://udstq615y7y4" path="res://script/scene/Multijoueur/stats_joueur.gd" id="1_4n7j7"]
-[ext_resource type="Texture2D" uid="uid://bxqhdticko8v1" path="res://assets/Background/bg2.png" id="2_wl3vf"]
-[ext_resource type="Texture2D" uid="uid://dfbit1y2e8qkp" path="res://assets/icon/profile_circle.png" id="3_8jhxm"]
-[ext_resource type="Texture2D" uid="uid://c01vrdnmxl84r" path="res://assets/icon/icone_canard.png" id="4_ihjb6"]
-[ext_resource type="FontFile" uid="uid://bdxt645xpj3et" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_uuut0"]
-[ext_resource type="Texture2D" uid="uid://dfo6k04nfjfq4" path="res://assets/icon/dice.png" id="6_1ycs3"]
-[ext_resource type="FontFile" uid="uid://7t1xdrw3u75p" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBoldItalic.ttf" id="7_whm6u"]
-[ext_resource type="Texture2D" uid="uid://c8f7vi6g2sq5o" path="res://assets/icon/badge_legende.png" id="8_ddjav"]
-[ext_resource type="Texture2D" uid="uid://bcuo8w3em402k" path="res://assets/icon/fleche_droite.png" id="10_n2pix"]
+[ext_resource type="Texture2D" uid="uid://cn6lhiosvojju" path="res://assets/Background/bg2.png" id="2_wl3vf"]
+[ext_resource type="Texture2D" uid="uid://dvjstugda1lcq" path="res://assets/icon/profile_circle.png" id="3_8jhxm"]
+[ext_resource type="Texture2D" uid="uid://cw21gdhjicgct" path="res://assets/icon/icone_canard.png" id="4_ihjb6"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_uuut0"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="6_1ycs3"]
+[ext_resource type="FontFile" uid="uid://cxk2egatoouod" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBoldItalic.ttf" id="7_whm6u"]
+[ext_resource type="Texture2D" uid="uid://kqkqxoamahf3" path="res://assets/icon/badge_legende.png" id="8_ddjav"]
+[ext_resource type="Texture2D" uid="uid://cl6fiqh4o65li" path="res://assets/icon/fleche_droite.png" id="10_n2pix"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_nom"]
 font = ExtResource("5_uuut0")
@@ -174,8 +174,8 @@ custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("10_n2pix")
-flip_h = true
 stretch_mode = 5
+flip_h = true
 
 [node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=1531527407]
 layout_mode = 2

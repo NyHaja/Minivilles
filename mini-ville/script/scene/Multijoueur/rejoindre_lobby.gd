@@ -13,6 +13,12 @@ var style_error  := StyleBoxFlat.new()
 
 var _clavier_ferme := false
 
+var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
+var popup_setting
+
+@onready var btn_rejoindre = $Panel/BtnRejoindre
+@onready var label_erreur = $Panel/LabelErreur
+
 # ----------------------------------------------------------------
 # INITIALISATION
 # ----------------------------------------------------------------
@@ -41,7 +47,7 @@ func _ready():
 	NetworkManager.message_recu.connect(_on_message)
 
 	# --- Boutons ---
-	$Panel/BtnRejoindre.pressed.connect(_on_rejoindre_pressed)
+	btn_rejoindre.pressed.connect(_on_rejoindre_pressed)
 	$Panel/BtnAnnuler.pressed.connect(func():
 		DisplayServer.virtual_keyboard_hide()
 		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
@@ -49,17 +55,30 @@ func _ready():
 		DisplayServer.virtual_keyboard_hide()
 		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 
-	$Panel/LabelErreur.visible = false
+	label_erreur.visible = false
+	
 	_update_boxes()
+	
+	popup_setting = pop_setting_scene.instantiate()
+	add_child(popup_setting)
+	popup_setting.hide()
 
+	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
+	
 	if OS.has_feature("android"):
 		await get_tree().process_frame
 		DisplayServer.virtual_keyboard_show("", Rect2(), DisplayServer.KEYBOARD_TYPE_DEFAULT, 6, 6)
+
+func affiche_parametre():
+	SoundManager.play_click()
+	#$Content/gameMode.hide()
+	popup_setting.show()
 
 func _notification(what):
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		DisplayServer.virtual_keyboard_hide()
 		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
+
 # ----------------------------------------------------------------
 # SAISIE CLAVIER
 # ----------------------------------------------------------------
@@ -115,8 +134,8 @@ func _on_rejoindre_pressed():
 	if code.length() < 6:
 		_feedback_erreur("Veuillez entrer le code complet")
 		return
-	$Panel/BtnRejoindre.disabled = true
-	$Panel/LabelErreur.visible = false
+	btn_rejoindre.disabled = true
+	label_erreur.visible =  false
 	LobbyHandler.rejoindre_lobby(code)
 
 
@@ -124,17 +143,23 @@ func _on_rejoindre_pressed():
 # RÉSEAU → RÉCEPTION
 # ----------------------------------------------------------------
 func _on_message(data: Dictionary):
+	
+	btn_rejoindre.disabled = false
 	match data.get("type", ""):
 		"lobby_erreur":
-			$Panel/BtnRejoindre.disabled = false
+			btn_rejoindre.disabled = false
 			_feedback_erreur("Ce lobby n'existe pas.")
 		"lobby_plein":
-			$Panel/BtnRejoindre.disabled = false
+			btn_rejoindre.disabled = false
 			_feedback_erreur("Ce lobby est plein.")
+		"partie_commencee":
+			btn_rejoindre.disabled = false
+			_feedback_erreur("La partie a déjà commencé")
+		#""
 
 func _on_lobby_rejoint(_joueurs: Array):
 	# Lobby rejoint avec succès → salle d'attente
-	get_tree().set_meta("nb_joueurs", LobbyHandler.get_joueurs().size())
+	#get_tree().set_meta("nb_joueurs", LobbyHandler.get_joueurs().size()	)
 	get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 
 
@@ -143,8 +168,8 @@ func _on_lobby_rejoint(_joueurs: Array):
 # ----------------------------------------------------------------
 func _feedback_erreur(message: String):
 	# Affiche le message en rouge
-	$Panel/LabelErreur.text = message
-	$Panel/LabelErreur.visible = true
+	label_erreur.text = message
+	label_erreur.visible = true
 	
 	for panel in panels:
 		panel.add_theme_stylebox_override("panel", style_error)

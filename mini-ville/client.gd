@@ -93,6 +93,17 @@ func forgot_password(email: String):
 	print("Requête mot de passe oublié envoyée pour : ", email)
 
 ## ----------------------------------------------------
+## 5.1 REQUÊTE : VERFICIATION RESET CODE
+## ----------------------------------------------------	
+func verify_reset_code(email: String, code: String, new_password: String):
+	NetworkManager.envoyer({
+		"action":       "verify_reset_code",
+		"email":        email,
+		"code":         code,
+		"new_password": new_password
+	})
+
+## ----------------------------------------------------
 ## 6. REQUÊTE : GET STATS
 ## ----------------------------------------------------	
 # Pour soi-même :
@@ -105,3 +116,13 @@ func get_player_stats(player_id: int):
 		"action":    "get_stats",
 		"player_id": player_id
 	})
+	
+## ----------------------------------------------------
+## 7. REQUÊTE : Deconnexion 
+## ----------------------------------------------------	
+
+func logout(): 
+	var request_data = {
+		"action": "logout"
+	}
+	NetworkManager.envoyer(request_data)

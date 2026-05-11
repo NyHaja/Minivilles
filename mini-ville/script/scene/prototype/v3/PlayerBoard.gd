@@ -4,7 +4,7 @@ class_name PlayerBoard
 signal pass_turn_requested
 signal open_monuments_requested
 
-var player = null
+var player_data = null
 
 @onready var lbl_name: Label = %PlayerLabel
 @onready var monument_icons: GridContainer = %MonumentIconContainer
@@ -66,8 +66,16 @@ func _process(_delta: float) -> void:
 
 	if active_stats_box and is_inside_tree():
 		active_stats_box.rotation = target_rot
-
+		
+	# LA MAGIE EST ICI : On fait tourner chaque monument individuellement
+	# La grille, elle, ne bouge pas et reste parfaitement à sa place !
 	if monument_icons and is_inside_tree():
+		for icon in monument_icons.get_children():
+			if icon is Control: 
+				if icon.size != Vector2.ZERO:
+					icon.pivot_offset = icon.size / 2.0
+				icon.rotation = target_rot
+		
 		if _is_phone():
 			# Téléphone : rotation de la grille entière + colonnes adaptatives
 			var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
@@ -86,17 +94,59 @@ func _process(_delta: float) -> void:
 						icon.pivot_offset = icon.size / 2.0
 					icon.rotation = target_rot
 
+
 # ----------------------------------------------------------------------
-# SETUP ET APPARITION
+# NEW SETUP: Reads from a Network Dictionary instead of a Player object!
 # ----------------------------------------------------------------------
+func setup_network(data: Dictionary, is_active_player: bool):
+	var top_bar = get_node_or_null("MainColumn/TopBar")
+	var monu_zone = get_node_or_null("MonumentZone")
+	if top_bar: top_bar.modulate.a = 0.0
+	if monu_zone: monu_zone.modulate.a = 0.0
+	
+	self.player_data = data
+	
+	var monument_array = data.get("monuments", {}) 
+	
+	var monument_nodes = {
+		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
+		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
+		Monument.MONUMENT_ID.Gare: {"unbuild": "GareUnbuild", "build": "GareBuild"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"unbuild": "CentreCommercialUnbuild", "build": "CentreCommercialBuild"},
+		Monument.MONUMENT_ID.Parc: {"unbuild": "ParcDattractionUnbuild", "build": "ParcDattractionBuild"},
+		Monument.MONUMENT_ID.Radio: {"unbuild": "TourRadioUnbuild", "build": "TourRadioBuild"}
+	}
+
+	for m_id in monument_nodes:
+		var info = monument_nodes[m_id]
+		var unbuild_node = find_child(info["unbuild"], true, false)
+		var build_node = find_child(info["build"], true, false)
+		
+		var is_built = monument_array.get(str(m_id), false) 
+		
+		if unbuild_node: unbuild_node.visible = not is_built
+		if build_node: build_node.visible = is_built
+
+	if btn_pass: btn_pass.visible = is_active_player
+	if btn_monu: btn_monu.visible = is_active_player
+
+	update_info()
+	update_deck()
+	
+	var tween = create_tween()
+	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
+	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
+
+# Setup pour partie locale
+
 func setup(player_data, is_active_player: bool):
 	var top_bar = get_node_or_null("MainColumn/TopBar")
 	var monu_zone = get_node_or_null("MonumentZone")
 	if top_bar: top_bar.modulate.a = 0.0
 	if monu_zone: monu_zone.modulate.a = 0.0
-
-	self.player = player_data
-
+	
+	self.player_data = player_data
+	
 	var monument_nodes = {
 		Monument.MONUMENT_ID.Aeroport: {"unbuild": "AéroportUnbuild", "build": "AéroportBuild"},
 		Monument.MONUMENT_ID.Port: {"unbuild": "PortUnbuild", "build": "PortBuild"},
@@ -128,16 +178,23 @@ func setup(player_data, is_active_player: bool):
 # RESTE DE LA LOGIQUE
 # ----------------------------------------------------------------------
 func update_info() -> void:
-	if not player: return
-	lbl_name.text = player.username
-	lbl_gold.text = str(player.balance)
+	if player_data == null: return
+	
+	if player_data is Dictionary:
+		if player_data.is_empty(): return
+		lbl_name.text = player_data.get("username", "Unknown")
+		lbl_gold.text = str(int(player_data.get("balance", 0)))
+	else:
+		lbl_name.text = player_data.username
+		lbl_gold.text = str(player_data.balance)
 
 func set_actions_enabled(can_act: bool) -> void:
 	if btn_pass: btn_pass.disabled = !can_act
 	if btn_monu: btn_monu.disabled = !can_act
 
 func update_deck() -> void:
-	if not player: return
+	if player_data == null: return
+	
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
@@ -149,8 +206,14 @@ func update_deck() -> void:
 	# Le rendu visuel différent vient du scale appliqué dans JeuScript
 	var card_width = 156
 	var card_height = 200
-	var stack_gap = 25
-
+	var stack_gap = 25 
+	
+	var deck_array = []
+	if player_data is Dictionary:
+		deck_array = player_data.get("deck", [])
+	else:
+		deck_array = player_data.deck
+	
 	var pile_counts = {
 		CardColor.Type.BLUE: 0,
 		CardColor.Type.GREEN: 0,
@@ -158,14 +221,14 @@ func update_deck() -> void:
 		CardColor.Type.PURPLE: 0
 	}
 
-	for instance in player.deck:
+	for instance in deck_array:
 		if typeof(instance) != TYPE_ARRAY: continue
-		var card_id = instance[0]
-		var quantity = instance[1]
-		var card_data = CardFactory.get_card(card_id)
-
-		if card_data != null:
-			var color = card_data.get_color()
+		var card_id = int(instance[0])
+		var quantity = int(instance[1])
+		var card_data_obj = CardFactory.get_card(card_id)
+		
+		if card_data_obj != null:
+			var color = card_data_obj.get_color()
 			var target_pile = piles[color]
 			var anchor = target_pile.get_node_or_null("Anchor")
 			if not anchor: continue
@@ -175,7 +238,7 @@ func update_deck() -> void:
 			for i in range(quantity):
 				var card_visual = CARD_SCENE.instantiate()
 				anchor.add_child(card_visual)
-				card_visual.setup_card(card_data, dir_suffix)
+				card_visual.setup_card(card_data_obj, dir_suffix)
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
 				pile_counts[color] += 1
@@ -197,15 +260,11 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 
 func get_board_tooltip_direction() -> String:
 	var rot = wrapf(self.rotation, -PI, PI)
-	if abs(rot) < 0.5:
-		return "top"
-	elif abs(rot) > 2.5:
-		return "bottom"
-	elif rot > 0.5:
-		return "left"
-	else:
-		return "right"
-
+	if abs(rot) < 0.5: return "top"
+	elif abs(rot) > 2.5: return "bottom"
+	elif rot > 0.5: return "left"
+	else: return "right"
+		
 func set_ui_visible(is_visible: bool) -> void:
 	var alpha = 1.0 if is_visible else 0.0
 

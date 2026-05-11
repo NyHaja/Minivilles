@@ -739,12 +739,12 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 20
 
-[node name="ConserverLeRésultat" type="TextureButton" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=704930035]
+[node name="ConserverLeResultat" type="TextureButton" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=704930035]
 layout_mode = 2
 texture_normal = ExtResource("21_cutg6")
 texture_hover = ExtResource("22_scawg")
 
-[node name="Ajouter2AuRésultat" type="TextureButton" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=1160586748]
+[node name="Ajouter2AuResultat" type="TextureButton" parent="ResultOverlay/VBoxContainer/ButtonContainer" unique_id=1160586748]
 layout_mode = 2
 texture_normal = ExtResource("23_gmss7")
 texture_hover = ExtResource("24_nak6p")

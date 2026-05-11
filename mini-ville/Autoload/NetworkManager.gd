@@ -63,11 +63,16 @@ func _process(_delta):
 	if tcp_status == StreamPeerTCP.STATUS_CONNECTED and tls_status == StreamPeerTLS.STATUS_DISCONNECTED:
 		var options = TLSOptions.client_unsafe()
 		_tls.connect_to_stream(_tcp, HOST, options)
+		return
+		
+	if tls_status == StreamPeerTLS.STATUS_HANDSHAKING or tls_status == StreamPeerTLS.STATUS_CONNECTED:
+		_tls.poll()
 
 	# 2. Status de connexion
 	if not _connecte and tls_status == StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = true
 		connecte.emit()
+		print("[NetworkManager] Connecté en TLS !")
 		
 	if _connecte and tls_status != StreamPeerTLS.STATUS_CONNECTED:
 		_connecte = false
@@ -105,6 +110,7 @@ func _traiter_message(raw: String):
 		if status == "success":
 			_session_token = data.get("access_token", "")
 			_joueur_id = data.get("player_id","")
+			_est_guest = false
 			# On émet le signal déclaré en haut
 			auth_finished.emit(true, "Connexion réussie")
 		else:
@@ -149,3 +155,7 @@ func est_guest()->bool: return _est_guest
 func set_token(token: String):
 	_session_token = token
 	_est_guest = false  # si on a un token, c'est pas un guest
+	
+func set_guest(id: int):
+	_joueur_id = id
+	_est_guest = true

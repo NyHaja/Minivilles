@@ -1,5 +1,10 @@
 extends Control
 
+
+# -------------- Popup -----------------------------
+var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
+var popup_setting
+
 # ----------------------------------------------------------------
 # CONFIGURATION
 # ----------------------------------------------------------------
@@ -61,7 +66,18 @@ func _ready():
 	timer_chrono.wait_time = 1.0
 	timer_chrono.timeout.connect(_on_tick)
 	timer_chrono.start()
+	
+	# --- Paramètre ----
+	popup_setting = pop_setting_scene.instantiate()
+	add_child(popup_setting)
+	popup_setting.hide()
 
+	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
+
+func affiche_parametre():
+	SoundManager.play_click()
+	#$Content/gameMode.hide()
+	popup_setting.show()
 # ----------------------------------------------------------------
 # RÉSEAU → ENVOI
 # ----------------------------------------------------------------
@@ -78,7 +94,7 @@ func _on_pret_pressed():
 		var total = LobbyHandler.get_joueurs().size()
 		var assez = total >= MIN_JOUEURS
 		btn_commencer.disabled = true  # toujours désactivé ici, attend que tous soient prêts
-		btn_commencer.text = "En attente... (1/%d)" % total if assez else "Minimum %d joueurs requis" % MIN_JOUEURS
+		btn_commencer.text = tr("En attente... (1/%d)") % total if assez else tr("Minimum %d joueurs requis") % MIN_JOUEURS
 
 
 # ----------------------------------------------------------------
@@ -100,8 +116,8 @@ func _rafraichir_slots(joueurs: Array):
 			if badge:
 				_afficher_badge(badge)
 	
-	var max_joueurs = get_tree().get_meta("nb_joueurs", 4)
-	_update_label_attente(joueurs.size(), max_joueurs)
+	max_joueurs_lobby = get_tree().get_meta("nb_joueurs", 4)
+	_update_label_attente(joueurs.size(), max_joueurs_lobby)
 	if LobbyHandler.is_host():
 		_update_btn_commencer(joueurs.size())
 	
@@ -109,20 +125,20 @@ func _update_label_attente(nb_actuels: int, max_joueurs: int):
 	if not LobbyHandler.is_host():
 		# Joueur non-host : toujours "En attente du host..."
 		label_attente.visible = true
-		label_attente.text = "En attente du host..."
+		label_attente.text = tr("En attente du host...")
 	elif nb_actuels >= max_joueurs:
 		# Host + lobby plein : cache le label
 		label_attente.visible = false
 	else:
 		# Host + lobby pas encore plein : affiche le compteur
 		label_attente.visible = true
-		label_attente.text = "En attente joueur %d/%d" % [nb_actuels, max_joueurs]
+		label_attente.text = tr("En attente joueur %d/%d") % [nb_actuels, max_joueurs]
 	
 
 func _update_btn_commencer(nb_joueurs: int):
 	if nb_joueurs >= max_joueurs_lobby:
 		btn_commencer.visible = true
-		btn_commencer.text = "Lancer la partie"
+		btn_commencer.text = tr("Lancer la partie")
 	else:
 		btn_commencer.visible = false
 

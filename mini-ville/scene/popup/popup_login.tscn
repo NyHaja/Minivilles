@@ -279,7 +279,8 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_go4yv")
 secret = true
 secret_character = "."
 
-[node name="Label" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1552366810]
+[node name="forgot_password" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1552366810]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_default_cursor_shape = 2
@@ -368,6 +369,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_m4w4u")
 text = "S'inscrire"
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/Panellogin/MarginContainer/Boxconnexion/VBoxContainer2/forgot_password" to="." method="_on_forgot_password_pressed"]
 [connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="bouton_connexion"]
 [connection signal="pressed" from="Panel/Panellogin/MarginContainer/Boxconnexion/connexionbtn" to="." method="_on_connexionbtn_pressed"]
 [connection signal="button_down" from="Panel/Panellogin/MarginContainer/Boxconnexion/inscription" to="." method="bouton_inscription"]

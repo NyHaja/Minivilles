@@ -3,9 +3,10 @@ extends Control
 signal on_back
 
 var _traitement_en_cours := false  # garde-fou anti-double appel
+const popup_forgot = preload("res://scene/popup/forgot_password.tscn")
 
 func _ready() -> void:
-	if has_node("Panel/VBoxContainer/backbtn"):
+	if not $Panel/VBoxContainer/backbtn.pressed.is_connected(_on_back_pressed):
 		$Panel/VBoxContainer/backbtn.pressed.connect(_on_back_pressed)
 
 	var btn_con = get_node_or_null("%connexionbtn")
@@ -109,3 +110,9 @@ func show_success(msg: String):
 		node.text = msg
 		node.add_theme_color_override("font_color", Color.GREEN)
 		node.show()
+
+
+func _on_forgot_password_pressed() -> void:
+	var instance_popup = popup_forgot.instantiate()
+	add_child(instance_popup)
+	

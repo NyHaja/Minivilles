@@ -10,7 +10,9 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 		"guest_player":    _handle_guest(client, data)
 		"historic":        _handle_historic(client, data)
 		"forgot_password": _handle_forgot_password(client, data)
+		"verify_reset_code":  _handle_verify_reset_code(client, data)
 		"get_stats": _handle_get_stats(client, data)
+		"logout":          _handle_logout(client, data)
 
 # ─────────────────────────────────────────
 # REGISTER
@@ -39,7 +41,23 @@ func _handle_authentification(client: StreamPeerTLS, data: Dictionary):
 					"password": password_saisi
 		}
 	$"../FlaskManager".send("login", "/login", payload, client,{"password": password_saisi})
+	
+# ─────────────────────────────────────────
+# LOGOUT
+# ─────────────────────────────────────────
 
+func _handle_logout(client: StreamPeerTLS, _data: Dictionary):
+	var token = get_parent().get_token(client)
+	
+	if token == "":
+		get_parent().send_to_client(client, {
+			"action_reply": "logout",
+			"status": "error",
+			"message": "Aucun token trouvé, vous êtes déjà déconnecté."
+		})
+		return
+		
+	$"../FlaskManager".send("logout", "/logout", {}, client, {}, token)
 # ─────────────────────────────────────────
 # GUEST
 # ─────────────────────────────────────────
@@ -60,6 +78,18 @@ func _handle_forgot_password(client: StreamPeerTLS, data: Dictionary):
 	}
 	$"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
 
+
+
+# ─────────────────────────────────────────
+# VERIFY RESET CODE
+# ─────────────────────────────────────────
+func _handle_verify_reset_code(client: StreamPeerTLS, data: Dictionary):
+	var payload = {
+		"email":        data.get("email", ""),
+		"code":         data.get("code", ""),
+		"new_password": data.get("new_password", "")
+	}
+	$"../FlaskManager".send("verify_reset_code", "/verify_reset_code", payload, client)
 
 # ─────────────────────────────────────────
 # GET STATS
@@ -97,3 +127,16 @@ func _handle_historic(client: StreamPeerTLS, data: Dictionary):
 	}
 	var token = get_parent().get_token(client)
 	$"../FlaskManager".send("historic", "/history/insert", payload, client,{}, token)
+	
+func _on_guest_cree(client, data: Dictionary, flask_response: Dictionary):
+	if flask_response.get("status") == "success":
+		var guest_id = flask_response.get("guest_id")
+		get_parent().guest_sessions[client] = guest_id
+		print("[AuthHandler] Guest", guest_id, "enregistré")
+		
+		get_parent().send_to_client(client, {
+			"action_reply": "guest_player",
+			"status": "success",
+			"guest_id": guest_id,
+			"nickname": data.get("nickname", "")
+		})

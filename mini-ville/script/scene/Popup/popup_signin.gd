@@ -51,7 +51,7 @@ func _on_inscrire_pressed() -> void:
 		show_error("Les mots de passe ne correspondent pas !")
 		return
 		
-	show_info("Envoi des données au serveur...")
+	show_info("Inscription en cours")
 	# On utilise l'Autoload Client pour envoyer la requête
 	Client.send_register_request(pseudo, mdp, mail, "")
 
@@ -62,7 +62,7 @@ func _on_inscrire_pressed() -> void:
 # Appelé quand le NetworkManager a fini de traiter une inscription
 func _on_registration_result(success: bool, message: String) -> void:
 	if success:
-		show_success("Compte créé ! Redirection...")
+		show_success("Compte créé ! Veuillez vous connecter")
 		await get_tree().create_timer(1.5).timeout
 		# Retour à l'écran de login principal
 		popup_login.show()

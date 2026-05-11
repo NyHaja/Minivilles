@@ -88,9 +88,6 @@ var dice_textures = [
 @onready var card_preview: Control = %CardPreview
 @onready var confirm_card_buy: Button = %ConfirmCardBuy
 @onready var cancel_card_buy: Button = %CancelCardBuy
-@onready var chalutier_panel: PanelContainer = %ChalutierPanel
-@onready var lbl_chalutier_result: RichTextLabel = %LblChalutierResult
-@onready var chalutier_roll: Button = %ChalutierRoll
 @onready var add_gold: Button = %AddGold
 @onready var remove_gold: Button = %RemoveGold
 @onready var settings_button: TextureButton = %Settings
@@ -213,9 +210,11 @@ func _on_window_resized() -> void:
 			middle_area.reset_size()
 			middle_area.pivot_offset = middle_area.size / 2.0
 			middle_area.scale = Vector2(0.8, 0.8)
-
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel,
-					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+		
+		# (SUPPRIME bien l'ancienne ligne : middle_area.position = ...)
+	
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
+					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
 	for ov in overlays:
 		if is_instance_valid(ov):
 			ov.size = screen_size
@@ -226,8 +225,7 @@ func _on_window_resized() -> void:
 
 
 func _force_overlays_to_front() -> void:
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel,
-					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel, chalutier_panel]
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
 	for overlay in overlays:
 		if is_instance_valid(overlay): overlay.z_index = 100
 
@@ -274,9 +272,9 @@ func _find_dice_ui_nodes() -> void:
 	result_overlay = %ResultOverlay
 	die_1 = %Die1
 	die_2 = %Die2
-	btn_conserver = find_child("ConserverLeRésultat", true, false)
+	btn_conserver = find_child("ConserverLeResultat", true, false)
 	btn_relancer = find_child("RefaireLeLancer", true, false)
-	btn_add_2 = find_child("Ajouter2AuRésultat", true, false)
+	btn_add_2 = find_child("Ajouter2AuResultat", true, false)
 
 # ----------------------------------------------------------------------
 # POSITIONNEMENT DES PLATEAUX — FUSIONNÉ TÉLÉPHONE / TABLETTE
@@ -402,10 +400,10 @@ func waitForDiceRoll() -> int:
 	mini_dice_array.clear()
 
 	var nom = current_player.username
-	var prefix = "Tour de "
+	var prefix = tr("Tour de ")
 	if ["A","E","I","O","U","Y"].has(nom[0].to_upper()):
-		prefix = "Tour d' "
-
+		prefix = tr("Tour d' ")
+		
 	lbl_turn_announcement.text = prefix + nom
 
 	var has_gare = false
@@ -437,7 +435,8 @@ func showResult(d1: int, d2: int, can_reroll: bool = false) -> String:
 	for board in active_boards:
 		if is_instance_valid(board) and board.has_method("set_ui_visible"):
 			board.set_ui_visible(true)
-			board.setup(board.player, board.player == current_player)
+			board.setup(board.player_data, board.player_data == current_player)
+	
 	set_actions_enabled(true)
 	return action
 
@@ -527,10 +526,11 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 
 	result_lbl.add_theme_font_size_override("font_size", 34)
 	addTwo_lbl.add_theme_font_size_override("font_size", 34)
-	if FileAccess.file_exists("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"):
-		result_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
-		addTwo_lbl.add_theme_font_override("font", load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf"))
-
+	var _font = load("res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf")
+	if _font:
+		result_lbl.add_theme_font_override("font", _font)
+		addTwo_lbl.add_theme_font_override("font", _font)
+	
 	if action == "add2":
 		total += 2
 		base_local_pos += Vector2(-45, 0)
@@ -632,9 +632,12 @@ func update_monument_menu(is_demolish_mode: bool = false):
 			state = "recto" if is_built else "verso"
 
 		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
-		if FileAccess.file_exists(tex_path):
-			tex_rect.texture = load(tex_path)
-
+		
+		var _tex = load(tex_path)
+		if _tex:
+			tex_rect.texture = _tex
+			
+		# --- GESTION DU BOUTON (Achat direct) ---
 		for conn in build_btn.pressed.get_connections():
 			build_btn.pressed.disconnect(conn.callable)
 
@@ -649,8 +652,9 @@ func update_monument_menu(is_demolish_mode: bool = false):
 			)
 
 func _on_construct_clicked(m_id):
-	_on_shop_card_clicked(m_id)
-	%ConfirmCardBuy.text = "CONSTRUIRE"
+	_on_shop_card_clicked(m_id) 
+	
+	%ConfirmCardBuy.text = tr("CONSTRUIRE")
 
 func _on_open_monuments_pressed() -> void:
 	update_monument_menu()
@@ -709,8 +713,10 @@ func ask_choose_player(owner_player, all_players: Array):
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
+				
 			vbox.add_child(profile_tex)
 
 			var name_label = RichTextLabel.new()
@@ -739,7 +745,7 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 	trade_my_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	trade_their_cards.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	btn_confirm_trade.disabled = true
-	btn_confirm_trade.text = "Sélectionnez les cartes à échanger"
+	btn_confirm_trade.text = tr("Sélectionnez les cartes à échanger")
 	trade_target = null
 	trade_their_card_id = -1
 	trade_my_card_id = -1
@@ -783,8 +789,9 @@ func ask_trade_cards(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
 			vbox.add_child(profile_tex)
 
 			var name_label = RichTextLabel.new()
@@ -838,9 +845,10 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 
 			var clean_name = get_clean_file_name(card.name, card.color)
 			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			if FileAccess.file_exists(path):
-				card_btn.texture_normal = load(path)
-
+			var _card_tex = load(path)
+			if _card_tex:
+				card_btn.texture_normal = _card_tex
+			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
 			outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -881,7 +889,7 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 func _check_trade_valid() -> void:
 	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
 		btn_confirm_trade.disabled = false
-		btn_confirm_trade.text = "Confirmer!"
+		btn_confirm_trade.text = tr("Confirmer")
 
 func _on_confirm_trade_pressed() -> void: trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
 
@@ -889,7 +897,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 	give_panel.move_to_front()
 	give_panel.show()
 	btn_confirm_give.disabled = true
-	btn_confirm_give.text = "Sélectionnez une carte et un adversaire"
+	btn_confirm_give.text = tr("Sélectionnez une carte et un adversaire")
 	give_target = null
 	give_card_id = -1
 
@@ -910,9 +918,10 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 
 			var clean_name = get_clean_file_name(card.name, card.color)
 			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			if FileAccess.file_exists(path):
-				card_btn.texture_normal = load(path)
-
+			var _card_tex = load(path)
+			if _card_tex:
+				card_btn.texture_normal = _card_tex
+			
 			var outline = Panel.new()
 			outline.set_anchors_preset(Control.PRESET_FULL_RECT)
 			outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -983,8 +992,9 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			profile_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			profile_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var avatar_path = "res://assets/UI/profile_picture_player.png"
-			if FileAccess.file_exists(avatar_path):
-				profile_tex.texture = load(avatar_path)
+			var _avatar_tex = load(avatar_path)
+			if _avatar_tex:
+				profile_tex.texture = _avatar_tex
 			vbox.add_child(profile_tex)
 
 			var name_label = RichTextLabel.new()
@@ -1016,7 +1026,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 func _check_give_valid() -> void:
 	if give_target != null and give_card_id != -1:
 		btn_confirm_give.disabled = false
-		btn_confirm_give.text = "Confirmer"
+		btn_confirm_give.text = tr("Confirmer")
 
 func _on_confirm_give_pressed() -> void: give_card_completed.emit([give_card_id, give_target])
 
@@ -1076,12 +1086,13 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		var image_node = preview_card.get_node_or_null("Visual")
 
 		if image_node and image_node is TextureButton:
-			var tex = load(path_basis)
-			if tex:
-				image_node.texture_normal = tex
+			var _tex = load(path_basis)
+			if _tex:
+				image_node.texture_normal = _tex
+			
 			image_node.disabled = true
 			image_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			image_node.ignore_texture_size = false
+			image_node.ignore_texture_size = true
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
 		var screen = get_viewport().get_visible_rect().size
@@ -1097,21 +1108,19 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			internal_tooltip.hide()
 
 		%CardPreview.add_child(preview_card)
-
+		
 		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
-
+		
 		if tip_path != "":
-			var tip_tex = load(tip_path)
-			if tip_tex:
-				%TooltipImage.texture = tip_tex
+			var _tip_tex = load(tip_path)
+			if _tip_tex:
+				%TooltipImage.texture = _tip_tex
 				%TooltipImage.show()
-				%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 			else:
-				var placeholder_tex = load(placeholder_path)
-				if placeholder_tex:
-					%TooltipImage.texture = placeholder_tex
+				var _placeholder_tex = load(placeholder_path)
+				if _placeholder_tex:
+					%TooltipImage.texture = _placeholder_tex
 					%TooltipImage.show()
-					%TooltipImage.custom_minimum_size = Vector2(preview_w, preview_h * 0.6)
 				else:
 					%TooltipImage.hide()
 		else:
@@ -1139,8 +1148,8 @@ func ask_chalutier_roll(player_name: String) -> int:
 	while turn_overlay.visible or result_overlay.visible:
 		await get_tree().create_timer(0.1).timeout
 
-	lbl_turn_announcement.text = "Chalutier de " + player_name
-
+	lbl_turn_announcement.text = tr("Chalutier de ") + player_name
+	
 	if btn_overlay_roll_1: btn_overlay_roll_1.hide()
 	if btn_overlay_roll_2:
 		btn_overlay_roll_2.show()
@@ -1159,8 +1168,8 @@ func ask_chalutier_roll(player_name: String) -> int:
 	var total = d1 + d2
 
 	var result_title = result_overlay.get_node("VBoxContainer/LblResultTitle")
-	result_title.text = "Prise de " + player_name + "!"
-
+	result_title.text = tr("Prise de ") + player_name + "!"
+	
 	result_overlay.move_to_front()
 	result_overlay.show()
 
@@ -1224,13 +1233,13 @@ func ask_chalutier_roll(player_name: String) -> int:
 
 	claim_btn.queue_free()
 	result_overlay.hide()
-	result_title.text = "Résultat du lancer"
-
+	result_title.text = tr("Résultat du lancer")
+	
 	return total
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
-	lbl_winner_name.text = "🏆 " + winner_name + " GAGNE!"
+	lbl_winner_name.text = "🏆 " + winner_name + " " + tr("GAGNE!")
 	victory_screen.move_to_front()
 	victory_screen.show()
 

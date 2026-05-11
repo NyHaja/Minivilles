@@ -77,12 +77,13 @@ func _handle_create(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	var serveur   = get_parent()
-	var player_id = serveur.get_player_id(client)
+	var identifiant = get_identifiant(client)
 	var lobby_id  = data.get("lobby_id", "").strip_edges().to_upper()
 
-	if player_id == null:
+	if identifiant == "":
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "joueur_non_connectee",
 			"status": "error",
 			"message": "Vous devez être connecté pour rejoindre un lobby."
 		})
@@ -91,6 +92,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby_id.length() !=6:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type":"code_incomplet",
 			"status": "error",
 			"message": "Code invalide."
 		})
@@ -99,6 +101,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if not serveur.lobbies.has(lobby_id):
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "lobby_erreur",
 			"status": "error",
 			"message": "Lobby introuvable."
 		})
@@ -109,6 +112,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby["etat"] != "EN_ATTENTE":
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "partie_commencee",
 			"status": "error",
 			"message": "La partie a déjà commencé."
 		})
@@ -117,6 +121,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if lobby["joueurs"].size() >= lobby["max_joueurs"]:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "lobby_plein",
 			"status": "error",
 			"message": "Le lobby est plein."
 		})
@@ -125,13 +130,14 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 	if client in lobby["joueurs"]:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
+			"type": "joueur_deja_connecte",
 			"status": "error",
 			"message": "Vous êtes déjà dans ce lobby."
 		})
 		return
 
 	lobby["joueurs"].append(client)
-	print("[LOBBY] Joueur ", player_id, " a rejoint le lobby ", lobby_id)
+	print("[LOBBY] Joueur ", identifiant, " a rejoint le lobby ", lobby_id)
 
 	var liste_joueurs = []
 	for joueur in lobby["joueurs"]:
@@ -226,7 +232,48 @@ func _handle_start(client: StreamPeerTLS, data: Dictionary):
 
 	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
 
-	$"../FlaskManager".send("create_game", "/game/start", {
+	$"../FlaskManager".send("create_game", "/game/create", {
 		"player_id":   player_id,
 		"player_type": "registered"
 	}, client, {"lobby_id": lobby_id})
+	
+func get_identifiant(client) -> String:
+	var serveur = get_parent()
+	var player_id = serveur.active_sessions.get(client, null)
+	if player_id != null:
+		return str(player_id)
+	
+	var guest_id = serveur.guest_sessions.get(client, null)
+	if guest_id != null:
+		return str(guest_id)
+	return ""
+	
+func _get_liste_joueurs(lobby: Dictionary) -> Array:
+	var serveur = get_parent()
+	var liste = []
+	
+	for joueur in lobby["joueurs"]:
+		var player_id = serveur.active_sessions.get(joueur, null)
+		var guest_id = serveur.guest_sessions.get(joueur, null)
+		
+		if player_id != null:
+			var nickname = serveur.active_nickname.get(joueur, "Joueur " + str(player_id))
+			liste.append({
+				"id": player_id,
+				"type": "registered",
+				"nickname": nickname
+			})
+		elif guest_id != null:
+			var nickname = serveur.guest_nickname.get(joueur, "Invité" + str(guest_id))
+			liste.append({
+				"id": guest_id,
+				"type": "guest",
+				"nickname": nickname
+			})
+		else:
+			liste.append({
+				"id": -1,
+				"type": "inconnu",
+				"nickname": "Inconnu"
+			})
+	return liste
