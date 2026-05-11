@@ -110,6 +110,28 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			http_nick.request(FLASK_URL + "/player/" + str(int(float(player_id))) + "/stats",
 				["Content-Type: application/json"], HTTPClient.METHOD_GET, "")
 		return
+	
+	# ------ MODE GUEST MANAGER
+	elif action_name == "guest_player":
+		if flask_response.get("status") == "success":
+			var guest_id = flask_response.get("guest_id")
+			var nickname = flask_response.get("nickname", "")
+			
+			get_parent().guest_sessions[client] = guest_id
+			print("[FlaslManager] Guest enregistré : ", nickname, " (id : ", guest_id, ")")
+			
+			get_parent().send_to_client(client, {
+				"action_reply": "guest_player",
+				"status": "success",
+				"guest_id": guest_id,
+				"nickname": nickname
+			})
+		else:
+			get_parent().send_to_client(client, {
+				"action_reply": "guest_player",
+				"status": "error",
+				"message": flask_response.get("message", "Erreur création guest.")
+			})
 	# ------------------------
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
 	elif action_name == "get_stats":
@@ -173,11 +195,13 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			var game_players: Array = []
 			
 			for joueur in serveur.lobbies[lobby_id]["joueurs"]:
-				var p_id = serveur.active_sessions.get(joueur, -1)
+				var p_id = serveur.active_sessions.get(joueur, null)
+				var g_id = serveur.guest_sessions.get(joueur, null)
+				var id = p_id if p_id != null else g_id
 				var nickname = serveur.active_nicknames.get(joueur, str(p_id))
-				ordre_joueurs.append(p_id)
+				ordre_joueurs.append(str(id))
 
-				var new_player = Player.new(nickname, int(float(p_id)), 3)
+				var new_player = Player.new(nickname, int(float(str(id))), 3)
 				game_players.append(new_player)
 
 			serveur.broadcast_lobby(lobby_id, {
