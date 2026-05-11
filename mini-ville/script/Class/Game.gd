@@ -151,10 +151,10 @@ func DicePhase() -> int:
 func rollDice(numberDice: int) -> Array[int]:
 	var res:Array[int] = [0, 0]
 	#res[0] = (randi() %6) + 1
-	res[0] = 5
-	if numberDice == 2:
-		res[1] = 5
-		#res[1] = (randi() %6) + 1
+	res[0] = 6
+	
+	#if numberDice == 2:
+	res[1] = 2 #(randi() %6) + 1
 		
 	return res
 
@@ -170,6 +170,8 @@ func EffectPhase(resDice) -> void:
 	await currentPlayer.activateEffect(CardColor.Type.GREEN, self, currentPlayer)
 	#Violet
 	await currentPlayer.activateEffect(CardColor.Type.PURPLE, self, currentPlayer)
+	
+	await gameplayScreen.executer_animations_collectees()
 
 
 		

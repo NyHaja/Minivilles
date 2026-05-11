@@ -9,7 +9,7 @@ var player_data = null
 @onready var lbl_name: Label = %PlayerLabel
 @onready var monument_icons: GridContainer = %MonumentIconContainer
 @onready var lbl_gold: Label = %PlayerMoney
-@onready var btn_pass: TextureButton = get_node_or_null("%PasserLeTourButton")
+@onready var btn_pass: Button = get_node_or_null("%PasserLeTourButton")
 @onready var btn_monu: TextureButton = get_node_or_null("%MonumentButton")
 
 @onready var active_stats_box = get_node_or_null("MainColumn/TopBar/ActivePlayerStats")
@@ -246,3 +246,15 @@ func set_ui_visible(is_visible: bool) -> void:
 		for child in btn_monu.get_children():
 			if child is CanvasItem:
 				child.modulate.a = alpha
+				
+func get_card_node(card_id: int) -> Control:
+	# On parcourt chaque pile du joueur
+	for color in piles:
+		var anchor = piles[color].get_node_or_null("Anchor")
+		if anchor:
+			# On cherche parmi les cartes instanciées
+			for card_visual in anchor.get_children():
+				# On vérifie si la carte a stocké son card_data et si l'ID correspond
+				if card_visual.get("card_data") and card_visual.card_data.id == card_id:
+					return card_visual
+	return null
