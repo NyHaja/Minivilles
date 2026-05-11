@@ -29,6 +29,8 @@ SoundManager="*uid://bu5ukwdc2m6d"
 NetworkManager="*uid://dwii3wdl3k8xh"
 Client="*uid://dyh5b0moyfuki"
 LobbyHandler="*uid://capsexgjolf2s"
+Game_Client="*uid://cheb7hhvtqruq"
+GuestHandler="*uid://5pa2db5yqfh"
 
 [display]
 

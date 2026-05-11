@@ -9,6 +9,13 @@ var current_roll_value: int = 0
 var takes_bonus_turn: bool = false
 var has_constructed_this_turn: bool = false
 
+var carte_owner_pour_echange = null
+var adversaire_choisi_pour_echange = null
+var carte_adversaire_pour_echange = null
+var carte_choisie_pour_don = null
+var adversaire_choisi_pour_don = null
+var monument_choisi_pour_demolition: int = -1
+
 var last_d1: int = 0
 var last_d2: int = 0
 
@@ -30,11 +37,16 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 	_broadcast_sync_state()
 	_broadcast_turn_start()
 
-func handle_client_message(player_id: int, data: Dictionary):
+func handle_client_message(player_id, data: Dictionary):
 	var active_player = players[currentPlayerIndex]
 	
-	if active_player.id != player_id:
+	print("[GameServer] Received action '", data.get("game_action", "unknown"), "' from network ID: ", player_id)
+	
+	if int(float(active_player.id)) != int(float(player_id)):
+		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", player_id)
 		return 
+		
+	print("[GameServer] ACCEPTED: Processing action...")
 		
 	match data.get("game_action", ""):
 		"roll_dice":
@@ -47,7 +59,6 @@ func handle_client_message(player_id: int, data: Dictionary):
 			_server_build_phase(data.get("monument_id", -1))
 		"skip_turn":
 			_server_skip_phase()
-			
 		"purple_card_choice":
 			player_choice_received.emit(data)
 
@@ -114,12 +125,14 @@ func _execute_effect_phase(dice_value: int):
 func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Dictionary:
 	var active_player = players[currentPlayerIndex]
 	
-	_broadcast_to_lobby({
-		"action_reply": "request_purple_choice",
-		"active_player_id": active_player.id,
-		"choice_type": action_type,
-		"metadata": metadata
-	})
+	var serveur = get_parent().get_parent()
+	if serveur and serveur.has_method("send_to_player"):
+		serveur.send_to_player(int(active_player.id), {
+			"action_reply": "request_purple_choice",
+			"active_player_id": active_player.id,
+			"choice_type": action_type,
+			"metadata": metadata
+		})
 	
 	var response = await self.player_choice_received
 	return response
@@ -212,9 +225,9 @@ func _broadcast_sync_state():
 	})
 
 func _broadcast_to_lobby(payload: Dictionary):
-	var parent_server = get_parent()
-	if parent_server and parent_server.has_method("broadcast_lobby"):
-		parent_server.get_parent().broadcast_lobby(lobby_id, payload)
+	var serveur = get_parent().get_parent()
+	if serveur and serveur.has_method("broadcast_lobby"):
+		serveur.broadcast_lobby(lobby_id, payload)
 
 func _record_match_history(winner: Player):
 	var parent_server = get_parent().get_parent()

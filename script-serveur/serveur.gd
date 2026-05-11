@@ -17,7 +17,8 @@ var active_sessions : Dictionary = {}
 var active_tokens : Dictionary = {}
 var lobbies : Dictionary = {}
 
-
+var active_nicknames: Dictionary = {}
+var guest_sessions: Dictionary = {}
 
 # ─────────────────────────────────────────
 # INITIALISATION
@@ -93,6 +94,7 @@ func receive_and_queue_requests():
 			# Nettoyage optionnel des sessions en cas de déconnexion brutale
 			active_sessions.erase(client)
 			active_tokens.erase(client)
+			active_nicknames.erase(client) 
 
 func process_queue():
 	var count = 0
@@ -136,10 +138,11 @@ func send_to_client(client: StreamPeerTLS, data: Dictionary): # Type changé ici
 # ─────────────────────────────────────────
 # UTILITAIRES
 # ─────────────────────────────────────────
-func on_client_login_success(client_socket: StreamPeerTLS, player_id, token: String = ""):
+func on_client_login_success(client_socket: StreamPeerTLS, player_id, token: String = "", nickname: String = ""):
 	active_sessions[client_socket] = int(player_id)
-	active_tokens[client_socket]   = token
-	print("Joueur ", int(player_id), " connecté avec token.")
+	active_tokens[client_socket] = token
+	active_nicknames[client_socket] = nickname if nickname != "" else str(int(player_id))
+	print("Joueur ", int(player_id), " (", nickname, ") connecté avec token.")
 
 func get_token(client: StreamPeerTLS) -> String:
 	return active_tokens.get(client, "")
@@ -151,3 +154,9 @@ func broadcast_lobby(lobby_id: String, data: Dictionary):
 	var lobby = lobbies[lobby_id]
 	for joueur in lobby["joueurs"]:
 		send_to_client(joueur, data)
+		
+func send_to_player(player_id: int, data: Dictionary):
+	for client in active_sessions.keys():
+		if active_sessions[client] == player_id:
+			send_to_client(client, data)
+			return

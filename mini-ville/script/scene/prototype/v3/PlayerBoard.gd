@@ -147,7 +147,7 @@ func update_info() -> void:
 	if player_data is Dictionary:
 		if player_data.is_empty(): return
 		lbl_name.text = player_data.get("username", "Unknown")
-		lbl_gold.text = str(player_data.get("balance", 0))
+		lbl_gold.text = str(int(player_data.get("balance", 0)))
 	else:
 		lbl_name.text = player_data.username
 		lbl_gold.text = str(player_data.balance)

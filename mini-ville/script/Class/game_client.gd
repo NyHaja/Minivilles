@@ -5,13 +5,17 @@ var gameplayScreen
 var my_player_id: int
 var is_my_turn: bool = false
 
+var current_lobby_id = LobbyHandler.get_lobby_id()
+
+var cached_sync_data: Dictionary = {}
+var cached_turn_data: Dictionary = {}
+
 func _ready():
-	my_player_id = NetworkManager.get_joueur_id()
-	
 	NetworkManager.message_recu.connect(_on_server_message)
 	print("[GameClient] Client ready. My ID is: ", my_player_id)
 
 func _on_server_message(data: Dictionary):
+	print("[GameClient] Message received: ", data.get("action_reply", data.get("action", "unknown")))
 	var action = data.get("action_reply", "")
 	
 	match action:
@@ -31,43 +35,68 @@ func _on_server_message(data: Dictionary):
 			_handle_purple_choice(data)
 
 func _handle_turn_started(data: Dictionary):
+	if not gameplayScreen or not is_instance_valid(gameplayScreen):
+		cached_turn_data = data
+		return
+	
 	var active_id = data.get("active_player_id", -1)
 	var active_name = data.get("player_name", "Inconnu")
-	is_my_turn = (active_id == my_player_id)
+	is_my_turn = (int(active_id) == int(my_player_id))
 	
-	if gameplayScreen:
+	if gameplayScreen and is_instance_valid(gameplayScreen):
 		gameplayScreen.set_actions_enabled(is_my_turn)
 		gameplayScreen.lbl_turn_announcement.text = tr("Tour de ") + active_name
-		if is_my_turn and gameplayScreen.turn_overlay:
+		
+		if gameplayScreen.turn_overlay:
+			gameplayScreen.turn_overlay.move_to_front()
+			
 			gameplayScreen.turn_overlay.show()
-		elif gameplayScreen.turn_overlay:
-			gameplayScreen.turn_overlay.hide()
+			
+			var btn_box = gameplayScreen.turn_overlay.get_node_or_null("VBoxContainer/HBoxContainer")
+			if btn_box:
+				btn_box.visible = is_my_turn
+				
+			if is_my_turn and gameplayScreen.btn_overlay_roll_2:
+				var my_data = gameplayScreen.latest_players_data.get(str(my_player_id), {})
+				var my_monuments = my_data.get("monuments", {})
+				
+				var has_gare = my_monuments.get("22", false) or my_monuments.get(22, false)
+				gameplayScreen.btn_overlay_roll_2.visible = has_gare
 
 func _handle_dice_rolled(data: Dictionary):
 	var d1 = data.get("d1", 1)
 	var d2 = data.get("d2", 0)
 	var amount_rolled = data.get("amount_rolled", 1)
 	
-	if gameplayScreen:
+	if gameplayScreen and is_instance_valid(gameplayScreen):
 		if gameplayScreen.turn_overlay:
 			gameplayScreen.turn_overlay.hide()
-			
-		var modifier = await gameplayScreen.showResult(d1, d2, false) 
 		
 		if is_my_turn:
+			var modifier = await gameplayScreen.showResult(d1, d2, false)
 			request_resolve_dice(modifier, amount_rolled)
+		else:
+			await gameplayScreen.showResult(d1, d2, false, true)
 
 func _handle_sync_state(data: Dictionary):
-	var players_data = data.get("players", {})
-	var shop_data = data.get("shop", {})
-	
-	if gameplayScreen and gameplayScreen.has_method("update_network_boards"):
-		gameplayScreen.update_network_boards(players_data)
-	if gameplayScreen and gameplayScreen.has_method("update_network_shop"):
-		gameplayScreen.update_network_shop(shop_data)
+	print("[GameClient] _handle_sync_state called. gameplayScreen valid: ", gameplayScreen and is_instance_valid(gameplayScreen))
+	if gameplayScreen and is_instance_valid(gameplayScreen):
+		var players_data = data.get("players", {})
+		var shop_data = data.get("shop", {})
+		
+		if gameplayScreen.has_method("update_network_boards"):
+			gameplayScreen.update_network_boards(players_data)
+		if gameplayScreen.has_method("update_network_shop"):
+			gameplayScreen.update_network_shop(shop_data)
+	else:
+		cached_sync_data = data
+		print("[GameClient] Caught sync_state during loading screen!")
 
 func _handle_purple_choice(data: Dictionary):
-	if not gameplayScreen: return
+	if int(data.get("active_player_id", -1)) != int(my_player_id):
+		return
+		
+	if not gameplayScreen or not is_instance_valid(gameplayScreen): return
 	
 	var choice_type = data.get("choice_type", "")
 	var response_payload = {
@@ -97,10 +126,18 @@ func _handle_purple_choice(data: Dictionary):
 
 
 func request_roll_dice(amount: int):
-	if not is_my_turn: return
+	print(">>> [GameClient] Clicked Roll Dice! Amount: ", amount)
+	print(">>> [GameClient] Security Check -> my_id: ", my_player_id, " | is_my_turn: ", is_my_turn)
+	
+	if not is_my_turn: 
+		print(">>> [GameClient] FAIL: The client thinks it is not your turn. Aborting send!")
+		return
+		
+	print(">>> [GameClient] SUCCESS: Sending roll request to server...")
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "roll_dice",
+		"lobby_id": current_lobby_id,
 		"amount": amount
 	})
 
@@ -109,6 +146,7 @@ func request_resolve_dice(modifier: String, amount_rolled: int):
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "resolve_dice",
+		"lobby_id": current_lobby_id,
 		"modifier": modifier,
 		"amount_rolled": amount_rolled
 	})
@@ -118,6 +156,7 @@ func request_buy_card(card_id: int):
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "buy_card",
+		"lobby_id": current_lobby_id,
 		"card_id": card_id
 	})
 
@@ -126,6 +165,7 @@ func request_build_monument(monument_id: int):
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "build_monument",
+		"lobby_id": current_lobby_id,
 		"monument_id": monument_id
 	})
 
@@ -133,5 +173,6 @@ func request_skip_turn():
 	if not is_my_turn: return
 	NetworkManager.envoyer({
 		"action": "game_action",
-		"game_action": "skip_turn"
+		"game_action": "skip_turn",
+		"lobby_id": current_lobby_id,
 	})
