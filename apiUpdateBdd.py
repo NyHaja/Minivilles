@@ -309,7 +309,7 @@ def register_guest():
             expires_at
         ))
         conn.commit()
-        return jsonify({"status": "success", "message": "Compte invité créé avec succès !"})
+        return jsonify({"status": "success", "message": "Compte invité créé avec succès !", "guest_id":cursor.lastrowid, "nickname": data.get('nickname')})
     except Error as e:
         conn.rollback()
         return jsonify({"status": "error", "message": str(e)}), 400
