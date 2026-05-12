@@ -17,7 +17,7 @@ func _init() -> void:
 		# ⚠️ ATTENTION ICI : 
 		# Si vous vouliez cibler l'"Entreprise de déménagement" (ancien 31), c'est maintenant l'ID 30.
 		# Si vous vouliez cibler le "Centre d'affaires" (ancien 32), alors 31 est le bon numéro !
-		if card != null and card_id == 31:
+		if card != null and card_id == 13:
 			copies_to_add = 200
 			
 		for copy in range(copies_to_add):

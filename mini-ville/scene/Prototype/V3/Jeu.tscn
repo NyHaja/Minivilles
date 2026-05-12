@@ -779,6 +779,7 @@ theme_override_constants/margin_left = 500
 theme_override_constants/margin_top = 300
 
 [node name="TurnOverlay" type="ColorRect" parent="." unique_id=93550791]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -1174,13 +1174,17 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
 		else:
 			var card_color = card_data.get_color()
-			clean_name = get_clean_file_name(card_name, card_color)
+			# --- LA CORRECTION EST ICI ---
+			# On demande directement au shop_board de nous donner le bon nom ! [cite: 32, 65]
+			clean_name = shop_board.get_clean_file_name(card_name, card_color)
 			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
 			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
 		
 		var _tex = load(path_basis)
 		if _tex:
 			%CardPreview.texture = _tex
+		else:
+			print("🔴 ERREUR : Impossible de charger l'image -> ", path_basis)
 		
 		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
 		
@@ -1205,18 +1209,20 @@ func _on_shop_card_clicked(card_id: int) -> void:
 func _on_confirm_buy_shop_pressed() -> void:
 	if game and game.CHOICE:
 		var card_data = CardFactory.get_card(selected_shop_card_id)
-		var cost = 0
-		if card_data.has_method("get_cost"): cost = card_data.get_cost()
-		elif "cost" in card_data: cost = card_data.cost
 		
-		# 1. Vérification de la monnaie
+		# --- CORRECTION DU CALCUL DU COÛT ---
+		var cost = 0
+		if card_data.has_method("get_cost"): 
+			cost = card_data.get_cost()
+		elif card_data.get("cost") != null:  # On utilise .get() au lieu de 'in'
+			cost = card_data.get("cost")
+		
+		# Maintenant le vrai coût est connu ! S'il est trop cher, ça s'arrêtera ici :
 		if current_player.balance < cost:
 			buy_confirm_panel.hide()
 			var p_idx_err = game.playerArray.find(current_player)
 			animer_erreur_argent(active_boards[p_idx_err])
-			if is_instance_valid(shop_board.last_clicked_slot):
-				animer_erreur_carte_shop(shop_board.last_clicked_slot)
-			return 
+			return # ÇA BLOQUE LE SHAKE ET L'ACHAT !
 
 		buy_confirm_panel.hide()
 		
