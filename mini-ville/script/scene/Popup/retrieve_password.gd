@@ -46,25 +46,25 @@ func _on_send_button_pressed() -> void:
 	# On concatène le code
 	var full_code = first.text + second.text + third.text + forth.text + fifth.text + last.text
 	
-	# 1. Vérification : Code incomplet
+	# 1. Vérification : Code incomplet (avec tr)
 	if full_code.length() < 6:
-		afficher_message("Veuillez entrer le code à 6 chiffres complet.", false)
+		afficher_message(tr("Veuillez entrer le code à 6 chiffres complet."), false)
 		return
 		
-	# 2. Vérification : Mot de passe vide
+	# 2. Vérification : Mot de passe vide (avec tr)
 	if new_password == "":
-		afficher_message("Veuillez entrer un nouveau mot de passe.", false)
+		afficher_message(tr("Veuillez entrer un nouveau mot de passe."), false)
 		return
 		
-	# 3. Vérification : Les mots de passe ne correspondent pas
+	# 3. Vérification : Les mots de passe ne correspondent pas (avec tr)
 	if new_password != confirm:
-		afficher_message("Les mots de passe ne correspondent pas.", false)
+		afficher_message(tr("Les mots de passe ne correspondent pas."), false)
 		return
 		
 	SoundManager.play_click()
 	
-	# 4. Tout est bon, on affiche le succès et on lance la requête
-	afficher_message("Modification en cours...", true)
+	# 4. Tout est bon, on affiche le succès et on lance la requête (avec tr)
+	afficher_message(tr("Modification en cours..."), true)
 	
 	# Appel réseau hypothétique : on envoie le code et le nouveau mot de passe
 	Client.verify_reset_code(mail, full_code, new_password)

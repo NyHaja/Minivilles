@@ -15,14 +15,13 @@ func _on_send_button_pressed() -> void:
 	var mail = %mail_forgot_pass.text.strip_edges()
 	
 	if mail == "":
-		# Affiche l'erreur dans la console
-		print("Erreur : Le champ email ne peut pas être vide.")
 		
-
-		%LabelErreur.text = "Veuillez entrer votre adresse email."
+		
+		# On utilise tr() pour la traduction
+		%LabelErreur.text = tr("Veuillez entrer votre adresse email.")
+		%LabelErreur.add_theme_color_override("font_color", Color.RED) # Pour être cohérent avec tes autres popups
 		%LabelErreur.show()
 		
-
 		return
 	
 	# Si on arrive ici, c'est que le mail n'est pas vide
