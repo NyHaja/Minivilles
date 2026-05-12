@@ -47,6 +47,7 @@ func lancer_connexion_reseau():
 	
 func _connecter():
 	print("[NetworkManager] Tentative de connexion WebSocket vers ", URL)
+	var tls_options = TLSOptions.client_unsafe()
 	var err = _ws.connect_to_url(URL)
 	if err != OK:
 		print("[NetworkManager] Erreur d'initialisation WebSocket : ", err)
