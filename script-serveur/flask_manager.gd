@@ -8,7 +8,7 @@ const FLASK_URL = "http://192.168.100.125:5000"
 # ─────────────────────────────────────────
 # ENVOI VERS FLASK (Méthode POST)
 # ─────────────────────────────────────────
-func send(action_name: String, endpoint: String, payload: Dictionary, client: StreamPeerTLS, extra: Dictionary = {}, token: String = ""):
+func send(action_name: String, endpoint: String, payload: Dictionary, client: WebSocketPeer, extra: Dictionary = {}, token: String = ""):
 	var http = HTTPRequest.new()
 	add_child(http)
 	http.request_completed.connect(
@@ -27,12 +27,10 @@ func send(action_name: String, endpoint: String, payload: Dictionary, client: St
 	)
 	print("[FLASK] -> Envoi vers ", endpoint, " | action : ", action_name)
 
-
-
 # ─────────────────────────────────────────
 # ENVOI VERS FLASK (Méthode GET)
 # ─────────────────────────────────────────
-func send_get(action_name: String, endpoint: String, client: StreamPeerTLS):
+func send_get(action_name: String, endpoint: String, client: WebSocketPeer):
 	var http = HTTPRequest.new()
 	add_child(http)
 	http.request_completed.connect(
@@ -42,15 +40,14 @@ func send_get(action_name: String, endpoint: String, client: StreamPeerTLS):
 		FLASK_URL + endpoint,
 		["Content-Type: application/json"],
 		HTTPClient.METHOD_GET,
-        ""
+		""
 	)
 	print("[FLASK] -> GET vers ", endpoint, " | action : ", action_name)
-
 
 # ─────────────────────────────────────────
 # RÉCEPTION DES RÉPONSES FLASK
 # ─────────────────────────────────────────
-func _on_response(result, response_code, headers, body, client: StreamPeerTLS, http: HTTPRequest, action_name: String, extra: Dictionary = {}):
+func _on_response(result, response_code, headers, body, client: WebSocketPeer, http: HTTPRequest, action_name: String, extra: Dictionary = {}):
 	http.queue_free()
 
 	var serveur = get_parent()
@@ -85,7 +82,7 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 		"status": "error",
 		"type": "token_expire",
 		"message": "Session expirée, veuillez vous reconnecter."})
-	# Nettoyer la session du joueur
+		# Nettoyer la session du joueur
 		serveur.active_sessions.erase(client)
 		serveur.active_tokens.erase(client)
 		return
@@ -97,6 +94,10 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			var player_id = flask_response.get("player_id")
 			var access_token = flask_response.get("access_token")
 			serveur.on_client_login_success(client, player_id, access_token)
+<<<<<<< Updated upstream
+=======
+			
+>>>>>>> Stashed changes
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
 				"status": "success",
@@ -132,7 +133,12 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 				"status": "error",
 				"message": flask_response.get("message", "Erreur création guest.")
 			})
+<<<<<<< Updated upstream
 	# ------------------------
+=======
+		return
+
+>>>>>>> Stashed changes
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
 	elif action_name == "get_stats":
 		if flask_response.get("status") == "success":
@@ -158,8 +164,8 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 				"message": flask_response.get("message", "Impossible de récupérer les stats.")
 			})
 		return
-	# --------------------------------------------
-# --- GESTION DU LOGOUT ---
+
+	# --- GESTION DU LOGOUT ---
 	elif action_name == "logout":
 		if flask_response.get("status") == "success":
 			print("Déconnexion confirmée par Flask pour un client.")
@@ -180,9 +186,8 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 				"message": flask_response.get("message", "Erreur lors de la déconnexion.")
 			})
 		return
-	# ------------------------
 
-	# Partie créée → stocker le game_id et notifier les joueurs
+	# --- GESTION CREATE_GAME ---
 	elif action_name == "create_game" and flask_response.get("status") == "success":
 		var game_id  = flask_response.get("game_id")
 		var lobby_id = extra.get("lobby_id", "")
@@ -215,7 +220,6 @@ func _on_response(result, response_code, headers, body, client: StreamPeerTLS, h
 			})
 			
 			serveur.get_node("GameHandler").start_new_game(lobby_id, game_players)
-			
 		return
 
 	# ── Réponse générique pour les autres actions ──
