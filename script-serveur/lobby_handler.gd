@@ -14,7 +14,7 @@ func handle(client: WebSocketPeer, data: Dictionary):
 # UTILITAIRES LOCAUX
 # ─────────────────────────────────────────
 func generer_lobby_id() -> String:
-	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var alphabet = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789"
 	var code = ""
 	for i in range(6):
 		code += alphabet[randi() % alphabet.length()]

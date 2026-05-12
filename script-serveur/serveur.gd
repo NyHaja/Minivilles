@@ -16,12 +16,9 @@ var active_sessions : Dictionary = {}
 var active_tokens : Dictionary = {}
 var lobbies : Dictionary = {}
 
-<<<<<<< Updated upstream
 var active_nicknames: Dictionary = {}
 var guest_sessions: Dictionary = {}
 
-=======
->>>>>>> Stashed changes
 # ─────────────────────────────────────────
 # INITIALISATION
 # ─────────────────────────────────────────
@@ -122,11 +119,7 @@ func send_to_client(client: WebSocketPeer, data: Dictionary): # Type changé ici
 # ─────────────────────────────────────────
 # UTILITAIRES
 # ─────────────────────────────────────────
-<<<<<<< Updated upstream
-func on_client_login_success(client_socket: StreamPeerTLS, player_id, token: String = "", nickname: String = ""):
-=======
-func on_client_login_success(client_socket: WebSocketPeer, player_id, token: String = ""):
->>>>>>> Stashed changes
+func on_client_login_success(client_socket: WebSocketPeer, player_id, token: String = "", nickname: String=""):
 	active_sessions[client_socket] = int(player_id)
 	active_tokens[client_socket] = token
 	active_nicknames[client_socket] = nickname if nickname != "" else str(int(player_id))

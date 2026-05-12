@@ -30,8 +30,8 @@
 [ext_resource type="Texture2D" uid="uid://c1xgp0wr15ioj" path="res://assets/UI/Règles.png" id="28_xnrgi"]
 [ext_resource type="Texture2D" uid="uid://cm3a6fahoq7xs" path="res://assets/UI/rules_button_hover.png" id="29_07at5"]
 [ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="30_fukxn"]
-[ext_resource type="Texture2D" uid="uid://c3icx3ctatp66" path="res://assets/UI/return_button.png" id="31_7cliw"]
-[ext_resource type="Texture2D" uid="uid://bdgq6bqijblho" path="res://assets/UI/return_button_hover.png" id="32_rtar8"]
+[ext_resource type="Texture2D" uid="uid://sjuw35xh1fgf" path="res://assets/UI/return_button_bg.png" id="31_hgaok"]
+[ext_resource type="Texture2D" uid="uid://d1l5e8bc5apwf" path="res://assets/UI/return_button_hover_bg.png" id="32_hfyoe"]
 [ext_resource type="Texture2D" uid="uid://b6k1kc2s5hlij" path="res://assets/Cards/Monuments/port_verso.png" id="33_lw7jm"]
 [ext_resource type="Texture2D" uid="uid://bo24nrmwxqg54" path="res://assets/UI/build_button.png" id="34_vpco0"]
 [ext_resource type="Texture2D" uid="uid://cxa5yqxbeiuxv" path="res://assets/UI/build_button_hover.png" id="35_fmbck"]
@@ -128,7 +128,25 @@ texture = ExtResource("7_aw5i8")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yln80"]
 texture = ExtResource("8_so6u2")
 
-[sub_resource type="FontVariation" id="FontVariation_ijtxi"]
+[sub_resource type="FontVariation" id="FontVariation_hgaok"]
+base_font = ExtResource("14_fdvlh")
+variation_opentype = {
+2003265652: 900
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hfyoe"]
+content_margin_left = 40.0
+texture = ExtResource("31_hgaok")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5bfng"]
+content_margin_left = 40.0
+texture = ExtResource("32_hfyoe")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_egrx8"]
+content_margin_left = 40.0
+texture = ExtResource("32_hfyoe")
+
+[sub_resource type="FontVariation" id="FontVariation_ar0uo"]
 base_font = ExtResource("14_fdvlh")
 variation_opentype = {
 2003265652: 900
@@ -832,7 +850,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yln80")
 text = "Fermer le jeu
 "
 
-[node name="MonumentOverlay" type="ColorRect" parent="." unique_id=1992552673]
+[node name="MonumentOverlay" type="ColorRect" parent="." unique_id=2056086357]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -842,7 +860,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7058824)
 
-[node name="MainContainer" type="VBoxContainer" parent="MonumentOverlay" unique_id=1110429163]
+[node name="MainContainer" type="VBoxContainer" parent="MonumentOverlay" unique_id=1033182657]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -857,120 +875,162 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 30
 
-[node name="TitleContainer" type="HBoxContainer" parent="MonumentOverlay/MainContainer" unique_id=333157899]
+[node name="TitleContainer" type="HBoxContainer" parent="MonumentOverlay/MainContainer" unique_id=53059167]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 0
 
-[node name="EspaceGauche" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1971567093]
+[node name="EspaceGauche" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=777955222]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
-[node name="closeButton" type="TextureButton" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1155646101]
+[node name="CloseButton" type="Button" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=806061925]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 50)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0
 size_flags_vertical = 4
-texture_normal = ExtResource("31_7cliw")
-texture_hover = ExtResource("32_rtar8")
+theme_override_colors/font_pressed_color = Color(0.5568628, 0.5568628, 0.5568628, 1)
+theme_override_colors/font_hover_color = Color(0.5568628, 0.5568628, 0.5568628, 1)
+theme_override_colors/font_outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_hgaok")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hfyoe")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5bfng")
+theme_override_styles/hover = SubResource("StyleBoxTexture_egrx8")
+text = "Retour"
+icon_alignment = 1
 
-[node name="EspaceEntreLesEléments" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=240940468]
-custom_minimum_size = Vector2(325, 0)
+[node name="EspaceEntreLesEléments" type="Control" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=932679956]
+custom_minimum_size = Vector2(470, 0)
 layout_mode = 2
 
-[node name="Monuments" type="Label" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=1179612424]
+[node name="Monuments" type="Label" parent="MonumentOverlay/MainContainer/TitleContainer" unique_id=40709576]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 30
-theme_override_fonts/font = SubResource("FontVariation_ijtxi")
+theme_override_fonts/font = SubResource("FontVariation_ar0uo")
 theme_override_font_sizes/font_size = 100
 text = "Monuments"
 
-[node name="CardsMonumentsContainer" type="HBoxContainer" parent="MonumentOverlay/MainContainer" unique_id=407135923]
+[node name="CardsMonumentsContainer" type="HBoxContainer" parent="MonumentOverlay/MainContainer" unique_id=598347580]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="Port" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=348730446]
 layout_mode = 2
 
-[node name="Port" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=404646439]
-layout_mode = 2
-
-[node name="Port" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=405847924]
+[node name="Port" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=1234251493]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("33_lw7jm")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildPort" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=1426727283]
+[node name="BuildPort" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=2067511014]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
 
-[node name="Gare" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=269338999]
+[node name="Gare" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=2143377925]
 layout_mode = 2
 
-[node name="Gare" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=121009355]
+[node name="Gare" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=2063806]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("36_knd4b")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildGare" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=1988421039]
+[node name="BuildGare" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=703785192]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
 
-[node name="Centre commercial" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=930120833]
+[node name="Centre commercial" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=1960576441]
 layout_mode = 2
 
-[node name="Centre commercial" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=548885759]
+[node name="Centre commercial" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=71663321]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("37_56esi")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildCentreCommercial" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=1756178854]
+[node name="BuildCentreCommercial" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=691884027]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
 
-[node name="Parc d\'attraction" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=1234829344]
+[node name="Parc d\'attraction" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=71426429]
 layout_mode = 2
 
-[node name="Parc d\'attraction" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=741818427]
+[node name="Parc d\'attraction" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=730208534]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("38_yf2r3")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildParcDattraction" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=39929364]
+[node name="BuildParcDattraction" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=1605331582]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
 
-[node name="Tour radio" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=1417154530]
+[node name="Tour radio" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=860801281]
 layout_mode = 2
 
-[node name="Tour radio" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=1843046972]
+[node name="Tour radio" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=57050062]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("39_oyg2h")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildTourRadio" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=306556759]
+[node name="BuildTourRadio" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=1906661244]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
 
-[node name="Aéroport" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=561857608]
+[node name="Aéroport" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=468033288]
 layout_mode = 2
 
-[node name="Aéroport" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=828646746]
+[node name="Aéroport" type="TextureRect" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=586278455]
+custom_minimum_size = Vector2(300, 600)
 layout_mode = 2
 texture = ExtResource("40_2m7yu")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BuildAeroport" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=1264539079]
+[node name="BuildAeroport" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=571365212]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture_normal = ExtResource("34_vpco0")
 texture_hover = ExtResource("35_fmbck")
+
+[node name="ClickBlocker" type="ColorRect" parent="." unique_id=1016568604]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1209877766]
+anchor_mode = 0
