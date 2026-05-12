@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://boiqp3n7u5iil" path="res://assets/UI/blank_red_button_hover.png" id="17_u3wdh"]
 [ext_resource type="Texture2D" uid="uid://n05ux5m5dwmg" path="res://assets/UI/roll_one_die_border_hover.png" id="18_gmss7"]
 [ext_resource type="Texture2D" uid="uid://sqyyb2nhevak" path="res://assets/UI/roll_two_dices_border.png" id="19_nak6p"]
+[ext_resource type="Texture2D" uid="uid://d21evg100wsi7" path="res://assets/UI/roll_two_dices_border_hover.png" id="20_mb4n0"]
 [ext_resource type="Texture2D" uid="uid://d4h85hiv2aiy3" path="res://assets/Cards/Monuments/aéroport_verso.png" id="20_sgkkh"]
 [ext_resource type="Texture2D" uid="uid://bo24nrmwxqg54" path="res://assets/UI/build_button.png" id="21_beeqq"]
 [ext_resource type="Texture2D" uid="uid://benlwfo0ydoxm" path="res://assets/UI/red_button_border.png" id="21_cobnc"]
@@ -146,6 +147,16 @@ variation_opentype = {
 content_margin_right = 70.0
 content_margin_bottom = 5.0
 texture = ExtResource("19_nak6p")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x6onv"]
+content_margin_right = 70.0
+content_margin_bottom = 5.0
+texture = ExtResource("20_mb4n0")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nak6p"]
+content_margin_right = 70.0
+content_margin_bottom = 5.0
+texture = ExtResource("20_mb4n0")
 
 [sub_resource type="FontVariation" id="FontVariation_x6onv"]
 base_font = ExtResource("3_tbpra")
@@ -768,7 +779,6 @@ theme_override_constants/margin_left = 500
 theme_override_constants/margin_top = 300
 
 [node name="TurnOverlay" type="ColorRect" parent="." unique_id=93550791]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -828,6 +838,8 @@ theme_override_colors/font_hover_color = Color(0.49803922, 0.54901963, 0.5529412
 theme_override_fonts/font = SubResource("FontVariation_qhi0s")
 theme_override_font_sizes/font_size = 45
 theme_override_styles/normal = SubResource("StyleBoxTexture_o81q4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_x6onv")
+theme_override_styles/hover = SubResource("StyleBoxTexture_nak6p")
 text = "lancer 2 dés"
 
 [node name="ResultOverlay" type="ColorRect" parent="." unique_id=362615289]
