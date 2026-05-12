@@ -231,7 +231,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 
 	serveur.send_to_client(client, reponse)
 	
-func _on_nickname_fetched(result, code, _headers, body, client: StreamPeerTLS, http: HTTPRequest):
+func _on_nickname_fetched(result, code, _headers, body, client: WebSocketPeer, http: HTTPRequest):
 	http.queue_free()
 	if code != 200: return
 	var data = JSON.parse_string(body.get_string_from_utf8())
