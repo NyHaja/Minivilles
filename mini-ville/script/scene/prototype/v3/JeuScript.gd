@@ -625,13 +625,14 @@ func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 func update_monument_menu(is_demolish_mode: bool = false):
 	var target_player = self.current_player 
 	
+	# Ajout du coût ("cost") directement dans le mapping pour une sécurité absolue
 	var monument_map = {
-		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "port"},
-		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "gare"},
-		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "centre_commercial"},
-		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "parc_dattraction"},
-		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "tour_radio"},
-		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "aéroport"}
+		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "port", "cost": 2},
+		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "gare", "cost": 4},
+		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "centre_commercial", "cost": 10},
+		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "parc_dattraction", "cost": 16},
+		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "tour_radio", "cost": 22},
+		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "aéroport", "cost": 30}
 	}
 	
 	for m_id in monument_map:
@@ -667,7 +668,7 @@ func update_monument_menu(is_demolish_mode: bool = false):
 			else:
 				build_btn.modulate.a = 0.0 
 				build_btn.disabled = true
-			build_btn.pressed.connect(func(): demolish_completed.emit(m_id))
+			build_btn.pressed.connect(func(id=m_id): demolish_completed.emit(id))
 		else:
 			if is_built:
 				build_btn.modulate.a = 0.0 
@@ -676,10 +677,46 @@ func update_monument_menu(is_demolish_mode: bool = false):
 				build_btn.modulate.a = 1.0 
 				build_btn.disabled = false
 			
-			build_btn.pressed.connect(func():
+			# ==========================================
+			# ACHAT DIRECT DEPUIS LE BOUTON (Plus de panel d'achat)
+			# ==========================================
+			build_btn.pressed.connect(func(id=m_id, cost=data["cost"]):
+				
+				# --- 1. ERREUR : Pas assez d'argent ---
+				if current_player.balance < cost:
+					monument_menu.hide()
+					await get_tree().create_timer(0.15).timeout
+					
+					var p_idx = game.playerArray.find(current_player)
+					if p_idx != -1:
+						animer_erreur_argent(active_boards[p_idx])
+					return # On arrête tout
+					
+				# --- 2. SUCCÈS : Achat validé ---
 				monument_menu.hide() 
-				animer_shake_ecran(15.0, 0.3) 
-				action_selected.emit([game.CHOICE.Build_MONUMENT, m_id]) 
+				
+				if is_instance_valid(click_blocker):
+					click_blocker.z_index = 4096
+					click_blocker.show()
+					
+				var p_idx = game.playerArray.find(current_player)
+				var board_visuel = active_boards[p_idx]
+				
+				# On simule visuellement la perte d'argent
+				if board_visuel.get("lbl_gold"):
+					board_visuel.lbl_gold.text = str(current_player.balance - cost)
+				animer_gain_gold(board_visuel, -cost)
+				
+				# Pause pour voir l'argent monter, PUIS le shake
+				await get_tree().create_timer(0.4).timeout
+				animer_shake_ecran(20.0, 0.4) 
+				await get_tree().create_timer(0.5).timeout
+				
+				if is_instance_valid(click_blocker):
+					click_blocker.hide()
+					
+				# On informe le backend (c'est LUI qui va modifier les vraies données et passer le tour)
+				action_selected.emit([game.CHOICE.Build_MONUMENT, id]) 
 			)
 		
 func _on_construct_clicked(m_id):
@@ -1207,81 +1244,128 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		buy_confirm_panel.show()
 
 func _on_confirm_buy_shop_pressed() -> void:
-	if game and game.CHOICE:
-		var card_data = CardFactory.get_card(selected_shop_card_id)
-		
-		# --- CORRECTION DU CALCUL DU COÛT ---
-		var cost = 0
+	if not game or not game.CHOICE: return
+
+	var card_data = CardFactory.get_card(selected_shop_card_id)
+	if card_data == null: return
+	
+	# ==========================================
+	# 1. IDENTIFICATION ET COÛT INFAILLIBLES
+	# ==========================================
+	var is_monument = (selected_shop_card_id >= 22 and selected_shop_card_id <= 27)
+	var cost = 0
+	
+	if is_monument:
+		match selected_shop_card_id:
+			22: cost = 4
+			23: cost = 10
+			24: cost = 16
+			25: cost = 22
+			26: cost = 2
+			27: cost = 30
+	else:
 		if card_data.has_method("get_cost"): 
 			cost = card_data.get_cost()
-		elif card_data.get("cost") != null:  # On utilise .get() au lieu de 'in'
+		elif card_data.get("cost") != null:
 			cost = card_data.get("cost")
-		
-		# Maintenant le vrai coût est connu ! S'il est trop cher, ça s'arrêtera ici :
-		if current_player.balance < cost:
-			buy_confirm_panel.hide()
-			var p_idx_err = game.playerArray.find(current_player)
-			animer_erreur_argent(active_boards[p_idx_err])
-			return # ÇA BLOQUE LE SHAKE ET L'ACHAT !
-
+	
+	# ==========================================
+	# 2. LOGIQUE D'ERREUR (Pas assez d'argent)
+	# ==========================================
+	if current_player.balance < cost:
+		# 1. Le panel se ferme
 		buy_confirm_panel.hide()
 		
-		if is_instance_valid(click_blocker): 
-			click_blocker.z_index = 4096 
-			click_blocker.show()
+		if is_monument and is_instance_valid(monument_menu):
+			monument_menu.hide()
 			
-		var p_idx = game.playerArray.find(current_player)
-		var board_visuel = active_boards[p_idx]
+		await get_tree().create_timer(0.15).timeout
 		
-		# 2. Prédiction de la perte d'or
+		# 2. L'animation d'erreur d'argent se joue
+		var p_idx_err = game.playerArray.find(current_player)
+		if p_idx_err != -1:
+			animer_erreur_argent(active_boards[p_idx_err])
+		
+		if not is_monument:
+			if is_instance_valid(shop_board) and is_instance_valid(shop_board.last_clicked_slot):
+				animer_erreur_carte_shop(shop_board.last_clicked_slot)
+		
+		# 3. PAS DE SHAKE (le "return" bloque la suite de la fonction)
+		return 
+
+	# ==========================================
+	# 3. ACHAT RÉUSSI (Le joueur a l'argent)
+	# ==========================================
+	
+	# 1. Le panel se ferme immédiatement
+	buy_confirm_panel.hide()
+	if is_monument and is_instance_valid(monument_menu):
+		monument_menu.hide() 
+	
+	if is_instance_valid(click_blocker): 
+		click_blocker.z_index = 4096 
+		click_blocker.show()
+		
+	var p_idx = game.playerArray.find(current_player)
+	var board_visuel = active_boards[p_idx]
+	
+	if is_monument:
+		# A. Mise à jour de la carte en Recto 
+		current_player.monumentArray[selected_shop_card_id] = true
+		
+		# B. On refresh le board AVANT de toucher à l'or visuel !
+		update_all_boards() 
+		
+		# C. On force le texte à baisser (sinon le refresh précédent remet l'ancien prix)
+		if board_visuel.get("lbl_gold"):
+			board_visuel.lbl_gold.text = str(current_player.balance - cost)
+		
+		# D. L'animation de perte de gold se joue...
 		animer_gain_gold(board_visuel, -cost)
-		var predicted_balance = current_player.balance - cost
-		if board_visuel.get("lbl_gold"): board_visuel.lbl_gold.text = str(predicted_balance)
 		
-		# --- 3. NOUVEAU : CALCUL DE LA QUANTITÉ DANS LE SHOP ---
+		# E. PUIS on attend que la pièce décolle pour lancer le tremblement...
+		await get_tree().create_timer(0.5).timeout 
+		
+		# F. Le shake de l'écran se déclenche !
+		animer_shake_ecran(20.0, 0.4) 
+		await get_tree().create_timer(0.6).timeout 
+		
+		if is_instance_valid(click_blocker): click_blocker.hide()
+		
+		action_selected.emit([game.CHOICE.Build_MONUMENT, selected_shop_card_id])
+		
+	else:
+		# Logique pour les établissements classiques (cartes du centre)
+		if board_visuel.get("lbl_gold"):
+			board_visuel.lbl_gold.text = str(current_player.balance - cost)
+			
+		animer_gain_gold(board_visuel, -cost)
+		
 		var quantity_in_shop = 1
 		if is_instance_valid(test_shop):
-			# On utilise get() qui fonctionne sur tous les objets Godot
-			var shop_array = test_shop.get("shop") 
-			
-			if shop_array != null:
+			var shop_array = test_shop.get("shop")
+			if shop_array:
 				for slot in shop_array:
 					var c_id = int(slot[0]) if typeof(slot) == TYPE_ARRAY else int(slot.get("id"))
 					if c_id == selected_shop_card_id:
 						quantity_in_shop = int(slot[1]) if typeof(slot) == TYPE_ARRAY else int(slot.get("quantity"))
 						break
 		
-		# 4. Achat Monuments vs Établissements
-		if card_data is Monument:
-			monument_menu.hide() 
-			animer_shake_ecran(20.0, 0.4) 
-			await get_tree().create_timer(0.6).timeout 
-			if is_instance_valid(click_blocker): click_blocker.hide()
-			action_selected.emit([game.CHOICE.Build_MONUMENT, selected_shop_card_id])
-		else:
-			# Gestion de la disparition / Remplacement
-			if is_instance_valid(shop_board):
-				if quantity_in_shop > 1:
-					# Annule l'animation de la pioche vers le shop (car on ne crée pas de trou)
-					pending_shop_animation_index = -1 
-					
-					# Petit bonus visuel : On réduit immédiatement la pastille de quantité 
-					# pour rassurer le joueur le temps que la vraie logique valide l'achat !
-					var shop_slot = shop_board.last_clicked_slot
-					if is_instance_valid(shop_slot) and shop_slot.has_method("set_badge_count"):
-						shop_slot.set_badge_count(quantity_in_shop - 1)
-				else:
-					# C'est le dernier : il va y avoir un trou. On prépare l'animation du deck.
-					pending_shop_animation_index = shop_board.last_clicked_index
-			
-			# L'animation de vol de la carte (on lui passe la quantité pour savoir s'il faut la cacher)
-			await animer_achat_vers_main(selected_shop_card_id, quantity_in_shop)
-			
-			await get_tree().create_timer(0.5).timeout
-			if is_instance_valid(click_blocker): click_blocker.hide()
-			
-			# Envoi à la logique
-			action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
+		if is_instance_valid(shop_board):
+			if quantity_in_shop > 1:
+				pending_shop_animation_index = -1
+				var shop_slot = shop_board.last_clicked_slot
+				if is_instance_valid(shop_slot) and shop_slot.has_method("set_badge_count"):
+					shop_slot.set_badge_count(quantity_in_shop - 1)
+			else:
+				pending_shop_animation_index = shop_board.last_clicked_index
+		
+		await animer_achat_vers_main(selected_shop_card_id, quantity_in_shop)
+		
+		await get_tree().create_timer(0.5).timeout
+		if is_instance_valid(click_blocker): click_blocker.hide()
+		
+		action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, selected_shop_card_id])
 
 func _on_cancel_buy_shop_pressed() -> void:
 	selected_shop_card_id = -1
