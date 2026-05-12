@@ -654,6 +654,8 @@ func update_monument_menu(is_demolish_mode: bool = false):
 		var _tex = load(tex_path)
 		if _tex:
 			tex_rect.texture = _tex
+		else:
+			print("🔴 ERREUR IMAGE : Godot ne trouve pas ce fichier -> ", tex_path)
 			
 		for conn in build_btn.pressed.get_connections():
 			build_btn.pressed.disconnect(conn.callable)
