@@ -257,14 +257,14 @@ func _get_liste_joueurs(lobby: Dictionary) -> Array:
 		var guest_id = serveur.guest_sessions.get(joueur, null)
 		
 		if player_id != null:
-			var nickname = serveur.active_nickname.get(joueur, "Joueur " + str(player_id))
+			var nickname = serveur.active_nicknames.get(joueur, "Joueur " + str(player_id))
 			liste.append({
 				"id": player_id,
 				"type": "registered",
 				"nickname": nickname
 			})
 		elif guest_id != null:
-			var nickname = serveur.guest_nickname.get(joueur, "Invité" + str(guest_id))
+			var nickname = serveur.guest_nicknames.get(joueur, "Invité" + str(guest_id))
 			liste.append({
 				"id": guest_id,
 				"type": "guest",

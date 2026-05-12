@@ -10,4 +10,4 @@ Thumbs.db
 *.import
 
 # executable .x86_64
-.x86_64
+*.x86_64
