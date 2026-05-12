@@ -42,7 +42,7 @@ var dice_textures = [
 
 # Popups
 @onready var monument_menu: ColorRect = %MonumentOverlay
-@onready var close_menu: TextureButton = %closeButton 
+@onready var close_menu: Button = %CloseButton 
 @onready var cards_monuments_container = $MonumentOverlay/MainContainer/CardsMonumentsContainer
 @onready var victory_screen: PanelContainer = $VictoryScreen
 @onready var lbl_winner_name: Label = %LblWinnerName
