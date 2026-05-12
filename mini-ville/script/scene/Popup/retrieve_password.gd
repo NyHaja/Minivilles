@@ -68,6 +68,7 @@ func _on_send_button_pressed() -> void:
 	
 	# Appel réseau hypothétique : on envoie le code et le nouveau mot de passe
 	Client.verify_reset_code(mail, full_code, new_password)
+	get_tree().change_scene_to_file("res://scene/Ecran principale/accueil.tscn")
 
 
 # --- Fonction unique pour gérer Succès et Erreurs ---
