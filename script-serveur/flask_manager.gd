@@ -94,10 +94,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			var player_id = flask_response.get("player_id")
 			var access_token = flask_response.get("access_token")
 			serveur.on_client_login_success(client, player_id, access_token)
-<<<<<<< Updated upstream
-=======
-			
->>>>>>> Stashed changes
+
 			serveur.send_to_client(client, {
 				"action_reply": "authentification",
 				"status": "success",
@@ -133,12 +130,8 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 				"status": "error",
 				"message": flask_response.get("message", "Erreur création guest.")
 			})
-<<<<<<< Updated upstream
-	# ------------------------
-=======
-		return
-
->>>>>>> Stashed changes
+			
+			
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
 	elif action_name == "get_stats":
 		if flask_response.get("status") == "success":
