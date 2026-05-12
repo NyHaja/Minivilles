@@ -1,12 +1,12 @@
 extends Node
 
-### ====== GESTIONNAIRE RÉSEAU CENTRALISÉ ======
+### ====== GESTIONNAIRE RÉSEAU CENTRALISÉ (WEBSOCKETS) ======
 
 # ------------------------------------
 #	CONFIGURATION
 # ------------------------------------
-const HOST = "185.155.93.105"
-const PORT = 22000
+# On utilise l'URL du Reverse Proxy de la fac au lieu de l'IP du Bastion
+const URL = "wss://mai-projet-integrateur.u-strasbg.fr/vmProjetIntegrateurgrp12-0/"
 
 # ------------------------------------
 #	SIGNAUX (Déclarés ici pour être reconnus globalement)
@@ -23,10 +23,7 @@ signal register_finished(success: bool, message: String)
 # ------------------------------------
 #	VARIABLES INTERNES
 # ------------------------------------
-var _tcp := StreamPeerTCP.new()
-var _tls := StreamPeerTLS.new()
-
-var _buffer := ""
+var _ws : WebSocketPeer
 var _connecte := false
 var _session_token := ""
 var _joueur_id := -1
@@ -36,6 +33,8 @@ var _est_guest := false
 #	INITIALISATION & CONNEXION
 # ------------------------------------
 func _ready() -> void:
+	# On force la création de l'objet WebSocket une fois que le script est chargé
+	_ws = WebSocketPeer.new()
 	print("[NetworkManager] En attente du signal de démarrage...")
 
 func lancer_connexion_reseau():
@@ -43,55 +42,38 @@ func lancer_connexion_reseau():
 	_connecter()
 	
 func _connecter():
-	var err = _tcp.connect_to_host(HOST, PORT)
+	print("[NetworkManager] Tentative de connexion WebSocket vers ", URL)
+	var err = _ws.connect_to_url(URL)
 	if err != OK:
-		print("[NetworkManager] Erreur TCP : ", err)
-	else:
-		print("[NetworkManager] Connexion TCP vers ", HOST)
+		print("[NetworkManager] Erreur d'initialisation WebSocket : ", err)
 
 # ------------------------------------
 #	BOUCLE RÉSEAU
 # ------------------------------------
 func _process(_delta):
-	_tcp.poll()
-	_tls.poll() 
-	
-	var tcp_status = _tcp.get_status()
-	var tls_status = _tls.get_status()
-
-	# 1. Handshake TLS
-	if tcp_status == StreamPeerTCP.STATUS_CONNECTED and tls_status == StreamPeerTLS.STATUS_DISCONNECTED:
-		var options = TLSOptions.client_unsafe()
-		_tls.connect_to_stream(_tcp, HOST, options)
-		return
+	# SÉCURITÉ : On s'assure que _ws existe bien avant de faire quoi que ce soit
+	if _ws == null: return
 		
-	if tls_status == StreamPeerTLS.STATUS_HANDSHAKING or tls_status == StreamPeerTLS.STATUS_CONNECTED:
-		_tls.poll()
+	_ws.poll()
+	var state = _ws.get_ready_state()
 
-	# 2. Status de connexion
-	if not _connecte and tls_status == StreamPeerTLS.STATUS_CONNECTED:
+	# 1. Gestion des statuts de connexion
+	if state == WebSocketPeer.STATE_OPEN and not _connecte:
 		_connecte = true
 		connecte.emit()
-		print("[NetworkManager] Connecté en TLS !")
+		print("[NetworkManager] Connecté au serveur en WebSocket (wss) !")
 		
-	if _connecte and tls_status != StreamPeerTLS.STATUS_CONNECTED:
+	elif state == WebSocketPeer.STATE_CLOSED and _connecte:
 		_connecte = false
 		deconnecte.emit()
-		
-	# 3. Lecture des données
-	if _connecte and _tls.get_available_bytes() > 0:
-		var data_array = _tls.get_data(_tls.get_available_bytes())
-		if data_array[0] == OK:
-			_buffer += data_array[1].get_string_from_utf8()
-			_traiter_buffer()
+		print("[NetworkManager] Déconnecté du serveur.")
 
-func _traiter_buffer():
-	while "\n" in _buffer:
-		var idx = _buffer.find("\n")
-		var ligne = _buffer.substr(0, idx).strip_edges()
-		_buffer = _buffer.substr(idx + 1)
-		if ligne != "":
-			_traiter_message(ligne)
+	# 2. Lecture des données
+	if state == WebSocketPeer.STATE_OPEN:
+		# Les WebSockets lisent des paquets entiers, plus besoin de couper avec "\n"
+		while _ws.get_available_packet_count() > 0:
+			var raw = _ws.get_packet().get_string_from_utf8()
+			_traiter_message(raw)
 
 # ------------------------------------
 #	LOGIQUE DE TRAITEMENT CENTRALISÉE
@@ -124,13 +106,15 @@ func _traiter_message(raw: String):
 		else:
 			var clean_error = _parse_sql_error(message)
 			register_finished.emit(false, clean_error)
+			
+	# 3. Traitement Statistiques
 	elif action == "get_stats":
 		if status == "success":
 			stats_received.emit(data)
 		else:
 			print("[NetworkManager] Erreur lors de la récupération des stats : ", message)
 
-	# Envoi du message brut pour les autres scripts
+	# Envoi du message brut pour les autres scripts (LobbyHandler, Client, etc.)
 	message_recu.emit(data)
 
 func _parse_sql_error(error_msg: String) -> String:
@@ -144,7 +128,8 @@ func _parse_sql_error(error_msg: String) -> String:
 # ------------------------------------
 func envoyer(data: Dictionary):
 	if not _connecte: return
-	_tls.put_data((JSON.stringify(data) + "\n").to_utf8_buffer())
+	# On envoie le JSON sous forme de paquet natif, plus besoin d'ajouter le "\n"
+	_ws.put_packet(JSON.stringify(data).to_utf8_buffer())
 
 func est_connecte() -> bool: return _connecte
 func get_token() -> String: return _session_token

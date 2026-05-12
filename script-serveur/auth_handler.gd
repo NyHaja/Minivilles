@@ -3,7 +3,7 @@ extends Node
 # ─────────────────────────────────────────
 # POINT D'ENTRÉE
 # ─────────────────────────────────────────
-func handle(client: StreamPeerTLS, data: Dictionary):
+func handle(client: WebSocketPeer, data: Dictionary):
 	match data.get("action", ""):
 		"register":        _handle_register(client, data)
 		"authentification": _handle_authentification(client, data)
@@ -17,9 +17,8 @@ func handle(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 # REGISTER
 # ─────────────────────────────────────────
-func _handle_register(client: StreamPeerTLS, data: Dictionary):
+func _handle_register(client: WebSocketPeer, data: Dictionary):
 	var password_clair =  data.get("password", "")
-	
 	var password_hashe = $"../Hasher".PreparePasswordForDB(password_clair)	
 	var payload = {
 		"nickname":   data.get("nickname", ""),
@@ -32,23 +31,17 @@ func _handle_register(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 # LOGIN
 # ─────────────────────────────────────────
-func _handle_authentification(client: StreamPeerTLS, data: Dictionary):
+func _handle_authentification(client: WebSocketPeer, data: Dictionary):
 	var email = data.get("email", "")
 	var password_saisi = data.get("password","")
-	
-		
-	var payload = { "email": email, 
-					"password": password_saisi
-		}
+	var payload = { "email": email, "password": password_saisi }
 	$"../FlaskManager".send("login", "/login", payload, client,{"password": password_saisi})
 	
 # ─────────────────────────────────────────
 # LOGOUT
 # ─────────────────────────────────────────
-
-func _handle_logout(client: StreamPeerTLS, _data: Dictionary):
+func _handle_logout(client: WebSocketPeer, _data: Dictionary):
 	var token = get_parent().get_token(client)
-	
 	if token == "":
 		get_parent().send_to_client(client, {
 			"action_reply": "logout",
@@ -56,34 +49,26 @@ func _handle_logout(client: StreamPeerTLS, _data: Dictionary):
 			"message": "Aucun token trouvé, vous êtes déjà déconnecté."
 		})
 		return
-		
 	$"../FlaskManager".send("logout", "/logout", {}, client, {}, token)
+
 # ─────────────────────────────────────────
 # GUEST
 # ─────────────────────────────────────────
-func _handle_guest(client: StreamPeerTLS, data: Dictionary):
-	var payload = {
-		"nickname": data.get("nickname", "")
-	}
+func _handle_guest(client: WebSocketPeer, data: Dictionary):
+	var payload = { "nickname": data.get("nickname", "") }
 	$"../FlaskManager".send("guest_player", "/guest/register", payload, client)
-
-
 
 # ─────────────────────────────────────────
 # FORGOT PASSWORD
 # ─────────────────────────────────────────
-func _handle_forgot_password(client: StreamPeerTLS, data: Dictionary):
-	var payload = {
-		"email": data.get("email", "")
-	}
+func _handle_forgot_password(client: WebSocketPeer, data: Dictionary):
+	var payload = { "email": data.get("email", "") }
 	$"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
-
-
 
 # ─────────────────────────────────────────
 # VERIFY RESET CODE
 # ─────────────────────────────────────────
-func _handle_verify_reset_code(client: StreamPeerTLS, data: Dictionary):
+func _handle_verify_reset_code(client: WebSocketPeer, data: Dictionary):
 	var payload = {
 		"email":        data.get("email", ""),
 		"code":         data.get("code", ""),
@@ -94,7 +79,7 @@ func _handle_verify_reset_code(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 # GET STATS
 # ─────────────────────────────────────────
-func _handle_get_stats(client: StreamPeerTLS, data: Dictionary):
+func _handle_get_stats(client: WebSocketPeer, data: Dictionary):
 	var player_id = data.get("player_id", get_parent().get_player_id(client))
 	if player_id == null:
 		get_parent().send_to_client(client, {
@@ -105,11 +90,10 @@ func _handle_get_stats(client: StreamPeerTLS, data: Dictionary):
 		return
 	$"../FlaskManager".send_get("get_stats", "/player/" + str(int(player_id)) + "/stats", client)
 
-
 # ─────────────────────────────────────────
 # HISTORIC
 # ─────────────────────────────────────────
-func _handle_historic(client: StreamPeerTLS, data: Dictionary):
+func _handle_historic(client: WebSocketPeer, data: Dictionary):
 	var serveur = get_parent()
 	var raw_player_id = serveur.get_player_id(client)
 	var raw_guest_id  = data.get("guest_id", -1)

@@ -3,7 +3,7 @@ extends Node
 # ─────────────────────────────────────────
 # POINT D'ENTRÉE
 # ─────────────────────────────────────────
-func handle(client: StreamPeerTLS, data: Dictionary):
+func handle(client: WebSocketPeer, data: Dictionary):
 	match data.get("action", ""):
 		"create_lobby": _handle_create(client, data)
 		"join_lobby":   _handle_join(client, data)
@@ -29,7 +29,7 @@ func generer_code_unique() -> String:
 # ─────────────────────────────────────────
 # CREATE LOBBY
 # ─────────────────────────────────────────
-func _handle_create(client: StreamPeerTLS, data: Dictionary):
+func _handle_create(client: WebSocketPeer, data: Dictionary):
 	var serveur = get_parent()
 	var player_id = serveur.get_player_id(client)
 
@@ -69,13 +69,11 @@ func _handle_create(client: StreamPeerTLS, data: Dictionary):
 			"joueurs":     [player_id]
 		}
 	})
-	
-	
 
 # ─────────────────────────────────────────
 # JOIN LOBBY
 # ─────────────────────────────────────────
-func _handle_join(client: StreamPeerTLS, data: Dictionary):
+func _handle_join(client: WebSocketPeer, data: Dictionary):
 	var serveur   = get_parent()
 	var identifiant = get_identifiant(client)
 	var lobby_id  = data.get("lobby_id", "").strip_edges().to_upper()
@@ -89,7 +87,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 		})
 		return
 		
-	if lobby_id.length() !=6:
+	if lobby_id.length() != 6:
 		serveur.send_to_client(client, {
 			"action_reply": "join_lobby",
 			"type":"code_incomplet",
@@ -156,7 +154,7 @@ func _handle_join(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 # LEAVE LOBBY
 # ─────────────────────────────────────────
-func _handle_leave(client: StreamPeerTLS, data: Dictionary):
+func _handle_leave(client: WebSocketPeer, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
 	var lobby_id  = data.get("lobby_id", "")
@@ -199,7 +197,7 @@ func _handle_leave(client: StreamPeerTLS, data: Dictionary):
 # ─────────────────────────────────────────
 # START GAME
 # ─────────────────────────────────────────
-func _handle_start(client: StreamPeerTLS, data: Dictionary):
+func _handle_start(client: WebSocketPeer, data: Dictionary):
 	var serveur   = get_parent()
 	var player_id = serveur.get_player_id(client)
 	var lobby_id  = data.get("lobby_id", "")
@@ -233,7 +231,7 @@ func _handle_start(client: StreamPeerTLS, data: Dictionary):
 	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
 
 	$"../FlaskManager".send("create_game", "/game/create", {
-		"player_id":   player_id,
+		"player_id": player_id,
 		"player_type": "registered"
 	}, client, {"lobby_id": lobby_id})
 	
