@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://kaiuhgyvgplq" path="res://script/scene/prototype/v3/jeu_multi.gd" id="1_hgaok"]
 [ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="2_hfyoe"]
-[ext_resource type="Script" uid="uid://b1sswurdf8its" path="res://script/scene/prototype/v3/DeckOutline.gd" id="3_5bfng"]
+[ext_resource type="Script" path="res://script/scene/prototype/v3/DeckOutline.gd" id="3_5bfng"]
 [ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/Prototype/V3/ShopBoard.tscn" id="4_egrx8"]
 [ext_resource type="PackedScene" uid="uid://b5jkk7cw0wbjt" path="res://scene/Prototype/V3/PlayerBoard.tscn" id="5_ar0uo"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_rchwe"]

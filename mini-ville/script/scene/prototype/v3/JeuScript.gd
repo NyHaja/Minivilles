@@ -626,12 +626,12 @@ func update_monument_menu(is_demolish_mode: bool = false):
 	var target_player = self.current_player 
 	
 	var monument_map = {
-		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "PORT"},
-		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "Gare"},
-		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "Centre_commercial"},
-		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "PARC_DATTRACTION"},
-		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "TOUR_RADIO"},
-		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "Aéroport"}
+		Monument.MONUMENT_ID.Port: {"node": "Port", "file": "port"},
+		Monument.MONUMENT_ID.Gare: {"node": "Gare", "file": "gare"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "centre_commercial"},
+		Monument.MONUMENT_ID.Parc: {"node": "Parc d'attraction", "file": "parc_dattraction"},
+		Monument.MONUMENT_ID.Radio: {"node": "Tour radio", "file": "tour_radio"},
+		Monument.MONUMENT_ID.Aeroport: {"node": "Aéroport", "file": "aéroport"}
 	}
 	
 	for m_id in monument_map:
