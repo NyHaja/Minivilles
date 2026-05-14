@@ -26,13 +26,13 @@ shadow_offset = Vector2(6, 7)
 
 [sub_resource type="LabelSettings" id="LabelSettings_r7ths"]
 font = ExtResource("4_dlb48")
-font_size = 60
+font_size = 70
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_nefu6"]
 font = ExtResource("5_wfh2e")
-font_size = 22
+font_size = 30
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 4
 

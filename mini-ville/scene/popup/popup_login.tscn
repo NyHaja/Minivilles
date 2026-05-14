@@ -30,13 +30,13 @@ shadow_offset = Vector2(6, 7)
 
 [sub_resource type="LabelSettings" id="LabelSettings_w3hqj"]
 font = ExtResource("5_rgr1t")
-font_size = 60
+font_size = 70
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_ou6fo"]
 font = ExtResource("6_l61gd")
-font_size = 22
+font_size = 25
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 4
 
@@ -86,15 +86,15 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
-expand_margin_left = 30.0
-expand_margin_right = 30.0
+expand_margin_left = 50.0
+expand_margin_right = 50.0
 shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
 shadow_size = 1
 shadow_offset = Vector2(4, 4)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rsws6"]
 font = ExtResource("8_dix67")
-font_size = 13
+font_size = 20
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 5
 
@@ -129,8 +129,8 @@ border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-expand_margin_left = 30.0
-expand_margin_right = 30.0
+expand_margin_left = 48.0
+expand_margin_right = 48.0
 
 [node name="Popup_login" type="Control" unique_id=1775637839]
 layout_mode = 3
@@ -354,6 +354,7 @@ label_settings = SubResource("LabelSettings_rsws6")
 horizontal_alignment = 1
 
 [node name="inscription" type="Button" parent="Panel/Panellogin/MarginContainer/Boxconnexion" unique_id=1213540827]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_default_cursor_shape = 2

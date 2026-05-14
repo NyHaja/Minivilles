@@ -152,9 +152,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -360.0
-offset_top = -415.0
+offset_top = -302.0
 offset_right = 360.0
-offset_bottom = 415.0
+offset_bottom = 302.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -179,10 +179,11 @@ layout_mode = 2
 alignment = 1
 
 [node name="GearIcon" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox/TitleRow" unique_id=847362911]
-custom_minimum_size = Vector2(55, 55)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("5_gy5cr")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox/TitleRow" unique_id=293847562]
@@ -289,6 +290,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
 
 [node name="LangueVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=293847566]
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_constants/separation = 5
 
 [node name="LangueTitle" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=736492815]
@@ -333,6 +335,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
 text = "Anglais"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=506170679]
+visible = false
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=1142722193]
@@ -356,6 +359,7 @@ size_flags_vertical = 4
 theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
 
 [node name="AffichageVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=584739207]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 5
 
