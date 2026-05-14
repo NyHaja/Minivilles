@@ -66,7 +66,7 @@ func _ready():
 	btn_commencer.visible = false
 
 	# --- Timer ---
-	NetworkManager.message_recu.connect(_on_message)
+	#NetworkManager.message_recu.connect(_on_message)
 	
 	# --- Paramètre ----
 	popup_setting = pop_setting_scene.instantiate()
@@ -215,9 +215,14 @@ func _demander_stats(player_id):
 # ----------------------------------------------------------------
 # LANCER LA PARTIE
 # ----------------------------------------------------------------
+var _partie_lancee := false
+
 func _on_commencer_pressed():
-	LobbyHandler.lancer_partie()
+	if _partie_lancee: return
+	_partie_lancee = true
+	timer_chrono.stop()
 	btn_commencer.disabled = true  # anti double-clic
+	LobbyHandler.lancer_partie()
 
 # ----------------------------------------------------------------
 # TIMER
@@ -227,14 +232,14 @@ func _on_tick():
 	_update_display()
 	if remaining_seconds == 0:
 		timer_chrono.stop()
-		if LobbyHandler.is_host():
+		if LobbyHandler.is_host() and not _partie_lancee:
 			var nb = LobbyHandler.get_joueurs().size()
 			if nb < MIN_JOUEURS:
 			# Host seul -> quitte le lobby automatiquement
 				LobbyHandler.quitter_lobby()
 				get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
 			else :
-				LobbyHandler.lancer_partie()
+				_on_commencer_pressed()
 
 func _update_display():
 	var m = remaining_seconds / 60
@@ -269,7 +274,8 @@ func _on_message(data: Dictionary):
 		"lobby_dissous":
 			_on_lobby_dissous()
 		"game_demarre":
-			pass
+			timer_chrono.stop()
+			_partie_lancee = true
 
 	# Stats reçues
 	if data.get("action_reply") == "get_stats" and data.get("status") == "success":

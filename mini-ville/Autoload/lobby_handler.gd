@@ -56,7 +56,7 @@ func quitter_lobby():
 		"token": NetworkManager.get_token(),
 		"lobby_id": lobby_id
 	})
-	_reset()
+	reset()
 	
 func lancer_partie():
 	if not est_host:
@@ -112,7 +112,7 @@ func _on_lobby_erreur(data: Dictionary):
 # ----------------------------------------------------------------
 # UTILITAIRES
 # ----------------------------------------------------------------	
-func _reset():
+func reset():
 	lobby_id = ""
 	est_host = false
 	joueurs = []
