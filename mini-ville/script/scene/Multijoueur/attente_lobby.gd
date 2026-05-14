@@ -30,7 +30,7 @@ var slots: Array = []
 @onready var label_duree   = $DureeTourRow/LabelDuree
 #@onready var btn_pret      = $BtnPret
 @onready var label_attente = $VBoxContainer2/Attente
-@onready var btn_commencer = $VBoxContainer2/BtnCommencer
+@onready var btn_commencer = $VBoxContainer2/HBoxContainer/BtnCommencer
 @onready var timer_chrono  = $TimerChrono
 
 # ----------------------------------------------------------------
@@ -66,9 +66,7 @@ func _ready():
 	btn_commencer.visible = false
 
 	# --- Timer ---
-	timer_chrono.wait_time = 1.0
-	timer_chrono.timeout.connect(_on_tick)
-	timer_chrono.start()
+	NetworkManager.message_recu.connect(_on_message)
 	
 	# --- Paramètre ----
 	popup_setting = pop_setting_scene.instantiate()
@@ -80,7 +78,7 @@ func _ready():
 	add_child(popup_stat)
 	popup_stat.hide()
 
-
+	$VBoxContainer2/HBoxContainer/BtnQuitter.pressed.connect(_on_quitter_pressed)
 	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
 	
 
@@ -171,8 +169,15 @@ func _update_label_attente(nb_actuels: int, max_joueurs: int):
 func _update_btn_commencer(nb_joueurs: int):
 	if nb_joueurs >= max_joueurs_lobby:
 		btn_commencer.visible = true
+		btn_commencer.disabled = false
 		btn_commencer.text = tr("Lancer la partie")
+	elif nb_joueurs >= MIN_JOUEURS:
+		# Assez de joueurs mais pas le max → peut lancer
+		btn_commencer.visible = true
+		btn_commencer.disabled = false
+		btn_commencer.text = tr("Lancer la partie (%d joueurs)") % nb_joueurs
 	else:
+		# Pas assez de joueurs → cache le bouton
 		btn_commencer.visible = false
 
 
@@ -223,7 +228,13 @@ func _on_tick():
 	if remaining_seconds == 0:
 		timer_chrono.stop()
 		if LobbyHandler.is_host():
-			LobbyHandler.lancer_partie()
+			var nb = LobbyHandler.get_joueurs().size()
+			if nb < MIN_JOUEURS:
+			# Host seul -> quitte le lobby automatiquement
+				LobbyHandler.quitter_lobby()
+				get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
+			else :
+				LobbyHandler.lancer_partie()
 
 func _update_display():
 	var m = remaining_seconds / 60
@@ -252,9 +263,23 @@ func _afficher_badge(badge: Node):
 
 func _on_message(data: Dictionary):
 	match data.get("type", ""):
+		"timer_sync":
+			remaining_seconds = data.get("remaining", 0)
+			_update_display()
+		"lobby_dissous":
+			_on_lobby_dissous()
 		"game_demarre":
 			pass
 
 	# Stats reçues
 	if data.get("action_reply") == "get_stats" and data.get("status") == "success":
 		affiche_stats(data)
+
+func _on_quitter_pressed():
+	SoundManager.play_click()
+	LobbyHandler.quitter_lobby()
+	get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
+	
+func _on_lobby_dissous():
+	LobbyHandler.reset()  # remet lobby_id et joueurs à vide
+	get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")

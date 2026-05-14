@@ -27,7 +27,7 @@ func _on_message(data : Dictionary):
 # ----------------------------------------------------------------
 # ACTIONS JOUEUR -> SERVEUR
 # ----------------------------------------------------------------
-func creer_lobby(nom: String, max_joueurs: int):
+func creer_lobby(nom: String, max_joueurs: int, dur_index: int = 1):
 	# Bloque si mode guest
 	if NetworkManager.est_guest():
 		print("[lobbyHandler] Un guest ne peut pas créer un lobby")
@@ -38,6 +38,7 @@ func creer_lobby(nom: String, max_joueurs: int):
 		"token":NetworkManager.get_token(),
 		"nom": nom,
 		"max_joueurs": max_joueurs,
+		"dur_index":   dur_index
 	})
 
 func rejoindre_lobby(code: String):
@@ -115,6 +116,7 @@ func _reset():
 	lobby_id = ""
 	est_host = false
 	joueurs = []
+	
 	
 func get_lobby_id() -> String:
 	return lobby_id

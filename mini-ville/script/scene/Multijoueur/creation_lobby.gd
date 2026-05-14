@@ -76,7 +76,8 @@ func _update_joueurs():
 
 func _on_lobby_cree(lobby_id: String):
 	#Navigue vers la salle d'attente en passant le lobby_id
-	get_tree().set_meta("tour_duration_index", dur_index)
+	$Content/BtnCreerWrap/BtnCreer.disabled = true
+	LobbyHandler.creer_lobby("Partie", nb_joueurs, dur_index)
 	get_tree().set_meta("nb_joueurs", nb_joueurs)
 	get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 	
