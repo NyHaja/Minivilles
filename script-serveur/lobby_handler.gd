@@ -32,6 +32,12 @@ func generer_code_unique() -> String:
 func _handle_create(client: WebSocketPeer, data: Dictionary):
 	var serveur = get_parent()
 	var player_id = serveur.get_player_id(client)
+	var nom         = data.get("nom", "Partie sans nom")
+	var max_joueurs = data.get("max_joueurs", 4)
+	var prive       = data.get("prive", false)
+	var dur_index = data.get("dur_index", 1)
+	var dur_seconds = [60, 120, 180, 300][dur_index]
+	var lobby_id    = generer_code_unique()
 
 	if player_id == null:
 		serveur.send_to_client(client, {
@@ -41,10 +47,6 @@ func _handle_create(client: WebSocketPeer, data: Dictionary):
 		})
 		return
 
-	var nom         = data.get("nom", "Partie sans nom")
-	var max_joueurs = data.get("max_joueurs", 4)
-	var prive       = data.get("prive", false)
-	var lobby_id    = generer_code_unique()
 
 	serveur.lobbies[lobby_id] = {
 		"nom":         nom,
@@ -52,11 +54,16 @@ func _handle_create(client: WebSocketPeer, data: Dictionary):
 		"joueurs":     [client],
 		"max_joueurs": max_joueurs,
 		"prive":       prive,
-		"etat":        "EN_ATTENTE"
+		"etat":        "EN_ATTENTE",
+		"timer" : dur_seconds,
+		"timer_actif": true
 	}
 
 	print("[LOBBY] Lobby créé : ", lobby_id, " par joueur ", player_id)
 
+	serveur.lobbies[lobby_id]["timer"] = dur_seconds
+	serveur.lobbies[lobby_id]["timer_actif"] = true
+	
 	serveur.send_to_client(client, {
 		"action_reply": "create_lobby",
 		"type":         "lobby_cree",
@@ -69,6 +76,48 @@ func _handle_create(client: WebSocketPeer, data: Dictionary):
 			"joueurs":     [player_id]
 		}
 	})
+	
+func tick_lobbies():
+	var serveur = get_parent()
+	var lobby_ids = serveur.lobbies.keys().duplicate()
+	for lobby_id in lobby_ids:
+		if not serveur.lobbies.has(lobby_id):
+			continue
+			
+		var lobby = serveur.lobbies[lobby_id]
+		if not lobby.get("timer_actif", false):
+			continue
+		
+		lobby["timer"] -= 1
+		
+		serveur.broadcast_lobby(lobby_id, {
+			"action_reply": "lobby_tick",
+			"type": "timer_sync",
+			"remaining": lobby["timer"]
+		})
+		
+		if lobby["timer"]%10 == 0 or lobby["timer"] <=5:
+			print("[LOBBY] Timer ", lobby_id, " : ", lobby["timer"], "s restantes")
+		
+		# TImer expiré
+		if lobby["timer"] <= 0:
+			lobby["timer_actif"] = false
+			if lobby["joueurs"].size() < 2:
+				# Host seul -> dissous le lobby
+				for joueur in lobby["joueurs"]:
+					serveur.send_to_client(joueur,{
+						"action_reply": "leave_lobby",
+						"type": "lobby_dissous",
+						"message": "Temps écoulé, lobby dissous."
+				})
+				serveur.lobbies.erase(lobby_id)
+			else:
+				lobby["etat"] = "EN_JEU"
+				var host = lobby["host"]
+				$"../FlaskManager".send("create_game", "/game/create", {
+					"player_id" : serveur.active_sessions.get(host, null),
+					"player_type": "registered"
+				}, host, {"lobby_id": lobby_id})
 
 # ─────────────────────────────────────────
 # JOIN LOBBY
@@ -169,15 +218,27 @@ func _handle_leave(client: WebSocketPeer, data: Dictionary):
 	lobby["joueurs"].erase(client)
 	print("[LOBBY] Joueur ", player_id, " a quitté le lobby ", lobby_id)
 
+	# Si c'est le host qui guitte -> dissout le lobby
+	if lobby["host"] == client:
+		# Notifie tousl les autres joueurs
+		for joueur in lobby["joueurs"]:
+			if joueur != client:
+				serveur.send_to_client(joueur,{
+					"action_reply": "leave_lobby",
+					"type": "lobby_dissous",
+					"status": "success",
+					"message": "Le host a quitté le lobby."
+				})
+		serveur.lobbies.erase(lobby_id)
+		print("[LOBBY] lobby ",lobby_id," dissous - host parti")
+		return
 	if lobby["joueurs"].size() == 0:
 		serveur.lobbies.erase(lobby_id)
 		print("[LOBBY] Lobby ", lobby_id, " dissous (vide)")
 		return
 
-	if lobby["host"] == client:
-		lobby["host"] = lobby["joueurs"][0]
-		print("[LOBBY] Nouveau host : ", serveur.active_sessions.get(lobby["host"], "inconnu"))
 
+	lobby["joueurs"].erase(client)
 	var liste_joueurs = _get_liste_joueurs(lobby)
 
 	serveur.broadcast_lobby(lobby_id, {
@@ -223,8 +284,13 @@ func _handle_start(client: WebSocketPeer, data: Dictionary):
 			"message": "Il faut au moins 2 joueurs pour lancer la partie."
 		})
 		return
-
-	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
+		
+	if lobby["etat"] != "EN_ATTENTE":
+		print("[LOBBY] Partie déjà en cours de création, annulation.")
+		return
+	print("[LOBBY] Partie lancée dans le lobby", lobby_id)
+	
+	lobby["etat"] = "EN_JEU"
 
 	$"../FlaskManager".send("create_game", "/game/create", {
 		"player_id": player_id,
@@ -272,3 +338,11 @@ func _get_liste_joueurs(lobby: Dictionary) -> Array:
 				"nickname": "Inconnu"
 			})
 	return liste
+	
+	
+func get_lobby_id_of(client: WebSocketPeer) -> String:
+	var serveur = get_parent()
+	for lobby_id in serveur.lobbies.keys():
+		if client in serveur.lobbies[lobby_id]["joueurs"]:
+			return lobby_id
+	return ""

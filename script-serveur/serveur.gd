@@ -20,6 +20,8 @@ var active_nicknames: Dictionary = {}
 var guest_sessions: Dictionary = {}
 var guest_nicknames: Dictionary = {}
 
+var _tick_timer := 0.0
+
 # ─────────────────────────────────────────
 # INITIALISATION
 # ─────────────────────────────────────────
@@ -39,6 +41,11 @@ func _ready():
 func _process(_delta):
 	receive_and_queue_requests()
 	process_queue()
+	
+	_tick_timer += _delta
+	if _tick_timer >= 1.0:
+		_tick_timer = 0.0
+		$LobbyHandler.tick_lobbies()
 
 func receive_and_queue_requests():
 	# Si un client TCP frappe à la porte...
@@ -71,10 +78,19 @@ func receive_and_queue_requests():
 		elif state == WebSocketPeer.STATE_CLOSED:
 			print("Un client s'est déconnecté (Fermeture WebSocket).")
 			clients.remove_at(i)
+			
+			var lobby_id = $LobbyHandler.get_lobby_id_of(client)
+			if lobby_id != "":
+				$LobbyHandler.handle(client, {
+					"action": "leave_lobby",
+					"lobby_id": lobby_id
+				})
 			# Nettoyage optionnel des sessions en cas de déconnexion brutale
 			active_sessions.erase(client)
 			active_tokens.erase(client)
-			active_nicknames.erase(client) 
+			active_nicknames.erase(client)
+			guest_nicknames.erase(client)
+			guest_nicknames.erase(client)
 
 func process_queue():
 	var count = 0
@@ -120,7 +136,9 @@ func send_to_client(client: WebSocketPeer, data: Dictionary): # Type changé ici
 		var json_string = JSON.stringify(data)
 		# Plus besoin d'ajouter + "\n" à la fin !
 		client.put_packet(json_string.to_utf8_buffer())
-		print("-> Réponse envoyée au client pour : ", data.get("action_reply", "inconnu"))
+		var action = data.get("action_reply", "inconnu")
+		if action != "lobby_tick" and action != "pong":
+			print("-> Réponse envoyée au client pour : ", action)
 
 # ─────────────────────────────────────────
 # UTILITAIRES

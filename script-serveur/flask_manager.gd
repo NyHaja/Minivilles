@@ -131,7 +131,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 				"status": "error",
 				"message": flask_response.get("message", "Erreur création guest.")
 			})
-			
+		return
 			
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
 	elif action_name == "get_stats":
@@ -185,6 +185,10 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 	elif action_name == "create_game" and flask_response.get("status") == "success":
 		var game_id  = flask_response.get("game_id")
 		var lobby_id = extra.get("lobby_id", "")
+		
+		if not serveur.lobbies.has(lobby_id):
+			print("[FLASK] Lobby", lobby_id, "n'existe plus, annulation" )
+			return
 
 		if serveur.lobbies.has(lobby_id):
 			serveur.lobbies[lobby_id]["game_id"] = game_id
@@ -214,6 +218,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			})
 			
 			serveur.get_node("GameHandler").start_new_game(lobby_id, game_players)
+			serveur.lobbies.erase(lobby_id)
 		return
 
 	# ── Réponse générique pour les autres actions ──
