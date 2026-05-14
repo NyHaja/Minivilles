@@ -218,7 +218,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			})
 			
 			serveur.get_node("GameHandler").start_new_game(lobby_id, game_players)
-			serveur.lobbies.erase(lobby_id)
+			#serveur.lobbies.erase(lobby_id)
 		return
 
 	# ── Réponse générique pour les autres actions ──
