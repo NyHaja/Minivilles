@@ -137,9 +137,7 @@ func _handle_join(client: WebSocketPeer, data: Dictionary):
 	lobby["joueurs"].append(client)
 	print("[LOBBY] Joueur ", identifiant, " a rejoint le lobby ", lobby_id)
 
-	var liste_joueurs = []
-	for joueur in lobby["joueurs"]:
-		liste_joueurs.append(serveur.active_sessions.get(joueur, "inconnu"))
+	var liste_joueurs = _get_liste_joueurs(lobby)
 
 	serveur.broadcast_lobby(lobby_id, {
 		"action_reply": "join_lobby",
@@ -180,9 +178,7 @@ func _handle_leave(client: WebSocketPeer, data: Dictionary):
 		lobby["host"] = lobby["joueurs"][0]
 		print("[LOBBY] Nouveau host : ", serveur.active_sessions.get(lobby["host"], "inconnu"))
 
-	var liste_joueurs = []
-	for joueur in lobby["joueurs"]:
-		liste_joueurs.append(serveur.active_sessions.get(joueur, "inconnu"))
+	var liste_joueurs = _get_liste_joueurs(lobby)
 
 	serveur.broadcast_lobby(lobby_id, {
 		"action_reply": "leave_lobby",
@@ -253,7 +249,8 @@ func _get_liste_joueurs(lobby: Dictionary) -> Array:
 	for joueur in lobby["joueurs"]:
 		var player_id = serveur.active_sessions.get(joueur, null)
 		var guest_id = serveur.guest_sessions.get(joueur, null)
-		
+		var found_guest = serveur.guest_sessions.get(joueur, null)
+
 		if player_id != null:
 			var nickname = serveur.active_nicknames.get(joueur, "Joueur " + str(player_id))
 			liste.append({

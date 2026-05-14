@@ -18,6 +18,7 @@ var lobbies : Dictionary = {}
 
 var active_nicknames: Dictionary = {}
 var guest_sessions: Dictionary = {}
+var guest_nicknames: Dictionary = {}
 
 # ─────────────────────────────────────────
 # INITIALISATION

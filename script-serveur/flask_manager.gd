@@ -115,17 +115,18 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			var guest_id = flask_response.get("guest_id")
 			var nickname = flask_response.get("nickname", "")
 			
-			get_parent().guest_sessions[client] = guest_id
+			serveur.guest_sessions[client] = guest_id
+			serveur.guest_nicknames[client] = nickname
 			print("[FlaslManager] Guest enregistré : ", nickname, " (id : ", guest_id, ")")
 			
-			get_parent().send_to_client(client, {
+			serveur.send_to_client(client, {
 				"action_reply": "guest_player",
 				"status": "success",
 				"guest_id": guest_id,
 				"nickname": nickname
 			})
 		else:
-			get_parent().send_to_client(client, {
+			serveur.send_to_client(client, {
 				"action_reply": "guest_player",
 				"status": "error",
 				"message": flask_response.get("message", "Erreur création guest.")
