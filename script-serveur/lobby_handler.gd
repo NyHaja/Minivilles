@@ -269,6 +269,11 @@ func _handle_start(client: WebSocketPeer, data: Dictionary):
 
 	var lobby = serveur.lobbies[lobby_id]
 
+	# Guard: prevent starting a game that already started (double create_game protection)
+	if lobby.get("etat", "EN_ATTENTE") == "EN_JEU":
+		print("[LOBBY] IGNORE create_game: lobby ", lobby_id, " is already EN_JEU")
+		return
+
 	if lobby["host"] != client:
 		serveur.send_to_client(client, {
 			"action_reply": "create_game",
@@ -284,13 +289,10 @@ func _handle_start(client: WebSocketPeer, data: Dictionary):
 			"message": "Il faut au moins 2 joueurs pour lancer la partie."
 		})
 		return
-		
-	if lobby["etat"] != "EN_ATTENTE":
-		print("[LOBBY] Partie déjà en cours de création, annulation.")
-		return
-	print("[LOBBY] Partie lancée dans le lobby", lobby_id)
-	
+
+	# Mark as in-game immediately to block any concurrent second call
 	lobby["etat"] = "EN_JEU"
+	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
 
 	$"../FlaskManager".send("create_game", "/game/create", {
 		"player_id": player_id,

@@ -223,7 +223,6 @@ func _on_commencer_pressed():
 	timer_chrono.stop()
 	btn_commencer.disabled = true  # anti double-clic
 	LobbyHandler.lancer_partie()
-
 # ----------------------------------------------------------------
 # TIMER
 # ----------------------------------------------------------------

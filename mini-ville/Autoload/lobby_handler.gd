@@ -10,6 +10,7 @@ signal lobby_creer_signal(lobby_id: String)
 var lobby_id := ""		# déclare une variable de type String
 var est_host := false	# déclare une variable de type boolean initalement false
 var joueurs := []		# déclare un tableau vide
+var _game_starting := false  # garde contre les double-envois de create_game
 
 # ----------------------------------------------------------------
 # INITIALISATION
@@ -59,14 +60,18 @@ func quitter_lobby():
 	reset()
 	
 func lancer_partie():
+	if _game_starting:
+		print("[LobbyHandler] Partie déjà en cours de lancement, ignoré.")
+		return
 	if not est_host:
 		print("[LobbyHandler] Seul le host peut lancer la partie")
 		return
-		
+
 	if joueurs.size() < 2:
 		print("[LobbyHandler] Il faut au moins 2 joueurs")
 		return
-		
+
+	_game_starting = true
 	NetworkManager.envoyer({
 		"action":"create_game",
 		"token": NetworkManager.get_token(),
@@ -116,6 +121,7 @@ func reset():
 	lobby_id = ""
 	est_host = false
 	joueurs = []
+	_game_starting = false
 	
 	
 func get_lobby_id() -> String:

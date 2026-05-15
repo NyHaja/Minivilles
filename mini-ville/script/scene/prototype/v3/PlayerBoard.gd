@@ -5,6 +5,8 @@ signal pass_turn_requested
 signal open_monuments_requested
 
 var player_data = null
+var prev_deck: Dictionary = {}       # {card_id: quantity} — for buy animation
+var prev_monuments: Dictionary = {}  # {m_id: bool} — for build animation
 
 @onready var lbl_name: Label = %PlayerLabel
 @onready var monument_icons: GridContainer = %MonumentIconContainer
@@ -86,18 +88,27 @@ func setup_network(data: Dictionary, is_active_player: bool):
 		var info = monument_nodes[m_id]
 		var unbuild_node = find_child(info["unbuild"], true, false)
 		var build_node = find_child(info["build"], true, false)
-		
-		var is_built = monument_array.get(str(m_id), false) 
-		
+
+		var is_built = monument_array.get(str(m_id), false)
+		var was_built = prev_monuments.get(m_id, false)
+
 		if unbuild_node: unbuild_node.visible = not is_built
-		if build_node: build_node.visible = is_built
+		if build_node:
+			build_node.visible = is_built
+			# Animate monument becoming built: golden flash fade-in
+			if is_built and not was_built:
+				build_node.modulate = Color(1.5, 1.5, 0.5, 0.0)  # start bright/golden, invisible
+				var mt = build_node.create_tween()
+				mt.tween_property(build_node, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.5).set_trans(Tween.TRANS_CUBIC)
+
+		prev_monuments[m_id] = is_built
 
 	if btn_pass: btn_pass.visible = is_active_player
 	if btn_monu: btn_monu.visible = is_active_player
 
 	update_info()
 	update_deck()
-	
+
 	var tween = create_tween()
 	if top_bar: tween.parallel().tween_property(top_bar, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
 	if monu_zone: tween.parallel().tween_property(monu_zone, "modulate:a", 1.0, 0.15).set_trans(Tween.TRANS_SINE)
@@ -160,50 +171,62 @@ func set_actions_enabled(can_act: bool) -> void:
 
 func update_deck() -> void:
 	if player_data == null: return
-	
+
 	for pile in piles.values():
 		var anchor = pile.get_node_or_null("Anchor")
 		if anchor:
-			for child in anchor.get_children(): 
+			for child in anchor.get_children():
 				anchor.remove_child(child)
 				child.queue_free()
-			
+
 	var pile_counts = {CardColor.Type.BLUE: 0, CardColor.Type.GREEN: 0, CardColor.Type.RED: 0, CardColor.Type.PURPLE: 0}
-	var card_width = 156 
+	var card_width = 156
 	var card_height = 200
-	var stack_gap = 25 
-	
+	var stack_gap = 25
+
 	var deck_array = []
 	if player_data is Dictionary:
 		deck_array = player_data.get("deck", [])
 	else:
 		deck_array = player_data.deck
-	
+
+	var new_deck_snapshot: Dictionary = {}
+
 	for instance in deck_array:
 		if typeof(instance) != TYPE_ARRAY: continue
 		var card_id = int(instance[0])
 		var quantity = int(instance[1])
 		var card_data_obj = CardFactory.get_card(card_id)
-		
+		new_deck_snapshot[card_id] = quantity
+
 		if card_data_obj != null:
 			var color = card_data_obj.get_color()
 			var target_pile = piles[color]
 			var anchor = target_pile.get_node_or_null("Anchor")
 			if not anchor: continue
-			
+
 			var dir_suffix = get_board_tooltip_direction()
-			
+			var prev_qty = prev_deck.get(card_id, 0)
+
 			for i in range(quantity):
 				var card_visual = CARD_SCENE.instantiate()
 				anchor.add_child(card_visual)
 				card_visual.setup_card(card_data_obj, dir_suffix)
 				card_visual.custom_minimum_size = Vector2(card_width, card_height)
 				card_visual.position = Vector2(pile_counts[color] * stack_gap, 0)
+
+				# Slide-up + fade for cards that are new since last sync
+				if i >= prev_qty:
+					var final_y = card_visual.position.y
+					card_visual.position.y = final_y + 40.0
+					card_visual.modulate.a = 0.0
+					var ct = card_visual.create_tween().set_parallel(true)
+					ct.tween_property(card_visual, "modulate:a", 1.0, 0.35)
+					ct.tween_property(card_visual, "position:y", final_y, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
 				pile_counts[color] += 1
 
-	for color in piles:
-		var count = pile_counts[color]
-		if count > 0: piles[color].custom_minimum_size.x = card_width + ((count - 1) * stack_gap)
+	prev_deck = new_deck_snapshot
 
 	for color in piles:
 		var count = pile_counts[color]
@@ -217,7 +240,7 @@ func get_clean_file_name(card_name: String, color: int) -> String:
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
 	return prefix + clean_name
 
 func get_board_tooltip_direction() -> String:

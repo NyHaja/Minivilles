@@ -19,41 +19,107 @@ func get_lang_folder() -> String:
 		return "English"
 	return "French"
 
-func update_network_shop(shop_data_dict: Dictionary) -> void:
-	for child in grid_container.get_children():
-		child.queue_free()
-		
-	var card_ids = shop_data_dict.keys()
-	var max_cards = min(card_ids.size(), 9)
-		
-	for i in range(max_cards):
-		var card_id_str = card_ids[i]
+# Maps card_id (int) → card_visual node. Populated by update_network_shop.
+var card_slot_map: Dictionary = {}
+
+# Smart in-place update. Returns {new_card_id: target_global_position} for
+# each card that needs a deck→slot animation.
+func update_network_shop(shop_data_dict: Dictionary) -> Dictionary:
+	var position_map: Dictionary = {}
+
+	if card_slot_map.is_empty():
+		_full_rebuild(shop_data_dict)
+		return position_map
+
+	var removed_ids: Array = []
+	for card_id in card_slot_map:
+		if not shop_data_dict.has(str(card_id)):
+			removed_ids.append(card_id)
+
+	var new_ids: Array = []
+	for card_id_str in shop_data_dict:
+		if not card_slot_map.has(int(card_id_str)):
+			new_ids.append(int(card_id_str))
+
+	for card_id_str in shop_data_dict:
 		var card_id = int(card_id_str)
-		var quantity = shop_data_dict[card_id_str]
+		if card_slot_map.has(card_id):
+			var slot = card_slot_map[card_id]
+			if slot.has_method("set_badge_count"):
+				slot.set_badge_count(shop_data_dict[card_id_str])
+
+	removed_ids.sort_custom(func(a, b):
+		var sa = card_slot_map.get(a, null)
+		var sb = card_slot_map.get(b, null)
+		var ia = sa.get_index() if is_instance_valid(sa) else 999
+		var ib = sb.get_index() if is_instance_valid(sb) else 999
+		return ia < ib
+	)
+
+	var freed_slots: Array = []
+	for card_id in removed_ids:
+		var slot = card_slot_map.get(card_id, null)
+		if is_instance_valid(slot):
+			freed_slots.append({
+				"index": slot.get_index(),
+				"position": slot.global_position
+			})
+			slot.free()
+		card_slot_map.erase(card_id)
+
+	for i in range(new_ids.size()):
+		var card_id = new_ids[i]
 		var card_data = CardFactory.get_card(card_id)
-		
-		if card_data != null:
-			var card_visual
-			var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
-			var tex_normal = load("res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png")
-			
-			if tex_normal:
-				card_visual = CARD_SCENE.instantiate()
-				var image_node = card_visual.get_node_or_null("Visual")
-				if image_node is TextureButton:
-					image_node.texture_normal = tex_normal
-					image_node.pressed.connect(func(): _on_card_clicked(card_visual, card_id))
-				
-				# Ajout du halo de sélection sur le Visual (pour qu'il suive l'élévation)
-				var glow = _create_glow_panel("SelectionGlow", Color(1.0, 0.84, 0.0, 0.8))
-				if image_node: image_node.add_child(glow)
-				
-				card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
-				if card_visual.has_method("set_badge_count"): card_visual.set_badge_count(quantity)
-			else:
-				card_visual = _create_fallback_button(card_data, quantity, card_id)
-				
-			grid_container.add_child(card_visual)
+		if card_data == null or card_data is Monument: continue
+
+		var qty = shop_data_dict.get(str(card_id), 1)
+		var card_visual = _create_card_visual(card_id, card_data, qty)
+		card_visual.modulate.a = 0.0  # hidden until fly-in animation reveals it
+
+		grid_container.add_child(card_visual)
+
+		if i < freed_slots.size():
+			grid_container.move_child(card_visual, freed_slots[i].index)
+			position_map[card_id] = freed_slots[i].position
+
+		card_slot_map[card_id] = card_visual
+
+	return position_map
+
+func _full_rebuild(shop_data_dict: Dictionary) -> void:
+	var old_children = grid_container.get_children()
+	for child in old_children:
+		child.free()
+	card_slot_map.clear()
+
+	var card_ids = shop_data_dict.keys()
+	for i in range(min(card_ids.size(), 9)):
+		var card_id = int(card_ids[i])
+		var card_data = CardFactory.get_card(card_id)
+		if card_data == null or card_data is Monument: continue
+		var card_visual = _create_card_visual(card_id, card_data, shop_data_dict[card_ids[i]])
+		grid_container.add_child(card_visual)
+		card_slot_map[card_id] = card_visual
+
+func _create_card_visual(card_id: int, card_data, quantity) -> Control:
+	var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
+	
+	var tex_normal = load("res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png")
+	
+	var card_visual: Control
+	if tex_normal:
+		card_visual = CARD_SCENE.instantiate()
+		var image_node = card_visual.get_node_or_null("Visual")
+		if image_node is TextureButton:
+			image_node.texture_normal = tex_normal
+			image_node.pressed.connect(func(): _on_card_clicked(card_visual, card_id))
+		var glow = _create_glow_panel("SelectionGlow", Color(1.0, 0.84, 0.0, 0.8))
+		if image_node: image_node.add_child(glow)
+		card_visual.custom_minimum_size = Vector2(shop_card_w, shop_card_h)
+		if card_visual.has_method("set_badge_count"): card_visual.set_badge_count(quantity)
+	else:
+		card_visual = _create_fallback_button(card_data, quantity, card_id)
+	return card_visual
 
 func update_shop(shop_data) -> void:
 	if not shop_data or not shop_data.get("shop"): return

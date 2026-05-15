@@ -95,8 +95,9 @@ func _traiter_message(raw: String):
 	var json = JSON.new()
 	if json.parse(raw) != OK: return
 	var data = json.get_data()
-	
+
 	var action = data.get("action_reply", "")
+	print(">>> [NetworkManager] _traiter_message: action=", action)
 	var status = data.get("status", "error")
 	var message = data.get("message", "")
 
@@ -104,6 +105,12 @@ func _traiter_message(raw: String):
 	if action == "pong":
 		return
 	# -----------------------------------------------
+
+	# --- DEBUG : Afficher les erreurs serveur côté client ---
+	if action == "debug_error":
+		print("!!! [SERVER DEBUG] ", data.get("message", ""))
+		return
+	# --------------------------------------------------------
 
 	# 1. Traitement Authentification
 	if action == "authentification":

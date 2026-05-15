@@ -38,32 +38,20 @@ func _handle_turn_started(data: Dictionary):
 	if not gameplayScreen or not is_instance_valid(gameplayScreen):
 		cached_turn_data = data
 		return
-	
+
 	var active_id = data.get("active_player_id", -1)
-	var active_name = data.get("player_name", "Inconnu")
 	is_my_turn = (int(active_id) == int(my_player_id))
-	
-	if gameplayScreen and is_instance_valid(gameplayScreen):
+
+	# Delegate to jeu_multi, which will delay showing the overlay
+	# until all fly animations (deck→shop, shop→hand) have finished.
+	if gameplayScreen.has_method("try_show_turn_overlay"):
+		gameplayScreen.try_show_turn_overlay(data)
+	else:
+		# Fallback for non-multiplayer screens
 		gameplayScreen.set_actions_enabled(is_my_turn)
-		gameplayScreen.lbl_turn_announcement.text = tr("Tour de ") + active_name
-		
-		if gameplayScreen.turn_overlay:
-			gameplayScreen.turn_overlay.move_to_front()
-			
-			gameplayScreen.turn_overlay.show()
-			
-			var btn_box = gameplayScreen.turn_overlay.get_node_or_null("VBoxContainer/HBoxContainer")
-			if btn_box:
-				btn_box.visible = is_my_turn
-				
-			if is_my_turn and gameplayScreen.btn_overlay_roll_2:
-				var my_data = gameplayScreen.latest_players_data.get(str(my_player_id), {})
-				var my_monuments = my_data.get("monuments", {})
-				
-				var has_gare = my_monuments.get("22", false) or my_monuments.get(22, false)
-				gameplayScreen.btn_overlay_roll_2.visible = has_gare
 
 func _handle_dice_rolled(data: Dictionary):
+	print(">>> [GameClient] _handle_dice_rolled called! d1=", data.get("d1"), " d2=", data.get("d2"))
 	var d1 = data.get("d1", 1)
 	var d2 = data.get("d2", 0)
 	var amount_rolled = data.get("amount_rolled", 1)
@@ -81,13 +69,10 @@ func _handle_dice_rolled(data: Dictionary):
 func _handle_sync_state(data: Dictionary):
 	print("[GameClient] _handle_sync_state called. gameplayScreen valid: ", gameplayScreen and is_instance_valid(gameplayScreen))
 	if gameplayScreen and is_instance_valid(gameplayScreen):
-		var players_data = data.get("players", {})
-		var shop_data = data.get("shop", {})
-		
-		if gameplayScreen.has_method("update_network_boards"):
-			gameplayScreen.update_network_boards(players_data)
-		if gameplayScreen.has_method("update_network_shop"):
-			gameplayScreen.update_network_shop(shop_data)
+		# jeu_multi._on_network_message handles sync_state directly (including gold animations).
+		# Calling update_network_boards here would overwrite latest_players_data before
+		# jeu_multi can diff the old vs new balances, killing the gold float animations.
+		pass
 	else:
 		cached_sync_data = data
 		print("[GameClient] Caught sync_state during loading screen!")
@@ -133,7 +118,7 @@ func request_roll_dice(amount: int):
 		print(">>> [GameClient] FAIL: The client thinks it is not your turn. Aborting send!")
 		return
 		
-	print(">>> [GameClient] SUCCESS: Sending roll request to server...")
+	print(">>> [GameClient] SUCCESS: Sending roll request to server... lobby_id=", current_lobby_id)
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "roll_dice",
@@ -143,6 +128,7 @@ func request_roll_dice(amount: int):
 
 func request_resolve_dice(modifier: String, amount_rolled: int):
 	if not is_my_turn: return
+	# NOTE: is_my_turn stays true — player still needs to buy or skip after this
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "resolve_dice",
@@ -153,6 +139,7 @@ func request_resolve_dice(modifier: String, amount_rolled: int):
 
 func request_buy_card(card_id: int):
 	if not is_my_turn: return
+	is_my_turn = false  # End of turn
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "buy_card",
@@ -162,6 +149,7 @@ func request_buy_card(card_id: int):
 
 func request_build_monument(monument_id: int):
 	if not is_my_turn: return
+	is_my_turn = false  # End of turn
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "build_monument",
@@ -171,6 +159,7 @@ func request_build_monument(monument_id: int):
 
 func request_skip_turn():
 	if not is_my_turn: return
+	is_my_turn = false  # End of turn
 	NetworkManager.envoyer({
 		"action": "game_action",
 		"game_action": "skip_turn",

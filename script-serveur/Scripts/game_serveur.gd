@@ -44,8 +44,12 @@ func handle_client_message(player_id, data: Dictionary):
 	
 	if int(float(active_player.id)) != int(float(player_id)):
 		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", player_id)
-		return 
-		
+		_broadcast_to_lobby({
+			"action_reply": "debug_error",
+			"message": "REJECTED: active_player=" + str(active_player.id) + " but sender=" + str(player_id)
+		})
+		return
+
 	print("[GameServer] ACCEPTED: Processing action...")
 		
 	match data.get("game_action", ""):
@@ -72,7 +76,8 @@ func _server_dice_phase(amount: int):
 	last_d1 = d1
 	last_d2 = d2
 	current_roll_value = d1 + d2
-	
+
+	print("[GameServer] _server_dice_phase: rolling d1=", d1, " d2=", d2, " lobby_id=", lobby_id)
 	_broadcast_to_lobby({
 		"action_reply": "dice_rolled",
 		"d1": d1,
@@ -226,8 +231,11 @@ func _broadcast_sync_state():
 
 func _broadcast_to_lobby(payload: Dictionary):
 	var serveur = get_parent().get_parent()
+	print("[GameServer] _broadcast_to_lobby: action=", payload.get("action_reply","?"), " serveur=", serveur, " lobby_id=", lobby_id)
 	if serveur and serveur.has_method("broadcast_lobby"):
 		serveur.broadcast_lobby(lobby_id, payload)
+	else:
+		print("[GameServer] ERROR: serveur null or missing broadcast_lobby! serveur=", serveur)
 
 func _record_match_history(winner: Player):
 	var parent_server = get_parent().get_parent()

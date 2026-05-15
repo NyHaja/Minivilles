@@ -30,9 +30,13 @@ func handle(client: WebSocketPeer, data: Dictionary):
 				break
 
 	if active_games.has(lobby_id):
-		var player_id = get_parent().get_player_id(client) 
-		
+		var player_id = get_parent().get_player_id(client)
+		print("[GameHandler] DEBUG routing to game. lobby=", lobby_id, " player_id=", player_id)
 		var game_instance = active_games[lobby_id]
 		game_instance.handle_client_message(player_id, data)
 	else:
 		print("[GameHandler] ERROR: Action received for unknown lobby: ", lobby_id)
+		get_parent().send_to_client(client, {
+			"action_reply": "debug_error",
+			"message": "GameHandler: no active game for lobby '" + lobby_id + "'. Known: " + str(active_games.keys())
+		})
