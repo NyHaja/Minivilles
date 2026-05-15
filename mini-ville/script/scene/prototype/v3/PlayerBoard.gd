@@ -40,6 +40,8 @@ func _ready() -> void:
 
 	if active_stats_box:
 		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
+		
+	if btn_pass: btn_pass.text = tr("PASSER_LE_TOUR")
 
 # ----------------------------------------------------------------------
 # ROTATION (Sécurisée pour les Grilles)

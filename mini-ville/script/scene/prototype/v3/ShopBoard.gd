@@ -13,6 +13,12 @@ var last_clicked_slot: Control = null
 var last_clicked_index: int = -1
 var current_glow_tween: Tween
 
+func get_lang_folder() -> String:
+	# Récupère la langue actuelle (ex: "fr", "en", "en_US")
+	if TranslationServer.get_locale().begins_with("en"):
+		return "English"
+	return "French"
+
 func update_network_shop(shop_data_dict: Dictionary) -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
@@ -29,7 +35,7 @@ func update_network_shop(shop_data_dict: Dictionary) -> void:
 		if card_data != null:
 			var card_visual
 			var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
-			var tex_normal = load("res://assets/Cards/Basis/" + clean_name + "_1.png")
+			var tex_normal = load("res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png")
 			
 			if tex_normal:
 				card_visual = CARD_SCENE.instantiate()
@@ -65,7 +71,7 @@ func update_shop(shop_data) -> void:
 		if card_data:
 			var card_visual
 			var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
-			var tex_normal = load("res://assets/Cards/Basis/" + clean_name + "_1.png")
+			var tex_normal = load("res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png")
 			
 			if tex_normal:
 				card_visual = CARD_SCENE.instantiate()

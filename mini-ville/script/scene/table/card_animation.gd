@@ -33,6 +33,12 @@ var anim_speed := 0.15
 var type_couleur_carte: int = -1
 var card_data = null
 
+func get_lang_folder() -> String:
+	# Récupère la langue actuelle (ex: "fr", "en", "en_US")
+	if TranslationServer.get_locale().begins_with("en"):
+		return "English"
+	return "French"
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	
@@ -158,12 +164,12 @@ func setup_card(card_data, dir: String = "top") -> void:
 	var card_color = card_data.get_color()
 	var clean_name = get_clean_file_name(card_name, card_color)
 
-	var path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+	var path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
 	var tex = load(path_basis)
 	if tex:
 		visual.texture_normal = tex
 
-	var tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_" + dir + ".png"
+	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + "_" + dir + ".png"
 	var tip_tex = load(tip_path)
 	if tip_tex:
 		tooltip.texture = tip_tex

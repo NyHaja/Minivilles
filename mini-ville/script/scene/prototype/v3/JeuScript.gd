@@ -112,6 +112,12 @@ var selected_shop_card_id: int = -1
 
 const MONUMENT_SLOT_SCENE = preload("res://scene/table/MonumentSlot.tscn")
 
+func get_lang_folder() -> String:
+	# Récupère la langue actuelle (ex: "fr", "en", "en_US")
+	if TranslationServer.get_locale().begins_with("en"):
+		return "English"
+	return "French"
+
 func _ready() -> void:
 	shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
@@ -156,6 +162,13 @@ func _ready() -> void:
 	
 	var chal_btn = get_node_or_null("%ChalutierRoll")
 	if chal_btn: chal_btn.pressed.connect(func(): chalutier_roll_pressed.emit())
+	
+	if btn_overlay_roll_1: btn_overlay_roll_1.text = tr("LANCER_1_DE")
+	if btn_overlay_roll_2: btn_overlay_roll_2.text = tr("LANCER_2_DES")
+	if settings_button: settings_button.text = tr("PARAMETRES")
+	if continue_button: continue_button.text = tr("CONTINUER")
+	if main_menu_button: main_menu_button.text = tr("MENU_PRINCIPAL")
+	if settings_quit_button: settings_quit_button.text = tr("QUITTER")
 	
 func _on_settings_pressed() -> void:
 	settings_overlay.move_to_front()
@@ -641,7 +654,7 @@ func update_monument_menu(is_demolish_mode: bool = false):
 		if not vbox: continue
 		
 		var tex_rect: TextureRect = vbox.get_child(0)
-		var build_btn: TextureButton = vbox.get_child(1)
+		var build_btn: Button = vbox.get_child(1)
 		
 		var is_built = target_player.monumentIsActive(m_id)
 		
@@ -651,7 +664,7 @@ func update_monument_menu(is_demolish_mode: bool = false):
 		else:
 			state = "recto" if is_built else "verso"
 			
-		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
+		var tex_path = "res://assets/Cards/" + get_lang_folder() + "/" + "Monuments/" + data["file"] + "_" + state + ".png"
 		var _tex = load(tex_path)
 		if _tex:
 			tex_rect.texture = _tex
@@ -935,7 +948,7 @@ func _populate_trade_deck(player, container: Container, is_mine: bool) -> void:
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex:
 				card_btn.texture_normal = _card_tex
@@ -1027,7 +1040,7 @@ func ask_give_card(owner_player, all_players: Array) -> Array:
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex:
 				card_btn.texture_normal = _card_tex
@@ -1204,18 +1217,14 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		var card_name = card_data.get_name()
 		var clean_name = ""
 		var path_basis = ""
-		var tip_path = ""
-		
-		if card_data is Monument:
-			clean_name = get_clean_file_name(card_name)
-			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
-		else:
-			var card_color = card_data.get_color()
-			# --- LA CORRECTION EST ICI ---
-			# On demande directement au shop_board de nous donner le bon nom ! [cite: 32, 65]
-			clean_name = shop_board.get_clean_file_name(card_name, card_color)
-			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+		var tip_path = ""		
+
+		var card_color = card_data.get_color()
+		# --- LA CORRECTION EST ICI ---
+		# On demande directement au shop_board de nous donner le bon nom ! 
+		clean_name = shop_board.get_clean_file_name(card_name, card_color)
+		path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
+		tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + "_top.png"
 		
 		var _tex = load(path_basis)
 		if _tex:
@@ -1223,7 +1232,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		else:
 			print("🔴 ERREUR : Impossible de charger l'image -> ", path_basis)
 		
-		var placeholder_path = "res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png"
+		var placeholder_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_vert_marché_fruit_et_légume_top.png"
 		
 		if tip_path != "":
 			var _tip_tex = load(tip_path)
@@ -1451,7 +1460,7 @@ func ask_chalutier_roll(player_name: String) -> int:
 	btn_rtlabel.fit_content = true
 	
 	var icon_path = "res://assets/UI/coin.png"
-	btn_rtlabel.text ="[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=48]Récupérer [color=gold]" + str(total) + "[/color] [img=48]" + icon_path + "[/img][/font_size][/font][/center]"
+	btn_rtlabel.text ="[center][font=res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf][font_size=48]" + tr("RECUPERER") + " [color=gold]" + str(total) + "[/color] [img=48]" + icon_path + "[/img][/font_size][/font][/center]"
 	
 	btn_vbox.add_child(btn_rtlabel)
 	

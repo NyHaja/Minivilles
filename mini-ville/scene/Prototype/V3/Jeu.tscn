@@ -21,21 +21,21 @@
 [ext_resource type="Texture2D" uid="uid://n05ux5m5dwmg" path="res://assets/UI/roll_one_die_border_hover.png" id="18_gmss7"]
 [ext_resource type="Texture2D" uid="uid://sqyyb2nhevak" path="res://assets/UI/roll_two_dices_border.png" id="19_nak6p"]
 [ext_resource type="Texture2D" uid="uid://d21evg100wsi7" path="res://assets/UI/roll_two_dices_border_hover.png" id="20_mb4n0"]
-[ext_resource type="Texture2D" uid="uid://d4h85hiv2aiy3" path="res://assets/Cards/Monuments/aéroport_verso.png" id="20_sgkkh"]
-[ext_resource type="Texture2D" uid="uid://bo24nrmwxqg54" path="res://assets/UI/build_button.png" id="21_beeqq"]
+[ext_resource type="Texture2D" uid="uid://d4h85hiv2aiy3" path="res://assets/Cards/French/Monuments/aéroport_verso.png" id="20_sgkkh"]
 [ext_resource type="Texture2D" uid="uid://benlwfo0ydoxm" path="res://assets/UI/red_button_border.png" id="21_cobnc"]
-[ext_resource type="Texture2D" uid="uid://cxa5yqxbeiuxv" path="res://assets/UI/build_button_hover.png" id="22_ijtxi"]
 [ext_resource type="Texture2D" uid="uid://b1thakn8mx747" path="res://assets/UI/red_button_border_hover.png" id="22_xeyo0"]
-[ext_resource type="Texture2D" uid="uid://ctfe1n4aqlsc2" path="res://assets/Cards/Monuments/centre_commercial_verso.png" id="23_vf6uw"]
-[ext_resource type="Texture2D" uid="uid://cwk68uf5xkoxg" path="res://assets/Cards/Monuments/gare_verso.png" id="24_fiso1"]
-[ext_resource type="Texture2D" uid="uid://cayratvgxlg2n" path="res://assets/Cards/Monuments/port_verso.png" id="25_dxqjm"]
-[ext_resource type="Texture2D" uid="uid://xoctkhbk4u3y" path="res://assets/Cards/Monuments/tour_radio_verso.png" id="26_4a53q"]
+[ext_resource type="Texture2D" uid="uid://ctfe1n4aqlsc2" path="res://assets/Cards/French/Monuments/centre_commercial_verso.png" id="23_vf6uw"]
+[ext_resource type="Texture2D" uid="uid://cwk68uf5xkoxg" path="res://assets/Cards/French/Monuments/gare_verso.png" id="24_fiso1"]
+[ext_resource type="Texture2D" uid="uid://cayratvgxlg2n" path="res://assets/Cards/French/Monuments/port_verso.png" id="25_dxqjm"]
+[ext_resource type="Texture2D" uid="uid://xoctkhbk4u3y" path="res://assets/Cards/French/Monuments/tour_radio_verso.png" id="26_4a53q"]
 [ext_resource type="FontFile" uid="uid://dvvfcd2y3rysp" path="res://assets/Fonts/Exo2-VariableFont_wght.ttf" id="27_cobnc"]
 [ext_resource type="Texture2D" uid="uid://bdp2gmkan6py" path="res://assets/UI/settings_button_border.png" id="27_scawg"]
-[ext_resource type="Texture2D" uid="uid://b4n1toe40id8m" path="res://assets/Cards/Monuments/parc_dattraction_verso.png" id="27_yln80"]
+[ext_resource type="Texture2D" uid="uid://b4n1toe40id8m" path="res://assets/Cards/French/Monuments/parc_dattraction_verso.png" id="27_yln80"]
 [ext_resource type="Texture2D" uid="uid://cc50vbs5c5xpa" path="res://assets/UI/settings_button_border_hover.png" id="28_gmss7"]
 [ext_resource type="Texture2D" uid="uid://becbelmmjo7x7" path="res://assets/UI/rule_button_border.png" id="29_nak6p"]
 [ext_resource type="Texture2D" uid="uid://c0wo4plf8m3bw" path="res://assets/UI/rule_button_border_hover.png" id="30_haf45"]
+[ext_resource type="Texture2D" uid="uid://bt6lij4jhphde" path="res://assets/UI/build_button_border.png" id="30_mb4n0"]
+[ext_resource type="Texture2D" uid="uid://egu37ofxxsug" path="res://assets/UI/build_button_border_hover.png" id="31_cobnc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cutg6"]
 
@@ -241,6 +241,15 @@ base_font = ExtResource("3_tbpra")
 variation_opentype = {
 2003265652: 900
 }
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qhi0s"]
+texture = ExtResource("30_mb4n0")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_565mm"]
+texture = ExtResource("31_cobnc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3tus8"]
+texture = ExtResource("31_cobnc")
 
 [node name="Jeu" type="Node" unique_id=1592581662]
 script = ExtResource("1_pm7t7")
@@ -1137,12 +1146,18 @@ texture = ExtResource("25_dxqjm")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildPort" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=1426727283]
+[node name="BuildPort" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Port" unique_id=1065716779]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="Gare" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=269338999]
 layout_mode = 2
@@ -1154,12 +1169,18 @@ texture = ExtResource("24_fiso1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildGare" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=1988421039]
+[node name="BuildGare" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Gare" unique_id=1208701432]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="Centre commercial" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=930120833]
 layout_mode = 2
@@ -1171,12 +1192,18 @@ texture = ExtResource("23_vf6uw")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildCentreCommercial" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=1756178854]
+[node name="BuildCentreCommercial" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Centre commercial" unique_id=221984200]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="Parc d\'attraction" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=1234829344]
 layout_mode = 2
@@ -1188,12 +1215,18 @@ texture = ExtResource("27_yln80")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildParcDattraction" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=39929364]
+[node name="BuildParcDattraction" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Parc d\'attraction" unique_id=1029371516]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="Tour radio" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=1417154530]
 layout_mode = 2
@@ -1205,12 +1238,18 @@ texture = ExtResource("26_4a53q")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildTourRadio" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=306556759]
+[node name="BuildTourRadio" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Tour radio" unique_id=616683301]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="Aéroport" type="VBoxContainer" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer" unique_id=561857608]
 layout_mode = 2
@@ -1222,12 +1261,18 @@ texture = ExtResource("20_sgkkh")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BuildAeroport" type="TextureButton" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=1264539079]
+[node name="BuildAeroport" type="Button" parent="MonumentOverlay/MainContainer/CardsMonumentsContainer/Aéroport" unique_id=957042482]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("21_beeqq")
-texture_hover = ExtResource("22_ijtxi")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_88jjp")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_qhi0s")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_565mm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3tus8")
+text = "Construire"
 
 [node name="ClickBlocker" type="ColorRect" parent="." unique_id=370266691]
 visible = false

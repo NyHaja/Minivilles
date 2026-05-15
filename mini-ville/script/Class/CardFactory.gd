@@ -8,7 +8,7 @@ static func get_card(card_id: int) -> Card:
 	return _database.get(card_id)
 	
 static func _initialize_database() -> void:
-	_database[1] = creerChampsBlé()
+	_database[1] = creerChampBlé()
 	_database[2] = creerFerme()
 	_database[3] = creerForet()
 	_database[4] = creerVignoble()
@@ -163,10 +163,10 @@ static func creerAeroport() -> Monument:
 # === 🔵 BLEUS  ===
 # Cartes bleues : s'activent sur n'importe quel tour (quand le dé tombe sur leur numéro)
 
-# Champs de Blé - Bleu - Dé: 1 - Coût: 1
+# Champ de Blé - Bleu - Dé: 1 - Coût: 1
 # Icon: WHEAT
 # Effect: Recevoir 1 pièce de la banque
-static func creerChampsBlé() -> Establishment:
+static func creerChampBlé() -> Establishment:
 	var effet = EffectGainBanque.new(1, 1)  # id_effet=1, montant=1
 	
 	# Créer la carte
@@ -174,7 +174,7 @@ static func creerChampsBlé() -> Establishment:
 	carte.NewCard(
 		effet,
 		1,                              # id card
-		"Champs de blé",
+		"Champ de blé",
 		Icon.Type.WHEAT,
 		CardColor.Type.BLUE,
 		1,                              # coût

@@ -10,6 +10,29 @@ func _load_translations():
 	var data = {
 		"fr": {
 			# --- Existant ---
+
+			# --- Boutons de l'UI ---
+			"PASSER_LE_TOUR": "Passer le tour",
+			"LANCER_1_DE": "Lancer 1 dé",
+			"LANCER_2_DES": "Lancer 2 dés",
+			"Refaire le lancer": "Refaire le lancer",
+			"Conserver le résultat": "Conserver le résultat",
+			"Ajouter 2 au résultat": "Ajouter 2 au résultat",
+			"PARAMETRES": "Paramètres",
+			"CONTINUER": "Continuer",
+			"MENU_PRINCIPAL": "Menu principal",
+			"QUITTER": "Quitter",
+			"RECUPERER": "Récupérer",
+			   
+			# --- Monuments ---
+			"Port": "Port",
+			"Gare": "Gare",
+			"Centre commercial": "Centre commercial",
+			"Parc d'attraction": "Parc d'attraction",
+			"Tour radio": "Tour radio",
+			"Aéroport": "Aéroport",
+			"Construire": "Construire",
+			
 			"Connexion": "Connexion",
 			"Jouer en invité": "Jouer en invité",
 			"Règles": "Règles",
@@ -118,6 +141,28 @@ func _load_translations():
 			"Veuillez entrer le code complet": "Veuillez entrer le code complet",
 		},
 		"en": {
+			# --- Boutons de l'UI ---
+			"PASSER_LE_TOUR": "End Turn",
+			"LANCER_1_DE": "Roll 1 die",
+			"LANCER_2_DES": "Roll 2 dice",
+			"Refaire le lancer": "Reroll",
+			"Conserver le résultat": "Keep the result",
+			"Ajouter 2 au résultat": "Add 2 to result",
+			"PARAMETRES": "Settings",
+			"CONTINUER": "Continue",
+			"MENU_PRINCIPAL": "Main Menu",
+			"QUITTER": "Quit",
+			"RECUPERER": "Collect",
+
+			# --- Monuments ---
+			"Port": "Harbor",
+			"Gare": "Train Station",
+			"Centre commercial": "Shopping Mall",
+			"Parc d'attraction": "Amusement Park",
+			"Tour radio": "Radio Tower",
+			"Aéroport": "Airport",			
+			"Construire": "Build",
+			
 			# --- Existant ---
 			"Connexion": "Login",
 			"Jouer en invité": "Play as Guest",
