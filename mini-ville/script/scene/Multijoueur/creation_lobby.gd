@@ -29,7 +29,7 @@ func _ready():
 	
 	# ------------ signal ----------------------------
 	LobbyHandler.lobby_creer_signal.connect(_on_lobby_cree)
-	#$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
+	$Content/BtnCreerWrap/BtnCreer.pressed.connect(_on_btn_creer_pressed)
 	
 	popup_setting = pop_setting_scene.instantiate()
 	
@@ -76,8 +76,10 @@ func _update_joueurs():
 
 func _on_lobby_cree(lobby_id: String):
 	#Navigue vers la salle d'attente en passant le lobby_id
-	get_tree().set_meta("tour_duration_index", dur_index)
+	$Content/BtnCreerWrap/BtnCreer.disabled = true
+	#LobbyHandler.creer_lobby("Partie", nb_joueurs, dur_index)
 	get_tree().set_meta("nb_joueurs", nb_joueurs)
+	get_tree().set_meta("tour_duration_index", dur_index)  # ← manquait aussi
 	get_tree().change_scene_to_file("res://scene/Multijoueur/attente_lobby.tscn")
 	
 	# Afficher le host dans la liste imédiatement

@@ -78,9 +78,25 @@ font_size = 22
 font_color = Color(0.45, 0.45, 0.45, 1)
 outline_size = 3
 
-[sub_resource type="FontVariation" id="FontVariation_f4kfe"]
+[sub_resource type="FontVariation" id="FontVariation_tcmw1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7hdvn"]
+font = SubResource("FontVariation_tcmw1")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontVariation" id="FontVariation_6atrx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6atrx"]
+font = SubResource("FontVariation_6atrx")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontVariation" id="FontVariation_f4kfe"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nbc8u"]
 font = SubResource("FontVariation_f4kfe")
 font_size = 57
 font_color = Color(0.784, 0.224, 0.149, 1)
@@ -88,24 +104,8 @@ outline_size = 4
 
 [sub_resource type="FontVariation" id="FontVariation_nbc8u"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_6atrx"]
-font = SubResource("FontVariation_nbc8u")
-font_size = 57
-font_color = Color(0.784, 0.224, 0.149, 1)
-outline_size = 4
-
-[sub_resource type="FontVariation" id="FontVariation_gtixo"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_nbc8u"]
-font = SubResource("FontVariation_gtixo")
-font_size = 57
-font_color = Color(0.784, 0.224, 0.149, 1)
-outline_size = 4
-
-[sub_resource type="FontVariation" id="FontVariation_bxy4l"]
-
 [sub_resource type="LabelSettings" id="LabelSettings_val"]
-font = SubResource("FontVariation_bxy4l")
+font = SubResource("FontVariation_nbc8u")
 font_size = 57
 font_color = Color(0.784, 0.224, 0.149, 1)
 outline_size = 4

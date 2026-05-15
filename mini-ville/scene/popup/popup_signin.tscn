@@ -27,13 +27,13 @@ shadow_offset = Vector2(6, 7)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ao08t"]
 font = ExtResource("4_dyhst")
-font_size = 60
+font_size = 70
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_dlvnj"]
 font = ExtResource("5_q6rvm")
-font_size = 22
+font_size = 30
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 4
 
@@ -85,7 +85,7 @@ shadow_offset = Vector2(3, 3)
 
 [sub_resource type="LabelSettings" id="LabelSettings_q8cub"]
 font = ExtResource("7_gfe4b")
-font_size = 13
+font_size = 20
 font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 outline_size = 5
 
@@ -97,8 +97,8 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
-expand_margin_left = 30.0
-expand_margin_right = 30.0
+expand_margin_left = 50.0
+expand_margin_right = 50.0
 shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
 shadow_size = 1
 shadow_offset = Vector2(4, 4)
@@ -116,10 +116,10 @@ expand_margin_right = 30.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_papkj"]
 bg_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
 skew = Vector2(1, 0)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 expand_margin_left = 50.0
 expand_margin_right = 50.0
 

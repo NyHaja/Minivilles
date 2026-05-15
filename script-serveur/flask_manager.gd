@@ -115,22 +115,23 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			var guest_id = flask_response.get("guest_id")
 			var nickname = flask_response.get("nickname", "")
 			
-			get_parent().guest_sessions[client] = guest_id
+			serveur.guest_sessions[client] = guest_id
+			serveur.guest_nicknames[client] = nickname
 			print("[FlaslManager] Guest enregistré : ", nickname, " (id : ", guest_id, ")")
 			
-			get_parent().send_to_client(client, {
+			serveur.send_to_client(client, {
 				"action_reply": "guest_player",
 				"status": "success",
 				"guest_id": guest_id,
 				"nickname": nickname
 			})
 		else:
-			get_parent().send_to_client(client, {
+			serveur.send_to_client(client, {
 				"action_reply": "guest_player",
 				"status": "error",
 				"message": flask_response.get("message", "Erreur création guest.")
 			})
-			
+		return
 			
 	# --- GESTION DES STATISTIQUES (GET_STATS) ---
 	elif action_name == "get_stats":
@@ -184,6 +185,10 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 	elif action_name == "create_game" and flask_response.get("status") == "success":
 		var game_id  = flask_response.get("game_id")
 		var lobby_id = extra.get("lobby_id", "")
+		
+		if not serveur.lobbies.has(lobby_id):
+			print("[FLASK] Lobby", lobby_id, "n'existe plus, annulation" )
+			return
 
 		if serveur.lobbies.has(lobby_id):
 			serveur.lobbies[lobby_id]["game_id"] = game_id
@@ -213,6 +218,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			})
 			
 			serveur.get_node("GameHandler").start_new_game(lobby_id, game_players)
+			#serveur.lobbies.erase(lobby_id)
 		return
 
 	# ── Réponse générique pour les autres actions ──
@@ -231,7 +237,7 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 
 	serveur.send_to_client(client, reponse)
 	
-func _on_nickname_fetched(result, code, _headers, body, client: StreamPeerTLS, http: HTTPRequest):
+func _on_nickname_fetched(result, code, _headers, body, client: WebSocketPeer, http: HTTPRequest):
 	http.queue_free()
 	if code != 200: return
 	var data = JSON.parse_string(body.get_string_from_utf8())

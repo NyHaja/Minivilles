@@ -22,7 +22,6 @@ func _ready() -> void:
 		NetworkManager.message_recu.connect(_on_network_message_received)
 
 	# 4. ÉCOUTER LE NETWORK MANAGER
-	# On s'assure d'écouter les signaux du NetworkManager (Singleton)
 	if NetworkManager.has_signal("auth_finished"):
 		if not NetworkManager.auth_finished.is_connected(_on_auth_result):
 			NetworkManager.auth_finished.connect(_on_auth_result)
@@ -43,7 +42,7 @@ func bouton_inscription():
 		popup_signin.on_back.connect(func(): show())
 		hide()
 	else:
-		show_error("Erreur : Scène popup introuvable.")
+		show_error(tr("Erreur : Scène popup introuvable."))
 
 
 func _on_connexionbtn_pressed() -> void:
@@ -59,7 +58,7 @@ func _on_connexionbtn_pressed() -> void:
 	var mdp  = mdp_node.text
 
 	if mail == "" or mdp == "":
-		show_error("Veuillez remplir tous les champs.")
+		show_error(tr("Veuillez remplir tous les champs."))
 		return
 
 	SoundManager.play_click()
@@ -81,7 +80,7 @@ func _on_auth_result(success: bool) -> void:
 		return
 
 	if success:
-		show_success("Connexion réussie !")
+		show_success(tr("Connexion réussie !"))
 
 		# On attend 1 seconde avant de changer de scène
 		await get_tree().create_timer(1.0).timeout
@@ -94,7 +93,7 @@ func _on_auth_result(success: bool) -> void:
 		get_tree().change_scene_to_file("res://scene/Ecran principale/connected_screen.tscn")
 	else:
 		_traitement_en_cours = false  # permet de réessayer
-		show_error("Identifiants incorrects.")
+		show_error(tr("Identifiants incorrects."))
 
 
 func show_error(msg: String):
@@ -115,4 +114,3 @@ func show_success(msg: String):
 func _on_forgot_password_pressed() -> void:
 	var instance_popup = popup_forgot.instantiate()
 	add_child(instance_popup)
-	

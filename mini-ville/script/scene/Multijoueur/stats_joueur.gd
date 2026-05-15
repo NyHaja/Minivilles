@@ -7,12 +7,45 @@ func _ready():
 			_on_retour())
 
 
-func setup(nom: String, parties_jouees: int, parties_gagnees: int, rang: String = "legende"):
-	$Content/ProfileRow/NomJoueur.text = nom
-	$Content/StatsContainer/Stat1Row/StatJouees.text = tr("Nombre de partie(s) jouée(s) : %d") % parties_jouees
-	$Content/StatsContainer/Stat2Row/StatGagnees.text = tr("Nombre de partie(s) gagnée(s) : %d") % parties_gagnees
-	$Content/RangContainer/BadgeWrap/BadgeRang.texture = load("res://assets/ui/stats_joueur/badge_%s.png" % rang)
-	$Content/RangContainer/LegendeTxtWrap/TexteLegende.text = rang.capitalize()
+# ------------------------------------
+#  MISE À JOUR DE L'INTERFACE
+# ------------------------------------
+func update_stats(data: Dictionary) -> void:
+	if not is_inside_tree(): return
+	
+	# Récupération des données depuis le JSON
+	var pseudo = data.get("nickname", "Joueur Inconnu")
+	var parties = data.get("games_played_count", 0)
+	var victoires = data.get("wins_count", 0)
+	var winrate = data.get("winrate", 0)
+	var mail = data.get("email","")
+	var created_at = data.get("created_at",)
+	
+	# Calcul des défaites (Parties jouées - Victoires)
+	var defaites = parties - victoires
+	if defaites < 0: defaites = 0 
+
+	# Mise à jour des Labels (Grâce aux Noms Uniques '%')
+	if get_node_or_null("%LabelPseudo"):
+		%LabelPseudo.text = str(pseudo).to_upper() 
+		
+	if get_node_or_null("%LabelEmail"):
+		%LabelEmail.text = str(mail)
+		
+	if get_node_or_null("%LabelMembre"):
+		%LabelMembre.text = str(created_at)
+
+	if get_node_or_null("%LabelPartiesVal"):
+		%LabelPartiesVal.text = str(parties)
+
+	if get_node_or_null("%LabelVictoiresVal"):
+		%LabelVictoiresVal.text = str(victoires)
+
+	if get_node_or_null("%LabelDefaitesVal"):
+		%LabelDefaitesVal.text = str(defaites)
+
+	if get_node_or_null("%LabelWinRateVal"):
+		%LabelWinRateVal.text = str(winrate) + "%"
 
 
 func _on_retour():

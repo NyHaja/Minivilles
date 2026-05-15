@@ -29,6 +29,10 @@ var _session_token := ""
 var _joueur_id := -1
 var _est_guest := false
 
+# Variables pour le Heartbeat (Maintien de connexion)
+var _temps_ecoule := 0.0
+const DELAI_PING := 20.0
+
 # ------------------------------------
 #	INITIALISATION & CONNEXION
 # ------------------------------------
@@ -43,6 +47,7 @@ func lancer_connexion_reseau():
 	
 func _connecter():
 	print("[NetworkManager] Tentative de connexion WebSocket vers ", URL)
+	var tls_options = TLSOptions.client_unsafe()
 	var err = _ws.connect_to_url(URL)
 	if err != OK:
 		print("[NetworkManager] Erreur d'initialisation WebSocket : ", err)
@@ -50,7 +55,7 @@ func _connecter():
 # ------------------------------------
 #	BOUCLE RÉSEAU
 # ------------------------------------
-func _process(_delta):
+func _process(delta): # <- Remplacement de _delta par delta pour l'utiliser
 	# SÉCURITÉ : On s'assure que _ws existe bien avant de faire quoi que ce soit
 	if _ws == null: return
 		
@@ -67,6 +72,14 @@ func _process(_delta):
 		_connecte = false
 		deconnecte.emit()
 		print("[NetworkManager] Déconnecté du serveur.")
+
+	# --- AJOUT : Gestion du Heartbeat (Ping) ---
+	if _connecte:
+		_temps_ecoule += delta
+		if _temps_ecoule >= DELAI_PING:
+			envoyer({"action": "ping"})
+			_temps_ecoule = 0.0
+	# -------------------------------------------
 
 	# 2. Lecture des données
 	if state == WebSocketPeer.STATE_OPEN:
@@ -86,6 +99,11 @@ func _traiter_message(raw: String):
 	var action = data.get("action_reply", "")
 	var status = data.get("status", "error")
 	var message = data.get("message", "")
+
+	# --- AJOUT : Ignorer silencieusement le Pong ---
+	if action == "pong":
+		return
+	# -----------------------------------------------
 
 	# 1. Traitement Authentification
 	if action == "authentification":

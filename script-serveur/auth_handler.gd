@@ -112,15 +112,15 @@ func _handle_historic(client: WebSocketPeer, data: Dictionary):
 	var token = get_parent().get_token(client)
 	$"../FlaskManager".send("historic", "/history/insert", payload, client,{}, token)
 	
-func _on_guest_cree(client, data: Dictionary, flask_response: Dictionary):
-	if flask_response.get("status") == "success":
-		var guest_id = flask_response.get("guest_id")
-		get_parent().guest_sessions[client] = guest_id
-		print("[AuthHandler] Guest", guest_id, "enregistré")
-		
-		get_parent().send_to_client(client, {
-			"action_reply": "guest_player",
-			"status": "success",
-			"guest_id": guest_id,
-			"nickname": data.get("nickname", "")
-		})
+#func _on_guest_cree(client, data: Dictionary, flask_response: Dictionary):
+	#if flask_response.get("status") == "success":
+		#var guest_id = flask_response.get("guest_id")
+		#get_parent().guest_sessions[client] = guest_id
+		#print("[AuthHandler] Guest", guest_id, "enregistré")
+		#
+		#get_parent().send_to_client(client, {
+			#"action_reply": "guest_player",
+			#"status": "success",
+			#"guest_id": guest_id,
+			#"nickname": data.get("nickname", "")
+		#})

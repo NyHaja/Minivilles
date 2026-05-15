@@ -232,6 +232,7 @@ layout_mode = 2
 [node name="BtnCreer" type="Button" parent="Content/gameMode/BtnCreerWrap" unique_id=601274390]
 custom_minimum_size = Vector2(720, 110)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
@@ -255,6 +256,7 @@ layout_mode = 2
 [node name="BtnRejoindre" type="Button" parent="Content/gameMode/BtnRejoindreWrap" unique_id=805246211]
 custom_minimum_size = Vector2(720, 110)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
 theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)

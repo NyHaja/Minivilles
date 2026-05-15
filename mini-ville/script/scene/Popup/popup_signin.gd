@@ -37,21 +37,21 @@ func _on_inscrire_pressed() -> void:
 	
 	%errorMessage.hide()
 
-	# Vérifications locales de sécurité
+	# Vérifications locales de sécurité (traduites)
 	if pseudo == "" or mail == "" or mdp == "":
-		show_error("Veuillez remplir tous les champs.")
+		show_error(tr("Veuillez remplir tous les champs."))
 		return
 	if not is_valid_email(mail):
-		show_error("Le format de l'email est invalide.")
+		show_error(tr("Le format de l'email est invalide."))
 		return
 	if mdp.length() < 6:
-		show_error("Le mot de passe doit faire au moins 6 caractères.")
+		show_error(tr("Le mot de passe doit faire au moins 6 caractères."))
 		return
 	if mdp != mdp_confirm:
-		show_error("Les mots de passe ne correspondent pas !")
+		show_error(tr("Les mots de passe ne correspondent pas !"))
 		return
 		
-	show_info("Inscription en cours")
+	show_info(tr("Inscription en cours"))
 	# On utilise l'Autoload Client pour envoyer la requête
 	Client.send_register_request(pseudo, mdp, mail, "")
 
@@ -62,14 +62,14 @@ func _on_inscrire_pressed() -> void:
 # Appelé quand le NetworkManager a fini de traiter une inscription
 func _on_registration_result(success: bool, message: String) -> void:
 	if success:
-		show_success("Compte créé ! Veuillez vous connecter")
+		show_success(tr("Compte créé !\nVeuillez vous connecter"))
 		await get_tree().create_timer(1.5).timeout
 		# Retour à l'écran de login principal
 		popup_login.show()
 
 	else:
-		# Le message est déjà traduit par le NetworkManager (ex: "Pseudo déjà pris")
-		show_error(message)
+		# On traduit le message d'erreur venu du serveur (ex: "Ce pseudo est déjà utilisé.")
+		show_error(tr(message))
 
 
 
