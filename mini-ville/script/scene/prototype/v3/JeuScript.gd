@@ -1224,7 +1224,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		# On demande directement au shop_board de nous donner le bon nom ! 
 		clean_name = shop_board.get_clean_file_name(card_name, card_color)
 		path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-		tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + "_top.png"
+		tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
 		
 		var _tex = load(path_basis)
 		if _tex:
@@ -1232,7 +1232,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		else:
 			print("🔴 ERREUR : Impossible de charger l'image -> ", path_basis)
 		
-		var placeholder_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_vert_marché_fruit_et_légume_top.png"
+		var placeholder_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_vert_marché_de_fruits_et_légumes.png"
 		
 		if tip_path != "":
 			var _tip_tex = load(tip_path)
