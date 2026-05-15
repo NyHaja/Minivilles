@@ -1,6 +1,9 @@
 @tool
 extends Control
 
+@export var tooltip_scale_target: Vector2 = Vector2(1.3, 1.3) # + Grand
+var mouse_over: bool = false
+
 # --- VARIABLES EXPORTÉES ---
 @export_group("Contenu de la Carte")
 
@@ -99,63 +102,99 @@ func _create_glow_panel() -> Panel:
 	p.modulate.a = 0.0
 	return p
 
+# Dans card_animation.gd
+
+# Variable pour s'assurer que le tooltip est grand
+
 func _on_mouse_entered() -> void:
+	mouse_over = true
+	
 	if hover_tween: hover_tween.kill()
-	
-	z_index = 10 # Passe au premier plan
-	
+	z_index = 10
 	hover_tween = create_tween().set_parallel(true)
 	
-	# 1. Élévation et agrandissement de la carte
-	hover_tween.tween_property(visual, "scale", Vector2(1.1, 1.1), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	hover_tween.tween_property(visual, "position:y", -20.0, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	var elevation_carte = 20.0
 	
-	# 2. Halo de la carte
+	# 1. CARTE
+	hover_tween.tween_property(visual, "scale", Vector2(1.1, 1.1), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	hover_tween.tween_property(visual, "position:y", -elevation_carte, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	
+	# 2. HALO (CORRECTION : On anime QUE la transparence, il suit la carte tout seul !)
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 1.0, anim_speed)
 		
-	# 3. Affichage du Tooltip (UNIQUEMENT S'IL A UNE IMAGE !)
+	# 3. TOOLTIP
 	if tooltip.texture != null:
 		tooltip.show()
+		tooltip.modulate.a = 0
+		tooltip.scale = Vector2(0.3, 0.3)
 		
-		# Calcul de la position parfaite du tooltip
-		var t_size = tooltip.size * Vector2(1.0, 1.0)
-		var center_x = (visual.size.x - t_size.x) / 2.0
-		var position_parfaite = Vector2(center_x, -t_size.y - tooltip_distance)
+		await get_tree().process_frame
+		if not mouse_over: return 
+
+		var t_size = tooltip.size
+		var v_size = visual.size
+		var t_center = t_size / 2.0
+		var v_center = v_size / 2.0
 		
+		# On place le pivot exactement au centre de la bulle
+		tooltip.pivot_offset = t_center
+
+		# On calcule la taille finale de la bulle une fois agrandie
+		var scaled_t_y = t_size.y * tooltip_scale_target.y
+		var scaled_t_x = t_size.x * tooltip_scale_target.x
+
+		# Le centre horizontal est toujours celui de la carte
+		var desired_pivot_x = v_center.x
+		var desired_pivot_y = 0.0
+
 		match current_tooltip_dir:
-			"top", "bottom":
+			"top":
 				tooltip.rotation_degrees = 0
-				tooltip.position = position_parfaite
-			"left", "right":
-				tooltip.rotation_degrees = 180  
-				tooltip.position = position_parfaite
-				
-		tooltip.pivot_offset = tooltip.size / 2.0
+				# Bulle droite : la hauteur visuelle est l'axe Y
+				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
+			"bottom":
+				tooltip.rotation_degrees = 180
+				# Bulle droite : la hauteur visuelle est l'axe Y
+				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
+			"left":
+				tooltip.rotation_degrees = -90
+				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
+				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
+			"right":
+				tooltip.rotation_degrees = 90
+				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
+				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
+
+		# On applique la position calculée
+		tooltip.position = Vector2(desired_pivot_x, desired_pivot_y) - t_center
 		
 		hover_tween.tween_property(tooltip, "modulate:a", 1.0, anim_speed)
-		hover_tween.tween_property(tooltip, "scale", Vector2(1.0, 1.0), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		hover_tween.tween_property(tooltip, "scale", tooltip_scale_target, anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
 
 func _on_mouse_exited() -> void:
-	if hover_tween: hover_tween.kill()
+	mouse_over = false
 	
+	if hover_tween: hover_tween.kill()
+	z_index = 0
 	hover_tween = create_tween().set_parallel(true)
 	
-	# 1. Retour à la normale de la carte
-	hover_tween.tween_property(visual, "scale", Vector2(1.0, 1.0), anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	# 1. CARTE
+	hover_tween.tween_property(visual, "scale", Vector2(1.0, 1.0), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(visual, "position:y", 0.0, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
-	# 2. Disparition du halo de la carte
+	# 2. HALO (Retour à zéro transparence)
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 0.0, anim_speed)
 		
-	# 3. Disparition du Tooltip (s'il était affiché)
+	# 3. TOOLTIP
 	if tooltip.texture != null:
 		hover_tween.tween_property(tooltip, "modulate:a", 0.0, anim_speed)
-		hover_tween.tween_property(tooltip, "scale", Vector2(0.8, 0.8), anim_speed)
-		hover_tween.chain().tween_callback(tooltip.hide)
+		hover_tween.tween_property(tooltip, "scale", Vector2(0.3, 0.3), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		
-	hover_tween.chain().tween_callback(func(): z_index = 0)
+		await hover_tween.finished
+		if not mouse_over: tooltip.hide()
 
 func setup_card(card_data, dir: String = "top") -> void:
 	type_couleur_carte = card_data.get_color() # <-- LIGNE À AJOUTER
@@ -169,12 +208,12 @@ func setup_card(card_data, dir: String = "top") -> void:
 	if tex:
 		visual.texture_normal = tex
 
-	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + "_" + dir + ".png"
+	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
 	var tip_tex = load(tip_path)
 	if tip_tex:
 		tooltip.texture = tip_tex
 	else:
-		var placeholder = "res://assets/Tooltips/tooltip_marché_fruit_et_légume_" + dir + ".png"
+		var placeholder = "res://assets/Tooltips/tooltip_marche_de_fruits_et_legumes.png"
 		var placeholder_tex = load(placeholder)
 		if placeholder_tex:
 			tooltip.texture = placeholder_tex
