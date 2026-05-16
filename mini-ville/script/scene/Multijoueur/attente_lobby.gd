@@ -81,6 +81,9 @@ func _ready():
 	$VBoxContainer2/HBoxContainer/BtnQuitter.pressed.connect(_on_quitter_pressed)
 	$VBoxContainer/BtnParametres.pressed.connect(affiche_parametre)
 	
+	# Rend le label cliquable
+	label_code.mouse_filter = Control.MOUSE_FILTER_STOP
+	label_code.gui_input.connect(_on_label_code_clique)
 
 func affiche_parametre():
 	SoundManager.play_click()
@@ -288,3 +291,17 @@ func _on_quitter_pressed():
 func _on_lobby_dissous():
 	LobbyHandler.reset()  # remet lobby_id et joueurs à vide
 	get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
+	
+func _on_label_code_clique(event: InputEvent):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var code = LobbyHandler.get_lobby_id()
+		DisplayServer.clipboard_set(code)
+		_afficher_feedback_copie()
+
+func _afficher_feedback_copie():
+	var original_text = label_code.text
+	label_code.text = "Copié ✓"
+	label_code.modulate = Color(0.2, 1.0, 0.2, 1)  # vert
+	await get_tree().create_timer(1.5).timeout
+	label_code.text = original_text
+	label_code.modulate = Color(1, 1, 1, 1)  # remet blanc
