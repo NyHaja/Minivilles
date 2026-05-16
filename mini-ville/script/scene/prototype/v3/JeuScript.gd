@@ -68,7 +68,7 @@ var dice_textures = [
 ]
 
 @onready var monument_menu: ColorRect = %MonumentOverlay
-@onready var close_menu: TextureButton = %closeButton 
+@onready var close_menu: Button = %CloseButton 
 @onready var cards_monuments_container = $MonumentOverlay/MainContainer/CardsMonumentsContainer
 @onready var victory_screen: PanelContainer = $VictoryScreen
 @onready var lbl_winner_name: Label = %LblWinnerName
@@ -211,6 +211,7 @@ func _on_window_resized() -> void:
 			
 	if is_game_initialized:
 		positionner_plateaux(false)
+
 
 func _force_overlays_to_front() -> void:
 	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
@@ -656,7 +657,7 @@ func update_monument_menu(is_demolish_mode: bool = false):
 		if not vbox: continue
 		
 		var tex_rect: TextureRect = vbox.get_child(0)
-		var build_btn: Button = vbox.get_child(1)
+		var build_btn: TextureButton = vbox.get_child(1)
 		
 		var is_built = target_player.monumentIsActive(m_id)
 		
