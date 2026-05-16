@@ -11,6 +11,8 @@ var style_filled := StyleBoxFlat.new()
 var style_empty  := StyleBoxFlat.new()
 var style_error  := StyleBoxFlat.new()
 
+var _clavier_ferme := false
+
 var pop_setting_scene = preload("res://scene/popup/popup_parametres.tscn")
 var popup_setting
 
@@ -48,13 +50,19 @@ func _ready():
 	# --- Boutons ---
 	btn_rejoindre.pressed.connect(_on_rejoindre_pressed)
 	$Panel/BtnAnnuler.pressed.connect(func():
-		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
+			DisplayServer.virtual_keyboard_hide()
+			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 	$BtnRetour/Fleche.pressed.connect(func():
-		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
+			DisplayServer.virtual_keyboard_hide()
+			get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn"))
 
 	label_erreur.visible = false
 	
 	_update_boxes()
+	
+	if OS.has_feature("android"):
+		await get_tree().process_frame
+		DisplayServer.virtual_keyboard_show("", Rect2(), DisplayServer.KEYBOARD_TYPE_DEFAULT, 6, 6)
 	
 	popup_setting = pop_setting_scene.instantiate()
 	add_child(popup_setting)
@@ -71,14 +79,45 @@ func affiche_parametre():
 # ----------------------------------------------------------------
 # SAISIE CLAVIER
 # ----------------------------------------------------------------
-func _unhandled_key_input(event):
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.unicode >= 32 and code.length() < 6:
-			code += char(event.unicode).to_upper()
+func _notification(what):
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		DisplayServer.virtual_keyboard_hide()
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		var unicode = event.unicode
+		if unicode >= 32 and code.length() < 6:
+			code += char(unicode).to_upper()
 			_update_boxes()
 		elif event.keycode == KEY_BACKSPACE and code.length() > 0:
 			code = code.left(code.length() - 1)
 			_update_boxes()
+		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			_clavier_ferme = true
+			DisplayServer.virtual_keyboard_hide()
+			get_viewport().set_input_as_handled()
+			return
+		
+		if OS.has_feature("android") and not _clavier_ferme:
+			DisplayServer.virtual_keyboard_show(code, Rect2(), DisplayServer.KEYBOARD_TYPE_DEFAULT, 6, 6)
+		
+		get_viewport().set_input_as_handled()
+		
+		# Rouvrir seulement si l'utilisateur touche l'écran volontairement
+		if OS.has_feature("android") and event is InputEventScreenTouch and event.pressed:
+			_clavier_ferme = false
+			DisplayServer.virtual_keyboard_show(code, Rect2(), DisplayServer.KEYBOARD_TYPE_DEFAULT, 6, 6)
+
+func _unhandled_key_input(event):
+	if not OS.has_feature("android"):
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.unicode >= 32 and code.length() < 6:
+				code += char(event.unicode).to_upper()
+				_update_boxes()
+			elif event.keycode == KEY_BACKSPACE and code.length() > 0:
+				code = code.left(code.length() - 1)
+				_update_boxes()
 
 
 func _update_boxes():

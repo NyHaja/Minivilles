@@ -25,6 +25,16 @@ var prev_monuments: Dictionary = {}  # {m_id: bool} — for build animation
 
 const CARD_SCENE = preload("res://scene/table/card_animation.tscn")
 
+# ----------------------------------------------------------------
+# UTILITAIRE DÉTECTION ÉCRAN
+# ----------------------------------------------------------------
+func _is_phone() -> bool:
+	var s = get_viewport().get_visible_rect().size
+	var small_side = min(s.x, s.y)
+	var large_side = max(s.x, s.y)
+	var ratio = large_side / small_side
+	return small_side < 1400 and ratio > 1.8
+
 func _ready() -> void:
 	var top_bar = get_node_or_null("MainColumn/TopBar")
 	var monu_zone = get_node_or_null("MonumentZone")
@@ -42,6 +52,12 @@ func _ready() -> void:
 
 	if active_stats_box:
 		active_stats_box.resized.connect(func(): active_stats_box.pivot_offset = active_stats_box.size / 2.0)
+
+	# Marge supplémentaire sur téléphone uniquement
+	if _is_phone():
+		monu_zone = get_node_or_null("MonumentZone")
+		if monu_zone:
+			monu_zone.add_theme_constant_override("margin_bottom", 60)
 		
 	if btn_pass: btn_pass.text = tr("PASSER_LE_TOUR")
 
@@ -56,11 +72,23 @@ func _process(_delta: float) -> void:
 		active_stats_box.rotation = target_rot
 		
 	if monument_icons and is_inside_tree():
-		for icon in monument_icons.get_children():
-			if icon is Control: 
-				if icon.size != Vector2.ZERO:
-					icon.pivot_offset = icon.size / 2.0
-				icon.rotation = target_rot
+		if _is_phone():
+			# Téléphone : rotation de la grille entière + colonnes adaptatives
+			var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
+			monument_icons.columns = 2 if is_sideways else 3
+			monument_icons.rotation = 0.0
+			for icon in monument_icons.get_children():
+				if icon is Control:
+					if icon.size != Vector2.ZERO:
+						icon.pivot_offset = icon.size / 2.0
+					icon.rotation = target_rot
+		else:
+			# Tablette : rotation individuelle des icônes, grille fixe
+			for icon in monument_icons.get_children():
+				if icon is Control:
+					if icon.size != Vector2.ZERO:
+						icon.pivot_offset = icon.size / 2.0
+					icon.rotation = target_rot
 
 # ----------------------------------------------------------------------
 # NEW SETUP: Reads from a Network Dictionary instead of a Player object!

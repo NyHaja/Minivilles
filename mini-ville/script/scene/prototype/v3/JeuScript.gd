@@ -119,6 +119,17 @@ func get_lang_folder() -> String:
 		return "English"
 	return "French"
 
+# ----------------------------------------------------------------
+# UTILITAIRE DÉTECTION ÉCRAN
+# Téléphone  : petit côté < 1400 ET ratio > 1.8  (ex: 1280x2856)
+# Tablette   : petit côté >= 1400                (ex: 2560x1600)
+# ----------------------------------------------------------------
+func _is_phone() -> bool:
+	var s = get_viewport().get_visible_rect().size
+	var small_side = min(s.x, s.y)
+	var large_side = max(s.x, s.y)
+	return small_side < 1400 and (large_side / small_side) > 1.8
+
 func _ready() -> void:
 	shop_button.pressed.connect(_on_shop_button_pressed)
 	shop_popup.shop_card_clicked.connect(_on_shop_card_clicked)
@@ -195,15 +206,36 @@ func _on_window_resized() -> void:
 		table_pivot.pivot_offset = screen_size / 2.0
 		table_pivot.position = Vector2.ZERO
 	
-	if middle_area:
-		middle_area.set_anchors_preset(Control.PRESET_CENTER)
-		middle_area.add_theme_constant_override("separation", 20)
-		middle_area.reset_size()
-		middle_area.pivot_offset = middle_area.size / 2.0
-		middle_area.scale = Vector2(0.8, 0.8)
+	var is_phone = _is_phone()
 	
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel, 
-					choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
+	# ----------------------------------------------------------------
+	# REDIMENSIONNEMENT — FUSIONNÉ TÉLÉPHONE / TABLETTE
+	# ----------------------------------------------------------------
+	if is_phone:
+		# TÉLÉPHONE : scale global proportionnel à la hauteur
+		var ref_height = 600.0
+		var global_scale = clamp(screen_size.y / ref_height, 0.3, 2.0)
+		if table_pivot:
+			table_pivot.scale = Vector2(global_scale, global_scale)
+		if middle_area:
+			middle_area.scale = Vector2(0.7, 0.7)
+			middle_area.set_anchors_preset(Control.PRESET_CENTER)
+			middle_area.add_theme_constant_override("separation", 20)
+			middle_area.reset_size()
+			middle_area.pivot_offset = middle_area.size / 2.0
+	else:
+		# TABLETTE / PC : pas de scale global
+		if table_pivot:
+			table_pivot.scale = Vector2(1.0, 1.0)
+		if middle_area:
+			middle_area.set_anchors_preset(Control.PRESET_CENTER)
+			middle_area.add_theme_constant_override("separation", 20)
+			middle_area.reset_size()
+			middle_area.pivot_offset = middle_area.size / 2.0
+			middle_area.scale = Vector2(0.8, 0.8)
+
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, yes_no_panel,
+									choose_player_panel, trade_panel, give_panel, demolish_panel, buy_confirm_panel]
 	for ov in overlays:
 		if is_instance_valid(ov):
 			ov.size = screen_size
@@ -301,7 +333,13 @@ func positionner_plateaux(animate: bool = true) -> void:
 
 	var screen_size = get_viewport().get_visible_rect().size
 	var c = screen_size / 2.0
-	var margin = 40 
+	var is_phone = _is_phone()
+	
+	var margin = 40
+	var scale_factor = 1.0
+	if is_phone:
+		margin = 80
+		scale_factor = clamp(screen_size.y / 600.0, 0.3, 2.0)
 
 	var tween = null
 	
@@ -328,8 +366,14 @@ func positionner_plateaux(animate: bool = true) -> void:
 		var real_size = board.size
 		var b_h = real_size.y 
 		
-		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
-		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+		var rx: float
+		var ry: float
+		if is_phone:
+			rx = ((screen_size.x / 2.0) - (b_h * scale_factor / 2.0) - margin) * 0.60
+			ry = (screen_size.y / 2.0) - (b_h * scale_factor / 2.0) - margin
+		else:
+			rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
+			ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
 		
 		board.pivot_offset = real_size / 2.0
 
@@ -351,6 +395,12 @@ func positionner_plateaux(animate: bool = true) -> void:
 			elif diff == 1: target_angle = PI; target_rot = PI/2.0
 			elif diff == 2: target_angle = -PI/2.0; target_rot = PI
 			elif diff == 3: target_angle = 0.0; target_rot = -PI/2.0
+
+		# Scale individuel des boards : téléphone uniquement
+		if is_phone:
+			board.scale = Vector2(1.0, 1.0) if diff == 0 else Vector2(0.7, 0.7)
+		else:
+			board.scale = Vector2(1.3, 1.3)
 
 		if animate:
 			var start_angle = player_angles[p_idx]
@@ -451,9 +501,9 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	result_overlay.move_to_front()
 	result_overlay.show()
 	
-	if btn_conserver: btn_conserver.hide() 
+	if btn_conserver: btn_conserver.hide()
 	if btn_relancer: btn_relancer.hide()
-	if btn_add_2: btn_add_2.hide() 
+	if btn_add_2: btn_add_2.hide()
 	
 	die_1.show()
 	if die_2: die_2.visible = (amount == 2)
@@ -580,7 +630,7 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	
 	if action == "add2":
 		target_btn.add_child(addTwo_lbl)
-		addTwo_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des-5, -5)
+		addTwo_lbl.position = base_local_pos + Vector2(espace_a_droite_des_des - 5, -5)
 		base_local_pos += Vector2(50, 0)
 	
 	target_btn.add_child(result_lbl)
@@ -603,9 +653,7 @@ func play_dice_animation(amount: int, final_d1: int, final_d2: int = 0, can_rero
 	is_rotating = false
 	if is_instance_valid(click_blocker): click_blocker.hide()
 	
-	# --- AJOUT ICI : DÉCLENCHEMENT DE LA RÉSOLUTION ---
-	# On utilise la variable 'total' calculée plus haut dans ta fonction
-		
+			
 	return action
 
 func ask_yes_no(question: String) -> bool:
@@ -641,14 +689,6 @@ func _on_roll_2_pressed() -> void: dice_amount_chosen.emit(2)
 func update_monument_menu(is_demolish_mode: bool = false):
 	var target_player = self.current_player
 	
-	# Redimensionner les cartes monuments proportionnellement à l'écran
-	var screen = get_viewport().get_visible_rect().size
-	var card_w = int(screen.x * 0.12)
-	var card_h = int(card_w * 2.0)
-	for vbox in cards_monuments_container.get_children():
-		var tex = vbox.get_child(0) as TextureRect
-		if tex:
-			tex.custom_minimum_size = Vector2(card_w, card_h)
 	
 	# Ajout du coût ("cost") directement dans le mapping pour une sécurité absolue
 	var monument_map = {
