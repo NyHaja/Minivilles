@@ -175,7 +175,7 @@ func _update_btn_commencer(nb_joueurs: int):
 		# Assez de joueurs mais pas le max → peut lancer
 		btn_commencer.visible = true
 		btn_commencer.disabled = false
-		btn_commencer.text = tr("Lancer la partie (%d joueurs)") % nb_joueurs
+		btn_commencer.text = tr("Lancer la partie")
 	else:
 		# Pas assez de joueurs → cache le bouton
 		btn_commencer.visible = false
