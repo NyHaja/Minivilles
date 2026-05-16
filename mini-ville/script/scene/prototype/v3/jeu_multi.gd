@@ -192,12 +192,21 @@ func update_network_shop(shop_data: Dictionary):
 
 	for card_id in position_map:
 		var target_pos: Vector2 = position_map[card_id]
-		var card_data = CardFactory.get_card(card_id)
-		if card_data == null: continue
-		var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
-		var tex: Texture2D = load("res://assets/Cards/Basis/" + clean_name + "_1.png")
+		var target_slot = shop_board.card_slot_map.get(card_id)
+		if not is_instance_valid(target_slot): continue
+
+		# Read the texture that ShopBoard already loaded into the visual node.
+		# This avoids duplicating the asset-path logic (which changed after the merge).
+		var image_node = target_slot.get_node_or_null("Visual")
+		var tex: Texture2D = null
+		if image_node is TextureButton:
+			tex = image_node.texture_normal
+
 		if tex:
-			animer_pioche_vers_shop(shop_board.card_slot_map.get(card_id), tex, target_pos)
+			animer_pioche_vers_shop(target_slot, tex, target_pos)
+		else:
+			# No texture available — reveal the slot immediately without animation.
+			target_slot.modulate.a = 1.0
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
@@ -226,8 +235,8 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		else:
 			var card_color = card_data.get_color()
 			var clean_name = get_clean_file_name(card_name, card_color)
-			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+			path_basis = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
+			tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
 
 		var image_node = preview_card.get_node_or_null("Visual")
 		if image_node and image_node is TextureButton:
@@ -239,14 +248,14 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			image_node.ignore_texture_size = true
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
-		preview_card.custom_minimum_size = Vector2(234, 300)
-		preview_card.size = Vector2(234, 300)
-
 		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
 		if internal_tooltip:
 			internal_tooltip.hide()
 
 		%CardPreview.add_child(preview_card)
+		# Fill the CardPreview TextureRect entirely — overrides the scene's anchor/offset
+		# defaults (offset_right=40 → 40px wide) that cause the card to appear undersized.
+		preview_card.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 		if tip_path != "":
 			var _tip_tex = load(tip_path)
@@ -270,12 +279,10 @@ func _on_confirm_buy_shop_pressed() -> void:
 	if card_data is Monument:
 		network_client.request_build_monument(selected_shop_card_id)
 	else:
-		# Fire the fly-to-hand animation immediately (optimistic visual)
-		var qty_in_shop = 1
-		if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
-			var slot = shop_board.last_clicked_slot
-			var qty_lbl = slot.get_node_or_null("QtyLabel")
-			if qty_lbl: qty_in_shop = int(qty_lbl.text) if qty_lbl.text.is_valid_int() else 1
+		# Fire the fly-to-hand animation immediately (optimistic visual).
+		# Read quantity from the cached shop data — the badge node name changed
+		# after the merge and is no longer a reliable source.
+		var qty_in_shop = int(latest_shop_data.get(str(selected_shop_card_id), 1))
 		animer_achat_vers_main(selected_shop_card_id, qty_in_shop)
 		network_client.request_buy_card(selected_shop_card_id)
 
@@ -493,7 +500,7 @@ func _populate_trade_deck(deck: Array, container: Container, is_mine: bool) -> v
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex: card_btn.texture_normal = _card_tex
 			
@@ -557,7 +564,7 @@ func ask_give_card() -> Array:
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex: card_btn.texture_normal = _card_tex
 			
@@ -774,6 +781,11 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
 	return prefix + clean_name
+
+func get_lang_folder() -> String:
+	if TranslationServer.get_locale().begins_with("en"):
+		return "English"
+	return "French"
 
 func update_monument_menu():
 	var my_data = latest_players_data.get(str(my_player_id), {})
