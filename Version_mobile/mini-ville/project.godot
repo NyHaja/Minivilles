@@ -1,0 +1,55 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="MiniVille"
+run/main_scene="uid://xg6ijxmum5pm"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://cjihtogdq8orn"
+
+[autoload]
+
+GameData="*uid://43kqotfp2uyk"
+PlayerData="*res://script/scene/Multijoueur/player_data.gd"
+LocaleManager="*res://script/scene/Traduction/locale_manager.gd"
+LobbyManager="res://script/scene/Multijoueur/lobby_manager.gd"
+SoundManager="*uid://bu5ukwdc2m6d"
+NetworkManager="*uid://dwii3wdl3k8xh"
+Client="*uid://dyh5b0moyfuki"
+LobbyHandler="*uid://capsexgjolf2s"
+Game_Client="*uid://cheb7hhvtqruq"
+GuestHandler="*uid://5pa2db5yqfh"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="MiniVille"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

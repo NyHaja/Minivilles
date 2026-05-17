@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://dteg5cm4blsjl"]
+
+[ext_resource type="Script" uid="uid://b5thopec0t1m5" path="res://script/scene/prototype/v3/MainMenu.gd" id="1_x21j7"]
+
+[node name="MainMenu" type="Control" unique_id=1638205809]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x21j7")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=534407363]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.37036446, 0.3703645, 0.37036446, 1)
+
+[node name="MainScreen" type="VBoxContainer" parent="ColorRect" unique_id=395346074]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.0
+offset_top = -29.0
+offset_right = 68.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Titel" type="Label" parent="ColorRect/MainScreen" unique_id=1388519802]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "MiniVille"
+horizontal_alignment = 1
+
+[node name="Play" type="Button" parent="ColorRect/MainScreen" unique_id=1864710678]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Play"
+
+[node name="SetupScreen" type="VBoxContainer" parent="ColorRect" unique_id=534812212]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.0
+offset_right = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerCount" type="OptionButton" parent="ColorRect/SetupScreen" unique_id=247912338]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PlayerNames" type="VBoxContainer" parent="ColorRect/SetupScreen" unique_id=1514177597]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Player1Name" type="LineEdit" parent="ColorRect/SetupScreen/PlayerNames" unique_id=727121826]
+layout_mode = 2
+
+[node name="Player2Name" type="LineEdit" parent="ColorRect/SetupScreen/PlayerNames" unique_id=1365300167]
+layout_mode = 2
+
+[node name="Player3Name" type="LineEdit" parent="ColorRect/SetupScreen/PlayerNames" unique_id=763120994]
+layout_mode = 2
+
+[node name="Player4Name" type="LineEdit" parent="ColorRect/SetupScreen/PlayerNames" unique_id=766692199]
+layout_mode = 2
+
+[node name="Start" type="Button" parent="ColorRect/SetupScreen" unique_id=1955509015]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Game"

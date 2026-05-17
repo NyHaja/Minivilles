@@ -1,0 +1,784 @@
+[gd_scene format=3 uid="uid://cw2ktak16f3h6"]
+
+[ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="1_x87qo"]
+[ext_resource type="Texture2D" uid="uid://c1xgp0wr15ioj" path="res://assets/UI/Règles.png" id="2_b6fju"]
+[ext_resource type="Texture2D" uid="uid://cikuvt5og2fwd" path="res://assets/UI/Paramètres.png" id="3_fiftr"]
+[ext_resource type="Texture2D" uid="uid://dv280h3ouu6vk" path="res://assets/UI/player_zone_bottom.png" id="4_2fmhe"]
+[ext_resource type="Texture2D" uid="uid://crpvb45smahgh" path="res://assets/UI/player_zone_top.png" id="5_7iton"]
+[ext_resource type="PackedScene" uid="uid://cd2sh1b6hfen5" path="res://scene/table/card_animation.tscn" id="5_ikfsv"]
+[ext_resource type="Texture2D" uid="uid://ky4qht6hlynt" path="res://assets/UI/player_zone_right.png" id="6_ikfsv"]
+[ext_resource type="Texture2D" uid="uid://csn34tt2obcsb" path="res://assets/Cards/Basis/rouge_restaurant_1.png" id="6_olq2e"]
+[ext_resource type="Texture2D" uid="uid://l4n4mklmls0i" path="res://assets/UI/player_zone_left.png" id="7_5dgvu"]
+[ext_resource type="Texture2D" uid="uid://c6p77cclojgys" path="res://assets/Cards/Hover/Rouge_restaurant_2.png" id="7_w61bx"]
+[ext_resource type="Texture2D" uid="uid://di8hn2mibtxvq" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_top.png" id="8_uvj3q"]
+[ext_resource type="Texture2D" uid="uid://8xrbpljr36vr" path="res://assets/Cards/Basis/rouge_cafe_1.png" id="9_uvj3q"]
+[ext_resource type="Texture2D" uid="uid://prd5xhknchq7" path="res://assets/Cards/Hover/Rouge_cafe_2.png" id="10_mqs2o"]
+[ext_resource type="Texture2D" uid="uid://ule5f83dvu1c" path="res://assets/Cards/Basis/violet_centre_d_affaire_1.png" id="11_p4uwf"]
+[ext_resource type="Texture2D" uid="uid://buobsrrtcpf40" path="res://assets/Cards/Hover/violet_centre_d_affaire_2.png" id="12_atg6p"]
+[ext_resource type="Texture2D" uid="uid://colgos0uayxnl" path="res://assets/Cards/Basis/violet_chaine_de_tele_1.png" id="13_yf828"]
+[ext_resource type="Texture2D" uid="uid://cbkvnx2ukqoen" path="res://assets/Cards/Hover/violet_chaine_de_tele_2.png" id="14_8xidt"]
+[ext_resource type="Texture2D" uid="uid://17v6hctpf2al" path="res://assets/Cards/Basis/violet_stade_1.png" id="15_vbpv4"]
+[ext_resource type="Texture2D" uid="uid://d3kob7xybp22" path="res://assets/Cards/Hover/violet_stade_2.png" id="16_ndfmf"]
+[ext_resource type="Texture2D" uid="uid://d7s0jebt1o1v" path="res://assets/Cards/Basis/bleu_champs_de_ble_1.png" id="17_nys34"]
+[ext_resource type="Texture2D" uid="uid://brrwy3lucvkm3" path="res://assets/Cards/Hover/Bleu_champs_de_ble_2.png" id="18_s0hop"]
+[ext_resource type="Texture2D" uid="uid://dr4a46jnd3gex" path="res://assets/Cards/Basis/bleu_ferme_1.png" id="19_1pnnn"]
+[ext_resource type="Texture2D" uid="uid://k33xa4bf1e4b" path="res://assets/Cards/Hover/Bleu_ferme_2.png" id="20_1x3ex"]
+[ext_resource type="Texture2D" uid="uid://tnw0ytdmex34" path="res://assets/Cards/Basis/bleu_verger_1.png" id="21_ql88y"]
+[ext_resource type="Texture2D" uid="uid://crmdcoviu8m5u" path="res://assets/Cards/Hover/bleu_foret_2.png" id="22_aqnxp"]
+[ext_resource type="Texture2D" uid="uid://tnw0ytdmex34" path="res://assets/Cards/Basis/bleu_verger_1.png" id="23_t3aav"]
+[ext_resource type="Texture2D" uid="uid://ccdorpqcawktp" path="res://assets/Cards/Hover/bleu_verger_2.png" id="24_yj1qu"]
+[ext_resource type="Texture2D" uid="uid://qn5pli88iicl" path="res://assets/Cards/Basis/bleu_mine_1.png" id="25_asuqw"]
+[ext_resource type="Texture2D" uid="uid://bhfin5nooe1je" path="res://assets/Cards/Hover/bleu_mine_2.png" id="26_4k3ma"]
+[ext_resource type="Texture2D" uid="uid://dj774vh00bf5o" path="res://assets/Cards/Basis/vert_boulangerie_1.png" id="27_opjrb"]
+[ext_resource type="Texture2D" uid="uid://dt617oh7ievmn" path="res://assets/Cards/Hover/Vert_boulangerie_2.png" id="28_kut41"]
+[ext_resource type="Texture2D" uid="uid://c5idp58ejd7l0" path="res://assets/Cards/Basis/vert_fabrique_de_meubles_1.png" id="29_b14wf"]
+[ext_resource type="Texture2D" uid="uid://de7mabmipcgx4" path="res://assets/Cards/Basis/vert_fromagerie_1.png" id="30_5v1oo"]
+[ext_resource type="Texture2D" uid="uid://bo30qdnolstij" path="res://assets/Cards/Hover/vert_fabrique_de_meubles_2.png" id="30_w61bx"]
+[ext_resource type="Texture2D" uid="uid://c7iwbojmxwv7r" path="res://assets/Cards/Hover/vert_fromagerie_2.png" id="31_skhme"]
+[ext_resource type="Texture2D" uid="uid://dwd42fy2il2sw" path="res://assets/Cards/Basis/vert_marche_de_fruit_et_legumes_1.png" id="32_a6xwo"]
+[ext_resource type="Texture2D" uid="uid://b1faxjfnp01jv" path="res://assets/Cards/Hover/vert_marche_de_fruit_et_legumes_2.png" id="33_1ol4r"]
+[ext_resource type="Texture2D" uid="uid://blkpvpx30sx8f" path="res://assets/Cards/Basis/vert_superette_1.png" id="34_2e2dr"]
+[ext_resource type="Texture2D" uid="uid://dfcq0b4ui752o" path="res://assets/Cards/Hover/vert_superette_2.png" id="35_k55q4"]
+[ext_resource type="Texture2D" uid="uid://hqpm83v722bx" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_bottom.png" id="37_w61bx"]
+[ext_resource type="Texture2D" uid="uid://cm2au7vgt3vmi" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_right.png" id="40_mqs2o"]
+[ext_resource type="PackedScene" uid="uid://daptylvdfs3ss" path="res://scene/table/card_X_axis.tscn" id="40_p4uwf"]
+[ext_resource type="Texture2D" uid="uid://r14ru0u2ork7" path="res://assets/Tooltips/tooltip_vert_marché_fruit_et_légume_left.png" id="43_atg6p"]
+
+[node name="GameScene" type="Control" unique_id=725904039]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="." unique_id=1523512055]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_x87qo")
+stretch_mode = 6
+
+[node name="rules_button" type="TextureButton" parent="." unique_id=233932788]
+layout_mode = 1
+offset_left = 160.0
+offset_top = 20.0
+offset_right = 333.0
+offset_bottom = 82.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("2_b6fju")
+
+[node name="settings_button" type="TextureButton" parent="." unique_id=605918818]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -411.0
+offset_top = 20.0
+offset_right = -160.0
+offset_bottom = 82.0
+grow_horizontal = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_fiftr")
+
+[node name="Player_bottom" type="TextureRect" parent="." unique_id=2130541193]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -401.0
+offset_top = -210.0
+offset_right = 401.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Background" type="TextureRect" parent="Player_bottom" unique_id=1268453886]
+layout_mode = 0
+offset_right = 802.0
+offset_bottom = 210.0
+texture = ExtResource("4_2fmhe")
+
+[node name="Card_container" type="Control" parent="Player_bottom" unique_id=2112743954]
+anchors_preset = 0
+offset_left = 296.0
+offset_right = 506.0
+offset_bottom = 210.0
+
+[node name="Restaurant" parent="Player_bottom/Card_container" unique_id=1098696589 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -292.0
+offset_top = 12.0
+offset_right = -136.0
+offset_bottom = 212.0
+texture_normale = ExtResource("6_olq2e")
+texture_hover = ExtResource("7_w61bx")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Café" parent="Player_bottom/Card_container" unique_id=13089188 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -278.0
+offset_top = 7.0
+offset_right = -122.0
+offset_bottom = 207.0
+texture_normale = ExtResource("9_uvj3q")
+texture_hover = ExtResource("10_mqs2o")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Centre d\'affaires" parent="Player_bottom/Card_container" unique_id=413112079 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -120.0
+offset_top = 6.0
+offset_right = 36.0
+offset_bottom = 206.0
+texture_normale = ExtResource("11_p4uwf")
+texture_hover = ExtResource("12_atg6p")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Chaine de télévision" parent="Player_bottom/Card_container" unique_id=933185464 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 6.0
+offset_right = 50.0
+offset_bottom = 206.0
+texture_normale = ExtResource("13_yf828")
+texture_hover = ExtResource("14_8xidt")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Stade" parent="Player_bottom/Card_container" unique_id=1313599743 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -89.0
+offset_top = 7.0
+offset_right = 67.0
+offset_bottom = 207.0
+texture_normale = ExtResource("15_vbpv4")
+texture_hover = ExtResource("16_ndfmf")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Champ de blé" parent="Player_bottom/Card_container" unique_id=2047042930 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 4.0
+offset_right = 220.0
+offset_bottom = 204.0
+texture_normale = ExtResource("17_nys34")
+texture_hover = ExtResource("18_s0hop")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Ferme" parent="Player_bottom/Card_container" unique_id=72863550 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 5.0
+offset_right = 232.0
+offset_bottom = 205.0
+texture_normale = ExtResource("19_1pnnn")
+texture_hover = ExtResource("20_1x3ex")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Foret" parent="Player_bottom/Card_container" unique_id=304125833 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 89.0
+offset_top = 4.0
+offset_right = 245.0
+offset_bottom = 204.0
+texture_normale = ExtResource("21_ql88y")
+texture_hover = ExtResource("22_aqnxp")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Verger" parent="Player_bottom/Card_container" unique_id=1799152308 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 6.0
+offset_right = 265.0
+offset_bottom = 206.0
+texture_normale = ExtResource("23_t3aav")
+texture_hover = ExtResource("24_yj1qu")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Mine" parent="Player_bottom/Card_container" unique_id=1941635823 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 121.0
+offset_top = 4.0
+offset_right = 277.0
+offset_bottom = 204.0
+texture_normale = ExtResource("25_asuqw")
+texture_hover = ExtResource("26_4k3ma")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Boulangerie" parent="Player_bottom/Card_container" unique_id=1762627272 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 4.0
+offset_right = 442.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("27_opjrb")
+texture_hover = ExtResource("28_kut41")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Fabrique de meuble" parent="Player_bottom/Card_container" unique_id=68834425 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 4.0
+offset_right = 457.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("29_b14wf")
+texture_hover = ExtResource("30_w61bx")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Fromagerie" parent="Player_bottom/Card_container" unique_id=89920891 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 309.0
+offset_top = 4.0
+offset_right = 472.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("30_5v1oo")
+texture_hover = ExtResource("31_skhme")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Marché de fruit et légume" parent="Player_bottom/Card_container" unique_id=2008820795 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 325.0
+offset_top = 4.0
+offset_right = 488.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("32_a6xwo")
+texture_hover = ExtResource("33_1ol4r")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Supérette" parent="Player_bottom/Card_container" unique_id=424198978 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 341.0
+offset_top = 5.0
+offset_right = 504.0
+offset_bottom = 213.97437
+texture_normale = ExtResource("34_2e2dr")
+texture_hover = ExtResource("35_k55q4")
+bulle_texture = ExtResource("8_uvj3q")
+
+[node name="Player_top" type="TextureRect" parent="." unique_id=726773963]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -401.0
+offset_right = 401.0
+offset_bottom = 210.0
+grow_horizontal = 2
+
+[node name="Background" type="TextureRect" parent="Player_top" unique_id=1973923871]
+layout_mode = 0
+offset_right = 802.0
+offset_bottom = 210.0
+texture = ExtResource("5_7iton")
+
+[node name="Card_container2" type="Control" parent="Player_top" unique_id=1739688360]
+anchors_preset = 0
+offset_left = 506.0
+offset_top = 209.0
+offset_right = 716.0
+offset_bottom = 419.0
+rotation = 3.1415927
+
+[node name="Restaurant" parent="Player_top/Card_container2" unique_id=64293030 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -292.0
+offset_top = 12.0
+offset_right = -136.0
+offset_bottom = 212.0
+texture_normale = ExtResource("6_olq2e")
+texture_hover = ExtResource("7_w61bx")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Café" parent="Player_top/Card_container2" unique_id=16995102 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -278.0
+offset_top = 7.0
+offset_right = -122.0
+offset_bottom = 207.0
+texture_normale = ExtResource("9_uvj3q")
+texture_hover = ExtResource("10_mqs2o")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Centre d\'affaires" parent="Player_top/Card_container2" unique_id=1864893930 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -120.0
+offset_top = 6.0
+offset_right = 36.0
+offset_bottom = 206.0
+texture_normale = ExtResource("11_p4uwf")
+texture_hover = ExtResource("12_atg6p")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Chaine de télévision" parent="Player_top/Card_container2" unique_id=559558763 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 6.0
+offset_right = 50.0
+offset_bottom = 206.0
+texture_normale = ExtResource("13_yf828")
+texture_hover = ExtResource("14_8xidt")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Stade" parent="Player_top/Card_container2" unique_id=65874065 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = -89.0
+offset_top = 7.0
+offset_right = 67.0
+offset_bottom = 207.0
+texture_normale = ExtResource("15_vbpv4")
+texture_hover = ExtResource("16_ndfmf")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Champ de blé" parent="Player_top/Card_container2" unique_id=1232806461 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 4.0
+offset_right = 220.0
+offset_bottom = 204.0
+texture_normale = ExtResource("17_nys34")
+texture_hover = ExtResource("18_s0hop")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Ferme" parent="Player_top/Card_container2" unique_id=1413791432 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 5.0
+offset_right = 232.0
+offset_bottom = 205.0
+texture_normale = ExtResource("19_1pnnn")
+texture_hover = ExtResource("20_1x3ex")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Foret" parent="Player_top/Card_container2" unique_id=95342980 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 89.0
+offset_top = 4.0
+offset_right = 245.0
+offset_bottom = 204.0
+texture_normale = ExtResource("21_ql88y")
+texture_hover = ExtResource("22_aqnxp")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Verger" parent="Player_top/Card_container2" unique_id=1697494672 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 6.0
+offset_right = 265.0
+offset_bottom = 206.0
+texture_normale = ExtResource("23_t3aav")
+texture_hover = ExtResource("24_yj1qu")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Mine" parent="Player_top/Card_container2" unique_id=1682581682 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 121.0
+offset_top = 4.0
+offset_right = 277.0
+offset_bottom = 204.0
+texture_normale = ExtResource("25_asuqw")
+texture_hover = ExtResource("26_4k3ma")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Boulangerie" parent="Player_top/Card_container2" unique_id=1411233839 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 4.0
+offset_right = 442.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("27_opjrb")
+texture_hover = ExtResource("28_kut41")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Fabrique de meuble" parent="Player_top/Card_container2" unique_id=2112139906 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 4.0
+offset_right = 457.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("29_b14wf")
+texture_hover = ExtResource("30_w61bx")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Fromagerie" parent="Player_top/Card_container2" unique_id=1231608587 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 309.0
+offset_top = 4.0
+offset_right = 472.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("30_5v1oo")
+texture_hover = ExtResource("31_skhme")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Marché de fruit et légume" parent="Player_top/Card_container2" unique_id=2109288483 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 325.0
+offset_top = 4.0
+offset_right = 488.0
+offset_bottom = 212.97437
+texture_normale = ExtResource("32_a6xwo")
+texture_hover = ExtResource("33_1ol4r")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Supérette" parent="Player_top/Card_container2" unique_id=1714550430 instance=ExtResource("5_ikfsv")]
+layout_mode = 0
+offset_left = 341.0
+offset_top = 5.0
+offset_right = 504.0
+offset_bottom = 213.97437
+texture_normale = ExtResource("34_2e2dr")
+texture_hover = ExtResource("35_k55q4")
+bulle_texture = ExtResource("37_w61bx")
+
+[node name="Player_right" type="TextureRect" parent="." unique_id=1451311375]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -401.0
+offset_bottom = 401.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="Player_right" unique_id=895690422]
+layout_mode = 0
+offset_right = 210.0
+offset_bottom = 802.0
+texture = ExtResource("6_ikfsv")
+
+[node name="Card_container3" type="Control" parent="Player_right" unique_id=1391614338]
+anchors_preset = 0
+offset_left = 184.0
+offset_top = 523.0
+offset_right = 394.0
+offset_bottom = 733.0
+
+[node name="Réstaurant" parent="Player_right/Card_container3" unique_id=549980520 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -174.0
+offset_top = 275.0
+offset_right = -18.0
+offset_bottom = 475.0
+texture_normale = ExtResource("6_olq2e")
+texture_hover = ExtResource("7_w61bx")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Café" parent="Player_right/Card_container3" unique_id=28889991 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -178.0
+offset_top = 260.0
+offset_right = -22.0
+offset_bottom = 460.0
+texture_normale = ExtResource("9_uvj3q")
+texture_hover = ExtResource("10_mqs2o")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Centre d\'affaire" parent="Player_right/Card_container3" unique_id=2136205778 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -174.0
+offset_top = 104.0
+offset_right = -18.0
+offset_bottom = 304.0
+texture_normale = ExtResource("11_p4uwf")
+texture_hover = ExtResource("12_atg6p")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Chaine de télévision" parent="Player_right/Card_container3" unique_id=411722268 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = 89.0
+offset_right = -21.0
+offset_bottom = 289.0
+texture_normale = ExtResource("13_yf828")
+texture_hover = ExtResource("14_8xidt")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Stade" parent="Player_right/Card_container3" unique_id=925753285 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = 75.0
+offset_right = -21.0
+offset_bottom = 275.0
+texture_normale = ExtResource("15_vbpv4")
+texture_hover = ExtResource("16_ndfmf")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Champ de blé" parent="Player_right/Card_container3" unique_id=915090694 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -179.0
+offset_top = -80.0
+offset_right = -23.0
+offset_bottom = 120.0
+texture_normale = ExtResource("17_nys34")
+texture_hover = ExtResource("18_s0hop")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Ferme" parent="Player_right/Card_container3" unique_id=1633314077 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -93.0
+offset_right = -25.0
+offset_bottom = 107.0
+texture_normale = ExtResource("19_1pnnn")
+texture_hover = ExtResource("20_1x3ex")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Foret" parent="Player_right/Card_container3" unique_id=1254063128 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -108.0
+offset_right = -25.0
+offset_bottom = 92.0
+texture_normale = ExtResource("21_ql88y")
+texture_hover = ExtResource("22_aqnxp")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Verger" parent="Player_right/Card_container3" unique_id=101065216 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -124.0
+offset_right = -25.0
+offset_bottom = 76.0
+texture_normale = ExtResource("23_t3aav")
+texture_hover = ExtResource("24_yj1qu")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Mine" parent="Player_right/Card_container3" unique_id=748081452 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -138.0
+offset_right = -25.0
+offset_bottom = 62.0
+texture_normale = ExtResource("25_asuqw")
+texture_hover = ExtResource("26_4k3ma")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Boulangerie" parent="Player_right/Card_container3" unique_id=979038218 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -296.0
+offset_right = -21.0
+offset_bottom = -96.0
+texture_normale = ExtResource("27_opjrb")
+texture_hover = ExtResource("28_kut41")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Fabrique de meuble" parent="Player_right/Card_container3" unique_id=519490553 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -310.0
+offset_right = -21.0
+offset_bottom = -110.0
+texture_normale = ExtResource("29_b14wf")
+texture_hover = ExtResource("30_w61bx")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Fromagerie" parent="Player_right/Card_container3" unique_id=281339157 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -329.0
+offset_right = -21.0
+offset_bottom = -129.0
+texture_normale = ExtResource("30_5v1oo")
+texture_hover = ExtResource("31_skhme")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Marché de fruit et légume" parent="Player_right/Card_container3" unique_id=1829945099 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -346.0
+offset_right = -21.0
+offset_bottom = -146.0
+texture_normale = ExtResource("32_a6xwo")
+texture_hover = ExtResource("33_1ol4r")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Supérette" parent="Player_right/Card_container3" unique_id=1025686577 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -178.0
+offset_top = -362.0
+offset_right = -22.0
+offset_bottom = -162.0
+texture_normale = ExtResource("34_2e2dr")
+texture_hover = ExtResource("35_k55q4")
+bulle_texture = ExtResource("40_mqs2o")
+
+[node name="Player4_left" type="TextureRect" parent="." unique_id=1792973544]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -401.0
+offset_right = 210.0
+offset_bottom = 401.0
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="Player4_left" unique_id=1515613697]
+layout_mode = 0
+offset_right = 210.0
+offset_bottom = 802.0
+texture = ExtResource("7_5dgvu")
+
+[node name="Card_container3" type="Control" parent="Player4_left" unique_id=1659839307]
+anchors_preset = 0
+offset_left = 28.0
+offset_top = 279.0
+offset_right = 238.0
+offset_bottom = 489.0
+rotation = -3.1415927
+
+[node name="Réstaurant" parent="Player4_left/Card_container3" unique_id=234282995 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -174.0
+offset_top = 275.0
+offset_right = -18.0
+offset_bottom = 475.0
+texture_normale = ExtResource("6_olq2e")
+texture_hover = ExtResource("7_w61bx")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Café" parent="Player4_left/Card_container3" unique_id=1826046148 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -178.0
+offset_top = 260.0
+offset_right = -22.0
+offset_bottom = 460.0
+texture_normale = ExtResource("9_uvj3q")
+texture_hover = ExtResource("10_mqs2o")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Centre d\'affaire" parent="Player4_left/Card_container3" unique_id=346996380 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -174.0
+offset_top = 104.0
+offset_right = -18.0
+offset_bottom = 304.0
+texture_normale = ExtResource("11_p4uwf")
+texture_hover = ExtResource("12_atg6p")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Chaine de télévision" parent="Player4_left/Card_container3" unique_id=1192327065 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = 89.0
+offset_right = -21.0
+offset_bottom = 289.0
+texture_normale = ExtResource("13_yf828")
+texture_hover = ExtResource("14_8xidt")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Stade" parent="Player4_left/Card_container3" unique_id=1845121693 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = 75.0
+offset_right = -21.0
+offset_bottom = 275.0
+texture_normale = ExtResource("15_vbpv4")
+texture_hover = ExtResource("16_ndfmf")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Champ de blé" parent="Player4_left/Card_container3" unique_id=1115360595 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -179.0
+offset_top = -80.0
+offset_right = -23.0
+offset_bottom = 120.0
+texture_normale = ExtResource("17_nys34")
+texture_hover = ExtResource("18_s0hop")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Ferme" parent="Player4_left/Card_container3" unique_id=803436893 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -93.0
+offset_right = -25.0
+offset_bottom = 107.0
+texture_normale = ExtResource("19_1pnnn")
+texture_hover = ExtResource("20_1x3ex")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Foret" parent="Player4_left/Card_container3" unique_id=1829716857 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -108.0
+offset_right = -25.0
+offset_bottom = 92.0
+texture_normale = ExtResource("21_ql88y")
+texture_hover = ExtResource("22_aqnxp")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Verger" parent="Player4_left/Card_container3" unique_id=81004975 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -124.0
+offset_right = -25.0
+offset_bottom = 76.0
+texture_normale = ExtResource("23_t3aav")
+texture_hover = ExtResource("24_yj1qu")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Mine" parent="Player4_left/Card_container3" unique_id=1842823520 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -181.0
+offset_top = -138.0
+offset_right = -25.0
+offset_bottom = 62.0
+texture_normale = ExtResource("25_asuqw")
+texture_hover = ExtResource("26_4k3ma")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Boulangerie" parent="Player4_left/Card_container3" unique_id=695412334 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -296.0
+offset_right = -21.0
+offset_bottom = -96.0
+texture_normale = ExtResource("27_opjrb")
+texture_hover = ExtResource("28_kut41")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Fabrique de meuble" parent="Player4_left/Card_container3" unique_id=1284535721 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -310.0
+offset_right = -21.0
+offset_bottom = -110.0
+texture_normale = ExtResource("29_b14wf")
+texture_hover = ExtResource("30_w61bx")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Fromagerie" parent="Player4_left/Card_container3" unique_id=530307244 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -329.0
+offset_right = -21.0
+offset_bottom = -129.0
+texture_normale = ExtResource("30_5v1oo")
+texture_hover = ExtResource("31_skhme")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Marché de fruit et légume" parent="Player4_left/Card_container3" unique_id=1117882341 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -177.0
+offset_top = -346.0
+offset_right = -21.0
+offset_bottom = -146.0
+texture_normale = ExtResource("32_a6xwo")
+texture_hover = ExtResource("33_1ol4r")
+bulle_texture = ExtResource("43_atg6p")
+
+[node name="Supérette" parent="Player4_left/Card_container3" unique_id=583243853 instance=ExtResource("40_p4uwf")]
+layout_mode = 0
+offset_left = -178.0
+offset_top = -362.0
+offset_right = -22.0
+offset_bottom = -162.0
+texture_normale = ExtResource("34_2e2dr")
+texture_hover = ExtResource("35_k55q4")
+bulle_texture = ExtResource("43_atg6p")

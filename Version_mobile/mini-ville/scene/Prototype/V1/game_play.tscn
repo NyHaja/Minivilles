@@ -1,0 +1,135 @@
+[gd_scene format=3 uid="uid://hcmd2gig0ht2"]
+
+[ext_resource type="Script" uid="uid://cghhy3ti0trae" path="res://script/scene/prototype/v1/game_play.gd" id="1_wge0y"]
+
+[node name="GamePlay" type="Control" unique_id=1098871159]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wge0y")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=81015746]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[node name="PRINCIPAL" type="PanelContainer" parent="." unique_id=1173278310]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MAIN" type="VBoxContainer" parent="PRINCIPAL" unique_id=1405465288]
+layout_mode = 2
+
+[node name="INFO BASE" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=1128841156]
+layout_mode = 2
+
+[node name="JOUEUR" type="HBoxContainer" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=1457436109]
+layout_mode = 2
+
+[node name="Joueur" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/JOUEUR" unique_id=717833671]
+layout_mode = 2
+text = "Joueur :"
+
+[node name="Pseudo" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/JOUEUR" unique_id=614354985]
+layout_mode = 2
+
+[node name="Gold" type="HBoxContainer" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=1202896642]
+layout_mode = 2
+
+[node name="GOLD" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/Gold" unique_id=1466112573]
+layout_mode = 2
+text = "Gold :"
+
+[node name="BALANCE" type="Label" parent="PRINCIPAL/MAIN/INFO BASE/Gold" unique_id=533684718]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=1156075965]
+layout_mode = 2
+text = "DECK"
+horizontal_alignment = 1
+
+[node name="DECK" type="HBoxContainer" parent="PRINCIPAL/MAIN/INFO BASE" unique_id=582188676]
+layout_mode = 2
+
+[node name="SHOP" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=451988624]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PRINCIPAL/MAIN/SHOP" unique_id=2064112494]
+layout_mode = 2
+text = "SHOP"
+horizontal_alignment = 1
+
+[node name="Liste" type="HBoxContainer" parent="PRINCIPAL/MAIN/SHOP" unique_id=1653696150]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PRINCIPAL/MAIN/SHOP/Liste" unique_id=1401496390]
+layout_mode = 2
+text = "1
+"
+
+[node name="acheter" type="Button" parent="PRINCIPAL/MAIN/SHOP" unique_id=1966683050]
+layout_mode = 2
+text = "ACHETER
+"
+
+[node name="Dé" type="VBoxContainer" parent="PRINCIPAL/MAIN" unique_id=439147969]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PRINCIPAL/MAIN/Dé" unique_id=1403101706]
+layout_mode = 2
+text = "Combien de dé lancez-vous ?"
+
+[node name="NumberDice" type="HBoxContainer" parent="PRINCIPAL/MAIN/Dé" unique_id=665070537]
+layout_mode = 2
+alignment = 1
+
+[node name="one" type="Button" parent="PRINCIPAL/MAIN/Dé/NumberDice" unique_id=1735316098]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1"
+
+[node name="two" type="Button" parent="PRINCIPAL/MAIN/Dé/NumberDice" unique_id=1615761373]
+unique_name_in_owner = true
+layout_mode = 2
+text = "2"
+
+[node name="LANCER" type="Button" parent="PRINCIPAL/MAIN/Dé" unique_id=1389366427]
+layout_mode = 2
+text = "LANCER
+"
+
+[node name="Resultat" type="HBoxContainer" parent="PRINCIPAL/MAIN/Dé" unique_id=278023259]
+layout_mode = 2
+alignment = 1
+
+[node name="Resultat" type="Label" parent="PRINCIPAL/MAIN/Dé/Resultat" unique_id=1275285342]
+layout_mode = 2
+text = "Resultat :"
+
+[node name="D1" type="Label" parent="PRINCIPAL/MAIN/Dé/Resultat" unique_id=17765175]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "0"
+
+[node name="D2" type="Label" parent="PRINCIPAL/MAIN/Dé/Resultat" unique_id=1850226502]
+layout_mode = 2
+text = "0"

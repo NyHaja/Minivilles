@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ciypuwyya4i48"]
+
+[ext_resource type="Script" uid="uid://bpk26xcmnxghn" path="res://serveur.gd" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://moo86wtys57c" path="res://auth_handler.gd" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://dmuabud013jtj" path="res://lobby_handler.gd" id="3_lquwl"]
+[ext_resource type="Script" uid="uid://3wj2gpyh7m5g" path="res://flask_manager.gd" id="4_7mycd"]
+[ext_resource type="Script" uid="uid://bqbs2frurcld1" path="res://game_handler.gd" id="5_7mycd"]
+[ext_resource type="Script" uid="uid://blhe6kgwa2km" path="res://AuthBridge.cs" id="5_lquwl"]
+
+[node name="Main" type="Node" unique_id=1350651009]
+script = ExtResource("1_lquwl")
+
+[node name="AuthHandler" type="Node" parent="." unique_id=1989117371]
+script = ExtResource("2_1bvp3")
+
+[node name="LobbyHandler" type="Node" parent="." unique_id=13899293]
+script = ExtResource("3_lquwl")
+
+[node name="FlaskManager" type="Node" parent="." unique_id=1164263083]
+script = ExtResource("4_7mycd")
+
+[node name="Hasher" type="Node" parent="." unique_id=868474557]
+script = ExtResource("5_lquwl")
+
+[node name="GameHandler" type="Node" parent="." unique_id=1317595923]
+script = ExtResource("5_7mycd")

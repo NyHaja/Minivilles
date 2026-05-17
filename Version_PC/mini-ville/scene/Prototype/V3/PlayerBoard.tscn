@@ -1,0 +1,350 @@
+[gd_scene format=3 uid="uid://b5jkk7cw0wbjt"]
+
+[ext_resource type="Texture2D" uid="uid://d1dcosvuy7386" path="res://assets/UI/button_border.png" id="1_8bbo5"]
+[ext_resource type="Script" uid="uid://dqo0fvfo4wf7j" path="res://script/scene/prototype/v3/PlayerBoard.gd" id="1_jujw4"]
+[ext_resource type="Texture2D" uid="uid://c0syfj2pyls0q" path="res://assets/UI/profile_picture_player.png" id="2_jujw4"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="3_fe7pv"]
+[ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="4_yr7xq"]
+[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="5_jt8eb"]
+[ext_resource type="FontFile" uid="uid://dvvfcd2y3rysp" path="res://assets/Fonts/Exo2-VariableFont_wght.ttf" id="7_4hdk1"]
+[ext_resource type="Texture2D" uid="uid://bvh5mp4ig27ae" path="res://assets/UI/Monuments_button.png" id="7_8eqg2"]
+[ext_resource type="Texture2D" uid="uid://w3lrlhjffscq" path="res://assets/UI/button_border_hover.png" id="8_la7td"]
+[ext_resource type="Script" uid="uid://b1sswurdf8its" path="res://script/scene/prototype/v3/DeckOutline.gd" id="8_si7nk"]
+[ext_resource type="Texture2D" uid="uid://nmhvion7jxtv" path="res://assets/UI/Monuments_button_hover.png" id="11_n5cuu"]
+[ext_resource type="Texture2D" uid="uid://cyyjwjbw2p4xg" path="res://assets/UI/port_unbuild.png" id="12_jt8eb"]
+[ext_resource type="Texture2D" uid="uid://2kviycucsmep" path="res://assets/UI/port_build.png" id="13_4hdk1"]
+[ext_resource type="Texture2D" uid="uid://cqa1vr8rq2xlw" path="res://assets/UI/gare_unbuild.png" id="13_n5cuu"]
+[ext_resource type="Texture2D" uid="uid://cytqexntwl5d5" path="res://assets/UI/centre_commercial_unbuild.png" id="14_8eqg2"]
+[ext_resource type="Texture2D" uid="uid://c56yowk7fy0hu" path="res://assets/UI/parc_dattraction_unbuild.png" id="15_hfg6g"]
+[ext_resource type="Texture2D" uid="uid://d12cuojqf25lg" path="res://assets/UI/gare_build.png" id="15_la7td"]
+[ext_resource type="Texture2D" uid="uid://cvwnn8um5xnuf" path="res://assets/UI/tour_radio_unbuild.png" id="16_jt8eb"]
+[ext_resource type="Texture2D" uid="uid://d0hybp73cw38" path="res://assets/UI/centre_commercial_build.png" id="17_ltfdg"]
+[ext_resource type="Texture2D" uid="uid://coovfsygmoaoh" path="res://assets/UI/aéroport_unbuild.png" id="17_n5cuu"]
+[ext_resource type="Texture2D" uid="uid://bbralevmg2ffg" path="res://assets/UI/parc_dattraction_build.png" id="19_uhn8a"]
+[ext_resource type="Texture2D" uid="uid://b6ogeqe4csva2" path="res://assets/UI/tour_radio_build.png" id="21_7cfod"]
+[ext_resource type="Texture2D" uid="uid://fsbnalgfbhnd" path="res://assets/UI/aéroport_build.png" id="23_fxp5n"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l0rt3"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 14.0
+content_margin_bottom = 5.0
+texture = ExtResource("1_8bbo5")
+
+[sub_resource type="FontVariation" id="FontVariation_trdnx"]
+base_font = ExtResource("3_fe7pv")
+
+[sub_resource type="FontVariation" id="FontVariation_88jjp"]
+base_font = ExtResource("4_yr7xq")
+variation_opentype = {
+2003265652: 900
+}
+
+[sub_resource type="FontVariation" id="FontVariation_ltfdg"]
+base_font = ExtResource("7_4hdk1")
+variation_opentype = {
+2003265652: 900
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uhn8a"]
+texture = ExtResource("1_8bbo5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4hdk1"]
+texture = ExtResource("8_la7td")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7cfod"]
+texture = ExtResource("8_la7td")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyh2q"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+bg_color = Color(0.6901961, 0.5019608, 0.46666667, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcw7y"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+bg_color = Color(0.6156863, 0.69411767, 0.4627451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3wdh"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+bg_color = Color(0.5019608, 0.6117647, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sxbm1"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+bg_color = Color(0.63529414, 0.45490196, 0.6392157, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="PlayerBottomArea" type="HBoxContainer" unique_id=384742348]
+size_flags_horizontal = 4
+size_flags_vertical = 8
+script = ExtResource("1_jujw4")
+
+[node name="MainColumn" type="VBoxContainer" parent="." unique_id=103638250]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="TopBar" type="HBoxContainer" parent="MainColumn" unique_id=1427482158]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActivePlayerStats" type="HBoxContainer" parent="MainColumn/TopBar" unique_id=1510555991]
+layout_mode = 2
+
+[node name="PlayerBadgeContainer" type="PanelContainer" parent="MainColumn/TopBar/ActivePlayerStats" unique_id=1149468268]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_l0rt3")
+
+[node name="PlayerButton" type="HBoxContainer" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer" unique_id=1365668469]
+layout_mode = 2
+
+[node name="ProfilePicture" type="TextureRect" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer/PlayerButton" unique_id=990870191]
+custom_minimum_size = Vector2(40, 20)
+layout_mode = 2
+texture = ExtResource("2_jujw4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerLabel" type="Label" parent="MainColumn/TopBar/ActivePlayerStats/PlayerBadgeContainer/PlayerButton" unique_id=183388474]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = SubResource("FontVariation_trdnx")
+theme_override_font_sizes/font_size = 20
+text = "Joueur 1"
+
+[node name="Espace" type="Control" parent="MainColumn/TopBar/ActivePlayerStats" unique_id=592436377]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainColumn/TopBar/ActivePlayerStats" unique_id=499126889]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="PlayerMoney" type="Label" parent="MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=1587650185]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = SubResource("FontVariation_88jjp")
+theme_override_font_sizes/font_size = 40
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CoinIcon" type="TextureRect" parent="MainColumn/TopBar/ActivePlayerStats/HBoxContainer" unique_id=1383412250]
+custom_minimum_size = Vector2(30, 37)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("5_jt8eb")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="RessortGauche" type="Control" parent="MainColumn/TopBar" unique_id=2015380112]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PasserLeTourButton" type="Button" parent="MainColumn/TopBar" unique_id=65250492]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.35686275, 0.35686275, 0.35686275, 1)
+theme_override_colors/font_hover_color = Color(0.35686275, 0.35686275, 0.35686275, 1)
+theme_override_fonts/font = SubResource("FontVariation_ltfdg")
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxTexture_uhn8a")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4hdk1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_7cfod")
+text = "Passer son tour"
+
+[node name="ActiveDeckContainer" type="HBoxContainer" parent="MainColumn" unique_id=139624129]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("8_si7nk")
+line_color = Color(1, 1, 1, 1)
+dash_length = 5.0
+padding = 8.0
+
+[node name="RedPileBottom" type="PanelContainer" parent="MainColumn/ActiveDeckContainer" unique_id=806215315]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(158, 215)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_fyh2q")
+
+[node name="Anchor" type="Control" parent="MainColumn/ActiveDeckContainer/RedPileBottom" unique_id=966486185]
+layout_mode = 2
+
+[node name="GreenPileBottom" type="PanelContainer" parent="MainColumn/ActiveDeckContainer" unique_id=2129202458]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(158, 215)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tcw7y")
+
+[node name="Anchor" type="Control" parent="MainColumn/ActiveDeckContainer/GreenPileBottom" unique_id=510154143]
+layout_mode = 2
+
+[node name="BluePileBottom" type="PanelContainer" parent="MainColumn/ActiveDeckContainer" unique_id=803500589]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(158, 215)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_u3wdh")
+
+[node name="Anchor" type="Control" parent="MainColumn/ActiveDeckContainer/BluePileBottom" unique_id=1901223307]
+layout_mode = 2
+
+[node name="PurplePileBottom" type="PanelContainer" parent="MainColumn/ActiveDeckContainer" unique_id=839036412]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(158, 215)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_sxbm1")
+
+[node name="Anchor" type="Control" parent="MainColumn/ActiveDeckContainer/PurplePileBottom" unique_id=1679856714]
+layout_mode = 2
+
+[node name="MonumentZone" type="MarginContainer" parent="." unique_id=1431316791]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/margin_left = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MonumentZone" unique_id=853161633]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="MonumentButton" type="TextureButton" parent="MonumentZone/VBoxContainer" unique_id=526610559]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+texture_normal = ExtResource("7_8eqg2")
+texture_hover = ExtResource("11_n5cuu")
+stretch_mode = 4
+
+[node name="MonumentIconContainer" type="GridContainer" parent="MonumentZone/VBoxContainer" unique_id=1653480655]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="PortUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1711790593]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("12_jt8eb")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PortBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1012147662]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("13_4hdk1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="GareUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1203057628]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("13_n5cuu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GareBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=954299368]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("15_la7td")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CentreCommercialUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1233916748]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("14_8eqg2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CentreCommercialBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=19057803]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("17_ltfdg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ParcDattractionUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=2018283363]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("15_hfg6g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ParcDattractionBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=627310282]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("19_uhn8a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TourRadioUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=85634834]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("16_jt8eb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TourRadioBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=2093488665]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("21_7cfod")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AéroportUnbuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1631085147]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("17_n5cuu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AéroportBuild" type="TextureRect" parent="MonumentZone/VBoxContainer/MonumentIconContainer" unique_id=1281799716]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("23_fxp5n")
+expand_mode = 1
+stretch_mode = 5

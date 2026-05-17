@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://xeg0g4tieopm"]
+
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="1_amtb7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hc1a5"]
+bg_color = Color(0.9607843, 0.7490196, 0.28627452, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_amtb7"]
+bg_color = Color(0.4, 0.29411766, 0.047058824, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b6qfk"]
+bg_color = Color(0.654902, 0.49019608, 0.101960786, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[node name="MonumentSlot" type="HBoxContainer" unique_id=747538287]
+offset_right = 427.0
+offset_bottom = 354.0
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2124027274]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CardImage" type="TextureButton" parent="VBoxContainer" unique_id=636974341]
+custom_minimum_size = Vector2(234, 300)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BuildButton" type="Button" parent="VBoxContainer" unique_id=445800239]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_amtb7")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_hc1a5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_amtb7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_b6qfk")
+text = "CONSTRUIRE"
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1422984658]
+layout_mode = 2
+theme_override_constants/margin_left = 10

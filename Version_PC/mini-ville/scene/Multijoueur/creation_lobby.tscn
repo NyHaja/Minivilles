@@ -1,0 +1,302 @@
+[gd_scene format=3 uid="uid://wxbvq4jsbxh3"]
+
+[ext_resource type="Script" uid="uid://b4w7fdbnubt8v" path="res://script/scene/Multijoueur/creation_lobby.gd" id="1_q5v2b"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_y76a8"]
+[ext_resource type="Texture2D" uid="uid://w4xl63u4e48n" path="res://assets/Background/bg.png" id="4_hckvh"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="5_q5v2b"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="6_wipa4"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_cx3lq"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="8_uy7m1"]
+[ext_resource type="Script" uid="uid://r80okf66ptxh" path="res://script/scene/Multijoueur/btn_fleche.gd" id="9_rxlvl"]
+[ext_resource type="Texture2D" uid="uid://dulxo2tcqe74g" path="res://assets/icon/chronometre.png" id="10_y76a8"]
+[ext_resource type="Texture2D" uid="uid://b6rtifuh8un50" path="res://assets/icon/joueur.png" id="11_hckvh"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="12_6cn7a"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="13_v5av7"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="14_70pqk"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="14_q5v2b"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="15_uy7m1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_titre_section"]
+font = ExtResource("7_cx3lq")
+font_size = 45
+outline_size = 4
+outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_duree"]
+font = ExtResource("7_cx3lq")
+font_size = 80
+outline_size = 6
+outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[node name="CreationLobby" type="Control" unique_id=918273645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q5v2b")
+
+[node name="Background" type="TextureRect" parent="." unique_id=872612023]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_hckvh")
+stretch_mode = 6
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=1982387299]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="LogoRow" type="HBoxContainer" parent="Content" unique_id=554534669]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="DiceGauche" type="TextureRect" parent="Content/LogoRow" unique_id=645392817]
+custom_minimum_size = Vector2(90, 88)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_q5v2b")
+stretch_mode = 5
+
+[node name="Minivilles" type="Label" parent="Content/LogoRow" unique_id=736451928]
+layout_mode = 2
+text = "Minivilles"
+label_settings = ExtResource("6_wipa4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DiceDroite" type="TextureRect" parent="Content/LogoRow" unique_id=554283716]
+custom_minimum_size = Vector2(90, 88)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_q5v2b")
+stretch_mode = 5
+
+[node name="DureeTitreWrap" type="CenterContainer" parent="Content" unique_id=1263731593]
+layout_mode = 2
+
+[node name="DureeDunTour" type="Label" parent="Content/DureeTitreWrap" unique_id=463174625]
+layout_mode = 2
+text = "Durée d'un tour"
+label_settings = SubResource("LabelSettings_titre_section")
+horizontal_alignment = 1
+
+[node name="DureeRow" type="HBoxContainer" parent="Content" unique_id=2103618912]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ArrowGaucheDuree" type="TextureButton" parent="Content/DureeRow" unique_id=372065534]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(108, 81)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+script = ExtResource("9_rxlvl")
+
+[node name="DureeDisplay" type="Control" parent="Content/DureeRow" unique_id=548797076]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+
+[node name="Chronometre" type="TextureRect" parent="Content/DureeRow/DureeDisplay" unique_id=100293847]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 16.0
+offset_right = 283.0
+offset_bottom = 183.0
+texture = ExtResource("10_y76a8")
+stretch_mode = 5
+
+[node name="LabelDuree" type="Label" parent="Content/DureeRow/DureeDisplay" unique_id=281956443]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 54.0
+offset_right = 400.0
+offset_bottom = 146.0
+text = "2 min"
+label_settings = SubResource("LabelSettings_duree")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArrowDroiteDuree" type="TextureButton" parent="Content/DureeRow" unique_id=190847352]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(108, 81)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+flip_h = true
+script = ExtResource("9_rxlvl")
+
+[node name="JoueursTitreWrap" type="CenterContainer" parent="Content" unique_id=118128701]
+layout_mode = 2
+
+[node name="NombreJoueurs" type="Label" parent="Content/JoueursTitreWrap" unique_id=109738261]
+layout_mode = 2
+text = "Nombre de joueurs"
+label_settings = SubResource("LabelSettings_titre_section")
+horizontal_alignment = 1
+
+[node name="JoueursRow" type="HBoxContainer" parent="Content" unique_id=1698159529]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ArrowGaucheJoueurs" type="TextureButton" parent="Content/JoueursRow" unique_id=918273644]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(108, 81)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+script = ExtResource("9_rxlvl")
+
+[node name="JoueursIcons" type="Control" parent="Content/JoueursRow" unique_id=1826243100]
+custom_minimum_size = Vector2(560, 125)
+layout_mode = 2
+
+[node name="Joueur1" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=827364518]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 169.0
+offset_right = 260.0
+offset_bottom = 125.0
+texture = ExtResource("11_hckvh")
+stretch_mode = 5
+
+[node name="Joueur2" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=736451927]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 299.0
+offset_right = 390.0
+offset_bottom = 125.0
+texture = ExtResource("11_hckvh")
+stretch_mode = 5
+
+[node name="Joueur3" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=645392816]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 429.0
+offset_right = 520.0
+offset_bottom = 125.0
+texture = ExtResource("11_hckvh")
+stretch_mode = 5
+
+[node name="Joueur4" type="TextureRect" parent="Content/JoueursRow/JoueursIcons" unique_id=554283715]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 559.0
+offset_right = 650.0
+offset_bottom = 125.0
+texture = ExtResource("11_hckvh")
+stretch_mode = 5
+
+[node name="ArrowDroiteJoueurs" type="TextureButton" parent="Content/JoueursRow" unique_id=463174624]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(108, 81)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+flip_h = true
+script = ExtResource("9_rxlvl")
+
+[node name="BtnCreerWrap" type="CenterContainer" parent="Content" unique_id=1671592120]
+layout_mode = 2
+
+[node name="BtnCreer" type="Button" parent="Content/BtnCreerWrap" unique_id=372065533]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(720, 110)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("7_cx3lq")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("13_v5av7")
+theme_override_styles/pressed = ExtResource("14_70pqk")
+theme_override_styles/hover = ExtResource("14_70pqk")
+theme_override_styles/focus = ExtResource("13_v5av7")
+text = "Créer"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=637545061]
+layout_mode = 1
+offset_top = 15.0
+offset_right = 202.0
+offset_bottom = 171.0
+theme_override_constants/separation = -16
+
+[node name="backbtn" type="TextureButton" parent="VBoxContainer" unique_id=28496431]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture_normal = ExtResource("8_uy7m1")
+texture_pressed = ExtResource("12_6cn7a")
+texture_hover = ExtResource("12_6cn7a")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1133380511]
+layout_mode = 2
+text = "Retour"
+label_settings = ExtResource("3_y76a8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="settingbtn" type="VBoxContainer" parent="." unique_id=1591054281]
+layout_mode = 0
+offset_left = 1753.0
+offset_top = 43.0
+offset_right = 1866.0
+offset_bottom = 181.0
+size_flags_horizontal = 10
+theme_override_constants/separation = 10
+
+[node name="TextureButton" type="TextureButton" parent="settingbtn" unique_id=1283499797]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("14_q5v2b")
+texture_pressed = ExtResource("14_q5v2b")
+texture_hover = ExtResource("15_uy7m1")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="settingbtn" unique_id=1352925110]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("7_cx3lq")
+text = "Paramètres"
+label_settings = ExtResource("3_y76a8")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Content/BtnCreerWrap/BtnCreer" to="." method="_on_btn_creer_pressed"]
+[connection signal="pressed" from="VBoxContainer/backbtn" to="." method="_on_back_pressed"]

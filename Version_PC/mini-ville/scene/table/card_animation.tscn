@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cd2sh1b6hfen5"]
+
+[ext_resource type="Script" uid="uid://5brxf40ioo38" path="res://script/scene/table/card_animation.gd" id="1_tslg0"]
+
+[node name="Card" type="Control" unique_id=1098696589]
+custom_minimum_size = Vector2(156, 200)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_tslg0")
+
+[node name="Visual" type="TextureButton" parent="." unique_id=1252935335]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(78, 200)
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Tooltip" type="TextureRect" parent="Visual" unique_id=1731105118]
+unique_name_in_owner = true
+z_index = 10
+layout_mode = 0
+offset_left = -36.0
+offset_top = -300.0
+offset_right = 180.0
+offset_bottom = -190.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5

@@ -1,0 +1,370 @@
+[gd_scene format=3 uid="uid://cy723vcb6wob3"]
+
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="1_771pm"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="2_rrmn3"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="3_fv8fc"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dyhst"]
+[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_q6rvm"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_fe3jr"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="7_gfe4b"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_gu3gm"]
+[ext_resource type="Script" uid="uid://xad4vf2w2rx2" path="res://script/scene/Popup/popup_signin.gd" id="99_sc_signin"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf780"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(6, 7)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ao08t"]
+font = ExtResource("4_dyhst")
+font_size = 70
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_dlvnj"]
+font = ExtResource("5_q6rvm")
+font_size = 30
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_4rm04"]
+color = Color(1, 1, 1, 1)
+grow_begin = -220.0
+grow_end = 0.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ikalx"]
+color = Color(1, 1, 1, 1)
+grow_begin = 216.0
+thickness = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_e3plc"]
+font = ExtResource("7_gfe4b")
+font_size = 25
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_poj2q"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 7
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pfnv3"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+skew = Vector2(1, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 50.0
+expand_margin_right = 50.0
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_q8cub"]
+font = ExtResource("7_gfe4b")
+font_size = 20
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwasg"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+skew = Vector2(1, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 50.0
+expand_margin_right = 50.0
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qc4td"]
+bg_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+skew = Vector2(1, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+expand_margin_left = 30.0
+expand_margin_right = 30.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_papkj"]
+bg_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+skew = Vector2(1, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+expand_margin_left = 50.0
+expand_margin_right = 50.0
+
+[node name="Popup_signin" type="Control" unique_id=593202972]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("99_sc_signin")
+
+[node name="Panel" type="Panel" parent="." unique_id=182428005]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1344971382]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 14.0
+offset_right = 115.0
+offset_bottom = 134.0
+theme_override_constants/separation = -17
+
+[node name="backbtn" type="TextureButton" parent="Panel/VBoxContainer" unique_id=34750739]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("1_771pm")
+texture_pressed = ExtResource("2_rrmn3")
+texture_hover = ExtResource("2_rrmn3")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=297333622]
+layout_mode = 2
+text = "Retour"
+label_settings = ExtResource("3_fv8fc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panelsignin" type="PanelContainer" parent="Panel" unique_id=747784925]
+layout_mode = 0
+offset_left = 613.0
+offset_top = 124.0
+offset_right = 1313.0
+offset_bottom = 974.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lf780")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Panelsignin" unique_id=211412567]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 40
+
+[node name="Boxconnexion" type="VBoxContainer" parent="Panel/Panelsignin/MarginContainer" unique_id=175913565]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelsignin/MarginContainer/Boxconnexion" unique_id=1365746267]
+layout_mode = 2
+theme_override_constants/separation = -7
+
+[node name="Label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=1628467504]
+layout_mode = 2
+text = "Minivilles"
+label_settings = SubResource("LabelSettings_ao08t")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer" unique_id=69516452]
+layout_mode = 2
+text = "S'inscrire"
+label_settings = SubResource("LabelSettings_dlvnj")
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panelsignin/MarginContainer/Boxconnexion" unique_id=928734928]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=622368727]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_4rm04")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=394430325]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("6_fe3jr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/HBoxContainer2" unique_id=324377399]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_ikalx")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/Panelsignin/MarginContainer/Boxconnexion" unique_id=2084957977]
+layout_mode = 2
+theme_override_constants/separation = 13
+
+[node name="pseudo_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=502909678]
+layout_mode = 2
+text = "pseudo"
+label_settings = SubResource("LabelSettings_e3plc")
+
+[node name="pseudo" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1758252983]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
+theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
+
+[node name="email_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1533472842]
+layout_mode = 2
+text = "email"
+label_settings = SubResource("LabelSettings_e3plc")
+
+[node name="mail" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1274627429]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
+theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
+
+[node name="password_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1915286508]
+layout_mode = 2
+text = "Mot de passe"
+label_settings = SubResource("LabelSettings_e3plc")
+
+[node name="mdp" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1846263279]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
+theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
+secret = true
+secret_character = "."
+
+[node name="confirm_label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1305234315]
+layout_mode = 2
+text = "Confirmer votre mot de passe"
+label_settings = SubResource("LabelSettings_e3plc")
+
+[node name="mdp_conf" type="LineEdit" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=851104971]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03238219, 0.03238219, 0.03238219, 1)
+theme_override_colors/font_uneditable_color = Color(0.875, 0.875, 0.875, 0.5)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.20784314, 0.5254902, 0.7490196, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_poj2q")
+secret = true
+secret_character = "."
+
+[node name="Control" type="Control" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=377824215]
+layout_mode = 2
+
+[node name="inscrire" type="Button" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=2044315211]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_dyhst")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_pfnv3")
+theme_override_styles/pressed = ExtResource("8_gu3gm")
+theme_override_styles/hover = ExtResource("8_gu3gm")
+text = "S'inscrire"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=550323486]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2/HBoxContainer2" unique_id=585811019]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_4rm04")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2/HBoxContainer2" unique_id=1551620009]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+size_flags_stretch_ratio = 1.11
+texture = ExtResource("6_fe3jr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2/HBoxContainer2" unique_id=1750199787]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_ikalx")
+
+[node name="Label" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1865395180]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+text = "Vous avez déjà un compte ?"
+label_settings = SubResource("LabelSettings_q8cub")
+horizontal_alignment = 1
+
+[node name="Button2" type="Button" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=1960505324]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_dyhst")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_bwasg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qc4td")
+theme_override_styles/hover = SubResource("StyleBoxFlat_papkj")
+text = "Se connecter"
+
+[node name="errorMessage" type="Label" parent="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2" unique_id=774476612]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96024394, 0.0071524177, 0.039429467, 1)
+
+[connection signal="pressed" from="Panel/Panelsignin/MarginContainer/Boxconnexion/VBoxContainer2/inscrire" to="." method="_on_inscrire_pressed"]

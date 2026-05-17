@@ -1,0 +1,353 @@
+[gd_scene format=3 uid="uid://j6vvlrs1s36k"]
+
+[ext_resource type="Script" uid="uid://cfo0iiykc6iud" path="res://script/scene/Multijoueur/rejoindre_lobby.gd" id="1_rcr0h"]
+[ext_resource type="Texture2D" uid="uid://ck5psmkcnsie4" path="res://assets/Background/bg_lobby.png" id="2_sbngy"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="3_backp"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="3_rcr0h"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="4_i2uor"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="5_hover"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="5_sbngy"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_ep5k2"]
+[ext_resource type="FontFile" uid="uid://cbihmbqwcnhgk" path="res://assets/Fonts/Exo_2/static/Exo2-BoldItalic.ttf" id="8_ctfjb"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="9_2mvr5"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="10_44j5d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_titre"]
+font = ExtResource("7_ep5k2")
+font_size = 80
+outline_size = 6
+outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup"]
+bg_color = Color(0.08, 0.1, 0.25, 0.45)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.25)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_sous"]
+font = ExtResource("8_ctfjb")
+font_size = 28
+font_color = Color(1, 1, 1, 0.85)
+outline_size = 2
+outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+bg_color = Color(1, 1, 1, 0.18)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 0.9)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 8
+shadow_offset = Vector2(0, 6)
+
+[sub_resource type="LabelSettings" id="LabelSettings_code"]
+font = ExtResource("8_ctfjb")
+font_size = 40
+outline_size = 3
+outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_4exmi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jkqrd"]
+font = SubResource("SystemFont_4exmi")
+font_size = 24
+font_color = Color(0.8258751, 0.24303669, 0.165054, 1)
+outline_size = 2
+shadow_size = 0
+
+[node name="Control" type="Control" unique_id=100000001]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rcr0h")
+
+[node name="Background" type="TextureRect" parent="." unique_id=100000002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_sbngy")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 160.0
+mouse_filter = 0
+theme_override_constants/separation = 0
+
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=100000051]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("3_rcr0h")
+texture_pressed = ExtResource("3_backp")
+texture_hover = ExtResource("3_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("4_i2uor")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=44841594]
+layout_mode = 0
+offset_left = 1736.0
+offset_top = 48.0
+offset_right = 1849.0
+offset_bottom = 180.0
+size_flags_horizontal = 10
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="VBoxContainer" unique_id=998115489]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture_normal = ExtResource("5_sbngy")
+texture_pressed = ExtResource("5_hover")
+texture_hover = ExtResource("5_hover")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteParametres" type="Label" parent="VBoxContainer" unique_id=1855596278]
+layout_mode = 2
+size_flags_vertical = 2
+text = "Paramètres"
+label_settings = ExtResource("4_i2uor")
+horizontal_alignment = 1
+
+[node name="Titre" type="Label" parent="." unique_id=100000009]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -387.0
+offset_top = 98.0
+offset_right = 373.0
+offset_bottom = 219.0
+grow_horizontal = 2
+text = "Rejoindre un lobby"
+label_settings = SubResource("LabelSettings_titre")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="." unique_id=100000041]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = -290.0
+offset_right = 420.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_popup")
+
+[node name="TitrePopup" type="Label" parent="Panel" unique_id=100000042]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -151.5
+offset_top = 13.0
+offset_right = 151.5
+offset_bottom = 47.0
+grow_horizontal = 2
+text = "Entrer le code du lobby"
+label_settings = SubResource("LabelSettings_sous")
+horizontal_alignment = 1
+
+[node name="CodeRow" type="HBoxContainer" parent="Panel" unique_id=100000011]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 80.0
+offset_right = 810.0
+offset_bottom = 175.0
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Box1" type="Panel" parent="Panel/CodeRow" unique_id=100000012]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox1" type="Label" parent="Panel/CodeRow/Box1" unique_id=100000013]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Box2" type="Panel" parent="Panel/CodeRow" unique_id=100000014]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox2" type="Label" parent="Panel/CodeRow/Box2" unique_id=100000015]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Box3" type="Panel" parent="Panel/CodeRow" unique_id=100000016]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox3" type="Label" parent="Panel/CodeRow/Box3" unique_id=100000017]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separateur" type="Label" parent="Panel/CodeRow" unique_id=100000018]
+layout_mode = 2
+text = "—"
+label_settings = SubResource("LabelSettings_sous")
+horizontal_alignment = 1
+
+[node name="Box4" type="Panel" parent="Panel/CodeRow" unique_id=100000019]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox4" type="Label" parent="Panel/CodeRow/Box4" unique_id=100000020]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Box5" type="Panel" parent="Panel/CodeRow" unique_id=100000026]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox5" type="Label" parent="Panel/CodeRow/Box5" unique_id=100000021]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Box6" type="Panel" parent="Panel/CodeRow" unique_id=100000022]
+custom_minimum_size = Vector2(70, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="LabelBox6" type="Label" parent="Panel/CodeRow/Box6" unique_id=100000023]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_code")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BtnRejoindre" type="Button" parent="Panel" unique_id=100000024]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 259.0
+offset_right = 726.0
+offset_bottom = 344.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("7_ep5k2")
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = ExtResource("9_2mvr5")
+theme_override_styles/pressed = ExtResource("10_44j5d")
+theme_override_styles/hover = ExtResource("10_44j5d")
+theme_override_styles/focus = ExtResource("9_2mvr5")
+text = "Rejoindre"
+
+[node name="BtnAnnuler" type="Button" parent="Panel" unique_id=100000025]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 413.0
+offset_right = 717.0
+offset_bottom = 478.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.7)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 0.7)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0.7)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 0.7)
+theme_override_colors/font_outline_color = Color(0.16862746, 0.2, 0.4862745, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("7_ep5k2")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("9_2mvr5")
+theme_override_styles/pressed = ExtResource("10_44j5d")
+theme_override_styles/hover = ExtResource("10_44j5d")
+theme_override_styles/focus = ExtResource("9_2mvr5")
+text = "Annuler"
+
+[node name="LabelErreur" type="Label" parent="Panel" unique_id=1965323241]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -161.0
+offset_top = -90.0
+offset_right = 159.0
+offset_bottom = -59.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Veuillez entrer le code complet"
+label_settings = SubResource("LabelSettings_jkqrd")
+horizontal_alignment = 1

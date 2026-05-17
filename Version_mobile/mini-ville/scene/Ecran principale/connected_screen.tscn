@@ -1,0 +1,192 @@
+[gd_scene format=3 uid="uid://c1ujckeu3wsr0"]
+
+[ext_resource type="Texture2D" uid="uid://b11202hbdgn2s" path="res://assets/Background/background.png" id="2_us86r"]
+[ext_resource type="Texture2D" uid="uid://bk36wj4sb2ht6" path="res://assets/icon/rules_btn.png" id="3_eigto"]
+[ext_resource type="Texture2D" uid="uid://bci2x7cew5q4" path="res://assets/icon/règles.png" id="4_m32hk"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_r6f8l"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="5_dgwue"]
+[ext_resource type="Texture2D" uid="uid://boqc8gboxy7dj" path="res://assets/icon/profileicon.png" id="7_afk1k"]
+[ext_resource type="Texture2D" uid="uid://cl2a11wf5ogci" path="res://assets/icon/profil.png" id="8_2voyj"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="9_lgjwb"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="10_1sjmq"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="11_cdui6"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="11_p4yce"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="12_1ti8x"]
+[ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="12_vcqhx"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="13_bhvod"]
+[ext_resource type="Script" uid="uid://crbofsejnkw0o" path="res://script/scene/Ecran principal/player_screen.gd" id="99_sc_player"]
+
+[node name="Player_screen" type="Control" unique_id=266147662]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("99_sc_player")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=577262117]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_us86r")
+
+[node name="Header" type="MarginContainer" parent="." unique_id=1669550561]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 13.0
+offset_top = 3.0
+offset_right = -10.0
+offset_bottom = 181.0
+grow_horizontal = 2
+
+[node name="header" type="HBoxContainer" parent="Header" unique_id=481450320]
+layout_mode = 2
+
+[node name="rulebtn" type="VBoxContainer" parent="Header/header" unique_id=126334321]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = -20
+
+[node name="TextureButton" type="TextureButton" parent="Header/header/rulebtn" unique_id=53712212]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("4_m32hk")
+texture_pressed = ExtResource("4_m32hk")
+texture_hover = ExtResource("3_eigto")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Header/header/rulebtn" unique_id=524999864]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("4_r6f8l")
+text = "Règles"
+label_settings = ExtResource("5_dgwue")
+horizontal_alignment = 1
+
+[node name="profilbtn" type="VBoxContainer" parent="Header/header" unique_id=1585367539]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_stretch_ratio = 8.0
+theme_override_constants/separation = -24
+
+[node name="TextureButton2" type="TextureButton" parent="Header/header/profilbtn" unique_id=1639844503]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8_2voyj")
+texture_pressed = ExtResource("8_2voyj")
+texture_hover = ExtResource("7_afk1k")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label2" type="Label" parent="Header/header/profilbtn" unique_id=529192654]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("4_r6f8l")
+text = "Profil"
+label_settings = ExtResource("5_dgwue")
+horizontal_alignment = 1
+
+[node name="settingbtn" type="VBoxContainer" parent="Header/header" unique_id=1597199447]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = -20
+
+[node name="TextureButton" type="TextureButton" parent="Header/header/settingbtn" unique_id=162211605]
+clip_contents = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("10_1sjmq")
+texture_pressed = ExtResource("10_1sjmq")
+texture_hover = ExtResource("9_lgjwb")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Header/header/settingbtn" unique_id=1607655262]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("4_r6f8l")
+text = "Paramètres"
+label_settings = ExtResource("5_dgwue")
+horizontal_alignment = 1
+
+[node name="Title" type="MarginContainer" parent="." unique_id=858433080]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -353.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Title" unique_id=536270957]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+
+[node name="Dice2" type="TextureRect" parent="Title/HBoxContainer" unique_id=1950784400]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("11_p4yce")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("12_vcqhx")
+
+[node name="Label" type="Label" parent="Title/HBoxContainer" unique_id=660498878]
+layout_mode = 2
+text = "Minivilles"
+label_settings = ExtResource("11_cdui6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Dice" type="TextureRect" parent="Title/HBoxContainer" unique_id=124001480]
+custom_minimum_size = Vector2(120, 120)
+layout_direction = 2
+layout_mode = 2
+texture = ExtResource("11_p4yce")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("12_vcqhx")
+
+[node name="gameMode" type="VBoxContainer" parent="." unique_id=1578344791]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -430.0
+offset_top = -455.0
+offset_right = 430.0
+offset_bottom = -328.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 31
+
+[node name="playbtn" type="Button" parent="gameMode" unique_id=1300849190]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("4_r6f8l")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("12_1ti8x")
+theme_override_styles/pressed = ExtResource("13_bhvod")
+theme_override_styles/hover = ExtResource("13_bhvod")
+text = "Jouer"

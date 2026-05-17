@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://cjnbgoja88851"]
+
+[ext_resource type="Script" uid="uid://udstq615y7y4" path="res://script/scene/Multijoueur/stats_joueur.gd" id="1_4n7j7"]
+[ext_resource type="Texture2D" uid="uid://cn6lhiosvojju" path="res://assets/Background/bg2.png" id="2_wl3vf"]
+[ext_resource type="Texture2D" uid="uid://dvjstugda1lcq" path="res://assets/icon/profile_circle.png" id="3_8jhxm"]
+[ext_resource type="Texture2D" uid="uid://cw21gdhjicgct" path="res://assets/icon/icone_canard.png" id="4_ihjb6"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_uuut0"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="6_1ycs3"]
+[ext_resource type="FontFile" uid="uid://cxk2egatoouod" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBoldItalic.ttf" id="7_whm6u"]
+[ext_resource type="Texture2D" uid="uid://kqkqxoamahf3" path="res://assets/icon/badge_legende.png" id="8_ddjav"]
+[ext_resource type="Texture2D" uid="uid://cl6fiqh4o65li" path="res://assets/icon/fleche_droite.png" id="10_n2pix"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nom"]
+font = ExtResource("5_uuut0")
+font_size = 150
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_offset = Vector2(4, 5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_stat"]
+font = ExtResource("7_whm6u")
+font_size = 80
+outline_size = 5
+outline_color = Color(0.169, 0.2, 0.486, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_legende_txt"]
+font = ExtResource("5_uuut0")
+font_size = 40
+outline_size = 4
+outline_color = Color(0.168, 0.2, 0.486, 1)
+
+[node name="StatsJoueur" type="Control" unique_id=434853156]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4n7j7")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1316904419]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_wl3vf")
+stretch_mode = 6
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=2018670327]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="ProfileRow" type="HBoxContainer" parent="Content" unique_id=1463064968]
+layout_mode = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="ProfileStack" type="Control" parent="Content/ProfileRow" unique_id=490495220]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ProfileCircle" type="TextureRect" parent="Content/ProfileRow/ProfileStack" unique_id=260304591]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8jhxm")
+stretch_mode = 5
+
+[node name="Canard" type="TextureRect" parent="Content/ProfileRow/ProfileStack" unique_id=530398982]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -12.0
+offset_right = -10.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_ihjb6")
+stretch_mode = 5
+
+[node name="NomJoueur" type="Label" parent="Content/ProfileRow" unique_id=560472897]
+layout_mode = 2
+text = "Arvons"
+label_settings = SubResource("LabelSettings_nom")
+vertical_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="Content" unique_id=1793394190]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 24
+
+[node name="Stat1Row" type="HBoxContainer" parent="Content/StatsContainer" unique_id=1544679168]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="IcoDe1" type="TextureRect" parent="Content/StatsContainer/Stat1Row" unique_id=1649514672]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("6_1ycs3")
+stretch_mode = 2
+
+[node name="StatJouees" type="Label" parent="Content/StatsContainer/Stat1Row" unique_id=1178760332]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Nombre de partie(s) jouée(s) : 0"
+label_settings = SubResource("LabelSettings_stat")
+
+[node name="Stat2Row" type="HBoxContainer" parent="Content/StatsContainer" unique_id=1538089474]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="IcoDe2" type="TextureRect" parent="Content/StatsContainer/Stat2Row" unique_id=1588210196]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("6_1ycs3")
+stretch_mode = 2
+
+[node name="StatGagnees" type="Label" parent="Content/StatsContainer/Stat2Row" unique_id=1688556221]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Nombre de partie(s) gagnée(s) : 0"
+label_settings = SubResource("LabelSettings_stat")
+
+[node name="RangContainer" type="VBoxContainer" parent="Content" unique_id=433971716]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BadgeWrap" type="CenterContainer" parent="Content/RangContainer" unique_id=875562490]
+layout_mode = 2
+
+[node name="BadgeRang" type="TextureRect" parent="Content/RangContainer/BadgeWrap" unique_id=774172216]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture = ExtResource("8_ddjav")
+stretch_mode = 5
+
+[node name="LegendeTxtWrap" type="CenterContainer" parent="Content/RangContainer" unique_id=681162798]
+layout_mode = 2
+
+[node name="TexteLegende" type="Label" parent="Content/RangContainer/LegendeTxtWrap" unique_id=64228140]
+layout_mode = 2
+text = "Légende"
+label_settings = SubResource("LabelSettings_legende_txt")
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=1582315584]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 160.0
+mouse_filter = 0
+theme_override_constants/separation = 5
+
+[node name="Fleche" type="TextureRect" parent="BtnRetour" unique_id=1408878078]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("10_n2pix")
+stretch_mode = 5
+flip_h = true
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=1531527407]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour au
+lobby"
+label_settings = SubResource("LabelSettings_legende_txt")

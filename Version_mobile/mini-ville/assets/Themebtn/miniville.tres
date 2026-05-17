@@ -1,0 +1,16 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://ch3eob5twgr5n"]
+
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="1_16tha"]
+
+[sub_resource type="FontVariation" id="FontVariation_ul6ys"]
+base_font = ExtResource("1_16tha")
+
+[resource]
+line_spacing = 4.0
+font = SubResource("FontVariation_ul6ys")
+font_size = 200
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 0.693)
+shadow_offset = Vector2(10, 13)

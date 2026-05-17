@@ -1,0 +1,181 @@
+[gd_scene format=3 uid="uid://bntbferfc67eh"]
+
+[ext_resource type="Script" uid="uid://dcvdbwdkhohlq" path="res://script/scene/Ecran principal/mode_de_jeu.gd" id="0_mdj01"]
+[ext_resource type="Texture2D" uid="uid://c4k5thwvnrule" path="res://assets/Background/bg_mode_de_jeu_new.png" id="1_gtnaa"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="2_31rsn"]
+[ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="3_anmlk"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="4_gwrmv"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="6_dg5l6"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="7_y6f07"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="8_lprcw"]
+[ext_resource type="Script" uid="uid://bnd1nn86amgdg" path="res://script/scene/Local/btn_solo.gd" id="9_dmcf4"]
+[ext_resource type="Script" uid="uid://1jdhm04axmh1" path="res://script/scene/Local/btn_multi.gd" id="10_okktj"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="13_v37wi"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="14_fny1t"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="14_hover"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="16_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="17_backp"]
+
+[node name="Control" type="Control" unique_id=1166678645]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("0_mdj01")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1825588920]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_gtnaa")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=1530701729]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Title" type="MarginContainer" parent="Content" unique_id=300086292]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content/Title" unique_id=819987837]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+
+[node name="Dice2" type="TextureRect" parent="Content/Title/HBoxContainer" unique_id=116088302]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("2_31rsn")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("3_anmlk")
+
+[node name="Label" type="Label" parent="Content/Title/HBoxContainer" unique_id=997130082]
+layout_mode = 2
+text = "Minivilles"
+label_settings = ExtResource("4_gwrmv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Dice" type="TextureRect" parent="Content/Title/HBoxContainer" unique_id=1329831146]
+custom_minimum_size = Vector2(120, 120)
+layout_direction = 2
+layout_mode = 2
+texture = ExtResource("2_31rsn")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("3_anmlk")
+
+[node name="Gap" type="Control" parent="Content" unique_id=259286484]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="BtnSoloWrap" type="CenterContainer" parent="Content" unique_id=1159679075]
+layout_mode = 2
+
+[node name="BtnSolo" type="Button" parent="Content/BtnSoloWrap" unique_id=759913985]
+custom_minimum_size = Vector2(720, 110)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("6_dg5l6")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("7_y6f07")
+theme_override_styles/pressed = ExtResource("8_lprcw")
+theme_override_styles/hover = ExtResource("8_lprcw")
+theme_override_styles/focus = ExtResource("7_y6f07")
+text = "Local"
+script = ExtResource("9_dmcf4")
+
+[node name="BtnMultiWrap" type="CenterContainer" parent="Content" unique_id=522245396]
+layout_mode = 2
+
+[node name="BtnMulti" type="Button" parent="Content/BtnMultiWrap" unique_id=1989472916]
+custom_minimum_size = Vector2(720, 110)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("6_dg5l6")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = ExtResource("7_y6f07")
+theme_override_styles/pressed = ExtResource("8_lprcw")
+theme_override_styles/hover = ExtResource("8_lprcw")
+theme_override_styles/focus = ExtResource("7_y6f07")
+text = "En ligne"
+script = ExtResource("10_okktj")
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=100000050]
+layout_mode = 0
+offset_left = 30.0
+offset_top = -3.0
+offset_right = 200.0
+offset_bottom = 158.0
+theme_override_constants/separation = -17
+
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=1943198583]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("16_back")
+texture_pressed = ExtResource("17_backp")
+texture_hover = ExtResource("17_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=266904920]
+layout_mode = 0
+offset_left = 1773.0
+offset_top = 30.0
+offset_right = 1886.0
+offset_bottom = 162.0
+size_flags_horizontal = 10
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="VBoxContainer" unique_id=583147940]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture_normal = ExtResource("14_fny1t")
+texture_pressed = ExtResource("14_hover")
+texture_hover = ExtResource("14_hover")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteParametres" type="Label" parent="VBoxContainer" unique_id=319804220]
+layout_mode = 2
+size_flags_vertical = 2
+text = "Paramètres"
+label_settings = ExtResource("13_v37wi")
+horizontal_alignment = 1

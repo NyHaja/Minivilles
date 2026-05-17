@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bu5ukwdc2m6d"]
+
+[ext_resource type="Script" uid="uid://dkryvbbm07uoa" path="res://Autoload/sound_manager.gd" id="1_gbdfy"]
+[ext_resource type="AudioStream" uid="uid://bjsc6hqeoyk24" path="res://assets/Sound/SFX/mouse-click.mp3" id="2_s6peo"]
+[ext_resource type="AudioStream" uid="uid://dj3rbkxkapsqw" path="res://assets/Sound/Music/how-delightful-jonny-boyle-main-version-45457-01-45.ogg" id="3_shlr6"]
+
+[node name="SoundManager" type="Node2D" unique_id=1625422692]
+script = ExtResource("1_gbdfy")
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="." unique_id=429039587]
+stream = ExtResource("2_s6peo")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1016374386]
+stream = ExtResource("3_shlr6")
+volume_db = -10.0
+autoplay = true
+parameters/looping = true

@@ -1,0 +1,332 @@
+[gd_scene format=3 uid="uid://crxp5k13nh4sp"]
+
+[ext_resource type="Script" uid="uid://ctfuasdpjw0go" path="res://script/scene/Multijoueur/choix_lobby.gd" id="1_c443o"]
+[ext_resource type="Texture2D" uid="uid://c4k5thwvnrule" path="res://assets/Background/bg_mode_de_jeu_new.png" id="2_w5wc1"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="3_5e00k"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="4_c443o"]
+[ext_resource type="Script" uid="uid://0gh11ajwtoq3" path="res://script/scene/Local/de.gd" id="4_voudi"]
+[ext_resource type="LabelSettings" uid="uid://ch3eob5twgr5n" path="res://assets/Themebtn/miniville.tres" id="5_5d6vx"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="5_5e00k"]
+[ext_resource type="Texture2D" uid="uid://d1thvht52ph0u" path="res://assets/icon/iconeparamètre.png" id="5_hover"]
+[ext_resource type="Texture2D" uid="uid://bcowl0kyuw8d1" path="res://assets/icon/dice.png" id="7_c443o"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="7_hgeqn"]
+[ext_resource type="StyleBox" uid="uid://dyofc8inyhga3" path="res://assets/Themebtn/butonstyle.tres" id="8_cmag3"]
+[ext_resource type="StyleBox" uid="uid://dp1n54e7xh6d1" path="res://assets/Themebtn/butonstylePress.tres" id="9_8lebm"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="11_geu4v"]
+[ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="14_dqbsl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ap4bs"]
+bg_color = Color(0.6052743, 0.6052743, 0.6052743, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mgvv6"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_jp5mq"]
+font = ExtResource("14_dqbsl")
+font_size = 30
+outline_size = 11
+outline_color = Color(0, 0.69803923, 0.87058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06vsb"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqbsl"]
+bg_color = Color(0, 0.5165412, 0.6475019, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jp5mq"]
+bg_color = Color(2.1658839e-06, 0.46009016, 0.578116, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4okt"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0qnol"]
+bg_color = Color(0.8454401, 0.2532929, 0.1737104, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t06b3"]
+bg_color = Color(0.7287041, 0.20073491, 0.13098767, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[node name="Choixlobby" type="Control" unique_id=2096883175]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c443o")
+
+[node name="Background" type="TextureRect" parent="." unique_id=120471264]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_w5wc1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1713461663]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 13.0
+offset_right = 1897.0
+offset_bottom = 157.0
+size_flags_vertical = 2
+size_flags_stretch_ratio = 0.86
+
+[node name="BtnRetour" type="VBoxContainer" parent="HBoxContainer2" unique_id=100000050]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 0
+theme_override_constants/separation = 5
+
+[node name="BtnBack" type="TextureButton" parent="HBoxContainer2/BtnRetour" unique_id=1943198583]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("3_5e00k")
+texture_pressed = ExtResource("4_c443o")
+texture_hover = ExtResource("4_c443o")
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="HBoxContainer2/BtnRetour" unique_id=100000052]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("11_geu4v")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2" unique_id=774803859]
+layout_mode = 2
+size_flags_horizontal = 10
+alignment = 1
+
+[node name="BtnParametres" type="TextureButton" parent="HBoxContainer2/VBoxContainer" unique_id=2120109553]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture_normal = ExtResource("5_5e00k")
+texture_pressed = ExtResource("5_hover")
+texture_hover = ExtResource("5_hover")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteParametres" type="Label" parent="HBoxContainer2/VBoxContainer" unique_id=1776649305]
+layout_mode = 2
+size_flags_vertical = 2
+text = "Paramètres"
+label_settings = ExtResource("11_geu4v")
+horizontal_alignment = 1
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=1675235325]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -674.5
+offset_top = -374.5
+offset_right = 674.5
+offset_bottom = 374.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content" unique_id=2118019788]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+
+[node name="Dice2" type="TextureRect" parent="Content/HBoxContainer" unique_id=830873676]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("7_c443o")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("4_voudi")
+
+[node name="Label" type="Label" parent="Content/HBoxContainer" unique_id=1238385541]
+layout_mode = 2
+text = "Minivilles"
+label_settings = ExtResource("5_5d6vx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Dice" type="TextureRect" parent="Content/HBoxContainer" unique_id=1505591319]
+custom_minimum_size = Vector2(120, 120)
+layout_direction = 2
+layout_mode = 2
+texture = ExtResource("7_c443o")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("4_voudi")
+
+[node name="gameMode" type="VBoxContainer" parent="Content" unique_id=804133005]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="BtnCreerWrap" type="CenterContainer" parent="Content/gameMode" unique_id=1030678226]
+layout_mode = 2
+
+[node name="BtnCreer" type="Button" parent="Content/gameMode/BtnCreerWrap" unique_id=601274390]
+custom_minimum_size = Vector2(720, 110)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("7_hgeqn")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("8_cmag3")
+theme_override_styles/pressed = ExtResource("9_8lebm")
+theme_override_styles/hover = ExtResource("9_8lebm")
+theme_override_styles/focus = ExtResource("8_cmag3")
+text = "Créer une partie"
+
+[node name="Control" type="Control" parent="Content/gameMode" unique_id=1040296961]
+layout_mode = 2
+
+[node name="BtnRejoindreWrap" type="CenterContainer" parent="Content/gameMode" unique_id=1818612144]
+layout_mode = 2
+
+[node name="BtnRejoindre" type="Button" parent="Content/gameMode/BtnRejoindreWrap" unique_id=805246211]
+custom_minimum_size = Vector2(720, 110)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_focus_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("7_hgeqn")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("8_cmag3")
+theme_override_styles/pressed = ExtResource("9_8lebm")
+theme_override_styles/hover = ExtResource("9_8lebm")
+theme_override_styles/focus = ExtResource("8_cmag3")
+text = "Rejoindre"
+
+[node name="PanelConnexionRequise" type="PanelContainer" parent="." unique_id=942971021]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -425.0
+offset_top = 25.5
+offset_right = 433.0
+offset_bottom = 326.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ap4bs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelConnexionRequise" unique_id=299891236]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Label" type="Label" parent="PanelConnexionRequise/VBoxContainer" unique_id=1293516871]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_mgvv6")
+text = "Vous devez être connecté pour créer une partie"
+label_settings = SubResource("LabelSettings_jp5mq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelConnexionRequise/VBoxContainer" unique_id=2135992221]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="BtnSeConnecter" type="Button" parent="PanelConnexionRequise/VBoxContainer/HBoxContainer" unique_id=1748382755]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.8132577, 0.8132577, 0.81325763, 1)
+theme_override_fonts/font = ExtResource("14_dqbsl")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_06vsb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_dqbsl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jp5mq")
+text = "Se Connecter"
+
+[node name="BtnFermer" type="Button" parent="PanelConnexionRequise/VBoxContainer/HBoxContainer" unique_id=1980009726]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
+theme_override_fonts/font = ExtResource("14_dqbsl")
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = SubResource("StyleBoxFlat_f4okt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0qnol")
+theme_override_styles/hover = SubResource("StyleBoxFlat_t06b3")
+text = "Fermer"
+
+[connection signal="pressed" from="HBoxContainer2/VBoxContainer/BtnParametres" to="." method="affiche_parametre"]
+[connection signal="pressed" from="Content/gameMode/BtnCreerWrap/BtnCreer" to="." method="_on_btn_creer_pressed"]

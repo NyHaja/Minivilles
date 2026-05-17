@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cspaj4lx56c1y"]
+
+[ext_resource type="Script" uid="uid://blimejyub2hcn" path="res://script/scene/prototype/v3/ShopBoard.gd" id="1_gsufv"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_gsufv"]
+load_path = "res://.godot/imported/ShopBG.png-73bda8648d30d2b03fa818f8352162c0.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gl3ib"]
+texture = SubResource("CompressedTexture2D_gsufv")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[node name="ShopBoard" type="PanelContainer" unique_id=1010216388]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_gl3ib")
+script = ExtResource("1_gsufv")
+
+[node name="ShopGridContainer" type="GridContainer" parent="." unique_id=1965849068]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3

@@ -1,0 +1,417 @@
+[gd_scene format=3 uid="uid://cl142ptcxeqdo"]
+
+[ext_resource type="Script" uid="uid://bx0vpo3ta12ck" path="res://script/scene/Popup/popup_parametres.gd" id="1_sc"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="2_erica"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="3_exo"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="5_backp"]
+[ext_resource type="Texture2D" uid="uid://dsqby0bl5kmvw" path="res://assets/icon/settingicon.png" id="5_gy5cr"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_ls"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="8_gy5cr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0.16862746, 0.2, 0.4862745, 1)
+shadow_size = 1
+shadow_offset = Vector2(6, 7)
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("2_erica")
+font_size = 60
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_subtitle"]
+font = ExtResource("3_exo")
+font_size = 30
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_qgbbu"]
+color = Color(1, 1, 1, 1)
+grow_begin = -220.0
+grow_end = 0.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_qs8kj"]
+color = Color(1, 1, 1, 1)
+grow_begin = 216.0
+thickness = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_item"]
+font = ExtResource("3_exo")
+font_size = 25
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_value"]
+font = ExtResource("3_exo")
+font_size = 23
+outline_size = 3
+
+[sub_resource type="LabelSettings" id="LabelSettings_section"]
+font = ExtResource("3_exo")
+font_size = 25
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwmbq"]
+bg_color = Color(1, 1, 1, 1)
+border_width_top = 3
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_a"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 15
+border_width_right = 3
+border_width_bottom = 15
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
+bg_color = Color(0.8089983, 0.8089983, 0.8089982, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.69803923, 0.87058824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="Popup_parametres" type="Control" unique_id=728934651]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sc")
+
+[node name="Panel" type="Panel" parent="." unique_id=109283746]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=384756291]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 14.0
+offset_right = 115.0
+offset_bottom = 134.0
+theme_override_constants/separation = -17
+
+[node name="backbtn" type="TextureButton" parent="Panel/VBoxContainer" unique_id=192837465]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_back")
+texture_pressed = ExtResource("5_backp")
+texture_hover = ExtResource("5_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=564738291]
+layout_mode = 2
+text = "Retour"
+label_settings = ExtResource("6_ls")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelParametres" type="PanelContainer" parent="Panel" unique_id=847362910]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -302.0
+offset_right = 360.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/PanelParametres" unique_id=293847561]
+layout_mode = 2
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 30
+
+[node name="MainVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer" unique_id=736492810]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="TitleVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=192837466]
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="TitleRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox" unique_id=584739201]
+layout_mode = 2
+alignment = 1
+
+[node name="GearIcon" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox/TitleRow" unique_id=847362911]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_gy5cr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox/TitleRow" unique_id=293847562]
+layout_mode = 2
+text = " Paramètres"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/TitleVBox" unique_id=736492811]
+layout_mode = 2
+text = "Réglages"
+label_settings = SubResource("LabelSettings_subtitle")
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=212662200]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=1040715376]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=456353009]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer2" unique_id=2029659106]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
+
+[node name="AudioVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=584739202]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="MusiqueRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=736492812]
+layout_mode = 2
+
+[node name="MusiqueLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/MusiqueRow" unique_id=192837468]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Musique"
+label_settings = SubResource("LabelSettings_item")
+
+[node name="MusiqueValue" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/MusiqueRow" unique_id=584739203]
+layout_mode = 2
+text = "70%"
+label_settings = SubResource("LabelSettings_value")
+horizontal_alignment = 2
+
+[node name="SliderMusique" type="HSlider" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=847362913]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+value = 70.0
+
+[node name="EffetsRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=293847564]
+layout_mode = 2
+
+[node name="EffetsLabel" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/EffetsRow" unique_id=736492813]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Effets sonores"
+label_settings = SubResource("LabelSettings_item")
+
+[node name="EffetsValue" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/EffetsRow" unique_id=192837469]
+layout_mode = 2
+text = "85%"
+label_settings = SubResource("LabelSettings_value")
+horizontal_alignment = 2
+
+[node name="SliderEffets" type="HSlider" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=584739204]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+value = 85.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox" unique_id=1772992586]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=1260963566]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=993688369]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AudioVBox/HBoxContainer3" unique_id=1582413772]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
+
+[node name="LangueVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=293847566]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 5
+
+[node name="LangueTitle" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=736492815]
+layout_mode = 2
+text = "Langue"
+label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=127516245]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_rwmbq")
+
+[node name="LangueGrid" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox" unique_id=27490603]
+layout_mode = 2
+
+[node name="BtnFR" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=847362916]
+custom_minimum_size = Vector2(250, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_fonts/font = ExtResource("3_exo")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Français"
+
+[node name="BtnEN" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/LangueVBox/LangueGrid" unique_id=293847567]
+custom_minimum_size = Vector2(250, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_fonts/font = ExtResource("3_exo")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Anglais"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=506170679]
+visible = false
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=1142722193]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_qgbbu")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=478587229]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("8_gy5cr")
+stretch_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/HBoxContainer3" unique_id=1054442830]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_qs8kj")
+
+[node name="AffichageVBox" type="VBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox" unique_id=584739207]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="AffichageTitle" type="Label" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=847362917]
+layout_mode = 2
+text = "Affichage"
+label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=50814693]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_rwmbq")
+
+[node name="AffichageRow" type="HBoxContainer" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox" unique_id=736492817]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnClair" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox/AffichageRow" unique_id=192837473]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_fonts/font = ExtResource("3_exo")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Clair"
+
+[node name="BtnSombre" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox/AffichageRow" unique_id=584739208]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_fonts/font = ExtResource("3_exo")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Sombre"
+
+[node name="BtnAuto" type="Button" parent="Panel/PanelParametres/MarginContainer/MainVBox/AffichageVBox/AffichageRow" unique_id=847362918]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_colors/font_pressed_color = Color(0.53333336, 0.15294118, 0.101960786, 1)
+theme_override_colors/font_hover_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+theme_override_fonts/font = ExtResource("3_exo")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+text = "Auto"

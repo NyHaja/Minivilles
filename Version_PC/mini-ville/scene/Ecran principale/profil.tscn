@@ -1,0 +1,433 @@
+[gd_scene format=3 uid="uid://deryxwrbl7vwu"]
+
+[ext_resource type="Script" uid="uid://cgy6f5o8vtdmt" path="res://script/scene/Ecran principal/profil.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cn6lhiosvojju" path="res://assets/Background/bg2.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://cw21gdhjicgct" path="res://assets/icon/icone_canard.png" id="3_avatar"]
+[ext_resource type="Texture2D" uid="uid://dvjstugda1lcq" path="res://assets/icon/profile_circle.png" id="4_cercle"]
+[ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="5_font"]
+[ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_lbl"]
+[ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="9_back"]
+[ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="10_backp"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="11_exo"]
+[ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="12_ellipse"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0.168, 0.2, 0.486, 1)
+shadow_size = 1
+shadow_offset = Vector2(6, 7)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0, 0.698, 0.871, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_titre"]
+font = ExtResource("5_font")
+font_size = 60
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_pseudo"]
+font = ExtResource("11_exo")
+font_size = 28
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep_left"]
+color = Color(1, 1, 1, 1)
+grow_begin = -220.0
+grow_end = 0.0
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep_right"]
+color = Color(1, 1, 1, 1)
+grow_begin = 216.0
+thickness = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_f4kfe"]
+font = ExtResource("11_exo")
+font_size = 30
+font_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+outline_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_stat_titre"]
+font = ExtResource("11_exo")
+font_size = 22
+font_color = Color(0.45, 0.45, 0.45, 1)
+outline_size = 3
+
+[sub_resource type="FontVariation" id="FontVariation_tcmw1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7hdvn"]
+font = SubResource("FontVariation_tcmw1")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontVariation" id="FontVariation_6atrx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6atrx"]
+font = SubResource("FontVariation_6atrx")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontVariation" id="FontVariation_f4kfe"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nbc8u"]
+font = SubResource("FontVariation_f4kfe")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="FontVariation" id="FontVariation_nbc8u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_val"]
+font = SubResource("FontVariation_nbc8u")
+font_size = 57
+font_color = Color(0.784, 0.224, 0.149, 1)
+outline_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rouge"]
+bg_color = Color(0.82, 0.15, 0.15, 1)
+skew = Vector2(1, 0)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0.4, 0.05, 0.05, 1)
+shadow_size = 1
+shadow_offset = Vector2(8, 9)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbc8u"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+skew = Vector2(1, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+
+[node name="Profil" type="Control" unique_id=1533452229]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1975494498]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1834138668]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer" unique_id=99799936]
+custom_minimum_size = Vector2(720, 830)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBoxCard" type="VBoxContainer" parent="CenterContainer/Card" unique_id=1114843864]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="CenterContainer/Card/VBoxCard" unique_id=860699902]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="HeaderRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/Header" unique_id=74196468]
+layout_mode = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxCard/Header/HeaderRow" unique_id=1117335878]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MON PROFIL"
+label_settings = SubResource("LabelSettings_titre")
+horizontal_alignment = 1
+
+[node name="MarginContent" type="MarginContainer" parent="CenterContainer/Card/VBoxCard" unique_id=1780507488]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 36
+
+[node name="VBoxContent" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent" unique_id=137856708]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ProfileRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=2009491533]
+layout_mode = 2
+theme_override_constants/separation = 120
+
+[node name="AvatarStack" type="Control" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow" unique_id=1726316891]
+custom_minimum_size = Vector2(178, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AvatarCercle" type="TextureRect" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/AvatarStack" unique_id=1636494803]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_cercle")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AvatarIcon" type="TextureRect" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/AvatarStack" unique_id=528716808]
+custom_minimum_size = Vector2(90, 84)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -42.0
+offset_right = 45.0
+offset_bottom = 42.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_avatar")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoContainer" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow" unique_id=1305995105]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="LabelPseudo" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=1578382332]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAYOR PSEUDO"
+label_settings = SubResource("LabelSettings_pseudo")
+
+[node name="LabelEmail" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=597468529]
+unique_name_in_owner = true
+layout_mode = 2
+text = "email@miniville.com"
+label_settings = ExtResource("6_lbl")
+
+[node name="LabelMembre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/ProfileRow/InfoContainer" unique_id=1762247697]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Membre depuis le 01/01/2025"
+label_settings = ExtResource("6_lbl")
+
+[node name="Separator" type="HBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=1335987060]
+layout_mode = 2
+
+[node name="HSepLeft" type="HSeparator" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/Separator" unique_id=1879681104]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_sep_left")
+
+[node name="Ellipse" type="TextureRect" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/Separator" unique_id=116527323]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+size_flags_stretch_ratio = 20.0
+texture = ExtResource("12_ellipse")
+stretch_mode = 2
+
+[node name="HSepRight" type="HSeparator" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/Separator" unique_id=774120820]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxLine_sep_right")
+
+[node name="LabelStats" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=263351698]
+layout_mode = 2
+text = "STATISTIQUES"
+label_settings = SubResource("LabelSettings_f4kfe")
+horizontal_alignment = 1
+
+[node name="StatsGrid" type="GridContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=1205621679]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="BoxParties" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=361744268]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties" unique_id=376177028]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties/VBox" unique_id=1208715627]
+layout_mode = 2
+text = "PARTIES"
+label_settings = SubResource("LabelSettings_stat_titre")
+horizontal_alignment = 1
+
+[node name="LabelPartiesVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxParties/VBox" unique_id=1756935306]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_7hdvn")
+horizontal_alignment = 1
+
+[node name="BoxVictoires" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=541753749]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires" unique_id=1503193892]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires/VBox" unique_id=151366573]
+layout_mode = 2
+text = "VICTOIRES"
+label_settings = SubResource("LabelSettings_stat_titre")
+horizontal_alignment = 1
+
+[node name="LabelVictoiresVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxVictoires/VBox" unique_id=1535891618]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6atrx")
+horizontal_alignment = 1
+
+[node name="BoxDefaites" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=1451582638]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites" unique_id=765355452]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites/VBox" unique_id=172720663]
+layout_mode = 2
+text = "DÉFAITES"
+label_settings = SubResource("LabelSettings_stat_titre")
+horizontal_alignment = 1
+
+[node name="LabelDefaitesVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxDefaites/VBox" unique_id=1282485309]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_nbc8u")
+horizontal_alignment = 1
+
+[node name="BoxWinRate" type="PanelContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid" unique_id=1574847374]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate" unique_id=1500490187]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LabelTitre" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate/VBox" unique_id=1896712404]
+layout_mode = 2
+text = "WIN RATE"
+label_settings = SubResource("LabelSettings_stat_titre")
+horizontal_alignment = 1
+
+[node name="LabelWinRateVal" type="Label" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/StatsGrid/BoxWinRate/VBox" unique_id=544774242]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_val")
+horizontal_alignment = 1
+
+[node name="SpacerDeco" type="Control" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=100000070]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BtnDeconnexion" type="Button" parent="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent" unique_id=461291777]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.5, 0.1, 0.1, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_rouge")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rouge")
+theme_override_styles/hover = SubResource("StyleBoxFlat_nbc8u")
+text = "DÉCONNEXION"
+
+[node name="BtnRetour" type="VBoxContainer" parent="." unique_id=2083702493]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 184.0
+offset_bottom = 145.0
+mouse_filter = 2
+theme_override_constants/separation = 5
+
+[node name="Fleche" type="TextureButton" parent="BtnRetour" unique_id=487084018]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("9_back")
+texture_pressed = ExtResource("10_backp")
+texture_hover = ExtResource("10_backp")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TexteRetour" type="Label" parent="BtnRetour" unique_id=1473557795]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Retour"
+label_settings = ExtResource("6_lbl")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="CenterContainer/Card/VBoxCard/MarginContent/VBoxContent/BtnDeconnexion" to="." method="_on_btn_deconnexion_pressed"]
