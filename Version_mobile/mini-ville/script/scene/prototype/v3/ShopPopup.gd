@@ -57,5 +57,18 @@ func _on_overlay_input(event: InputEvent) -> void:
 func update_shop(shop_data) -> void:
 	shop_board.update_shop(shop_data)
 
+func update_network_shop(shop_data) -> void:
+	shop_board.update_network_shop(shop_data)
+
+func open_network(shop_data) -> void:
+	_on_window_resized()
+	shop_board.update_network_shop(shop_data)
+	show()
+	popup_panel.modulate.a = 0.0
+	popup_panel.scale = Vector2(0.88, 0.88)
+	var tween = create_tween().set_parallel(true)
+	tween.tween_property(popup_panel, "modulate:a", 1.0, 0.18)
+	tween.tween_property(popup_panel, "scale", Vector2(1.0, 1.0), 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
 func set_actions_enabled(can_act: bool) -> void:
 	shop_board.set_actions_enabled(can_act)
