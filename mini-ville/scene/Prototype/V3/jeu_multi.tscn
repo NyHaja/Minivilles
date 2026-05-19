@@ -2,35 +2,32 @@
 
 [ext_resource type="Script" uid="uid://kaiuhgyvgplq" path="res://script/scene/prototype/v3/jeu_multi.gd" id="1_hgaok"]
 [ext_resource type="Texture2D" uid="uid://hyy5v47tnfka" path="res://assets/Background/bluePrint_BG.png" id="2_hfyoe"]
-[ext_resource type="Script" uid="uid://b1sswurdf8its" path="res://script/scene/prototype/v3/DeckOutline.gd" id="3_5bfng"]
-[ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/Prototype/V3/ShopBoard.tscn" id="4_egrx8"]
 [ext_resource type="PackedScene" uid="uid://b5jkk7cw0wbjt" path="res://scene/Prototype/V3/PlayerBoard.tscn" id="5_ar0uo"]
-[ext_resource type="Texture2D" uid="uid://dnu4b0datk8ir" path="res://assets/UI/deck.png" id="5_e7esc"]
-[ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_rchwe"]
-[ext_resource type="Texture2D" uid="uid://b80b2lkm1gpkv" path="res://assets/UI/blank_red_button.png" id="7_aw5i8"]
-[ext_resource type="Texture2D" uid="uid://boiqp3n7u5iil" path="res://assets/UI/blank_red_button_hover.png" id="8_so6u2"]
+[ext_resource type="FontFile" uid="uid://b6n3as0gbmyqk" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="6_rchwe"]
+[ext_resource type="Texture2D" uid="uid://cedk3thn74ji" path="res://assets/UI/blank_red_button.png" id="7_aw5i8"]
+[ext_resource type="Texture2D" uid="uid://bx5v77rskly23" path="res://assets/UI/blank_red_button_hover.png" id="8_so6u2"]
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="10_ggau0"]
-[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="11_5ii82"]
-[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="12_3bkwh"]
+[ext_resource type="FontFile" uid="uid://pp6ohnymkqy3" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="11_5ii82"]
+[ext_resource type="Texture2D" uid="uid://cvwbpgerg3t6w" path="res://assets/UI/coin.png" id="12_3bkwh"]
 [ext_resource type="FontFile" uid="uid://det3n6g6o2ke" path="res://assets/Fonts/Exo2-Italic-VariableFont_wght.ttf" id="14_fdvlh"]
-[ext_resource type="Texture2D" uid="uid://svvrfo5sph4m" path="res://assets/UI/roll_one_die_border.png" id="17_q6kod"]
-[ext_resource type="Texture2D" uid="uid://n05ux5m5dwmg" path="res://assets/UI/roll_one_die_border_hover.png" id="18_3kryq"]
-[ext_resource type="Texture2D" uid="uid://sqyyb2nhevak" path="res://assets/UI/roll_two_dices_border.png" id="19_hgaok"]
-[ext_resource type="Texture2D" uid="uid://drimvo22ctigp" path="res://assets/UI/die_one.png" id="19_mc7pq"]
-[ext_resource type="Texture2D" uid="uid://d21evg100wsi7" path="res://assets/UI/roll_two_dices_border_hover.png" id="20_hfyoe"]
-[ext_resource type="Texture2D" uid="uid://benlwfo0ydoxm" path="res://assets/UI/red_button_border.png" id="22_5bfng"]
-[ext_resource type="Texture2D" uid="uid://b1thakn8mx747" path="res://assets/UI/red_button_border_hover.png" id="23_egrx8"]
-[ext_resource type="Texture2D" uid="uid://bdp2gmkan6py" path="res://assets/UI/settings_button_border.png" id="24_ar0uo"]
-[ext_resource type="Texture2D" uid="uid://cc50vbs5c5xpa" path="res://assets/UI/settings_button_border_hover.png" id="25_rchwe"]
-[ext_resource type="Texture2D" uid="uid://d060nc6x2ngvq" path="res://assets/UI/rule_button_border.png" id="26_aw5i8"]
-[ext_resource type="Texture2D" uid="uid://by718f34wfi8x" path="res://assets/UI/rule_button_border_hover.png" id="27_so6u2"]
+[ext_resource type="Texture2D" uid="uid://d2uumr7y3t6gx" path="res://assets/UI/roll_one_die_border.png" id="17_q6kod"]
+[ext_resource type="Texture2D" uid="uid://bwr8ajug837mf" path="res://assets/UI/roll_one_die_border_hover.png" id="18_3kryq"]
+[ext_resource type="Texture2D" uid="uid://df73qas5k5no2" path="res://assets/UI/roll_two_dices_border.png" id="19_hgaok"]
+[ext_resource type="Texture2D" uid="uid://dfhillybci4ue" path="res://assets/UI/die_one.png" id="19_mc7pq"]
+[ext_resource type="Texture2D" uid="uid://rliwfq4r6m6r" path="res://assets/UI/roll_two_dices_border_hover.png" id="20_hfyoe"]
+[ext_resource type="Texture2D" uid="uid://cow1mabixwjtl" path="res://assets/UI/red_button_border.png" id="22_5bfng"]
+[ext_resource type="Texture2D" uid="uid://d2l1p7i13vk6i" path="res://assets/UI/red_button_border_hover.png" id="23_egrx8"]
+[ext_resource type="Texture2D" uid="uid://trsjm51x50r7" path="res://assets/UI/settings_button_border.png" id="24_ar0uo"]
+[ext_resource type="Texture2D" uid="uid://d377e0pn8s1o1" path="res://assets/UI/settings_button_border_hover.png" id="25_rchwe"]
+[ext_resource type="Texture2D" uid="uid://bhy3fvjnxqcuf" path="res://assets/UI/rule_button_border.png" id="26_aw5i8"]
+[ext_resource type="Texture2D" uid="uid://d0pi323wwvumq" path="res://assets/UI/rule_button_border_hover.png" id="27_so6u2"]
 [ext_resource type="FontFile" uid="uid://dvvfcd2y3rysp" path="res://assets/Fonts/Exo2-VariableFont_wght.ttf" id="28_vwwxi"]
-[ext_resource type="Texture2D" uid="uid://sjuw35xh1fgf" path="res://assets/UI/return_button_bg.png" id="31_hgaok"]
-[ext_resource type="Texture2D" uid="uid://d1l5e8bc5apwf" path="res://assets/UI/return_button_hover_bg.png" id="32_hfyoe"]
-[ext_resource type="Texture2D" uid="uid://bo24nrmwxqg54" path="res://assets/UI/build_button.png" id="34_vpco0"]
-[ext_resource type="Texture2D" uid="uid://cxa5yqxbeiuxv" path="res://assets/UI/build_button_hover.png" id="35_fmbck"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cutg6"]
+[ext_resource type="Texture2D" uid="uid://buqq015sdkhn6" path="res://assets/UI/return_button_bg.png" id="31_hgaok"]
+[ext_resource type="Texture2D" uid="uid://bncfisa6q87qq" path="res://assets/UI/return_button_hover_bg.png" id="32_hfyoe"]
+[ext_resource type="Texture2D" uid="uid://cvb51ogu1k4nd" path="res://assets/UI/build_button.png" id="34_vpco0"]
+[ext_resource type="Texture2D" uid="uid://bwcjv7csoilx6" path="res://assets/UI/build_button_hover.png" id="35_fmbck"]
+[ext_resource type="Texture2D" uid="uid://bk3b1x8wgdo2y" path="res://assets/UI/ShopButton.png" id="42_shop"]
+[ext_resource type="PackedScene" path="res://scene/table/ShopPopup.tscn" id="43_popup"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fiso1"]
 texture = ExtResource("7_aw5i8")
@@ -253,33 +250,19 @@ grow_vertical = 2
 scale = Vector2(0.85, 0.85)
 theme_override_constants/separation = 0
 
-[node name="Shop" type="HBoxContainer" parent="CenterBoard" unique_id=2126635692]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
-size_flags_stretch_ratio = 3.0
-alignment = 1
-script = ExtResource("3_5bfng")
-line_color = Color(1, 1, 1, 1)
-dash_length = 5.0
-
-[node name="ShopBoard" parent="CenterBoard/Shop" unique_id=1010216388 instance=ExtResource("4_egrx8")]
+[node name="ShopButton" type="TextureButton" parent="." unique_id=27034050]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxEmpty_cutg6")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("42_shop")
 
-[node name="Space" type="Control" parent="CenterBoard" unique_id=1831708992]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-
-[node name="Deck" type="TextureRect" parent="CenterBoard" unique_id=553265755]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-texture = ExtResource("5_e7esc")
-expand_mode = 1
-stretch_mode = 5
+[node name="ShopPopup" parent="." unique_id=311173293 instance=ExtResource("43_popup")]
+unique_name_in_owner = true
 
 [node name="TablePivot" type="Control" parent="." unique_id=1138575796]
 layout_mode = 3

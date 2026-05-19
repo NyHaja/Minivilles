@@ -16,10 +16,11 @@ signal demolish_completed(monu_id: int)
 signal dice_decision_made(action: String)
 signal rotation_finished
 
-@onready var middle_area: HBoxContainer = $Shop
+@onready var middle_area: HBoxContainer = $CenterBoard
 @onready var table_pivot: Control = $TablePivot
 @onready var boards: Array = [$TablePivot/BoardJoueurBas, $TablePivot/BoardJoueurGauche, $TablePivot/BoardJoueurHaut, $TablePivot/BoardJoueurDroite]
-@onready var shop_board = %ShopBoard
+@onready var shop_popup: CanvasLayer = %ShopPopup
+@onready var shop_button: TextureButton = %ShopButton
 var active_boards: Array = []
 
 @onready var turn_overlay: ColorRect = $TurnOverlay
@@ -65,7 +66,7 @@ var dice_textures = [
 @onready var settings_button: Button = %Settings
 @onready var settings_overlay: ColorRect = %SettingsOverlay
 @onready var continue_button: Button = %Continuer
-@onready var main_menu_button: Button = %MenuPrincipale
+@onready var main_menu_button: Button = $VictoryScreen/VBoxContainer/ReturnToMenu
 @onready var settings_quit_button: Button = %Quitter
 
 # Variables de stockage temporaire pour les popups
@@ -90,7 +91,8 @@ func _ready() -> void:
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(func(): network_client.request_roll_dice(1))
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(func(): network_client.request_roll_dice(2))
 	
-	%CancelCardBuy.pressed.connect(func(): buy_confirm_panel.hide())
+	%CancelCardBuy.pressed.connect(func(): buy_confirm_panel.hide(); shop_popup.open_network(latest_shop_data))
+	buy_confirm_panel.z_index = 10
 	close_menu.pressed.connect(func(): monument_menu.hide())
 	
 	if btn_conserver: btn_conserver.pressed.connect(func(): dice_decision_made.emit("keep"))
@@ -111,7 +113,8 @@ func _ready() -> void:
 			board.open_monuments_requested.connect(_on_open_monuments_pressed)
 			
 		
-	if is_instance_valid(shop_board): shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
+	shop_button.pressed.connect(_on_shop_button_pressed)
+	shop_popup.shop_card_clicked.connect(_on_shop_card_clicked)
 	%ConfirmCardBuy.pressed.connect(_on_confirm_buy_shop_pressed)
 
 	get_viewport().size_changed.connect(_on_window_resized)
@@ -136,7 +139,7 @@ func _ready() -> void:
 func set_actions_enabled(can_act: bool) -> void:
 	for board in boards:
 		if is_instance_valid(board): board.set_actions_enabled(can_act)
-	if is_instance_valid(shop_board): shop_board.set_actions_enabled(can_act)
+	if is_instance_valid(shop_popup): shop_popup.set_actions_enabled(can_act)
 
 func update_network_boards(players_data: Dictionary):
 	print("[JeuMulti] update_network_boards called with ", players_data.size(), " players")
@@ -184,20 +187,29 @@ func update_network_boards(players_data: Dictionary):
 func update_network_shop(shop_data: Dictionary):
 	latest_shop_data = shop_data
 
-	if not is_instance_valid(shop_board): return
+	if not is_instance_valid(shop_popup.shop_board): return
 
 	# Smart diff update — returns {new_card_id: target_position} using the
 	# removed card's stable pre-free global_position as the animation target.
-	var position_map: Dictionary = shop_board.update_network_shop(shop_data)
+	var position_map: Dictionary = shop_popup.shop_board.update_network_shop(shop_data)
 
 	for card_id in position_map:
 		var target_pos: Vector2 = position_map[card_id]
-		var card_data = CardFactory.get_card(card_id)
-		if card_data == null: continue
-		var clean_name = get_clean_file_name(card_data.get_name(), card_data.get_color())
-		var tex: Texture2D = load("res://assets/Cards/Basis/" + clean_name + "_1.png")
-		if tex:
-			animer_pioche_vers_shop(shop_board.card_slot_map.get(card_id), tex, target_pos)
+		var target_slot = shop_popup.shop_board.card_slot_map.get(card_id)
+		if not is_instance_valid(target_slot): continue
+
+		# Read the texture that ShopBoard already loaded into the visual node.
+		# This avoids duplicating the asset-path logic (which changed after the merge).
+		var image_node = target_slot.get_node_or_null("Visual")
+		var tex: Texture2D = null
+		if image_node is TextureButton:
+			tex = image_node.texture_normal
+
+		# If the popup is hidden, global_position is invalid — reveal immediately
+		if not shop_popup.visible or not tex:
+			target_slot.modulate.a = 1.0
+		else:
+			animer_pioche_vers_shop(target_slot, tex, target_pos)
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
@@ -226,8 +238,8 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		else:
 			var card_color = card_data.get_color()
 			var clean_name = get_clean_file_name(card_name, card_color)
-			path_basis = "res://assets/Cards/Basis/" + clean_name + "_1.png"
-			tip_path = "res://assets/Tooltips/tooltip_" + clean_name + "_top.png"
+			path_basis = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
+			tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
 
 		var image_node = preview_card.get_node_or_null("Visual")
 		if image_node and image_node is TextureButton:
@@ -239,14 +251,14 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			image_node.ignore_texture_size = true
 			image_node.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
-		preview_card.custom_minimum_size = Vector2(234, 300)
-		preview_card.size = Vector2(234, 300)
-
 		var internal_tooltip = preview_card.get_node_or_null("Visual/Tooltip")
 		if internal_tooltip:
 			internal_tooltip.hide()
 
 		%CardPreview.add_child(preview_card)
+		# Fill the CardPreview TextureRect entirely — overrides the scene's anchor/offset
+		# defaults (offset_right=40 → 40px wide) that cause the card to appear undersized.
+		preview_card.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 		if tip_path != "":
 			var _tip_tex = load(tip_path)
@@ -258,6 +270,7 @@ func _on_shop_card_clicked(card_id: int) -> void:
 		else:
 			%TooltipImage.hide()
 
+	await shop_popup.close()
 	buy_confirm_panel.move_to_front()
 	buy_confirm_panel.show()
 		
@@ -270,12 +283,10 @@ func _on_confirm_buy_shop_pressed() -> void:
 	if card_data is Monument:
 		network_client.request_build_monument(selected_shop_card_id)
 	else:
-		# Fire the fly-to-hand animation immediately (optimistic visual)
-		var qty_in_shop = 1
-		if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
-			var slot = shop_board.last_clicked_slot
-			var qty_lbl = slot.get_node_or_null("QtyLabel")
-			if qty_lbl: qty_in_shop = int(qty_lbl.text) if qty_lbl.text.is_valid_int() else 1
+		# Fire the fly-to-hand animation immediately (optimistic visual).
+		# Read quantity from the cached shop data — the badge node name changed
+		# after the merge and is no longer a reliable source.
+		var qty_in_shop = int(latest_shop_data.get(str(selected_shop_card_id), 1))
 		animer_achat_vers_main(selected_shop_card_id, qty_in_shop)
 		network_client.request_buy_card(selected_shop_card_id)
 
@@ -493,7 +504,7 @@ func _populate_trade_deck(deck: Array, container: Container, is_mine: bool) -> v
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex: card_btn.texture_normal = _card_tex
 			
@@ -557,7 +568,7 @@ func ask_give_card() -> Array:
 			card_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			
 			var clean_name = get_clean_file_name(card.name, card.color)
-			var path = "res://assets/Cards/Basis/" + clean_name + "_1.png"
+			var path = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
 			var _card_tex = load(path)
 			if _card_tex: card_btn.texture_normal = _card_tex
 			
@@ -691,6 +702,14 @@ func _on_window_resized() -> void:
 		table_pivot.pivot_offset = screen_size / 2.0
 		table_pivot.position = Vector2.ZERO
 		
+func is_tablet() -> bool:
+	var dpi = DisplayServer.screen_get_dpi()
+	var screen_size_px = DisplayServer.screen_get_size()
+	var screen_inch_w = screen_size_px.x / float(dpi)
+	var screen_inch_h = screen_size_px.y / float(dpi)
+	var diag = sqrt(screen_inch_w * screen_inch_w + screen_inch_h * screen_inch_h)
+	return diag >= 7.0
+
 func positionner_plateaux() -> void:
 	var active_count = latest_players_data.size()
 	
@@ -700,6 +719,7 @@ func positionner_plateaux() -> void:
 	var screen_size = get_viewport().get_visible_rect().size
 	var c = screen_size / 2.0
 	var margin = 40
+	var board_scale = 1.3 if is_tablet() else 1.0
 
 	for p_idx in range(active_count):
 		if p_idx >= active_boards.size(): continue
@@ -708,15 +728,17 @@ func positionner_plateaux() -> void:
 		
 		if not is_instance_valid(board): continue
 
-		var real_size = board.size
-		if real_size.x < 10 or real_size.y < 10:
-			real_size = Vector2(818, 264)
-		var b_h = real_size.y
-		
+		var base_size = board.size
+		if base_size.x < 10 or base_size.y < 10:
+			base_size = Vector2(818, 264)
+		var real_size = base_size * board_scale
+		board.scale = Vector2(board_scale, board_scale)
+		# pivot_offset en coordonnées locales (avant scale)
+		board.pivot_offset = base_size / 2.0
+		var b_h = real_size.y  # hauteur (dimension courte)
+		var b_w = real_size.x  # largeur (dimension longue)
 		var rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
 		var ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
-		
-		board.pivot_offset = real_size / 2.0
 
 		var target_angle = 0.0 
 		var target_rot = 0.0   
@@ -734,9 +756,14 @@ func positionner_plateaux() -> void:
 			elif p_idx == 2: target_angle = -PI/2.0; target_rot = PI
 			elif p_idx == 3: target_angle = 0.0; target_rot = -PI/2.0
 
-		var target_center = c + Vector2(cos(target_angle)*rx, sin(target_angle)*ry)
+		# Boards haut/bas (angles PI/2 et -PI/2) : après rotation leur longueur s'étend en X
+		# → leur distance verticale au centre doit être b_w/2 + margin (pas b_h)
+		var ry_used = ry
+		if abs(target_angle) == PI/2.0:
+			ry_used = (screen_size.y / 2.0) - (b_w / 2.0) - margin
+		var target_center = c + Vector2(cos(target_angle)*rx, sin(target_angle)*ry_used)
 		board.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-		board.position = target_center - board.pivot_offset
+		board.position = target_center - (base_size * board_scale / 2.0)
 		board.rotation = target_rot
 		
 		print(">>> Board ", p_idx, " → pos: ", board.position, " rot: ", board.rotation, " size: ", real_size)
@@ -756,8 +783,8 @@ func _on_network_message(data: Dictionary) -> void:
 			update_network_shop(data.get("shop", {}))
 		"buy_error":
 			# Server rejected the purchase
-			if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
-				animer_erreur_carte_shop(shop_board.last_clicked_slot)
+			if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.get("last_clicked_slot"):
+				animer_erreur_carte_shop(shop_popup.shop_board.last_clicked_slot)
 			var my_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
 			if is_instance_valid(my_board):
 				animer_erreur_argent(my_board)
@@ -774,6 +801,11 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
 	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
 	return prefix + clean_name
+
+func get_lang_folder() -> String:
+	if TranslationServer.get_locale().begins_with("en"):
+		return "English"
+	return "French"
 
 func update_monument_menu():
 	var my_data = latest_players_data.get(str(my_player_id), {})
@@ -1113,7 +1145,7 @@ func animer_pioche_vers_shop(target_slot: Control, texture_recto: Texture2D, tar
 	target_slot.modulate.a = 0.0
 	_active_fly_animations += 1
 
-	var card_size = Vector2(shop_board.shop_card_w, shop_board.shop_card_h)
+	var card_size = Vector2(shop_popup.shop_board.shop_card_w, shop_popup.shop_board.shop_card_h)
 	var dummy = TextureRect.new()
 	dummy.texture = preload("res://assets/UI/dos_card.png")
 	dummy.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -1160,12 +1192,12 @@ func animer_pioche_vers_shop(target_slot: Control, texture_recto: Texture2D, tar
 	_finish_fly_animation()
 
 func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1) -> void:
-	if not is_instance_valid(shop_board) or not is_instance_valid(shop_board.get("last_clicked_slot")): return
+	if not is_instance_valid(shop_popup.shop_board) or not is_instance_valid(shop_popup.shop_board.get("last_clicked_slot")): return
 
 	var target_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
 	if not is_instance_valid(target_board): return
 
-	var shop_slot   = shop_board.last_clicked_slot
+	var shop_slot   = shop_popup.shop_board.last_clicked_slot
 	var visual_node = shop_slot.get_node_or_null("Visual")
 
 	var card_data  = CardFactory.get_card(card_id)
@@ -1228,8 +1260,8 @@ func animer_erreur_carte_shop(slot_node: Control) -> void:
 	tween.tween_property(visual, "position:x", orig_pos.x, 0.05)
 	tween.tween_property(visual, "modulate", Color.WHITE, 0.3).set_delay(0.2)
 
-	if is_instance_valid(shop_board) and shop_board.has_method("clear_selection"):
-		tween.tween_callback(func(): shop_board.clear_selection())
+	if is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.has_method("clear_selection"):
+		tween.tween_callback(func(): shop_popup.shop_board.clear_selection())
 
 func animer_erreur_argent(board_visuel: PlayerBoard) -> void:
 	var label_argent = board_visuel.lbl_gold
@@ -1461,3 +1493,6 @@ func notifier_activation_multi(player_id: int, card_id: int, balance_changes: Di
 					animer_gain_gold(board, amount)
 					board.update_info()
 	})
+
+func _on_shop_button_pressed() -> void:
+	shop_popup.open_network(latest_shop_data)

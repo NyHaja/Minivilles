@@ -205,8 +205,9 @@ func setup_card(card_data, dir: String = "top") -> void:
 
 	var path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
 	var tex = load(path_basis)
-	if tex:
-		visual.texture_normal = tex
+	var v = get_node_or_null("Visual") if not is_node_ready() else visual
+	if tex and v:
+		v.texture_normal = tex
 
 	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
 	var tip_tex = load(tip_path)
