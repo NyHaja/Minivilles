@@ -620,6 +620,8 @@ func _on_yes_pressed() -> void: yes_no_answered.emit(true)
 func _on_no_pressed() -> void: yes_no_answered.emit(false)
 
 func pause() -> Array:
+	# Safety: ensure click_blocker is never left visible from a prior animation
+	if is_instance_valid(click_blocker): click_blocker.hide()
 	update_all_boards()
 	set_actions_enabled(true)
 	var choice = await action_selected
@@ -676,18 +678,21 @@ func update_monument_menu(is_demolish_mode: bool = false):
 			
 		if is_demolish_mode:
 			if is_built:
-				build_btn.modulate.a = 1.0 
+				build_btn.modulate.a = 1.0
 				build_btn.disabled = false
+				build_btn.text = tr("DÉMOLIR")
 			else:
-				build_btn.modulate.a = 0.0 
+				build_btn.modulate.a = 0.0
 				build_btn.disabled = true
+				build_btn.text = tr("DÉMOLIR")
 			build_btn.pressed.connect(func(id=m_id): demolish_completed.emit(id))
 		else:
+			build_btn.text = tr("CONSTRUIRE")
 			if is_built:
-				build_btn.modulate.a = 0.0 
+				build_btn.modulate.a = 0.0
 				build_btn.disabled = true
 			else:
-				build_btn.modulate.a = 1.0 
+				build_btn.modulate.a = 1.0
 				build_btn.disabled = false
 			
 			# ==========================================

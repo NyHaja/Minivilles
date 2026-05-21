@@ -816,7 +816,7 @@ func update_monument_menu():
 		else:
 			state = "recto" if is_built else "verso"
 			
-		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
+		var tex_path = "res://assets/Cards/" + get_lang_folder() + "/" + "Monuments/" + data["file"] + "_" + state + ".png"
 		var _tex = load(tex_path)
 		if _tex: tex_rect.texture = _tex
 
