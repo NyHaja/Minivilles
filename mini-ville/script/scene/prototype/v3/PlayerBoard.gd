@@ -66,29 +66,31 @@ func _ready() -> void:
 # ----------------------------------------------------------------------
 func _process(_delta: float) -> void:
 	var normalized_rot = wrapf(self.rotation, -PI, PI)
-	var target_rot = -self.rotation if abs(normalized_rot) > PI * 0.8 else 0.0
+	var target_rot_stats = -self.rotation if abs(normalized_rot) > PI * 0.8 else 0.0
+	var target_rot_monu = -self.rotation if abs(normalized_rot) > 0.3 else 0.0
 
 	if active_stats_box and is_inside_tree():
-		active_stats_box.rotation = target_rot
+		active_stats_box.rotation = target_rot_stats
 		
 	if monument_icons and is_inside_tree():
+		var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
 		if _is_phone():
 			# Téléphone : rotation de la grille entière + colonnes adaptatives
-			var is_sideways = abs(normalized_rot) > 0.9 and abs(normalized_rot) < 2.2
 			monument_icons.columns = 2 if is_sideways else 3
 			monument_icons.rotation = 0.0
 			for icon in monument_icons.get_children():
 				if icon is Control:
 					if icon.size != Vector2.ZERO:
 						icon.pivot_offset = icon.size / 2.0
-					icon.rotation = target_rot
+					icon.rotation = target_rot_monu
 		else:
-			# Tablette : rotation individuelle des icônes, grille fixe
+			# Tablette : 2 colonnes (grille 2x3)
+			monument_icons.columns = 2
 			for icon in monument_icons.get_children():
 				if icon is Control:
 					if icon.size != Vector2.ZERO:
 						icon.pivot_offset = icon.size / 2.0
-					icon.rotation = target_rot
+					icon.rotation = target_rot_monu
 
 # ----------------------------------------------------------------------
 # NEW SETUP: Reads from a Network Dictionary instead of a Player object!

@@ -11,3 +11,9 @@ Thumbs.db
 
 # executable .x86_64
 *.x86_64
+
+# Android build - tout généré automatiquement
+mini-ville/android/build/build/
+mini-ville/android/build/.gradle/
+mini-ville/android/build/src/main/assets/
+mini-ville/android/build/build/outputs/
