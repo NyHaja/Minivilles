@@ -110,6 +110,9 @@ var give_card_id: int = -1
 var demolish_monu_id: int = -1
 var selected_shop_card_id: int = -1
 
+var forced_dice_total: int = -1
+var debug_dice_panel: Control = null
+
 const MONUMENT_SLOT_SCENE = preload("res://scene/table/MonumentSlot.tscn")
 
 func get_lang_folder() -> String:
@@ -169,7 +172,107 @@ func _ready() -> void:
 	if continue_button: continue_button.text = tr("CONTINUER")
 	if main_menu_button: main_menu_button.text = tr("MENU_PRINCIPAL")
 	if settings_quit_button: settings_quit_button.text = tr("QUITTER")
-	
+
+func _setup_debug_dice_picker() -> void:
+	if not turn_overlay:
+		return
+
+	# Wrapper holds toggle button + picker side by side, positioned at left edge
+	var wrapper = HBoxContainer.new()
+	wrapper.name = "DebugDiceWrapper"
+	wrapper.add_theme_constant_override("separation", 6)
+	turn_overlay.add_child(wrapper)
+
+	# --- Toggle button ---
+	var toggle_btn = Button.new()
+	toggle_btn.text = "🎲"
+	toggle_btn.tooltip_text = "Choisir valeur forcée"
+	toggle_btn.custom_minimum_size = Vector2(64, 64)
+	toggle_btn.flat = true
+	toggle_btn.add_theme_font_size_override("font_size", 28)
+	wrapper.add_child(toggle_btn)
+
+	# --- Picker panel (hidden by default) ---
+	var picker = VBoxContainer.new()
+	picker.name = "DebugDicePicker"
+	picker.hide()
+	picker.add_theme_constant_override("separation", 8)
+	wrapper.add_child(picker)
+	debug_dice_panel = picker
+
+	# Row 1: single die faces 1-6
+	var row1 = HBoxContainer.new()
+	row1.add_theme_constant_override("separation", 4)
+	picker.add_child(row1)
+
+	var die_names = ["die_one", "die_two", "die_three", "die_four", "die_five", "die_six"]
+	for i in 6:
+		var val = i + 1
+		var btn = Button.new()
+		btn.flat = true
+		btn.custom_minimum_size = Vector2(52, 52)
+		var tex = load("res://assets/UI/" + die_names[i] + ".png")
+		if tex:
+			btn.icon = tex
+			btn.expand_icon = true
+		else:
+			btn.text = str(val)
+		btn.tooltip_text = "Forcer " + str(val)
+		btn.pressed.connect(func(v = val):
+			forced_dice_total = v
+			debug_dice_panel.hide()
+			dice_amount_chosen.emit(1)
+		)
+		row1.add_child(btn)
+
+	# Row 2: two-dice values 7-12
+	var row2 = HBoxContainer.new()
+	row2.add_theme_constant_override("separation", 4)
+	picker.add_child(row2)
+
+	var double_tex = load("res://assets/UI/2Dice.png")
+	for i in 6:
+		var val = i + 7
+		var cell = VBoxContainer.new()
+		cell.add_theme_constant_override("separation", 2)
+		cell.custom_minimum_size = Vector2(52, 0)
+		var btn = Button.new()
+		btn.flat = true
+		btn.custom_minimum_size = Vector2(52, 52)
+		if double_tex:
+			btn.icon = double_tex
+			btn.expand_icon = true
+		var lbl = Label.new()
+		lbl.text = str(val)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.add_theme_font_size_override("font_size", 13)
+		cell.add_child(btn)
+		cell.add_child(lbl)
+		btn.pressed.connect(func(v = val):
+			forced_dice_total = v
+			debug_dice_panel.hide()
+			dice_amount_chosen.emit(2)
+		)
+		row2.add_child(cell)
+
+	# Toggle visibility
+	toggle_btn.pressed.connect(func():
+		if debug_dice_panel:
+			debug_dice_panel.visible = not debug_dice_panel.visible
+	)
+
+	# Reposition wrapper at the left edge, vertically centered.
+	# Must run after layout is done (size unknown at _ready time), so we
+	# hook into turn_overlay's resized signal and also fire once next frame.
+	var reposition = func():
+		if is_instance_valid(wrapper) and is_instance_valid(turn_overlay):
+			wrapper.position = Vector2(10, (turn_overlay.size.y - wrapper.size.y) / 2.0)
+
+	turn_overlay.resized.connect(reposition)
+	# Also fire once after the first layout pass
+	get_tree().process_frame.connect(reposition, CONNECT_ONE_SHOT)
+
 func _on_settings_pressed() -> void:
 	settings_overlay.move_to_front()
 	settings_overlay.show()
@@ -1749,34 +1852,39 @@ func declencher_animations_activation(activations: Array) -> void:
 		click_blocker.show() 
 		
 	# 2. PHASE DE MONTÉE : Toutes les cartes s'élèvent ensemble
-	var montee_tweens = []
+	var has_valid_cards = false
 	for data in activations:
 		var c = data.get("carte_visuelle")
 		if is_instance_valid(c) and c.has_method("animer_montee"):
-			montee_tweens.append(c.animer_montee())
-			
-	if not montee_tweens.is_empty():
-		await montee_tweens[0].finished # On attend qu'elles soient au sommet
-		
+			c.animer_montee()
+			has_valid_cards = true
+
+	# Always use a timer instead of awaiting tween.finished:
+	# if card nodes are queue_free()'d while a tween runs, Godot kills the
+	# tween and never emits finished — causing a permanent hang.
+	if has_valid_cards:
+		await get_tree().create_timer(0.35).timeout # matches animer_montee duration
+
 	# 3. PHASE D'EFFETS : On exécute les fonctions de gain (or, vol, etc.)
 	for data in activations:
 		var effet = data.get("effet_callable")
 		if effet is Callable and effet.is_valid():
 			effet.call()
-			
+
 	# Pause de "Juice" : on laisse le temps de voir les gains s'envoler
-	await get_tree().create_timer(1.2).timeout 
-	
+	await get_tree().create_timer(1.2).timeout
+
 	# 4. PHASE DE DESCENTE : Tout le monde redescend
-	var descente_tweens = []
+	var has_valid_cards_descente = false
 	for data in activations:
 		var c = data.get("carte_visuelle")
 		if is_instance_valid(c) and c.has_method("animer_descente"):
-			descente_tweens.append(c.animer_descente())
-			
-	if not descente_tweens.is_empty():
-		await descente_tweens[0].finished
-		
+			c.animer_descente()
+			has_valid_cards_descente = true
+
+	if has_valid_cards_descente:
+		await get_tree().create_timer(0.35).timeout # matches animer_descente duration
+
 	# 5. LIBÉRATION : Le jeu peut reprendre
 	if is_instance_valid(click_blocker):
 		click_blocker.hide()

@@ -2,6 +2,7 @@ extends Jeu
 
 func _ready() -> void:
 	super._ready()
+	_setup_debug_dice_picker()
 
 	var les_joueurs: Array[Player] = []
 

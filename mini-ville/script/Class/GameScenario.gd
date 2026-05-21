@@ -47,6 +47,20 @@ func verifyVictory(player: Player) -> bool:
 
 func rollDice(numberDice: int) -> Array[int]:
 	var res: Array[int] = [0, 0]
+
+	if is_instance_valid(gameplayScreen) and gameplayScreen.forced_dice_total > 0:
+		var total = gameplayScreen.forced_dice_total
+		gameplayScreen.forced_dice_total = -1
+		if numberDice == 2:
+			# Split total across two dice (clamp each die to 1-6)
+			var d1 = clamp(total - 6, 1, 6)
+			var d2 = total - d1
+			res[0] = d1
+			res[1] = d2
+		else:
+			res[0] = clamp(total, 1, 6)
+		return res
+
 	res[0] = (randi() % 6) + 1
 	if numberDice == 2:
 		res[1] = (randi() % 6) + 1
@@ -88,7 +102,7 @@ func _setup_scenario() -> void:
 		[4,  1],
 		[10, 1],
 		[15, 1],
-		[33, 1],
+		[30, 1],
 		[32, 1],
 	]
 

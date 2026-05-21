@@ -281,19 +281,19 @@ func _get_activation_glow_color() -> Color:
 		_: return Color(1.0, 1.0, 1.0, 1.0)
 
 func animer_montee() -> Tween:
-	z_index = 50 
-	
+	z_index = 50
+
 	var style = selection_glow.get_theme_stylebox("panel")
 	style.shadow_color = _get_activation_glow_color()
-	
-	var tween = create_tween().set_parallel(true)
+
+	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(visual, "position:y", -35.0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(selection_glow, "modulate:a", 1.0, 0.3)
-	
+
 	return tween
 
 func animer_descente() -> Tween:
-	var tween = create_tween().set_parallel(true)
+	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(visual, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tween.tween_property(selection_glow, "modulate:a", 0.0, 0.3)
 	
