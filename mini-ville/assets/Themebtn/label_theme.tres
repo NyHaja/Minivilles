@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://3y7ypy2wh3hf"]
+
+[ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="1_y7yry"]
+
+[resource]
+font = ExtResource("1_y7yry")
+font_size = 40
+font_color = Color(0.16862746, 0.2, 0.4862745, 1)
+outline_size = 7

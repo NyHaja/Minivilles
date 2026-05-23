@@ -7,7 +7,29 @@
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
 [ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
-[ext_resource type="FontFile" uid="uid://cr0g67jt3u7pu" path="res://assets/Fonts/Exo_2/static/Exo2-Medium.ttf" id="8_p7dpe"]
+[ext_resource type="Texture2D" uid="uid://cq8frnh684v3b" path="res://assets/icon/trophy.png" id="8_txb8w"]
+[ext_resource type="LabelSettings" path="res://assets/Themebtn/label_theme.tres" id="9_6j6s5"]
+[ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="10_rl0rg"]
+[ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="11_w8hpi"]
+[ext_resource type="Texture2D" uid="uid://22upijbo801o" path="res://assets/UI/2Dice.png" id="12_udav2"]
+[ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="13_4i6t0"]
+[ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="14_3s30b"]
+[ext_resource type="Texture2D" uid="uid://b7nl7i1rovsxl" path="res://assets/icon/boutique.png" id="15_nqbat"]
+[ext_resource type="Texture2D" uid="uid://elhdkyxqsbsd" path="res://assets/icon/PasserTour.png" id="16_a86s3"]
+[ext_resource type="Texture2D" uid="uid://cc217mlc1i0i6" path="res://assets/icon/carte_icon.png" id="17_23br6"]
+[ext_resource type="Texture2D" uid="uid://cqf8v5ands7wm" path="res://assets/icon/carte_iconRV.png" id="18_fkuw2"]
+[ext_resource type="FontFile" uid="uid://dshevnxirfvvt" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBold.ttf" id="18_ksmpo"]
+[ext_resource type="Texture2D" uid="uid://keghyqsvkbvj" path="res://assets/icon/monument.png" id="19_mxs8g"]
+[ext_resource type="Texture2D" uid="uid://fn3i5lpclx1s" path="res://assets/UI/gare.png" id="20_fkuw2"]
+[ext_resource type="Texture2D" uid="uid://sbwi2j1i5g15" path="res://assets/UI/centre-commercial.png" id="21_owyki"]
+[ext_resource type="Texture2D" uid="uid://c0bg2yn0738to" path="res://assets/UI/antenne-radio.png" id="22_0ktsg"]
+[ext_resource type="Texture2D" uid="uid://cv51jgcw83f2s" path="res://assets/UI/parc-dattractions.png" id="23_tdpf2"]
+[ext_resource type="Texture2D" uid="uid://2pcuggpj6flm" path="res://assets/UI/port.png" id="24_dmnl6"]
+[ext_resource type="Texture2D" uid="uid://mvpbv0w2xtil" path="res://assets/UI/aeroport.png" id="25_qo4q7"]
+[ext_resource type="Texture2D" uid="uid://cx7ih6snwqkpf" path="res://assets/icon/ampoule.png" id="26_j523l"]
+[ext_resource type="Texture2D" uid="uid://c41bx326ll0un" path="res://assets/icon/diversifier.png" id="27_bwooj"]
+[ext_resource type="Texture2D" uid="uid://bxq4sv7piy6jw" path="res://assets/icon/oeil.png" id="28_t4sha"]
+[ext_resource type="Texture2D" uid="uid://cqiwlwpf18t5u" path="res://assets/icon/carte viollette.png" id="29_dybcw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -59,12 +81,104 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[sub_resource type="LabelSettings" id="LabelSettings_07o7p"]
-font = ExtResource("8_p7dpe")
-font_size = 30
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i113y"]
+bg_color = Color(0.47020411, 0.73138297, 0.47363, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_afyve"]
+font = ExtResource("10_rl0rg")
+
+[sub_resource type="LabelSettings" id="LabelSettings_r6rok"]
+font = ExtResource("11_w8hpi")
+font_size = 40
+font_color = Color(0.16862746, 0.2, 0.4862745, 1)
+outline_size = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_gquvg"]
+font = ExtResource("13_4i6t0")
 font_color = Color(0, 0, 0, 1)
-outline_size = 3
-outline_color = Color(0.17254902, 0.24313726, 0.3137255, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0841w"]
+font = ExtResource("13_4i6t0")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_a2nsm"]
+font = ExtResource("13_4i6t0")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hoi6x"]
+font = ExtResource("13_4i6t0")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mxs8g"]
+bg_color = Color(0, 0.69803923, 0.87058824, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_fkuw2"]
+font = ExtResource("11_w8hpi")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_owyki"]
+bg_color = Color(0, 0.27450982, 0.3529412, 1)
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_0ktsg"]
+font = ExtResource("18_ksmpo")
+font_size = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tdpf2"]
+bg_color = Color(0.47020411, 0.73138297, 0.47363, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_dmnl6"]
+font = ExtResource("11_w8hpi")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qo4q7"]
+bg_color = Color(0, 0, 0, 0.44313726)
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j523l"]
+bg_color = Color(0.78431374, 0.22352941, 0.14901961, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwooj"]
+bg_color = Color(0.47058824, 0, 0.4745098, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rs81r"]
+bg_color = Color(0, 0, 0, 0.32156864)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_urt5r"]
+font = ExtResource("4_dlb48")
+font_color = Color(0.9730744, 0.45402223, 7.70092e-06, 1)
+outline_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fkuw2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lx1mv"]
+font = ExtResource("13_4i6t0")
+font_color = Color(0, 0, 0, 1)
 
 [node name="RulesPanel" type="Control" unique_id=1392428517]
 layout_mode = 3
@@ -177,8 +291,6 @@ theme_override_styles/separator = SubResource("StyleBoxLine_1a0co")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion" unique_id=931820981]
 layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_right = 40
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer" unique_id=2101002856]
 layout_mode = 2
@@ -191,25 +303,535 @@ draw_focus_border = true
 horizontal_scroll_mode = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer" unique_id=1752348606]
-custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1661583302]
+[node name="Section 1" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1402422929]
 layout_mode = 2
-text = "Minivilles Deluxe est un jeu de stratégie et de construction pour 2 à 4 joueurs. Le but est d'être le premier joueur à construire les 4 monuments de votre ville.
-Mise en place
-Chaque joueur commence avec 3 pièces, un champ de blé et une boulangerie. Les cartes de développement sont placées au centre de la table et sont accessibles à tous les joueurs.
-Déroulement d'un tour
-Un tour se déroule en 3 phases :
-La première phase est le lancer de dés. Le joueur actif lance un ou deux dés selon les monuments qu'il a construits. Le résultat détermine quelles cartes sont activées.
-La deuxième phase est la collecte des revenus. Les cartes sont activées selon le résultat des dés. Les cartes bleues rapportent des pièces à leur propriétaire à tout moment. Les cartes verts rapportent des pièces uniquement pendant le tour du propriétaire. Les cartes rouges permettent de voler des pièces aux autres joueurs. Les cartes violettes ont des effets spéciaux puissants.
-La troisième phase est la construction. Le joueur peut acheter et construire une carte de développement ou un monument en payant son coût en pièces.
-Les monuments
-Chaque ville possède 4 monuments uniques à construire. Certains monuments peuvent être construits en plusieurs étapes et offrent des bonus puissants une fois terminés.
-Fin de partie
-Le premier joueur à construire ses 4 monuments remporte la partie !"
-label_settings = SubResource("LabelSettings_07o7p")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Section 1" unique_id=660341340]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("8_txb8w")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="cmt_gagner" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Section 1" unique_id=1376183432]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Comment Gagner ?"
+label_settings = ExtResource("9_6j6s5")
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=330361991]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i113y")
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer" unique_id=522973165]
+clip_contents = true
+layout_mode = 2
+text = "Le premier joueur à construire les 5 monuments de sa ville remporte la partie. Pour construire un monument, il faut accumuler suffisamment de pièces en activant des cartes au bon moment et gérer intelligemment son économie tout au long des tours."
+label_settings = SubResource("LabelSettings_afyve")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1743251879]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1352760334]
+layout_mode = 2
+text = "Que faire durant ton tour ?"
+label_settings = SubResource("LabelSettings_r6rok")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1324722102]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="rollDice" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=367332052]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/rollDice" unique_id=1423357390]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+texture = ExtResource("12_udav2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/rollDice" unique_id=1454121330]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lancer le dé : Choisir de lancer 1 ou 2 dés selon les cartes que tu possèdes"
+label_settings = SubResource("LabelSettings_gquvg")
+autowrap_mode = 3
+
+[node name="earnCoin" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=361942313]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/earnCoin" unique_id=1993193097]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+texture = ExtResource("14_3s30b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/earnCoin" unique_id=714735181]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Activer les cartes — selon le résultat, certaines cartes de tous les joueurs se déclenchent automatiquement."
+label_settings = SubResource("LabelSettings_0841w")
+autowrap_mode = 3
+
+[node name="Card_monument" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=783867507]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/Card_monument" unique_id=1053096181]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+texture = ExtResource("15_nqbat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/Card_monument" unique_id=1582006051]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Acheter une carte ou construire un monument — une seule action d'achat par tour si tu as assez de pièces."
+label_settings = SubResource("LabelSettings_a2nsm")
+autowrap_mode = 3
+
+[node name="passTurn" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=1429408575]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/passTurn" unique_id=295643128]
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+texture = ExtResource("16_a86s3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/VBoxContainer/passTurn" unique_id=552471448]
+layout_mode = 2
+text = "Passer votre Tour"
+label_settings = SubResource("LabelSettings_hoi6x")
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1806203712]
+layout_mode = 2
+
+[node name="Type de carte" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=2147200455]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Type de carte" unique_id=52454370]
+clip_contents = true
+custom_minimum_size = Vector2(90, 60)
+layout_mode = 2
+texture = ExtResource("17_23br6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Type de carte" unique_id=1254031940]
+clip_contents = true
+layout_mode = 2
+text = "Types de cartes"
+label_settings = ExtResource("9_6j6s5")
+
+[node name="TextureRect2" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Type de carte" unique_id=159133869]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+texture = ExtResource("18_fkuw2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GridContainer" type="GridContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=424084504]
+layout_mode = 2
+columns = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer" unique_id=1418139358]
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_mxs8g")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer" unique_id=1660163460]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer" unique_id=372238892]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1104356559]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=56881251]
+layout_mode = 2
+text = "Bleues"
+label_settings = SubResource("LabelSettings_fkuw2")
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer" unique_id=928314057]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_owyki")
+
+[node name="BleuDescription" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer/PanelContainer" unique_id=1970950220]
+layout_mode = 2
+text = "Établissements primaires.
+Rapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur"
+label_settings = SubResource("LabelSettings_0ktsg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="PanelContainer2" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer" unique_id=1282455551]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_tdpf2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2" unique_id=1401617132]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer" unique_id=1349064175]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=493930726]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1373613927]
+layout_mode = 2
+text = "Vertes"
+label_settings = SubResource("LabelSettings_dmnl6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer" unique_id=547802257]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qo4q7")
+
+[node name="BleuDescription" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer/PanelContainer" unique_id=805961152]
+layout_mode = 2
+text = "Commerces.
+S'activent uniquement durant le tour de leur propriétaire"
+label_settings = SubResource("LabelSettings_0ktsg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="PanelContainer3" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer" unique_id=1046712632]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_j523l")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3" unique_id=1419776498]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer" unique_id=393751140]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer/HBoxContainer" unique_id=1256979653]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer/HBoxContainer" unique_id=631289083]
+layout_mode = 2
+text = "Rouges"
+label_settings = SubResource("LabelSettings_dmnl6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer" unique_id=744659653]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qo4q7")
+
+[node name="BleuDescription" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer/PanelContainer" unique_id=1666223874]
+layout_mode = 2
+text = "Restaurants.
+Prennent des pièces aux autres joueurs lors de leur tour."
+label_settings = SubResource("LabelSettings_0ktsg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="PanelContainer4" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer" unique_id=1539943582]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bwooj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4" unique_id=755719188]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4/VBoxContainer" unique_id=1137078278]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4/VBoxContainer/HBoxContainer" unique_id=431889144]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4/VBoxContainer/HBoxContainer" unique_id=332609590]
+layout_mode = 2
+text = "Violettes"
+label_settings = SubResource("LabelSettings_dmnl6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4/VBoxContainer" unique_id=37914742]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qo4q7")
+
+[node name="BleuDescription" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer4/VBoxContainer/PanelContainer" unique_id=761848794]
+layout_mode = 2
+text = "Grands projets.
+Effets puissants et uniques, un seul exemplaire par joueur."
+label_settings = SubResource("LabelSettings_0ktsg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator3" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=247181888]
+layout_mode = 2
+
+[node name="Les monuments" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=359432694]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Les monuments" unique_id=1031526077]
+clip_contents = true
+custom_minimum_size = Vector2(90, 60)
+layout_mode = 2
+texture = ExtResource("19_mxs8g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Les monuments" unique_id=508680782]
+layout_mode = 2
+text = "Les Monuments"
+label_settings = ExtResource("9_6j6s5")
+
+[node name="PanelContainer2" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=599523613]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rs81r")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2" unique_id=675256942]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=285586413]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 50
+
+[node name="Gare" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=145413718]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Gare" unique_id=1098133759]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Gare"
+label_settings = SubResource("LabelSettings_urt5r")
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Gare" unique_id=1358758610]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("20_fkuw2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Centre Co" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=167741439]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Centre Co" unique_id=2089390549]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Centre Commercial"
+label_settings = SubResource("LabelSettings_urt5r")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Centre Co" unique_id=442081598]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("21_owyki")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tour radio" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1489655323]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Tour radio" unique_id=580888194]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Tour Radio"
+label_settings = SubResource("LabelSettings_urt5r")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer/Tour radio" unique_id=686989618]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("22_0ktsg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=208989385]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 50
+
+[node name="Gare" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=937230884]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Gare" unique_id=1868983636]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Parc d'attraction"
+label_settings = SubResource("LabelSettings_urt5r")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Gare" unique_id=997171801]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("23_tdpf2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Centre Co" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=1077813110]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Centre Co" unique_id=276959857]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Port"
+label_settings = SubResource("LabelSettings_urt5r")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Centre Co" unique_id=1153511532]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("24_dmnl6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tour radio" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=637363413]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Tour radio" unique_id=1103915677]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Aéroport"
+label_settings = SubResource("LabelSettings_urt5r")
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Tour radio" unique_id=778761396]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+texture = ExtResource("25_qo4q7")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HSeparator4" type="HSeparator" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=496464670]
+layout_mode = 2
+
+[node name="Section 5" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=296843366]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Section 5" unique_id=828619592]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+texture = ExtResource("26_j523l")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/Section 5" unique_id=1485064444]
+layout_mode = 2
+text = "Comment Bien jouer ?"
+label_settings = ExtResource("9_6j6s5")
+
+[node name="PanelContainer3" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=1056281974]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fkuw2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3" unique_id=1572867019]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=716543445]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer" unique_id=1108580190]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+texture = ExtResource("27_bwooj")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer" unique_id=2138059359]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Diversifie tes cartes pour couvrir un maximum de résultats de dé."
+label_settings = SubResource("LabelSettings_lx1mv")
+autowrap_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=1118492933]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2" unique_id=1794887637]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+texture = ExtResource("28_t4sha")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2" unique_id=344504985]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Surveille les monuments des adversaires — plus ils en construisent, plus ils sont dangereux."
+label_settings = SubResource("LabelSettings_lx1mv")
+autowrap_mode = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=686161527]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer3" unique_id=1942472336]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+texture = ExtResource("14_3s30b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer3" unique_id=819710709]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Garde toujours assez de pièces pour construire un monument si l'occasion se présente."
+label_settings = SubResource("LabelSettings_lx1mv")
+autowrap_mode = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=106051640]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer4" unique_id=2012072794]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+texture = ExtResource("29_dybcw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer4" unique_id=58769399]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Les cartes violettes peuvent renverser une partie — ne les néglige pas."
+label_settings = SubResource("LabelSettings_lx1mv")
 autowrap_mode = 3
 
 [connection signal="pressed" from="Panel/VBoxContainer/backbtn" to="." method="_on_back_pressed"]

@@ -1,6 +1,7 @@
 [gd_resource type="LabelSettings" format=3 uid="uid://d1nxsgm600800"]
 
 [sub_resource type="SystemFont" id="SystemFont_4exmi"]
+subpixel_positioning = 0
 
 [resource]
 font = SubResource("SystemFont_4exmi")

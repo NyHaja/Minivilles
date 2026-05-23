@@ -16,7 +16,6 @@ static func _initialize_database() -> void:
 	_database[6] = creerVerger()
 	_database[7] = creerBoulangerie()
 	_database[8] = creerSuperette()
-	_database[9] = creerFromagerie()
 	_database[10] = creerPetitBateauPeche()
 	_database[11] = creerFabriqueMeubles()
 	_database[12] = creerMoonsterSoda()
@@ -294,31 +293,6 @@ static func creerVerger() -> Establishment:
 	return carte
 
 
-# Fromagerie - Dé: 7 - Coût: 5
-# Icon: FACTORY
-# Effect: Recevoir 3 pièces par carte Bétail possédée
-static func creerFromagerie() -> Establishment:
-	var effet = EffectGainBanqueParIcone.new(
-		2,              # id_effet
-		3,              # montant_par_carte
-		[Icon.Type.COW]      # icones_cibles
-	)
-
-	var carte = Establishment.new()
-	carte.NewCard(
-		effet,
-		9,                              # id card
-		"Fromagerie",
-		Icon.Type.FACTORY,
-		CardColor.Type.GREEN,
-		5,                              # coût
-		"Recevez 3 pièces par carte Bétail possédée.",
-		[7, 7]                          # activation sur 7
-	)
-
-	return carte
-
-
 # Petit bâteau de peche - Dé: 8 - Coût: 2
 # Icon: BOAT
 # Effect: Recevoir 3 pièces de la banque (Nécessite le Port)
@@ -483,12 +457,12 @@ static func creerMoonsterSoda() -> Establishment:
  
 # Halle de marché -Dé: 11-12 - Coût: 2
 # Icon: FRUIT
-# Effect: Recevoir 2 pièces par carte BLÉ possédée
+# Effect: Recevoir 2 pièces par carte TASSE possédée
 static func creerHalleMarche() -> Establishment:
 	var effet = EffectGainBanqueParIcone.new(
 		2,              # id_effet
 		2,              # montant_par_carte
-		[Icon.Type.WHEAT]    # icones_cibles
+		[Icon.Type.CUP]    # icones_cibles
 	)
 	
 	# Créer la carte
