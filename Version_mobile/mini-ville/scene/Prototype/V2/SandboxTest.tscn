@@ -116,8 +116,8 @@ offset_bottom = 628.0
 
 [connection signal="pressed" from="AddGold" to="." method="_on_add_gold_pressed"]
 [connection signal="pressed" from="RemoveGold" to="." method="_on_remove_gold_pressed"]
-[connection signal="pressed" from="BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildPort" to="." method="_on_build_port_pressed"]
+[connection signal="pressed" from="BuildPort" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildGare" to="." method="_on_build_gare_pressed"]
 [connection signal="pressed" from="BuildGare" to="." method="_on_build_monu_pressed"]
 [connection signal="pressed" from="BuildCentreCommercial" to="." method="_on_build_centre_commercial_pressed"]

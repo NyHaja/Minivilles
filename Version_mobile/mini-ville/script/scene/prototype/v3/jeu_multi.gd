@@ -717,9 +717,24 @@ func positionner_plateaux() -> void:
 		return
 
 	var screen_size = get_viewport().get_visible_rect().size
-	var c = screen_size / 2.0
+	# Décaler le centre vers la droite et le bas pour compenser
+	# les éléments UI (nom joueur, pièces, monuments) qui prennent de la place
+	# Ces valeurs sont relatives à la taille d'écran pour s'adapter à toutes les résolutions
+	var offset_x = screen_size.x * 0.065  # ~6.5% vers la droite
+	var offset_y = screen_size.y * 0.045  # ~4.5% vers le bas
+	var c = screen_size / 2.0 + Vector2(offset_x, offset_y)
 	var margin = 40
-	var board_scale = 1.3 if is_tablet() else 1.0
+	# Scale dynamique selon taille écran et nb joueurs
+	# base_h = 264 (dimension courte du board, celle qui "empiète" sur l'espace)
+	# On veut que chaque board ne dépasse pas ~45% de la dimension la plus courte de l'écran
+	var board_scale = 1.0
+	if is_tablet():
+		var base_h = 264.0
+		# Chaque board (dimension courte = base_h) doit tenir dans ~30% de la dimension
+		# la plus courte de l'écran pour que 4 boards autour ne se chevauchent pas
+		var min_screen = min(screen_size.x, screen_size.y)
+		var max_scale = (min_screen * 0.30) / base_h
+		board_scale = clamp(max_scale, 1.0, 1.3)
 
 	for p_idx in range(active_count):
 		if p_idx >= active_boards.size(): continue
@@ -756,11 +771,7 @@ func positionner_plateaux() -> void:
 			elif p_idx == 2: target_angle = -PI/2.0; target_rot = PI
 			elif p_idx == 3: target_angle = 0.0; target_rot = -PI/2.0
 
-		# Boards haut/bas (angles PI/2 et -PI/2) : après rotation leur longueur s'étend en X
-		# → leur distance verticale au centre doit être b_w/2 + margin (pas b_h)
 		var ry_used = ry
-		if abs(target_angle) == PI/2.0:
-			ry_used = (screen_size.y / 2.0) - (b_w / 2.0) - margin
 		var target_center = c + Vector2(cos(target_angle)*rx, sin(target_angle)*ry_used)
 		board.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 		board.position = target_center - (base_size * board_scale / 2.0)
@@ -812,12 +823,12 @@ func update_monument_menu():
 	var my_monuments = my_data.get("monuments", {})
 
 	var monument_map = {
-		Monument.MONUMENT_ID.Port:             {"node": "Port",              "file": "PORT"},
-		Monument.MONUMENT_ID.Gare:             {"node": "Gare",              "file": "Gare"},
-		Monument.MONUMENT_ID.Centre_Commercial:{"node": "Centre commercial", "file": "Centre_commercial"},
-		Monument.MONUMENT_ID.Parc:             {"node": "Parc d'attraction", "file": "PARC_DATTRACTION"},
-		Monument.MONUMENT_ID.Radio:            {"node": "Tour radio",        "file": "TOUR_RADIO"},
-		Monument.MONUMENT_ID.Aeroport:         {"node": "Aéroport",          "file": "Aéroport"}
+		Monument.MONUMENT_ID.Port:              {"node": "Port",              "file": "port"},
+		Monument.MONUMENT_ID.Gare:              {"node": "Gare",              "file": "gare"},
+		Monument.MONUMENT_ID.Centre_Commercial: {"node": "Centre commercial", "file": "centre_commercial"},
+		Monument.MONUMENT_ID.Parc:              {"node": "Parc d'attraction", "file": "parc_dattraction"},
+		Monument.MONUMENT_ID.Radio:             {"node": "Tour radio",        "file": "tour_radio"},
+		Monument.MONUMENT_ID.Aeroport:          {"node": "Aéroport",          "file": "aéroport"}
 	}
 	
 	for m_id in monument_map:
@@ -836,10 +847,11 @@ func update_monument_menu():
 		else:
 			state = "recto" if is_built else "verso"
 			
-		var tex_path = "res://assets/Cards/Monuments/" + data["file"] + "_" + state + ".png"
+		var tex_path = "res://assets/Cards/" + get_lang_folder() + "/Monuments/" + data["file"] + "_" + state + ".png"
 		var _tex = load(tex_path)
-		if _tex: tex_rect.texture = _tex
-
+		if _tex: 
+			tex_rect.texture = _tex
+			
 		for conn in build_btn.pressed.get_connections():
 			build_btn.pressed.disconnect(conn.callable)
 

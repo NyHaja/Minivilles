@@ -1,18 +1,18 @@
-[gd_scene format=3 uid="uid://shop_popup_scene"]
+[gd_scene format=3 uid="uid://c66immc84oj3p"]
 
-[ext_resource type="Script" path="res://script/scene/prototype/v3/ShopPopup.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/table/ShopBoard.tscn" id="2_shopboard"]
+[ext_resource type="Script" uid="uid://bsm4j220jur21" path="res://script/scene/prototype/v3/ShopPopup.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cspaj4lx56c1y" path="res://scene/Prototype/V3/ShopBoard.tscn" id="2_shopboard"]
 [ext_resource type="Texture2D" uid="uid://c1imgygktxl57" path="res://assets/icon/backArrow.png" id="4_back"]
 [ext_resource type="Texture2D" uid="uid://bs4j15ninqarw" path="res://assets/icon/backArrowPress.png" id="5_backp"]
 [ext_resource type="LabelSettings" uid="uid://d1nxsgm600800" path="res://assets/Themebtn/new_label_settings.tres" id="6_ls"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.13, 0.22, 0.52, 1.0)
+bg_color = Color(0.13, 0.22, 0.52, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.18, 0.72, 0.85, 1.0)
+border_color = Color(0.18, 0.72, 0.85, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -20,24 +20,21 @@ corner_radius_bottom_left = 12
 shadow_color = Color(0, 0, 0, 0.5)
 shadow_size = 12
 
-[node name="ShopPopup" type="CanvasLayer"]
+[node name="ShopPopup" type="CanvasLayer" unique_id=300938564]
 layer = 5
 script = ExtResource("1_script")
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="." unique_id=186775746]
 unique_name_in_owner = true
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0.05, 0.7)
-mouse_filter = 0
 
-[node name="PopupPanel" type="PanelContainer" parent="."]
+[node name="PopupPanel" type="PanelContainer" parent="." unique_id=433999203]
 unique_name_in_owner = true
-layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -52,18 +49,16 @@ grow_vertical = 2
 pivot_offset = Vector2(310, 290)
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel" unique_id=1875485964]
 layout_mode = 2
-anchor_right = 1.0
-anchor_bottom = 1.0
 theme_override_constants/separation = 0
 
-[node name="CloseButton" type="VBoxContainer" parent="PopupPanel/VBoxContainer"]
+[node name="CloseButton" type="VBoxContainer" parent="PopupPanel/VBoxContainer" unique_id=240061919]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = -17
 
-[node name="backbtn" type="TextureButton" parent="PopupPanel/VBoxContainer/CloseButton"]
+[node name="backbtn" type="TextureButton" parent="PopupPanel/VBoxContainer/CloseButton" unique_id=1668039874]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
@@ -76,14 +71,14 @@ texture_hover = ExtResource("5_backp")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="PopupPanel/VBoxContainer/CloseButton"]
+[node name="Label" type="Label" parent="PopupPanel/VBoxContainer/CloseButton" unique_id=751589324]
 layout_mode = 2
 text = "Retour"
 label_settings = ExtResource("6_ls")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ShopBoard" parent="PopupPanel/VBoxContainer" instance=ExtResource("2_shopboard")]
+[node name="ShopBoard" parent="PopupPanel/VBoxContainer" unique_id=539732392 instance=ExtResource("2_shopboard")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
