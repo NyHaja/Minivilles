@@ -7,29 +7,29 @@
 [ext_resource type="FontFile" uid="uid://dql41vkn5vfyl" path="res://assets/Fonts/EricaOne-Regular.ttf" id="4_dlb48"]
 [ext_resource type="FontFile" uid="uid://pq2db3tvjklb" path="res://assets/Fonts/Exo_2/static/Exo2-BlackItalic.ttf" id="5_wfh2e"]
 [ext_resource type="Texture2D" uid="uid://bgxlc2pptct0" path="res://assets/icon/Ellipse 32.png" id="6_uxse3"]
-[ext_resource type="Texture2D" uid="uid://cq8frnh684v3b" path="res://assets/icon/trophy.png" id="8_txb8w"]
+[ext_resource type="Texture2D" uid="uid://10g6ywjr7n8w" path="res://assets/icon/trophy.png" id="8_txb8w"]
 [ext_resource type="LabelSettings" uid="uid://2fyboyt7uj78" path="res://assets/Themebtn/label_theme.tres" id="9_6j6s5"]
 [ext_resource type="FontFile" uid="uid://4nekeyacigrd" path="res://assets/Fonts/Exo_2/static/Exo2-Bold.ttf" id="10_rl0rg"]
 [ext_resource type="FontFile" uid="uid://dxjthtx5vhhhw" path="res://assets/Fonts/Exo_2/static/Exo2-Black.ttf" id="11_w8hpi"]
 [ext_resource type="Texture2D" uid="uid://22upijbo801o" path="res://assets/UI/2Dice.png" id="12_udav2"]
 [ext_resource type="FontFile" uid="uid://3whcbur0kkic" path="res://assets/Fonts/Exo_2/static/Exo2-ExtraBold.ttf" id="13_4i6t0"]
 [ext_resource type="Texture2D" uid="uid://cj5d03ku4rouy" path="res://assets/UI/coin.png" id="14_3s30b"]
-[ext_resource type="Texture2D" uid="uid://b7nl7i1rovsxl" path="res://assets/icon/boutique.png" id="15_nqbat"]
-[ext_resource type="Texture2D" uid="uid://elhdkyxqsbsd" path="res://assets/icon/PasserTour.png" id="16_a86s3"]
-[ext_resource type="Texture2D" uid="uid://cc217mlc1i0i6" path="res://assets/icon/carte_icon.png" id="17_23br6"]
-[ext_resource type="Texture2D" uid="uid://cqf8v5ands7wm" path="res://assets/icon/carte_iconRV.png" id="18_fkuw2"]
+[ext_resource type="Texture2D" uid="uid://dxa257y6r2f6g" path="res://assets/icon/boutique.png" id="15_nqbat"]
+[ext_resource type="Texture2D" uid="uid://l5xpey4qwr6b" path="res://assets/icon/PasserTour.png" id="16_a86s3"]
+[ext_resource type="Texture2D" uid="uid://dbnqobmj63m1w" path="res://assets/icon/carte_icon.png" id="17_23br6"]
+[ext_resource type="Texture2D" uid="uid://caql2ejglqkj" path="res://assets/icon/carte_iconRV.png" id="18_fkuw2"]
 [ext_resource type="FontFile" uid="uid://dshevnxirfvvt" path="res://assets/Fonts/Exo_2/static/Exo2-SemiBold.ttf" id="18_ksmpo"]
-[ext_resource type="Texture2D" uid="uid://keghyqsvkbvj" path="res://assets/icon/monument.png" id="19_mxs8g"]
+[ext_resource type="Texture2D" uid="uid://cj5pah6asdkav" path="res://assets/icon/monument.png" id="19_mxs8g"]
 [ext_resource type="Texture2D" uid="uid://fn3i5lpclx1s" path="res://assets/UI/gare.png" id="20_fkuw2"]
 [ext_resource type="Texture2D" uid="uid://sbwi2j1i5g15" path="res://assets/UI/centre-commercial.png" id="21_owyki"]
 [ext_resource type="Texture2D" uid="uid://c0bg2yn0738to" path="res://assets/UI/antenne-radio.png" id="22_0ktsg"]
 [ext_resource type="Texture2D" uid="uid://cv51jgcw83f2s" path="res://assets/UI/parc-dattractions.png" id="23_tdpf2"]
 [ext_resource type="Texture2D" uid="uid://2pcuggpj6flm" path="res://assets/UI/port.png" id="24_dmnl6"]
 [ext_resource type="Texture2D" uid="uid://mvpbv0w2xtil" path="res://assets/UI/aeroport.png" id="25_qo4q7"]
-[ext_resource type="Texture2D" uid="uid://cx7ih6snwqkpf" path="res://assets/icon/ampoule.png" id="26_j523l"]
-[ext_resource type="Texture2D" uid="uid://c41bx326ll0un" path="res://assets/icon/diversifier.png" id="27_bwooj"]
-[ext_resource type="Texture2D" uid="uid://bxq4sv7piy6jw" path="res://assets/icon/oeil.png" id="28_t4sha"]
-[ext_resource type="Texture2D" uid="uid://cqiwlwpf18t5u" path="res://assets/icon/carte viollette.png" id="29_dybcw"]
+[ext_resource type="Texture2D" uid="uid://brdodi7518hf6" path="res://assets/icon/ampoule.png" id="26_j523l"]
+[ext_resource type="Texture2D" uid="uid://b01lwernpyowh" path="res://assets/icon/diversifier.png" id="27_bwooj"]
+[ext_resource type="Texture2D" uid="uid://b6m7kqunyapun" path="res://assets/icon/oeil.png" id="28_t4sha"]
+[ext_resource type="Texture2D" uid="uid://dypk1dtn4sjnn" path="res://assets/icon/carte viollette.png" id="29_dybcw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7ook"]
 bg_color = Color(0, 0.69803923, 0.87058824, 1)
@@ -329,15 +329,14 @@ text = "Comment Gagner ?"
 label_settings = ExtResource("9_6j6s5")
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer" unique_id=330361991]
+custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_i113y")
 
 [node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/PanelContainer" unique_id=522973165]
 clip_contents = true
 layout_mode = 2
-text = "
-Le premier joueur à construire les 5 monuments de sa ville remporte la partie. Pour construire un monument, il faut accumuler suffisamment de pièces en activant des cartes au bon moment et gérer intelligemment son économie tout au long des tours.
-"
+text = "Le premier joueur à construire les 5 monuments de sa ville remporte la partie. Pour construire un monument, il faut accumuler suffisamment de pièces en activant des cartes au bon moment et gérer intelligemment son économie tout au long des tours."
 label_settings = SubResource("LabelSettings_afyve")
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -476,15 +475,14 @@ label_settings = SubResource("LabelSettings_fkuw2")
 horizontal_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer" unique_id=928314057]
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_owyki")
 
 [node name="BleuDescription" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer/VBoxContainer/PanelContainer" unique_id=1970950220]
 layout_mode = 2
-text = "
-Établissements primaires.
-Rapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur
-"
+text = "Établissements primaires.
+Rapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur"
 label_settings = SubResource("LabelSettings_0ktsg")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -508,7 +506,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1373613927]
 layout_mode = 2
-text = "Verts"
+text = "Vertes"
 label_settings = SubResource("LabelSettings_dmnl6")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -551,7 +549,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel/Panelrule/MarginContainer/Boxconnexion/MarginContainer/PanelContainer/ScrollContainer/VBoxContainer/GridContainer/PanelContainer3/VBoxContainer" unique_id=744659653]
-custom_minimum_size = Vector2(0, 110)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_qo4q7")

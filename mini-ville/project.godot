@@ -13,7 +13,10 @@ config_version=5
 config/name="MiniVille"
 run/main_scene="uid://xg6ijxmum5pm"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.27327007, 0.41344216, 0.9878225, 1)
+boot_splash/stretch_mode=2
+boot_splash/image="uid://clliqj3yckkti"
+config/icon="uid://c3brderihwmjs"
 
 [audio]
 
