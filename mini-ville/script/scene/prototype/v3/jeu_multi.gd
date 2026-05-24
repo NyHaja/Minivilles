@@ -112,8 +112,18 @@ func _ready() -> void:
 	_force_overlays_to_front()
 	_setup_tooltip_glows()
 	
-	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(func(): network_client.request_roll_dice(1))
-	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(func(): network_client.request_roll_dice(2))
+	if btn_overlay_roll_1:
+		btn_overlay_roll_1.pressed.connect(func():
+			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
+			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
+			network_client.request_roll_dice(1)
+		)
+	if btn_overlay_roll_2:
+		btn_overlay_roll_2.pressed.connect(func():
+			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
+			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
+			network_client.request_roll_dice(2)
+		)
 	
 	%CancelCardBuy.pressed.connect(func(): 
 		buy_confirm_panel.hide()
@@ -124,11 +134,24 @@ func _ready() -> void:
 		send_ui_interaction("close_monuments")
 	)
 	
-	if btn_conserver: btn_conserver.pressed.connect(func(): dice_decision_made.emit("keep"))
-	if btn_relancer: btn_relancer.pressed.connect(func(): dice_decision_made.emit("reroll"))
-	if btn_add_2: btn_add_2.pressed.connect(func(): dice_decision_made.emit("add2"))
+	if btn_conserver: btn_conserver.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("keep")
+	)
+	if btn_relancer: btn_relancer.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("reroll")
+	)
+	if btn_add_2: btn_add_2.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("add2")
+	)
 	
-	if settings_button: settings_button.pressed.connect(func(): settings_overlay.show())
+	if settings_button: 
+		settings_button.pressed.connect(func(): 
+			settings_overlay.z_index = 4096 # S'assure qu'il passe au-dessus de TOUT
+			settings_overlay.show()
+		)
 	if continue_button: continue_button.pressed.connect(func(): settings_overlay.hide())
 	if main_menu_button: main_menu_button.pressed.connect(func(): get_tree().change_scene_to_file("res://scene/Ecran principale/accueil.tscn"))
 	if settings_quit_button: settings_quit_button.pressed.connect(func(): get_tree().quit())
@@ -138,7 +161,12 @@ func _ready() -> void:
 	
 	for board in boards:
 		if is_instance_valid(board):
-			board.pass_turn_requested.connect(func(): network_client.request_skip_turn())
+			board.pass_turn_requested.connect(func(): 
+				# NOUVEAU : On verrouille le plateau instantanément
+				set_actions_enabled(false) 
+				if is_instance_valid(click_blocker): click_blocker.show()
+				network_client.request_skip_turn()
+			)
 			board.open_monuments_requested.connect(_on_open_monuments_pressed)
 			
 	if is_instance_valid(shop_board): shop_board.shop_card_clicked.connect(_on_shop_card_clicked)
@@ -162,6 +190,26 @@ func _ready() -> void:
 		var cached_turn = network_client.cached_turn_data.duplicate()
 		network_client.cached_turn_data.clear()
 		network_client._handle_turn_started(cached_turn)
+		 
+# Ajoute cette petite fonction juste au-dessus de _ready()
+func _disable_result_buttons() -> void:
+	if btn_conserver: btn_conserver.disabled = true
+	if btn_relancer: btn_relancer.disabled = true
+	if btn_add_2: btn_add_2.disabled = true
+
+# Et dans _ready(), remplace les 3 lignes btn_conserver, etc. par :
+	if btn_conserver: btn_conserver.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("keep")
+	)
+	if btn_relancer: btn_relancer.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("reroll")
+	)
+	if btn_add_2: btn_add_2.pressed.connect(func(): 
+		_disable_result_buttons()
+		dice_decision_made.emit("add2")
+	)
 		
 func set_actions_enabled(can_act: bool) -> void:
 	# --- SÉCURITÉ : On débloque toujours les clics si on active les actions ---
@@ -375,6 +423,7 @@ func _on_confirm_buy_shop_pressed() -> void:
 	else:
 		var qty_in_shop = int(latest_shop_data.get(str(selected_shop_card_id), 1))
 		var new_qty = qty_in_shop - 1
+		set_actions_enabled(false)
 		
 		# --- GESTION LOCALE --- 
 		# Evite les clignotements pour celui qui vient de cliquer
@@ -803,7 +852,7 @@ func _find_dice_ui_nodes() -> void:
 	btn_add_2 = find_child("Ajouter2AuRésultat", true, false)
 
 func _force_overlays_to_front() -> void:
-	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, choose_player_panel, trade_panel, give_panel, buy_confirm_panel]
+	var overlays = [turn_overlay, result_overlay, monument_menu, victory_screen, choose_player_panel, trade_panel, give_panel, buy_confirm_panel, settings_overlay]
 	for overlay in overlays:
 		if is_instance_valid(overlay): overlay.z_index = 100 
 
@@ -1132,6 +1181,7 @@ func update_monument_menu(target_id: int = -1):
 				return
 
 			monument_menu.hide()
+			set_actions_enabled(false)
 			network_client.request_build_monument(id)
 			animer_shake_ecran()
 		)
@@ -1151,7 +1201,7 @@ func try_show_turn_overlay(data: Dictionary) -> void:
 
 func _show_turn_overlay(data: Dictionary) -> void:
 	var active_id   = data.get("active_player_id", -1)
-	current_active_player_id = int(active_id) # <- AJOUT ICI
+	current_active_player_id = int(active_id)
 	var active_name = data.get("player_name", "Inconnu")
 	var is_my       = (int(active_id) == int(my_player_id))
 
@@ -1163,11 +1213,17 @@ func _show_turn_overlay(data: Dictionary) -> void:
 		turn_overlay.show()
 		var btn_box = turn_overlay.get_node_or_null("VBoxContainer/HBoxContainer")
 		if btn_box: btn_box.visible = is_my
+		
+		# --- NOUVEAU : On réactive la possibilité de cliquer sur les dés ---
+		if btn_overlay_roll_1: btn_overlay_roll_1.disabled = false
+		if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true # Sécurité par défaut
+		
 		if is_my and btn_overlay_roll_2:
 			var my_data      = latest_players_data.get(str(my_player_id), {})
 			var my_monuments = my_data.get("monuments", {})
 			var has_gare     = my_monuments.get("22", false) or my_monuments.get(22, false)
 			btn_overlay_roll_2.visible = has_gare
+			btn_overlay_roll_2.disabled = not has_gare # On l'active que si on a la gare
 
 func _trigger_gold_animations(new_players: Dictionary) -> void:
 	if latest_players_data.is_empty(): return
@@ -1856,8 +1912,8 @@ func animer_echange_cartes(player1_id: int, id_carte1: int, player2_id: int, id_
 	add_child(dummy1); add_child(dummy2)
 	dummy1.setup_card(card_data1, board1.get_board_tooltip_direction())
 	dummy2.setup_card(card_data2, board2.get_board_tooltip_direction())
-	dummy1.z_index = 4000;  dummy1.top_level = true
-	dummy2.z_index = 4000;  dummy2.top_level = true
+	dummy1.z_index = 10;  dummy1.top_level = true
+	dummy2.z_index = 10;  dummy2.top_level = true
 	dummy1.global_position = noeud1.global_position;  dummy1.rotation = board1.rotation
 	dummy2.global_position = noeud2.global_position; dummy2.rotation = board2.rotation
 	noeud1.modulate.a = 0.0
@@ -1935,7 +1991,7 @@ func animer_don_carte(donor_id: int, id_carte: int, receiver_id: int) -> void:
 	var dummy = CARD_ANIMATION_SCENE.instantiate()
 	add_child(dummy)
 	dummy.setup_card(card_data, board_source.get_board_tooltip_direction())
-	dummy.z_index   = 4000
+	dummy.z_index   = 10
 	dummy.top_level = true
 	dummy.global_position = noeud_carte.global_position
 	dummy.rotation        = board_source.rotation
