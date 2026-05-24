@@ -11,6 +11,8 @@ var _is_animating_dice: bool = false
 var _pending_sync_data: Dictionary = {}
 var file_attente_messages: Array = []
 var traitement_en_cours: bool = false
+var est_premier_tour: bool = true
+var pending_shop_animation_index: int = -1
 
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
@@ -34,7 +36,6 @@ var active_boards: Array = []
 var player_angles: Array = [0.0, 0.0, 0.0, 0.0]
 var is_rotating: bool = false
 var _active_fly_animations: int = 0
-var pending_turn_data: Dictionary = {}
 
 @onready var turn_overlay: ColorRect = $TurnOverlay
 @onready var lbl_turn_announcement: Label = %LblTurnAnnouncement
@@ -149,7 +150,7 @@ func _ready() -> void:
 		var cached = network_client.cached_sync_data.duplicate()
 		network_client.cached_sync_data.clear()
 		_on_network_message(cached)
-
+	
 	if not network_client.cached_turn_data.is_empty():
 		var cached_turn = network_client.cached_turn_data.duplicate()
 		network_client.cached_turn_data.clear()
@@ -235,25 +236,10 @@ func update_network_boards(players_data: Dictionary, animate_rotation: bool = fa
 
 func update_network_shop(shop_data: Dictionary):
 	latest_shop_data = shop_data
-
 	if not is_instance_valid(shop_board): return
-
-	var position_map: Dictionary = shop_board.update_network_shop(shop_data)
-
-	for card_id in position_map:
-		var target_pos: Vector2 = position_map[card_id]
-		var target_slot = shop_board.card_slot_map.get(card_id)
-		if not is_instance_valid(target_slot): continue
-
-		var image_node = target_slot.get_node_or_null("Visual")
-		var tex: Texture2D = null
-		if image_node is TextureButton:
-			tex = image_node.texture_normal
-
-		if tex:
-			animer_pioche_vers_shop(target_slot, tex, target_pos)
-		else:
-			target_slot.modulate.a = 1.0
+	
+	# On se contente d'actualiser les données, l'animation sera gérée après.
+	shop_board.update_network_shop(shop_data)
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
@@ -281,7 +267,12 @@ func _on_shop_card_clicked(card_id: int) -> void:
 			path_basis = "res://assets/Cards/Monuments/monument_" + clean_name + "_active.png"
 		else:
 			var card_color = card_data.get_color()
-			var clean_name = get_clean_file_name(card_name, card_color)
+			var clean_name = ""
+			if shop_board.has_method("get_clean_file_name"):
+				clean_name = shop_board.get_clean_file_name(card_name, card_color)
+			else:
+				clean_name = get_clean_file_name(card_name, card_color)
+			
 			path_basis = "res://assets/Cards/" + get_lang_folder() + "/Establishments/" + clean_name + "_1.png"
 			tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/tooltip_" + clean_name + ".png"
 
@@ -355,7 +346,15 @@ func _on_confirm_buy_shop_pressed() -> void:
 		animer_shake_ecran()
 	else:
 		var qty_in_shop = int(latest_shop_data.get(str(selected_shop_card_id), 1))
-		animer_achat_vers_main(selected_shop_card_id, qty_in_shop)
+		var new_qty = qty_in_shop - 1
+		
+		# --- GESTION LOCALE --- 
+		# Evite les clignotements pour celui qui vient de cliquer
+		if new_qty > 0 and is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
+			if shop_board.last_clicked_slot.has_method("set_badge_count"):
+				shop_board.last_clicked_slot.set_badge_count(new_qty)
+
+		animer_achat_vers_main(selected_shop_card_id, new_qty, my_player_id)
 		network_client.request_buy_card(selected_shop_card_id)
 
 func _on_open_monuments_pressed() -> void:
@@ -925,11 +924,21 @@ func _traiter_prochain_message() -> void:
 					await _apply_sync_state(data)
 					
 			"turn_start":
-				# On garde ta sécurité pour les cartes qui volent du shop
-				if _active_fly_animations > 0:
-					pending_turn_data = data
+				# 1. On attend quand même que les éléments techniques soient prêts/positionnés
+				while _active_fly_animations > 0 or _is_animating_dice or is_rotating or not file_animations_activations.is_empty():
+					await get_tree().process_frame
+					
+				# 2. CORRECTION : Si c'est le lancement du jeu, on passe DIRECTEMENT
+				if est_premier_tour:
+					est_premier_tour = false  # On désactive pour les prochains tours
 				else:
-					_show_turn_overlay(data)
+					if is_instance_valid(click_blocker): click_blocker.show()
+					# La pause de 2.5 secondes ne s'appliquera que durant la partie
+					await get_tree().create_timer(1).timeout
+					if is_instance_valid(click_blocker): click_blocker.hide()
+
+				# 3. On lance l'affichage immédiat
+				_show_turn_overlay(data)
 					
 			"buy_error":
 				if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
@@ -939,36 +948,78 @@ func _traiter_prochain_message() -> void:
 				
 			"game_over":
 				show_victory_screen(data.get("winner_name", "Un joueur"))
+	 
+	if pending_shop_animation_index != -1 and is_instance_valid(shop_board):
+		if is_instance_valid(click_blocker):
+			click_blocker.show()
 
+		await get_tree().process_frame
+
+		var grid = shop_board.get("grid_container")
+		if grid and pending_shop_animation_index < grid.get_child_count():
+			var new_slot = grid.get_child(pending_shop_animation_index)
+			var image_node = new_slot.get_node_or_null("Visual")
+
+			var new_tex = null
+			if image_node is TextureButton:
+				new_tex = image_node.texture_normal
+			elif image_node is TextureRect:
+				new_tex = image_node.texture
+
+			if new_tex:
+				await animer_pioche_vers_shop(new_slot, new_tex)
+				await get_tree().create_timer(0.6).timeout
+
+		pending_shop_animation_index = -1
+		if is_instance_valid(click_blocker):
+			click_blocker.hide()
+			
 	traitement_en_cours = false
 
 func _apply_sync_state(data: Dictionary) -> void:
 	print("[JeuMulti] sync_state appliqué !")
-	
-	# 👇 1. ON SAUVEGARDE TOUT IMMÉDIATEMENT AVANT LA PAUSE
 	var new_players = data.get("players", {})
-	var new_shop = data.get("shop", {}) # 👈 LA CORRECTION EST ICI
+	var new_shop = data.get("shop", {})
 	var activations = data.get("activations", [])
 
-	# S'il y a eu des cartes activées ce tour-ci
 	if activations.size() > 0:
 		for act in activations:
 			notifier_activation_multi(int(act["player_id"]), int(act["card_id"]), act.get("balance_changes", {}))
-		
-		# ⏱️ LA FAMEUSE PAUSE
 		await executer_animations_collectees()
-		
 		_trigger_card_move_animations(new_players)
 		update_network_boards(new_players, false)
-		# 👇 2. ON UTILISE LA SAUVEGARDE AU LIEU DE "data.get(...)"
-		update_network_shop(new_shop) 
-		
-	# Sinon, c'est une simple mise à jour (achat, bonus passif)
+		update_network_shop(new_shop)
 	else:
-		_trigger_gold_animations(new_players)    
-		_trigger_card_move_animations(new_players) 
+		_trigger_gold_animations(new_players)
+		_trigger_card_move_animations(new_players)
 		update_network_boards(new_players, false)
-		update_network_shop(new_shop) # 👈 PAREIL ICI
+		update_network_shop(new_shop)
+
+	# --- CORRECTION : Lancer l'animation une fois le shop mis à jour ---
+	if pending_shop_animation_index != -1 and is_instance_valid(shop_board):
+		if is_instance_valid(click_blocker):
+			click_blocker.show()
+
+		await get_tree().process_frame
+
+		var grid = shop_board.get("grid_container")
+		if grid and pending_shop_animation_index < grid.get_child_count():
+			var new_slot = grid.get_child(pending_shop_animation_index)
+			var image_node = new_slot.get_node_or_null("Visual")
+
+			var new_tex = null
+			if image_node is TextureButton:
+				new_tex = image_node.texture_normal
+			elif image_node is TextureRect:
+				new_tex = image_node.texture
+
+			if new_tex:
+				await animer_pioche_vers_shop(new_slot, new_tex)
+				await get_tree().create_timer(0.6).timeout
+
+		pending_shop_animation_index = -1
+		if is_instance_valid(click_blocker):
+			click_blocker.hide()
 
 func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
@@ -978,7 +1029,8 @@ func get_clean_file_name(card_name: String, color: int = -1) -> String:
 		CardColor.Type.RED: prefix = "rouge_"
 		CardColor.Type.PURPLE: prefix = "violet_"
 	var clean_name = card_name.to_lower().replace(" ", "_").replace("'", "_")
-	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a")
+	# --- CORRECTION : Ajout du remplacement de ô et î ---
+	clean_name = clean_name.replace("é", "e").replace("è", "e").replace("à", "a").replace("ô","o").replace("î","i")
 	return prefix + clean_name
 
 func get_lang_folder() -> String:
@@ -1044,10 +1096,6 @@ func _check_trade_valid() -> void:
 
 func _finish_fly_animation() -> void:
 	_active_fly_animations = max(0, _active_fly_animations - 1)
-	if _active_fly_animations == 0 and not pending_turn_data.is_empty():
-		var data = pending_turn_data
-		pending_turn_data = {}
-		_show_turn_overlay(data)
 
 func try_show_turn_overlay(data: Dictionary) -> void:
 	# Au lieu d'afficher le tour, on le force à faire la queue avec les autres messages !
@@ -1127,6 +1175,24 @@ func _trigger_card_move_animations(new_players: Dictionary) -> void:
 			var donor_id   = int(donors[0])
 			var receiver_id = int(receivers[0])
 			animer_don_carte(donor_id, cid, receiver_id)
+		
+		# --- CORRECTION SPECTATEURS ---
+		# Si quelqu'un gagne une carte sans qu'un autre joueur la perde = ACHAT AU SHOP !
+		elif donors.size() == 0 and receivers.size() == 1:
+			var receiver_id = int(receivers[0])
+			var old_shop_qty = int(latest_shop_data.get(str(cid), 0))
+			var new_shop_qty = old_shop_qty - 1
+			
+			if receiver_id != my_player_id:
+				# On lance l'animation chez les spectateurs
+				animer_achat_vers_main(cid, new_shop_qty, receiver_id)
+				
+			# Si la pile du shop tombe à zéro, on mémorise son index 
+			# pour préparer le vol de la nouvelle carte (pour TOUT LE MONDE)
+			if new_shop_qty <= 0 and is_instance_valid(shop_board):
+				var slot = shop_board.card_slot_map.get(cid)
+				if is_instance_valid(slot):
+					pending_shop_animation_index = slot.get_index()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # BOÎTE À OUTILS : ANIMATIONS JUICY
@@ -1576,15 +1642,25 @@ func animer_pioche_vers_shop(target_slot: Control, texture_recto: Texture2D, tar
 	dummy.queue_free()
 	_finish_fly_animation()
 
-func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1) -> void:
-	if not is_instance_valid(shop_board) or not is_instance_valid(shop_board.get("last_clicked_slot")): return
+func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1, target_player_id: int = -1) -> void:
+	if target_player_id == -1: target_player_id = my_player_id
 
-	var target_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
+	var target_board: PlayerBoard = player_board_map.get(str(target_player_id), null)
 	if not is_instance_valid(target_board): return
 
-	var shop_slot   = shop_board.last_clicked_slot
-	var visual_node = shop_slot.get_node_or_null("Visual")
+	var shop_slot = null
+	# Si c'est notre propre achat, on utilise le slot cliqué
+	if target_player_id == my_player_id and is_instance_valid(shop_board) and is_instance_valid(shop_board.get("last_clicked_slot")):
+		shop_slot = shop_board.last_clicked_slot
+	else:
+		# Pour les spectateurs, on retrouve le slot via son ID
+		if is_instance_valid(shop_board) and shop_board.get("card_slot_map"):
+			shop_slot = shop_board.card_slot_map.get(card_id)
 
+	if not is_instance_valid(shop_slot): return
+
+	var visual_node = shop_slot.get_node_or_null("Visual")
+	
 	var card_data  = CardFactory.get_card(card_id)
 	var color      = card_data.get_color()
 	var pile_cible = target_board.piles[color]
@@ -1609,7 +1685,8 @@ func animer_achat_vers_main(card_id: int, quantity_in_shop: int = 1) -> void:
 	dummy.global_position = visual_node.global_position if visual_node else shop_slot.global_position
 	dummy.scale = Vector2(0.75, 0.75)
 
-	if visual_node and quantity_in_shop <= 1:
+	# --- CORRECTION : On cache la carte seulement s'il n'en reste plus
+	if visual_node and quantity_in_shop <= 0:
 		visual_node.modulate.a = 0.0
 
 	_active_fly_animations += 1
