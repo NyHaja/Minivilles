@@ -356,6 +356,7 @@ func _on_confirm_buy_shop_pressed() -> void:
 	if my_balance < cost:
 		buy_confirm_panel.hide()
 		if is_monument and is_instance_valid(monument_menu): monument_menu.hide()
+		send_ui_interaction("buy_error", {"card_id": selected_shop_card_id, "is_monument": is_monument})
 		await get_tree().create_timer(0.15).timeout
 		var my_board = player_board_map.get(str(my_player_id), null)
 		if is_instance_valid(my_board): animer_erreur_argent(my_board)
@@ -969,10 +970,18 @@ func _traiter_prochain_message() -> void:
 				_show_turn_overlay(data)
 					
 			"buy_error":
-				if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
+				# 👇 SÉCURITÉ : Fermer les fenêtres d'achat globales quoi qu'il arrive
+				if is_instance_valid(buy_confirm_panel): buy_confirm_panel.hide()
+				if is_instance_valid(monument_menu): monument_menu.hide()
+
+				var target_id = current_active_player_id if current_active_player_id != -1 else my_player_id
+				var target_board: PlayerBoard = player_board_map.get(str(target_id), null)
+				if is_instance_valid(target_board): 
+					animer_erreur_argent(target_board)
+				
+				# Le secouement de carte du shop n'est joué que pour l'acheteur local
+				if target_id == my_player_id and is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
 					animer_erreur_carte_shop(shop_board.last_clicked_slot)
-				var my_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
-				if is_instance_valid(my_board): animer_erreur_argent(my_board)
 				
 			"game_over":
 				show_victory_screen(data.get("winner_name", "Un joueur"))
@@ -1116,6 +1125,7 @@ func update_monument_menu(target_id: int = -1):
 			var current_balance = int(latest_players_data.get(str(my_player_id), {}).get("balance", 0))
 			if current_balance < cost:
 				monument_menu.hide()
+				send_ui_interaction("buy_error", {"card_id": id, "is_monument": true})
 				await get_tree().create_timer(0.15).timeout
 				var my_board = player_board_map.get(str(my_player_id), null)
 				if is_instance_valid(my_board): animer_erreur_argent(my_board)
@@ -2074,7 +2084,27 @@ func _handle_spectator_ui(type: String, meta: Dictionary, active_id: int) -> voi
 			_apply_spectator_hover(int(meta.get("card_id", -1)), int(meta.get("owner_id", -1)), true)
 		"unhover_card":
 			_apply_spectator_hover(int(meta.get("card_id", -1)), int(meta.get("owner_id", -1)), false)
-
+		"buy_error":
+			var cid = int(meta.get("card_id", -1))
+			var is_monument = meta.get("is_monument", false)
+			
+			# 👇 AJOUT : On ferme immédiatement le panel correspondant chez le spectateur
+			if is_monument and is_instance_valid(monument_menu):
+				monument_menu.hide()
+			elif not is_monument and is_instance_valid(buy_confirm_panel):
+				buy_confirm_panel.hide()
+			
+			# 1. On secoue l'argent du joueur qui a essayé d'acheter
+			var board = player_board_map.get(str(active_id), null)
+			if is_instance_valid(board):
+				animer_erreur_argent(board)
+				
+			# 2. Si c'est une carte du shop, on fait clignoter la carte en rouge
+			if not is_monument and is_instance_valid(shop_board) and shop_board.get("card_slot_map"):
+				var slot = shop_board.card_slot_map.get(cid)
+				if is_instance_valid(slot):
+					animer_erreur_carte_shop(slot)
+					
 func _apply_spectator_hover(cid: int, owner_id: int, show: bool) -> void:
 	var target_node = null
 	
