@@ -131,10 +131,35 @@ func activateEffect(color: int, game: GameServer, roller: Player) -> void:
 							var response = await game.request_player_choice("demolish_monument")
 							game.monument_choisi_pour_demolition = response.get("monument_id", -1)
 						
+						# =========================================================
+						# 🟢 AJOUT MULTIJOUEUR : 1. SAUVEGARDE DE L'OR AVANT L'EFFET
+						# =========================================================
+						var balances_avant = {}
+						if game and game.players:
+							for p in game.players:
+								balances_avant[p.id] = p.balance
+						
+						# =========================================================
+						# APPLICATION NORMALE DE L'EFFET (aucun script d'effet à modifier !)
+						# =========================================================
 						card.effect.appliquer(game, self, roller)
 						
 						if card.icon == Icon.Type.BREAD and monumentIsActive(Monument.MONUMENT_ID.Centre_Commercial):
 							self.receiveGold(1)
+							
+						# =========================================================
+						# 🟢 AJOUT MULTIJOUEUR : 2. CALCUL DES CHANGEMENTS ET ENVOI
+						# =========================================================
+						var balance_changes = {}
+						if game and game.players:
+							for p in game.players:
+								var diff = p.balance - balances_avant[p.id]
+								if diff != 0:
+									balance_changes[str(p.id)] = diff
+									
+							# On notifie le serveur que cette carte vient de s'activer
+							if game.has_method("notifier_activation"):
+								game.notifier_activation(self, cardId, balance_changes)
 
 func _find_player_by_id(player_array: Array, target_id: int) -> Player:
 	for p in player_array:

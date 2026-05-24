@@ -110,7 +110,11 @@ func _on_mouse_entered() -> void:
 	mouse_over = true
 	
 	if hover_tween: hover_tween.kill()
-	z_index = 10
+	
+	# 👇 CORRECTION ICI : On force le passage au premier plan absolu
+	z_as_relative = false
+	z_index = 4096
+	
 	hover_tween = create_tween().set_parallel(true)
 	
 	var elevation_carte = 20.0
@@ -119,7 +123,7 @@ func _on_mouse_entered() -> void:
 	hover_tween.tween_property(visual, "scale", Vector2(1.1, 1.1), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(visual, "position:y", -elevation_carte, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
-	# 2. HALO (CORRECTION : On anime QUE la transparence, il suit la carte tout seul !)
+	# 2. HALO
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 1.0, anim_speed)
 		
@@ -137,36 +141,26 @@ func _on_mouse_entered() -> void:
 		var t_center = t_size / 2.0
 		var v_center = v_size / 2.0
 		
-		# On place le pivot exactement au centre de la bulle
 		tooltip.pivot_offset = t_center
-
-		# On calcule la taille finale de la bulle une fois agrandie
 		var scaled_t_y = t_size.y * tooltip_scale_target.y
 		var scaled_t_x = t_size.x * tooltip_scale_target.x
-
-		# Le centre horizontal est toujours celui de la carte
 		var desired_pivot_x = v_center.x
 		var desired_pivot_y = 0.0
 
 		match current_tooltip_dir:
 			"top":
 				tooltip.rotation_degrees = 0
-				# Bulle droite : la hauteur visuelle est l'axe Y
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
 			"bottom":
 				tooltip.rotation_degrees = 180
-				# Bulle droite : la hauteur visuelle est l'axe Y
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
 			"left":
 				tooltip.rotation_degrees = -90
-				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
 			"right":
 				tooltip.rotation_degrees = 90
-				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
 
-		# On applique la position calculée
 		tooltip.position = Vector2(desired_pivot_x, desired_pivot_y) - t_center
 		
 		hover_tween.tween_property(tooltip, "modulate:a", 1.0, anim_speed)
@@ -177,14 +171,17 @@ func _on_mouse_exited() -> void:
 	mouse_over = false
 	
 	if hover_tween: hover_tween.kill()
-	z_index = 0
 	hover_tween = create_tween().set_parallel(true)
+	
+	# 👇 CORRECTION ICI : On enlève le z_index tout de suite pour ne pas bloquer les autres cartes
+	z_as_relative = true
+	z_index = 0
 	
 	# 1. CARTE
 	hover_tween.tween_property(visual, "scale", Vector2(1.0, 1.0), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(visual, "position:y", 0.0, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
-	# 2. HALO (Retour à zéro transparence)
+	# 2. HALO
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 0.0, anim_speed)
 		
@@ -304,7 +301,9 @@ func _get_activation_glow_color() -> Color:
 		_: return Color(1.0, 1.0, 1.0, 1.0)
 
 func animer_montee() -> Tween:
-	z_index = 50
+	# 👇 CORRECTION ICI
+	z_as_relative = false
+	z_index = 4096
 
 	var style = selection_glow.get_theme_stylebox("panel")
 	style.shadow_color = _get_activation_glow_color()
@@ -323,7 +322,9 @@ func animer_descente() -> Tween:
 	# Nettoyage à la toute fin de la descente
 	tween.chain().tween_callback(func():
 		var style = selection_glow.get_theme_stylebox("panel")
-		style.shadow_color = Color(1.0, 1.0, 1.0, 0.8) # Remet le halo blanc pour le hover
+		style.shadow_color = Color(1.0, 1.0, 1.0, 0.8)
+		# 👇 CORRECTION ICI
+		z_as_relative = true
 		z_index = 0
 	)
 	

@@ -9,6 +9,8 @@ var player_board_map: Dictionary = {}  # {player_id_str: board_node}
 var _pending_dice_action: String = ""
 var _is_animating_dice: bool = false
 var _pending_sync_data: Dictionary = {}
+var file_attente_messages: Array = []
+var traitement_en_cours: bool = false
 
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
@@ -350,6 +352,7 @@ func _on_confirm_buy_shop_pressed() -> void:
 
 	if is_monument:
 		network_client.request_build_monument(selected_shop_card_id)
+		animer_shake_ecran()
 	else:
 		var qty_in_shop = int(latest_shop_data.get(str(selected_shop_card_id), 1))
 		animer_achat_vers_main(selected_shop_card_id, qty_in_shop)
@@ -898,49 +901,74 @@ func positionner_plateaux(animate: bool = false) -> void:
 		rotation_finished.emit()
 		
 func _on_network_message(data: Dictionary) -> void:
-	print("[JeuMulti] _on_network_message: ", data.get("action_reply", "?"))
-	var action = data.get("action_reply", "")
-	
-	match action:
-		"sync_state":
-			# SI LES DÉS VOLE, ON MET LA MISE À JOUR EN ATTENTE !
-			if _is_animating_dice:
-				_pending_sync_data = data
-			else:
-				_apply_sync_state(data)
-		"buy_error":
-			if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
-				animer_erreur_carte_shop(shop_board.last_clicked_slot)
-			var my_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
-			if is_instance_valid(my_board): animer_erreur_argent(my_board)
-		"game_over":
-			show_victory_screen(data.get("winner_name", "Un joueur"))
+	print("[JeuMulti] Réception réseau (mis en file d'attente) : ", data.get("action_reply", "?"))
+	ajouter_message_file_attente(data)
+
+func ajouter_message_file_attente(data: Dictionary) -> void:
+	file_attente_messages.append(data)
+	if not traitement_en_cours:
+		_traiter_prochain_message()
+
+func _traiter_prochain_message() -> void:
+	traitement_en_cours = true
+
+	while file_attente_messages.size() > 0:
+		var data = file_attente_messages.pop_front()
+		var action = data.get("action_reply", data.get("action", ""))
+
+		match action:
+			"sync_state":
+				if _is_animating_dice:
+					_pending_sync_data = data
+				else:
+					# ⏳ L'AWAIT MAGIQUE EST ICI : on fige la file le temps de l'animation !
+					await _apply_sync_state(data)
+					
+			"turn_start":
+				# On garde ta sécurité pour les cartes qui volent du shop
+				if _active_fly_animations > 0:
+					pending_turn_data = data
+				else:
+					_show_turn_overlay(data)
+					
+			"buy_error":
+				if is_instance_valid(shop_board) and shop_board.get("last_clicked_slot"):
+					animer_erreur_carte_shop(shop_board.last_clicked_slot)
+				var my_board: PlayerBoard = player_board_map.get(str(my_player_id), null)
+				if is_instance_valid(my_board): animer_erreur_argent(my_board)
+				
+			"game_over":
+				show_victory_screen(data.get("winner_name", "Un joueur"))
+
+	traitement_en_cours = false
 
 func _apply_sync_state(data: Dictionary) -> void:
 	print("[JeuMulti] sync_state appliqué !")
+	
+	# 👇 1. ON SAUVEGARDE TOUT IMMÉDIATEMENT AVANT LA PAUSE
 	var new_players = data.get("players", {})
-	var activations = data.get("activations", []) # Récupération des cartes activées par le serveur
+	var new_shop = data.get("shop", {}) # 👈 LA CORRECTION EST ICI
+	var activations = data.get("activations", [])
 
 	# S'il y a eu des cartes activées ce tour-ci
 	if activations.size() > 0:
 		for act in activations:
 			notifier_activation_multi(int(act["player_id"]), int(act["card_id"]), act.get("balance_changes", {}))
 		
-		# On fige temporairement la mise à jour des plateaux pour laisser le temps 
-		# aux cartes de léviter et aux pièces de s'animer (le "Juice")
+		# ⏱️ LA FAMEUSE PAUSE
 		await executer_animations_collectees()
 		
-		# Ensuite, on gère les éventuels vols de cartes (cartes violettes) et la mise à jour finale
 		_trigger_card_move_animations(new_players)
 		update_network_boards(new_players, false)
-		update_network_shop(data.get("shop", {}))
+		# 👇 2. ON UTILISE LA SAUVEGARDE AU LIEU DE "data.get(...)"
+		update_network_shop(new_shop) 
 		
 	# Sinon, c'est une simple mise à jour (achat, bonus passif)
 	else:
 		_trigger_gold_animations(new_players)    
 		_trigger_card_move_animations(new_players) 
 		update_network_boards(new_players, false)
-		update_network_shop(data.get("shop", {}))
+		update_network_shop(new_shop) # 👈 PAREIL ICI
 
 func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
@@ -1006,6 +1034,7 @@ func update_monument_menu():
 
 			monument_menu.hide()
 			network_client.request_build_monument(id)
+			animer_shake_ecran()
 		)
 
 func _check_trade_valid() -> void:
@@ -1021,10 +1050,9 @@ func _finish_fly_animation() -> void:
 		_show_turn_overlay(data)
 
 func try_show_turn_overlay(data: Dictionary) -> void:
-	if _active_fly_animations > 0:
-		pending_turn_data = data
-	else:
-		_show_turn_overlay(data)
+	# Au lieu d'afficher le tour, on le force à faire la queue avec les autres messages !
+	data["action_reply"] = "turn_start"
+	ajouter_message_file_attente(data)
 
 func _show_turn_overlay(data: Dictionary) -> void:
 	var active_id   = data.get("active_player_id", -1)
@@ -1047,16 +1075,12 @@ func _show_turn_overlay(data: Dictionary) -> void:
 
 func _trigger_gold_animations(new_players: Dictionary) -> void:
 	if latest_players_data.is_empty(): return
-	var any_change = false
 	for p_id_str in new_players:
 		var old_balance = int(latest_players_data.get(p_id_str, {}).get("balance", 0))
 		var new_balance = int(new_players[p_id_str].get("balance", 0))
 		var delta = new_balance - old_balance
 		if delta != 0 and player_board_map.has(p_id_str):
 			animer_gain_gold(player_board_map[p_id_str], delta)
-			any_change = true
-	if any_change:
-		animer_shake_ecran(8.0, 0.25)
 
 func _trigger_card_move_animations(new_players: Dictionary) -> void:
 	if latest_players_data.is_empty(): return
@@ -1813,13 +1837,14 @@ func animer_don_carte(donor_id: int, id_carte: int, receiver_id: int) -> void:
 
 func declencher_animations_activation(activations: Array) -> void:
 	if activations.is_empty(): return
-
+	
+	# 1. BLOCAGE TOTAL des interactions pour la durée du spectacle
 	if is_instance_valid(click_blocker):
 		click_blocker.z_index = 4096
 		click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
 		click_blocker.show() 
-
-	var montee_tweens = []
+		
+	# 2. PHASE DE MONTÉE : Toutes les cartes s'élèvent ensemble
 	var has_valid_cards = false
 	for data in activations:
 		var c = data.get("carte_visuelle")
@@ -1828,15 +1853,18 @@ func declencher_animations_activation(activations: Array) -> void:
 			has_valid_cards = true
 
 	if has_valid_cards:
-		await get_tree().create_timer(0.35).timeout
+		await get_tree().create_timer(0.35).timeout # Durée de l'animation de montée
 
+	# 3. PHASE D'EFFETS : On exécute les fonctions de gain (or, vol, etc.)
 	for data in activations:
 		var effet = data.get("effet_callable")
 		if effet is Callable and effet.is_valid():
 			effet.call()
 
+	# Pause de "Juice" : on laisse le temps de voir les pièces voler et les textes clignoter
 	await get_tree().create_timer(1.2).timeout
 
+	# 4. PHASE DE DESCENTE : Tout le monde redescend
 	var has_valid_cards_descente = false
 	for data in activations:
 		var c = data.get("carte_visuelle")
@@ -1845,8 +1873,9 @@ func declencher_animations_activation(activations: Array) -> void:
 			has_valid_cards_descente = true
 
 	if has_valid_cards_descente:
-		await get_tree().create_timer(0.35).timeout
+		await get_tree().create_timer(0.35).timeout # Durée de l'animation de descente
 
+	# 5. LIBÉRATION : Le jeu peut reprendre
 	if is_instance_valid(click_blocker):
 		click_blocker.hide()
 
@@ -1858,16 +1887,18 @@ func executer_animations_collectees() -> void:
 func notifier_activation_multi(player_id: int, card_id: int, balance_changes: Dictionary = {}) -> void:
 	var board_visuel: PlayerBoard = player_board_map.get(str(player_id), null)
 	if not is_instance_valid(board_visuel): return
-
 	var noeud_carte = board_visuel.get_card_node(card_id)
-
+	var card_data = CardFactory.get_card(card_id)
+	
 	file_animations_activations.append({
 		"carte_visuelle": noeud_carte,
+		"couleur": card_data.get_color() if card_data else -1,
 		"effet_callable": func():
 			for p_id_str in balance_changes:
-				var amount = balance_changes[p_id_str]
-				var board  = player_board_map.get(str(p_id_str), null)
+				var amount = int(balance_changes[p_id_str])
+				var board = player_board_map.get(str(p_id_str), null)
 				if is_instance_valid(board):
 					animer_gain_gold(board, amount)
-					board.update_info()
+					if board.get("lbl_gold"):
+						board.lbl_gold.text = str(int(board.lbl_gold.text) + amount)
 	})

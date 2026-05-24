@@ -251,6 +251,8 @@ func _broadcast_sync_state():
 		"activations": pending_activations.duplicate()
 	})
 
+	pending_activations.clear()
+
 func _broadcast_to_lobby(payload: Dictionary):
 	var serveur = get_parent().get_parent()
 	print("[GameServer] _broadcast_to_lobby: action=", payload.get("action_reply","?"), " serveur=", serveur, " lobby_id=", lobby_id)
