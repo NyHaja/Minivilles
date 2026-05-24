@@ -61,10 +61,10 @@ func _on_guest_cree(data: Dictionary):
 			return
 		guest_id = int(raw_id)  # ← conversion explicite
 		# Sauvegarder dans NetworkManager
-		NetworkManager.set_guest(guest_id)
 		
 		guest_nickname = data.get("nickname", "")
 		est_guest = true
+		NetworkManager.set_guest(guest_id, guest_nickname)
 		print("[GuestHandler] Guest créé :", guest_nickname, " (id : ", guest_id, ")")
 		# Aller vers l'écran de rejoindre lobby
 		get_tree().change_scene_to_file("res://scene/Ecran principale/guest_screen.tscn")

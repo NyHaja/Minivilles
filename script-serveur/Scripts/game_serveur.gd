@@ -15,6 +15,7 @@ var carte_adversaire_pour_echange = null
 var carte_choisie_pour_don = null
 var adversaire_choisi_pour_don = null
 var monument_choisi_pour_demolition: int = -1
+var pending_activations: Array = []
 
 var last_d1: int = 0
 var last_d2: int = 0
@@ -38,17 +39,27 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 	_broadcast_turn_start()
 
 func handle_client_message(player_id, data: Dictionary):
+	print("[DEBUG] Serveur a reçu : ", data) 
+	if data.has("username"): print("[DEBUG] Pseudo : ", data["username"])
+		
 	var active_player = players[currentPlayerIndex]
-	
 	print("[GameServer] Received action '", data.get("game_action", "unknown"), "' from network ID: ", player_id)
-	
-	if int(float(active_player.id)) != int(float(player_id)):
-		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", player_id)
+
+	# --- CORRECTION GUEST : Système de secours si le routeur renvoie null ---
+	var eff_player_id = player_id
+	if eff_player_id == null:
+		if data.has("guest_id"): eff_player_id = data["guest_id"]
+		elif data.has("player_id"): eff_player_id = data["player_id"]
+		
+	if eff_player_id != null and str(active_player.id) != str(eff_player_id):
+		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", eff_player_id)
 		_broadcast_to_lobby({
 			"action_reply": "debug_error",
-			"message": "REJECTED: active_player=" + str(active_player.id) + " but sender=" + str(player_id)
+			"message": "REJECTED: active_player=" + str(active_player.id) + " but sender=" + str(eff_player_id)
 		})
 		return
+	elif eff_player_id == null:
+		print("[GameServer] WARNING: Action accepted with null ID (Guest fallback)")
 
 	print("[GameServer] ACCEPTED: Processing action...")
 		
@@ -114,6 +125,8 @@ func _server_resolve_dice(modifier: String, amount_rolled: int):
 
 func _execute_effect_phase(dice_value: int):
 	var current_player = players[currentPlayerIndex]
+
+	pending_activations.clear()
 	
 	for player in _get_players_counter_clockwise(current_player):
 		player.activateEffect(CardColor.Type.RED, self, current_player) 
@@ -147,6 +160,7 @@ func _server_buy_phase(card_id: int):
 	var card_to_buy = CardFactory.get_card(card_id)
 	
 	if card_to_buy == null or not shop.available(card_id):
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 		return 
 		
 	if active_player.buyCard(card_to_buy):
@@ -154,11 +168,15 @@ func _server_buy_phase(card_id: int):
 		has_constructed_this_turn = true
 		_broadcast_sync_state()
 		_advance_turn()
+	else:
+		# --- CORRECTION : On débloque le client si l'achat échoue ---
+		_broadcast_to_lobby({"action_reply": "buy_error"}) 
 
 func _server_build_phase(monument_id: int):
 	var active_player = players[currentPlayerIndex]
 	
 	if active_player.monumentIsActive(monument_id):
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 		return 
 		
 	var monument_data = _get_monument_data(monument_id)
@@ -178,6 +196,9 @@ func _server_build_phase(monument_id: int):
 			_record_match_history(active_player)
 		else:
 			_advance_turn()
+	else:
+		# --- CORRECTION : On débloque le client si la construction échoue ---
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 
 func _server_skip_phase():
 	var active_player = players[currentPlayerIndex]
@@ -226,7 +247,8 @@ func _broadcast_sync_state():
 	_broadcast_to_lobby({
 		"action_reply": "sync_state",
 		"players": state_data,
-		"shop": shop_data
+		"shop": shop_data,
+		"activations": pending_activations.duplicate()
 	})
 
 func _broadcast_to_lobby(payload: Dictionary):
@@ -274,3 +296,18 @@ func _get_monument_data(monument_id: int) -> Dictionary:
 		Monument.MONUMENT_ID.Port: return {"name": "Port", "cost": 2}
 		Monument.MONUMENT_ID.Aeroport: return {"name": "Aéroport", "cost": 30}
 		_: return {"name": "Unknown Monument", "cost": 999}
+
+func notifier_activation(joueur, card_id: int, balance_changes: Dictionary = {}):
+	var changes_ids = {}
+	for p in balance_changes:
+		# Assure qu'on stocke l'ID sous forme de chaîne propre
+		var p_id = str(p.id) if (typeof(p) == TYPE_OBJECT and p.get("id") != null) else str(p)
+		changes_ids[p_id] = balance_changes[p]
+
+	var j_id = joueur.id if (typeof(joueur) == TYPE_OBJECT and joueur.get("id") != null) else joueur
+	
+	pending_activations.append({
+		"player_id": j_id,
+		"card_id": card_id,
+		"balance_changes": changes_ids
+	})

@@ -3,8 +3,7 @@ class_name DrawPile
 
 var drawPile : Array[int]
 
-# IDs 1-21 = cartes normales (9=Fromagerie, 19=Restaurant, 21=Épicerie), 22-27 = monuments (exclus), 28-33 = violets/spéciaux
-var valid_card_ids: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 29, 30, 31, 32, 33]
+var valid_card_ids: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 29, 30, 31, 32]
 
 func _init() -> void:
 	for card_id in valid_card_ids:

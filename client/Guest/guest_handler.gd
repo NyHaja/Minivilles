@@ -30,7 +30,7 @@ func creer_guest(nickname: String):
 		
 	NetworkManager.envoyer({
 		"action": "guest_player",
-		"nickname": nickname
+		"username": nickname
 	})
 	
 func rejoindre_lobby_guest(lobby_id: String):
@@ -52,15 +52,16 @@ func jouer_local():
 # ----------------------------------------------------------------
 func _on_guest_cree(data: Dictionary):
 	if data.get("status") == "success":
-		guest_id =data.get("guest_id", -1)
-		# Sauvegarder dans NetworkManager
-		NetworkManager.set_guest(guest_id)
+		# 1. On FORCE l'ID en entier pour éviter le crash !
+		guest_id = int(data.get("guest_id", -1))
+		guest_nickname = str(data.get("username", ""))
 		
-		guest_nickname = data.get("nickname", "")
+		# 2. On sauvegarde TOUT dans le NetworkManager
+		NetworkManager.set_guest(guest_id, guest_nickname)
 		est_guest = true
+		
 		print("[GuestHandler] Guest créé :", guest_nickname, " (id : ", guest_id, ")")
-		# Aller vers l'écran de rejoindre lobby
-		get_tree().change_scene_to_file("res://main_client.tscn")
+		get_tree().change_scene_to_file("res://scene/Multijoueur/choix_game.tscn")
 	else:
 		var raison = data.get("message", "Erreur inconnue")
 		print("[GuestHandler] Erreur création guest : ", raison)

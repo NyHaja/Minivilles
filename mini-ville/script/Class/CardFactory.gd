@@ -16,30 +16,30 @@ static func _initialize_database() -> void:
 	_database[6] = creerVerger()
 	_database[7] = creerBoulangerie()
 	_database[8] = creerSuperette()
-	_database[10] = creerPetitBateauPeche()
-	_database[11] = creerFabriqueMeubles()
-	_database[12] = creerMoonsterSoda()
-	_database[13] = creerHalleMarche()
-	_database[14] = creerMarcheFL()
-	_database[15] = creerStade()
-	_database[16] = creerMaisonEdition()
-	_database[17] = creerCafe()
-	_database[18] = creerMoonsterBurger()
-	_database[19] = creerRestaurant()
-	_database[20] = creerCentreImpots()
-	_database[21] = creerEpicerie()
-	_database[22] = creerGare()
-	_database[23] = creerCentreCommercial()
-	_database[24] = creerParcAttractions()
-	_database[25] = creerTourRadio()
-	_database[26] = creerPort()
-	_database[27] = creerAeroport()
-	_database[28] = creerClubPrive()
-	_database[29] = creerChalutier()
-	_database[30] = creerEntrepriseTravauxPublics()
-	_database[31] = creerEntrepriseDemenagement()
-	_database[32] = creerCentreAffaires()
-	_database[33] = creerChaineTele()
+	_database[9] = creerPetitBateauPeche()
+	_database[10] = creerFabriqueMeubles()
+	_database[11] = creerMoonsterSoda()
+	_database[12] = creerHalleMarche()
+	_database[13] = creerMarcheFL()
+	_database[14] = creerStade()
+	_database[15] = creerMaisonEdition()
+	_database[16] = creerCafe()
+	_database[17] = creerMoonsterBurger()
+	_database[18] = creerRestaurantFamilial()
+	_database[19] = creerCentreImpots()
+	_database[20] = creerEpicerie()
+	_database[21] = creerGare()
+	_database[22] = creerCentreCommercial()
+	_database[23] = creerParcAttractions()
+	_database[24] = creerTourRadio()
+	_database[25] = creerPort()
+	_database[26] = creerAeroport()
+	_database[27] = creerClubPrive()
+	_database[28] = creerChalutier()
+	_database[29] = creerEntrepriseTravauxPublics()
+	_database[30] = creerEntrepriseDemenagement()
+	_database[31] = creerCentreAffaires()
+	_database[32] = creerChaineTele()
 
 static func creerTousMonuments() -> Array[Monument]:
 	var monuments : Array[Monument] = []
@@ -64,7 +64,7 @@ static func creerGare() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		22,                             # id monument
+		21,                             # id monument
 		"Gare",
 		4,                              # coût
 		"Vous pouvez choisir de lancer 2 dés au lieu d'1."
@@ -81,7 +81,7 @@ static func creerCentreCommercial() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		23,                             # id monument
+		22,                             # id monument
 		"Centre Commercial",
 		10,                             # coût
 		"Vos établissements Tasse (rouge) et Pain (vert) rapportent +1 pièce chacun."
@@ -98,7 +98,7 @@ static func creerParcAttractions() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		24,                             # id monument
+		23,                             # id monument
 		"Parc d'Attractions",
 		16,                             # coût
 		"Si vous obtenez un double avec 2 dés, rejouez un tour supplémentaire (max 1 bonus)."
@@ -115,7 +115,7 @@ static func creerTourRadio() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		25,                             # id monument
+		24,                             # id monument
 		"Tour Radio",
 		22,                             # cout
 		"Une fois par tour, relancez vos dés (même nombre, seul le 2e résultat compte)."
@@ -132,10 +132,10 @@ static func creerPort() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		26,                             # id monument
+		25,                             # id monument
 		"Port",
 		2,                              # coût
-		"Si résultat des dés >= 10, ajoutez +2. Active aussi Petit bâteau et Chalutier."
+		"Si résultat des dés >= 10, ajoutez +2. Active aussi Petit bateau et Chalutier."
 	)
 	
 	return monument
@@ -149,7 +149,7 @@ static func creerAeroport() -> Monument:
 	var monument = Monument.new()
 	monument.NewMonument(
 		effet,
-		27,                             # id monument
+		26,                             # id monument
 		"Aéroport",
 		30,                             # coût
 		"Si vous ne construisez rien ce tour, recevez 10 pièces de la banque."
@@ -293,7 +293,7 @@ static func creerVerger() -> Establishment:
 	return carte
 
 
-# Petit bâteau de peche - Dé: 8 - Coût: 2
+# Petit bateau de peche - Dé: 8 - Coût: 2
 # Icon: BOAT
 # Effect: Recevoir 3 pièces de la banque (Nécessite le Port)
 static func creerPetitBateauPeche() -> Establishment:
@@ -303,12 +303,12 @@ static func creerPetitBateauPeche() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		10,                             # id card
+		9,                              # id card
 		"Petit bâteau de pêche",
 		Icon.Type.BOAT,
 		CardColor.Type.BLUE,
 		2,                              # coût
-		"Recevez 3 pièces. (Nécessite le Port)",
+		"Recevez 3 pièces.\n(Nécessite le Port)",
 		[8, 8]                          # activation sur 8
 	)
 	
@@ -323,7 +323,7 @@ static func creerChalutier() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		29,                             # id card
+		28,                             # id card
 		"Chalutier",
 		Icon.Type.BOAT,
 		CardColor.Type.BLUE,
@@ -368,7 +368,7 @@ static func creerEpicerie() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		21,                             # id card
+		20,                              # id card
 		"Épicerie",
 		Icon.Type.BREAD,
 		CardColor.Type.GREEN,
@@ -400,7 +400,7 @@ static func creerSuperette() -> Establishment:
 	)
 	
 	return carte
- 
+
  
 # Fabrique de meubles - Dé: 8 - Coût: 3
 # Icon: FACTORY
@@ -417,7 +417,7 @@ static func creerFabriqueMeubles() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		11,                             # id card
+		10,                             # id card
 		"Fabrique de meubles",
 		Icon.Type.FACTORY,
 		CardColor.Type.GREEN,
@@ -443,7 +443,7 @@ static func creerMoonsterSoda() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		12,                             # id card
+		11,                             # id card
 		"Moonster Soda",
 		Icon.Type.FACTORY,
 		CardColor.Type.GREEN,
@@ -455,21 +455,21 @@ static func creerMoonsterSoda() -> Establishment:
 	return carte
  
  
-# Halle de marché -Dé: 11-12 - Coût: 2
+# Halle du marché -Dé: 11-12 - Coût: 2
 # Icon: FRUIT
-# Effect: Recevoir 2 pièces par carte TASSE possédée
+# Effect: Recevoir 2 pièces par carte BLÉ possédée
 static func creerHalleMarche() -> Establishment:
 	var effet = EffectGainBanqueParIcone.new(
 		2,              # id_effet
 		2,              # montant_par_carte
-		[Icon.Type.CUP]    # icones_cibles
+		[Icon.Type.WHEAT]    # icones_cibles
 	)
 	
 	# Créer la carte
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		13,                             # id card
+		12,                             # id card
 		"Halle de marché",
 		Icon.Type.FRUIT,
 		CardColor.Type.GREEN,
@@ -481,7 +481,7 @@ static func creerHalleMarche() -> Establishment:
 	return carte
  
  
-# Marché de fruits/légumes - Dé: 11-12 - Coût: 2
+# Marché fruits/légumes - Dé: 11-12 - Coût: 2
 # Icon: FRUIT
 # Effect: Recevoir 2 pièces par carte BLÉ possédée
 static func creerMarcheFL() -> Establishment:
@@ -495,7 +495,7 @@ static func creerMarcheFL() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		14,                             # id card
+		13,                             # id card
 		"Marché de fruits et légumes",
 		Icon.Type.FRUIT,
 		CardColor.Type.GREEN,
@@ -516,7 +516,7 @@ static func creerEntrepriseTravauxPublics() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		30,                             # id card
+		29,                             # id card
 		"Entreprise de travaux publics",
 		Icon.Type.SUITCASE,
 		CardColor.Type.GREEN,
@@ -537,7 +537,7 @@ static func creerEntrepriseDemenagement() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		31,                             # id card
+		30,                             # id card
 		"Entreprise de déménagement",
 		Icon.Type.SUITCASE,
 		CardColor.Type.GREEN,
@@ -561,7 +561,7 @@ static func creerStade() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		15,                                        # id card
+		14,                                        # id card
 		"Stade",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,
@@ -582,7 +582,7 @@ static func creerChaineTele() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		33,                                        # id card
+		32,                                        # id card
 		"Chaîne de Télévision",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,
@@ -603,7 +603,7 @@ static func creerCentreAffaires() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		32,                             # id card
+		31,                             # id card
 		"Centre d'affaires",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,
@@ -625,7 +625,7 @@ static func creerMaisonEdition() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		16,                                        # id card
+		15,                                        # id card
 		"Maison d'édition",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,
@@ -645,8 +645,8 @@ static func creerCentreImpots() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		20,                             # id card
-		"Centre des impôts",
+		19,                             # id card
+		"Centre des Impôts",
 		Icon.Type.MAJOR,
 		CardColor.Type.PURPLE,
 		4,                              # coût
@@ -668,7 +668,7 @@ static func creerCafe() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		17,                             # id card
+		16,                             # id card
 		"Café",
 		Icon.Type.CUP,
 		CardColor.Type.RED,
@@ -690,7 +690,7 @@ static func creerMoonsterBurger() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		18,                             # id card
+		17,                             # id card
 		"Moonster Burger",
 		Icon.Type.CUP,
 		CardColor.Type.RED,
@@ -705,14 +705,14 @@ static func creerMoonsterBurger() -> Establishment:
 # Restaurant familial - Activation: 9-10 - Coût: 3
 # Icon: CUP
 # Effect: Le lanceur vous donne 2 pièces
-static func creerRestaurant() -> Establishment:
+static func creerRestaurantFamilial() -> Establishment:
 	var effet = EffectVolLanceur.new(5, 2)  # id_effet=5, montant=2
-
+	
 	# Créer carte
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		19,                             # id card
+		18,                             # id card
 		"Restaurant",
 		Icon.Type.CUP,
 		CardColor.Type.RED,
@@ -720,7 +720,7 @@ static func creerRestaurant() -> Establishment:
 		"Le lanceur vous donne 2 pièces.",
 		[9, 10]                         # activation sur 9-10
 	)
-
+	
 	return carte
 
 
@@ -737,12 +737,12 @@ static func creerClubPrive() -> Establishment:
 	var carte = Establishment.new()
 	carte.NewCard(
 		effet,
-		28,                             # id card
+		27,                             # id card
 		"Club Privé",
 		Icon.Type.CUP,
 		CardColor.Type.RED,
 		4,                              # coût
-		"S'active si le lanceur a 3+ monuments. Il vous donne ses pièces.",
+		"S'active si le lanceur a 3+ monuments.\nIl vous donne ses pièces.",
 		[12, 14]                        # activation sur 12-14
 	)
 	

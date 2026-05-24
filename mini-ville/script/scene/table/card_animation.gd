@@ -197,33 +197,56 @@ func _on_mouse_exited() -> void:
 		if not mouse_over: tooltip.hide()
 
 func setup_card(card_data, dir: String = "top") -> void:
-	type_couleur_carte = card_data.get_color() # <-- LIGNE À AJOUTER
+	type_couleur_carte = card_data.get_color()
 	self.card_data = card_data
 	var card_name = card_data.get_name()
 	var card_color = card_data.get_color()
 	var clean_name = get_clean_file_name(card_name, card_color)
 
+	# --- 1. CHARGEMENT SÉCURISÉ DE L'IMAGE DE LA CARTE ---
 	var path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-	var tex = load(path_basis)
-	if tex:
-		visual.texture_normal = tex
-
-	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
-	var tip_tex = load(tip_path)
-	if tip_tex:
-		tooltip.texture = tip_tex
-	else:
-		var placeholder = "res://assets/Tooltips/tooltip_marche_de_fruits_et_legumes.png"
-		var placeholder_tex = load(placeholder)
-		if placeholder_tex:
-			tooltip.texture = placeholder_tex
-		else:
-			tooltip.texture = null # S'assure que le tooltip reste désactivé s'il n'y a pas d'image
-
-	current_tooltip_dir = dir
+	var tex_carte = load(path_basis) 
 	
-	if tooltip.texture:
-		tooltip.pivot_offset = tooltip.size / 2.0
+	var visual_node = get_node_or_null("Visual") 
+	if is_instance_valid(visual_node) and tex_carte != null:
+		if visual_node is TextureButton:
+			visual_node.texture_normal = tex_carte
+		elif visual_node is TextureRect:
+			visual_node.texture = tex_carte
+
+	# --- 2. SÉCURITÉ POUR LE CHARGEMENT DU TOOLTIP ---
+	# On récupère la variable tooltip existante (probablement un @onready) ou le noeud directement
+	var tooltip_node = get("tooltip") 
+	if tooltip_node == null:
+		tooltip_node = get_node_or_null("Tooltip")
+		
+	# Si le noeud n'est pas encore prêt dans la scène, on attend une frame
+	if tooltip_node == null:
+		if not is_node_ready():
+			await ready
+		tooltip_node = get("tooltip")
+		if tooltip_node == null:
+			tooltip_node = get_node_or_null("Tooltip")
+
+	# Si on a bien récupéré le Tooltip, on lui applique l'image
+	if is_instance_valid(tooltip_node):
+		var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
+		var tip_tex = load(tip_path)
+		
+		if tip_tex:
+			tooltip_node.texture = tip_tex
+		else:
+			var placeholder = "res://assets/Tooltips/tooltip_marche_de_fruits_et_legumes.png"
+			var placeholder_tex = load(placeholder)
+			if placeholder_tex:
+				tooltip_node.texture = placeholder_tex
+			else:
+				tooltip_node.texture = null 
+
+		current_tooltip_dir = dir
+		
+		if tooltip_node.texture:
+			tooltip_node.pivot_offset = tooltip_node.size / 2.0
 
 func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
