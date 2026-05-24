@@ -76,6 +76,8 @@ func handle_client_message(player_id, data: Dictionary):
 			_server_skip_phase()
 		"purple_card_choice":
 			player_choice_received.emit(data)
+		"ui_interaction":
+			_server_ui_interaction(active_player, data)
 
 func _server_dice_phase(amount: int):
 	has_constructed_this_turn = false
@@ -313,3 +315,11 @@ func notifier_activation(joueur, card_id: int, balance_changes: Dictionary = {})
 		"card_id": card_id,
 		"balance_changes": changes_ids
 	})
+
+func _server_ui_interaction(active_player: Player, data: Dictionary):
+	# Le serveur ne fait que relayer l'action aux autres joueurs
+	var payload = data.duplicate()
+	payload["action_reply"] = "spectator_ui"
+	payload["active_player_id"] = active_player.id
+	
+	_broadcast_to_lobby(payload)

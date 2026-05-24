@@ -13,6 +13,7 @@ var file_attente_messages: Array = []
 var traitement_en_cours: bool = false
 var est_premier_tour: bool = true
 var pending_shop_animation_index: int = -1
+var current_active_player_id: int = -1
 
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
@@ -114,8 +115,14 @@ func _ready() -> void:
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(func(): network_client.request_roll_dice(1))
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(func(): network_client.request_roll_dice(2))
 	
-	%CancelCardBuy.pressed.connect(func(): buy_confirm_panel.hide())
-	close_menu.pressed.connect(func(): monument_menu.hide())
+	%CancelCardBuy.pressed.connect(func(): 
+		buy_confirm_panel.hide()
+		send_ui_interaction("close_shop_preview")
+	)
+	close_menu.pressed.connect(func(): 
+		monument_menu.hide()
+		send_ui_interaction("close_monuments")
+	)
 	
 	if btn_conserver: btn_conserver.pressed.connect(func(): dice_decision_made.emit("keep"))
 	if btn_relancer: btn_relancer.pressed.connect(func(): dice_decision_made.emit("reroll"))
@@ -232,7 +239,18 @@ func update_network_boards(players_data: Dictionary, animate_rotation: bool = fa
 				if is_spectator or board != player_board_map.get(my_id_str, null):
 					btn_pass.hide() 
 					btn_pass.mouse_filter = Control.MOUSE_FILTER_IGNORE 
-					btn_pass.button_pressed = false
+					btn_pass.button_pressed = false					
+					
+	hook_all_hovers.call_deferred()
+					 
+func send_ui_interaction(type: String, metadata: Dictionary = {}) -> void:
+	if current_active_player_id != my_player_id: return
+	NetworkManager.envoyer({
+		"action": "game_action",
+		"game_action": "ui_interaction",
+		"interaction_type": type,
+		"metadata": metadata
+	})
 
 func update_network_shop(shop_data: Dictionary):
 	latest_shop_data = shop_data
@@ -240,6 +258,7 @@ func update_network_shop(shop_data: Dictionary):
 	
 	# On se contente d'actualiser les données, l'animation sera gérée après.
 	shop_board.update_network_shop(shop_data)
+	hook_all_hovers.call_deferred()
 
 func show_victory_screen(winner_name: String) -> void:
 	set_actions_enabled(false)
@@ -247,7 +266,7 @@ func show_victory_screen(winner_name: String) -> void:
 	victory_screen.move_to_front()
 	victory_screen.show()
 
-func _on_shop_card_clicked(card_id: int) -> void:
+func _on_shop_card_clicked(card_id: int, is_spectator: bool = false) -> void:
 	selected_shop_card_id = card_id
 	var card_data = CardFactory.get_card(card_id)
 
@@ -304,6 +323,13 @@ func _on_shop_card_clicked(card_id: int) -> void:
 
 	buy_confirm_panel.move_to_front()
 	buy_confirm_panel.show()
+	 
+	%ConfirmCardBuy.visible = not is_spectator
+	if not is_spectator:
+		send_ui_interaction("open_shop_preview", {"card_id": card_id})
+		
+	buy_confirm_panel.move_to_front()
+	buy_confirm_panel.show()
 		
 func _on_confirm_buy_shop_pressed() -> void:
 	var card_data = CardFactory.get_card(selected_shop_card_id)
@@ -338,6 +364,7 @@ func _on_confirm_buy_shop_pressed() -> void:
 		return
 
 	# L'ACHAT EST VALIDE, on lance la machine :
+	send_ui_interaction("close_shop_preview")
 	buy_confirm_panel.hide()
 	monument_menu.hide()
 
@@ -358,6 +385,7 @@ func _on_confirm_buy_shop_pressed() -> void:
 		network_client.request_buy_card(selected_shop_card_id)
 
 func _on_open_monuments_pressed() -> void:
+	send_ui_interaction("open_monuments")
 	update_monument_menu()
 	monument_menu.move_to_front()
 	monument_menu.show()
@@ -948,6 +976,12 @@ func _traiter_prochain_message() -> void:
 				
 			"game_over":
 				show_victory_screen(data.get("winner_name", "Un joueur"))
+				
+			"spectator_ui":
+				var active_id = int(data.get("active_player_id", -1))
+				# On ignore le message si c'est nous qui l'avons envoyé
+				if active_id != my_player_id:
+					_handle_spectator_ui(data.get("interaction_type", ""), data.get("metadata", {}), active_id)
 	 
 	if pending_shop_animation_index != -1 and is_instance_valid(shop_board):
 		if is_instance_valid(click_blocker):
@@ -1038,9 +1072,12 @@ func get_lang_folder() -> String:
 		return "English"
 	return "French"
 
-func update_monument_menu():
-	var my_data = latest_players_data.get(str(my_player_id), {})
-	var my_monuments = my_data.get("monuments", {})
+func update_monument_menu(target_id: int = -1):
+	if target_id == -1: target_id = my_player_id
+	var is_mine = (target_id == my_player_id)
+	
+	var target_data = latest_players_data.get(str(target_id), {})
+	var target_monuments = target_data.get("monuments", {})
 
 	var monument_map = {
 		Monument.MONUMENT_ID.Port:             {"node": "Port",              "file": "PORT", "cost": 2},
@@ -1059,7 +1096,7 @@ func update_monument_menu():
 		var tex_rect: TextureRect = vbox.get_child(0)
 		var build_btn: TextureButton = vbox.get_child(1)
 		
-		var is_built = my_monuments.get(m_id, false) or my_monuments.get(str(m_id), false)
+		var is_built = target_monuments.get(m_id, false) or target_monuments.get(str(m_id), false)
 		
 		var state = ""
 		if data["file"] == data["file"].to_upper():
@@ -1074,7 +1111,7 @@ func update_monument_menu():
 		for conn in build_btn.pressed.get_connections():
 			build_btn.pressed.disconnect(conn.callable)
 
-		build_btn.visible = not is_built
+		build_btn.visible = not is_built and is_mine
 		build_btn.pressed.connect(func(id=m_id, cost=data["cost"]):
 			var current_balance = int(latest_players_data.get(str(my_player_id), {}).get("balance", 0))
 			if current_balance < cost:
@@ -1104,6 +1141,7 @@ func try_show_turn_overlay(data: Dictionary) -> void:
 
 func _show_turn_overlay(data: Dictionary) -> void:
 	var active_id   = data.get("active_player_id", -1)
+	current_active_player_id = int(active_id) # <- AJOUT ICI
 	var active_name = data.get("player_name", "Inconnu")
 	var is_my       = (int(active_id) == int(my_player_id))
 
@@ -1979,3 +2017,108 @@ func notifier_activation_multi(player_id: int, card_id: int, balance_changes: Di
 					if board.get("lbl_gold"):
 						board.lbl_gold.text = str(int(board.lbl_gold.text) + amount)
 	})
+
+func hook_all_hovers() -> void:
+	# 1. Cartes du Shop
+	if is_instance_valid(shop_board) and shop_board.get("card_slot_map"):
+		for cid in shop_board.card_slot_map:
+			var slot = shop_board.card_slot_map[cid]
+			_attach_hover_signals(slot, cid, -1)
+			
+	# 2. Cartes des Joueurs
+	for p_id_str in player_board_map:
+		var board = player_board_map[p_id_str]
+		if not is_instance_valid(board): continue
+		var deck = latest_players_data.get(p_id_str, {}).get("deck", [])
+		for entry in deck:
+			if typeof(entry) == TYPE_ARRAY:
+				var cid = int(entry[0])
+				var c_node = board.get_card_node(cid)
+				_attach_hover_signals(c_node, cid, int(p_id_str))
+
+func _attach_hover_signals(node: Control, cid: int, owner_id: int) -> void:
+	if not is_instance_valid(node): return
+	var target = node.get_node_or_null("Visual")
+	if not is_instance_valid(target): target = node
+	
+	# Empêche de connecter les signaux plusieurs fois
+	if target.has_meta("hover_hooked"): return
+	target.set_meta("hover_hooked", true)
+	
+	if target.has_signal("mouse_entered"):
+		target.mouse_entered.connect(_on_card_hovered.bind(cid, owner_id))
+		target.mouse_exited.connect(_on_card_unhovered.bind(cid, owner_id))
+
+func _on_card_hovered(cid: int, owner_id: int) -> void:
+	if current_active_player_id == my_player_id:
+		send_ui_interaction("hover_card", {"card_id": cid, "owner_id": owner_id})
+		
+func _on_card_unhovered(cid: int, owner_id: int) -> void:
+	if current_active_player_id == my_player_id:
+		send_ui_interaction("unhover_card", {"card_id": cid, "owner_id": owner_id})
+		 
+func _handle_spectator_ui(type: String, meta: Dictionary, active_id: int) -> void:
+	match type:
+		"open_monuments":
+			update_monument_menu(active_id)
+			monument_menu.move_to_front()
+			monument_menu.show()
+		"close_monuments":
+			monument_menu.hide()
+		"open_shop_preview":
+			var cid = int(meta.get("card_id", -1))
+			_on_shop_card_clicked(cid, true) # true = mode spectateur (sans bouton Acheter)
+		"close_shop_preview":
+			buy_confirm_panel.hide()
+		"hover_card":
+			_apply_spectator_hover(int(meta.get("card_id", -1)), int(meta.get("owner_id", -1)), true)
+		"unhover_card":
+			_apply_spectator_hover(int(meta.get("card_id", -1)), int(meta.get("owner_id", -1)), false)
+
+func _apply_spectator_hover(cid: int, owner_id: int, show: bool) -> void:
+	var target_node = null
+	
+	if owner_id == -1: # C'est le shop
+		if is_instance_valid(shop_board) and shop_board.get("card_slot_map"):
+			target_node = shop_board.card_slot_map.get(cid)
+	else: # C'est un joueur
+		var board = player_board_map.get(str(owner_id), null)
+		if is_instance_valid(board):
+			target_node = board.get_card_node(cid)
+			
+	if not is_instance_valid(target_node): return
+	
+	if show:
+		appliquer_halo_jaune(target_node)
+	else:
+		retirer_halo_jaune(target_node)
+
+func appliquer_halo_jaune(node: Control) -> void:
+	if not is_instance_valid(node) or node.has_node("SpectatorGlow"): return
+	
+	var p = Panel.new()
+	p.name = "SpectatorGlow"
+	p.set_anchors_preset(Control.PRESET_FULL_RECT)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.show_behind_parent = true
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0, 0, 0, 0)
+	style.set_border_width_all(5)
+	style.border_color = Color(1.0, 0.84, 0.0, 1.0) # Jaune/Or vif
+	style.shadow_color = Color(1.0, 0.84, 0.0, 0.7)
+	style.shadow_size = 25
+	style.set_corner_radius_all(10)
+	p.add_theme_stylebox_override("panel", style)
+	node.add_child(p)
+	
+	# Effet de pulsation (Juice)
+	var tween = create_tween().set_loops()
+	tween.tween_property(p, "modulate:a", 0.4, 0.5)
+	tween.tween_property(p, "modulate:a", 1.0, 0.5)
+
+func retirer_halo_jaune(node: Control) -> void:
+	if not is_instance_valid(node): return
+	var glow = node.get_node_or_null("SpectatorGlow")
+	if is_instance_valid(glow):
+		glow.queue_free()
