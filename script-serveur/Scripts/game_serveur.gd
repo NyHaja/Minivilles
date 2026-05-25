@@ -81,12 +81,12 @@ func handle_client_message(player_id, data: Dictionary):
 			_server_ui_interaction(active_player, data)
 
 func _server_dice_phase(amount: int):
+	# --- LA BARRIÈRE DE SÉCURITÉ ---
 	if turn_phase != "waiting_for_roll": 
-		print("[GameServer] REJETÉ : Ce n'est pas le moment de lancer les dés.")
+		_broadcast_to_lobby({"action_reply": "debug_error", "message": "Phase de lancer invalide"})
 		return
 		
-	turn_phase = "waiting_for_resolution" # <-- On passe à l'attente du choix (Garder/Relancer)
-	
+	turn_phase = "waiting_for_resolution"
 	has_constructed_this_turn = false
 	takes_bonus_turn = false
 	
@@ -106,29 +106,29 @@ func _server_dice_phase(amount: int):
 	})
 
 func _server_resolve_dice(modifier: String, amount_rolled: int):
-	if turn_phase != "waiting_for_resolution": return
-	
+	# --- LA BARRIÈRE DE SÉCURITÉ ---
+	if turn_phase != "waiting_for_resolution":
+		_broadcast_to_lobby({"action_reply": "debug_error", "message": "Phase de résolution invalide"})
+		return
+		
 	var active_player = players[currentPlayerIndex]
 	
 	if modifier == "reroll" and active_player.monumentIsActive(Monument.MONUMENT_ID.Radio):
 		print("[GameServer] Player used Radio Tower to reroll!")
-		turn_phase = "waiting_for_roll" # On l'autorise à relancer
+		turn_phase = "waiting_for_roll" # On l'autorise exceptionnellement à relancer
 		_server_dice_phase(amount_rolled)
 		return 
 		
-	# --- NOUVEAU : On verrouille le tour pendant le calcul des effets ---
+	# --- ON FIGE LE SERVEUR ---
 	turn_phase = "processing_effects" 
-		
 	current_roll_value = last_d1 + last_d2
 	
 	if modifier == "add2" and active_player.monumentIsActive(Monument.MONUMENT_ID.Port):
 		if current_roll_value >= 10:
-			print("[GameServer] Player used Port to add 2 to the dice!")
 			current_roll_value += 2
 		
 	if active_player.monumentIsActive(Monument.MONUMENT_ID.Parc):
 		if amount_rolled == 2 and last_d1 == last_d2:
-			print("[GameServer] Player rolled doubles! Amusement Park grants a bonus turn.")
 			takes_bonus_turn = true
 		
 	_broadcast_to_lobby({
@@ -136,11 +136,10 @@ func _server_resolve_dice(modifier: String, amount_rolled: int):
 		"final_value": current_roll_value
 	})
 	
-	# ⚠️ CRUCIAL : On "await" cette fonction pour bloquer le serveur le temps que 
-	# les popups de cartes violettes soient validées par les joueurs.
+	# Le serveur attend impérativement la fin des cartes violettes
 	await _execute_effect_phase(current_roll_value)
 	
-	# Une fois tous les effets terminés, le joueur a enfin le droit d'acheter ou de passer
+	# On libère le joueur pour qu'il puisse acheter
 	turn_phase = "waiting_for_action"
 
 func _execute_effect_phase(dice_value: int):
@@ -163,6 +162,10 @@ func _execute_effect_phase(dice_value: int):
 func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Dictionary:
 	var active_player = players[currentPlayerIndex]
 	
+	# 👇 LA CORRECTION MAGIQUE : On vide la file d'attente des animations 
+	# et on les envoie aux joueurs AVANT d'ouvrir le menu !
+	_broadcast_sync_state()
+	
 	var serveur = get_parent().get_parent()
 	if serveur and serveur.has_method("send_to_player"):
 		serveur.send_to_player(int(active_player.id), {
@@ -176,7 +179,9 @@ func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Di
 	return response
 
 func _server_buy_phase(card_id: int):
-	if turn_phase != "waiting_for_action": return
+	if turn_phase != "waiting_for_action":
+		_broadcast_to_lobby({"action_reply": "debug_error", "message": "Ce n'est pas le moment d'agir"})
+		return
 	var active_player = players[currentPlayerIndex]
 	var card_to_buy = CardFactory.get_card(card_id)
 	
@@ -194,7 +199,9 @@ func _server_buy_phase(card_id: int):
 		_broadcast_to_lobby({"action_reply": "buy_error"}) 
 
 func _server_build_phase(monument_id: int):
-	if turn_phase != "waiting_for_action": return
+	if turn_phase != "waiting_for_action":
+		_broadcast_to_lobby({"action_reply": "debug_error", "message": "Ce n'est pas le moment d'agir"})
+		return
 	var active_player = players[currentPlayerIndex]
 	
 	if active_player.monumentIsActive(monument_id):
@@ -223,7 +230,9 @@ func _server_build_phase(monument_id: int):
 		_broadcast_to_lobby({"action_reply": "buy_error"})
 
 func _server_skip_phase():
-	if turn_phase != "waiting_for_action": return
+	if turn_phase != "waiting_for_action":
+		_broadcast_to_lobby({"action_reply": "debug_error", "message": "Ce n'est pas le moment d'agir"})
+		return
 	var active_player = players[currentPlayerIndex]
 	
 	if not has_constructed_this_turn:
