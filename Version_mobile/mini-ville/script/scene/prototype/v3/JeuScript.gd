@@ -138,6 +138,12 @@ func _ready() -> void:
 	shop_popup.shop_card_clicked.connect(_on_shop_card_clicked)
 	if btn_overlay_roll_1: btn_overlay_roll_1.pressed.connect(_on_roll_1_pressed)
 	if btn_overlay_roll_2: btn_overlay_roll_2.pressed.connect(_on_roll_2_pressed)
+	# Traduction des boutons définis dans la scène
+	if btn_overlay_roll_1: btn_overlay_roll_1.text = tr("LANCER_1_DE")
+	if btn_overlay_roll_2: btn_overlay_roll_2.text = tr("LANCER_2_DES")
+	if btn_conserver: btn_conserver.text = tr("Conserver le résultat")
+	if btn_relancer: btn_relancer.text = tr("Refaire le lancer")
+	if btn_add_2: btn_add_2.text = tr("Ajouter 2 au résultat")
 	
 	if turn_overlay: turn_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 		

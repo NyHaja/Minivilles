@@ -14,6 +14,7 @@ var traitement_en_cours: bool = false
 var est_premier_tour: bool = true
 var pending_shop_animation_index: int = -1
 var current_active_player_id: int = -1
+var _dice_anim_counter: int = 0
 
 signal dice_amount_chosen(amount: int)
 signal yes_no_answered(result: bool)
@@ -117,12 +118,28 @@ func _ready() -> void:
 		btn_overlay_roll_1.pressed.connect(func():
 			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
 			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
+			if turn_overlay: turn_overlay.hide()
+			
+			# --- NOUVEAU : On bloque TOUT l'écran ---
+			if is_instance_valid(click_blocker):
+				click_blocker.z_index = 4096
+				click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+				click_blocker.show()
+			
 			network_client.request_roll_dice(1)
 		)
 	if btn_overlay_roll_2:
 		btn_overlay_roll_2.pressed.connect(func():
 			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
 			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
+			if turn_overlay: turn_overlay.hide()
+			
+			# --- NOUVEAU : On bloque TOUT l'écran ---
+			if is_instance_valid(click_blocker):
+				click_blocker.z_index = 4096
+				click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+				click_blocker.show()
+			
 			network_client.request_roll_dice(2)
 		)
 	
@@ -203,6 +220,13 @@ func _disable_result_buttons() -> void:
 	if btn_conserver: btn_conserver.disabled = true
 	if btn_relancer: btn_relancer.disabled = true
 	if btn_add_2: btn_add_2.disabled = true
+	
+	# --- NOUVEAU : On re-bloque l'écran en attendant la réponse ---
+	if is_instance_valid(click_blocker):
+		click_blocker.z_index = 4096
+		click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+		click_blocker.show()
+
 
 # Et dans _ready(), remplace les 3 lignes btn_conserver, etc. par :
 	if btn_conserver: btn_conserver.pressed.connect(func(): 
@@ -1006,12 +1030,12 @@ func _traiter_prochain_message() -> void:
 				while _active_fly_animations > 0 or _is_animating_dice or is_rotating or not file_animations_activations.is_empty():
 					await get_tree().process_frame
 					
-				# 2. CORRECTION : Si c'est le lancement du jeu, on passe DIRECTEMENT
+				# 2. Si c'est le lancement du jeu, on passe DIRECTEMENT
 				if est_premier_tour:
 					est_premier_tour = false  # On désactive pour les prochains tours
 				else:
 					if is_instance_valid(click_blocker): click_blocker.show()
-					# La pause de 2.5 secondes ne s'appliquera que durant la partie
+					# La pause ne s'appliquera que durant la partie
 					await get_tree().create_timer(1).timeout
 					if is_instance_valid(click_blocker): click_blocker.hide()
 
@@ -1032,7 +1056,35 @@ func _traiter_prochain_message() -> void:
 				if target_id == my_player_id and is_instance_valid(shop_popup.shop_board) and shop_popup.shop_board.get("last_clicked_slot"):
 
 					animer_erreur_carte_shop(shop_popup.shop_board.last_clicked_slot)
+
+			"request_purple_choice":
+				# --- AJOUT : BARRAGE VISUEL ---
+				# On force la file d'attente à patienter tant qu'une carte vole, 
+				# qu'un dé roule ou qu'une activation est en cours.
+				while _active_fly_animations > 0 or _is_animating_dice or is_rotating or not file_animations_activations.is_empty():
+					await get_tree().process_frame
+					
+				var choice_type = data.get("choice_type", "")
+				var active_id = int(data.get("active_player_id", -1))
 				
+				# Si c'est à nous de faire le choix (joueur actif)
+				if active_id == my_player_id:
+					if is_instance_valid(click_blocker): click_blocker.hide() # On libère l'écran pour cliquer
+					
+					var result = null
+					match choice_type:
+						"choose_player": result = await ask_choose_player() # Chaîne Télé
+						"trade_cards": result = await ask_trade_cards()     # Centre d'affaires
+						"give_card": result = await ask_give_card()         # Entreprise de Déménagement
+						"demolish_monument": result = await ask_demolish_monument() # Travaux Publics
+						
+					# On renvoie la décision finale au serveur
+					NetworkManager.envoyer({
+						"action": "game_action",
+						"game_action": "purple_card_choice",
+						"result": result
+					})
+
 			"game_over":
 				show_victory_screen(data.get("winner_name", "Un joueur"))
 				
@@ -1040,8 +1092,10 @@ func _traiter_prochain_message() -> void:
 				var active_id = int(data.get("active_player_id", -1))
 				# On ignore le message si c'est nous qui l'avons envoyé
 				if active_id != my_player_id:
-					_handle_spectator_ui(data.get("interaction_type", ""), data.get("metadata", {}), active_id)
+					if has_method("_handle_spectator_ui"):
+						_handle_spectator_ui(data.get("interaction_type", ""), data.get("metadata", {}), active_id)
 
+	# --- ANIMATION DE REMPLACEMENT DU SHOP ---
 	if pending_shop_animation_index != -1 and is_instance_valid(shop_popup.shop_board):
 		if is_instance_valid(click_blocker):
 			click_blocker.show()
@@ -1077,6 +1131,8 @@ func _apply_sync_state(data: Dictionary) -> void:
 	var new_players = data.get("players", {})
 	var new_shop = data.get("shop", {})
 	var activations = data.get("activations", [])
+	
+	_trigger_monument_animations(new_players)
 
 	if activations.size() > 0:
 		for act in activations:
@@ -1228,9 +1284,13 @@ func _show_turn_overlay(data: Dictionary) -> void:
 		if is_my and btn_overlay_roll_2:
 			var my_data      = latest_players_data.get(str(my_player_id), {})
 			var my_monuments = my_data.get("monuments", {})
-			var has_gare     = my_monuments.get("22", false) or my_monuments.get(22, false)
+			
+			# --- CORRECTION GARE ---
+			var gare_id      = Monument.MONUMENT_ID.Gare
+			var has_gare     = my_monuments.get(str(gare_id), false) or my_monuments.get(gare_id, false)
+			
 			btn_overlay_roll_2.visible = has_gare
-			btn_overlay_roll_2.disabled = not has_gare # On l'active que si on a la gare
+			btn_overlay_roll_2.disabled = not has_gare
 
 func _trigger_gold_animations(new_players: Dictionary) -> void:
 	if latest_players_data.is_empty(): return
@@ -1240,6 +1300,30 @@ func _trigger_gold_animations(new_players: Dictionary) -> void:
 		var delta = new_balance - old_balance
 		if delta != 0 and player_board_map.has(p_id_str):
 			animer_gain_gold(player_board_map[p_id_str], delta)
+
+func _trigger_monument_animations(new_players: Dictionary) -> void:
+	if latest_players_data.is_empty(): return
+
+	for p_id_str in new_players:
+		var old_monuments = latest_players_data.get(p_id_str, {}).get("monuments", {})
+		var new_monuments = new_players.get(p_id_str, {}).get("monuments", {})
+
+		for m_id in new_monuments:
+			# On vérifie l'ancien et le nouvel état (en gérant les clés string/int)
+			var was_built = old_monuments.get(m_id, false) or old_monuments.get(str(m_id), false)
+			var is_built = new_monuments.get(m_id, false) or new_monuments.get(str(m_id), false)
+
+			if is_built and not was_built:
+				# 🔥 UN MONUMENT VIENT D'ÊTRE CONSTRUIT !
+				
+				# 1. On ferme les fenêtres pour tout le monde pour forcer l'attention sur le plateau
+				if is_instance_valid(monument_menu): monument_menu.hide()
+				if is_instance_valid(buy_confirm_panel): buy_confirm_panel.hide()
+				
+				# 2. On joue le tremblement chez les spectateurs 
+				# (L'acheteur local a déjà lancé sa propre animation au moment du clic)
+				if int(p_id_str) != my_player_id:
+					animer_shake_ecran(20.0, 0.4)
 
 func _trigger_card_move_animations(new_players: Dictionary) -> void:
 	if latest_players_data.is_empty(): return
@@ -1384,9 +1468,20 @@ func showResult(d1: int, d2: int, can_reroll: bool = false, spectator: bool = fa
 	return action
 
 func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0, can_reroll: bool = false, spectator: bool = false, active_player_id: int = -1) -> String:
+	
+	# --- BARRAGE RÉSEAU : Le spectateur attend que l'écran soit libre ---
+	while traitement_en_cours or not file_attente_messages.is_empty():
+		await get_tree().process_frame
+
+	# --- SÉCURITÉ ANTI-DOUBLONS : On génère un ID unique pour cette animation ---
+	_dice_anim_counter += 1
+	var my_anim_id = _dice_anim_counter
+
+	if turn_overlay: turn_overlay.hide()
+
 	if die_1 == null or result_overlay == null: return "keep"
 
-	_is_animating_dice = true # <-- ON BLOQUE LES MISES À JOUR RÉSEAU
+	_is_animating_dice = true
 	_pending_dice_action = "" 
 	
 	for d in mini_dice_array:
@@ -1414,6 +1509,10 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 	
 	# --- ANIMATION ROULEMENT ---
 	for i in range(frames):
+		# --- TUEUR FANTÔME : Si une nouvelle animation a commencé, on tue celle-ci immédiatement ! ---
+		if my_anim_id != _dice_anim_counter: 
+			return "interrupted"
+
 		if spectator and _pending_dice_action != "":
 			break
 			
@@ -1425,6 +1524,11 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 		await get_tree().create_timer(delay).timeout
 		if i > frames - 4: delay += 0.05
 
+	# --- DERNIÈRE VÉRIFICATION AVANT LE RÉSULTAT FINAL ---
+	if my_anim_id != _dice_anim_counter: 
+		return "interrupted"
+
+	# On assigne la vraie valeur (Le 5 du serveur ne sera plus jamais écrasé par un 1 aléatoire)
 	die_1.rotation_degrees = 0.0
 	die_1.texture = dice_textures[final_d1 - 1]
 	if amount == 2 and die_2:
@@ -1432,11 +1536,16 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 		die_2.texture = dice_textures[final_d2 - 1]
 
 	var total = final_d1 + final_d2
+	
+	if is_instance_valid(click_blocker): 
+		click_blocker.hide()
 
 	if not spectator:
-		var has_port = false
 		var my_data = latest_players_data.get(str(my_player_id), {})
-		has_port = my_data.get("monuments", {}).get("25", false) or my_data.get("monuments", {}).get(25, false)
+		
+		# --- CORRECTION PORT ---
+		var port_id = Monument.MONUMENT_ID.Port
+		var has_port = my_data.get("monuments", {}).get(str(port_id), false) or my_data.get("monuments", {}).get(port_id, false)
 
 		if btn_conserver: btn_conserver.show(); btn_conserver.disabled = false
 		if btn_relancer: btn_relancer.visible = can_reroll; btn_relancer.disabled = false
@@ -1452,10 +1561,12 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 
 	if action == "reroll":
 		result_overlay.hide()
-		_is_animating_dice = false # <-- ON LIBÈRE LE RÉSEAU
 		if not _pending_sync_data.is_empty():
-			_apply_sync_state(_pending_sync_data)
+			var data_to_apply = _pending_sync_data.duplicate()
 			_pending_sync_data.clear()
+			await _apply_sync_state(data_to_apply) # <--- AWAIT AJOUTÉ
+			
+		_is_animating_dice = false # <--- DÉPLACÉ APRÈS LE AWAIT
 		return action
 
 	is_rotating = true
@@ -1489,8 +1600,8 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 		# JOUEUR ACTIF LOCAL (En bas)
 		dice_anchor.grow_horizontal = Control.GROW_DIRECTION_END
 		target_btn.add_child(dice_anchor)
-		var vec_dir = Vector2(-120,-5)
-		if total > 10: vec_dir += Vector2(-40,0)
+		var vec_dir = Vector2(-110,-5)
+		if total >= 10: vec_dir += Vector2(-30,0)
 		if amount == 2: vec_dir += Vector2(-50,0)
 		if action == "add2": vec_dir += Vector2(-50,0)
 		dice_anchor.position = vec_dir
@@ -1518,16 +1629,16 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 				dice_anchor.rotation = PI / 2.0 
 				dice_anchor.grow_horizontal = Control.GROW_DIRECTION_END
 				
-				var vec_dir = Vector2(180,180)
-				if total > 10: vec_dir += Vector2(0,-30)
+				var vec_dir = Vector2(140,150)
+				if total >= 10: vec_dir += Vector2(0,-30)
 				if amount == 2: vec_dir += Vector2(0,-50)
 				if action == "add2": vec_dir += Vector2(0,-50)
 				dice_anchor.global_position = board_center + vec_dir
 			elif is_right:
 				dice_anchor.rotation = -PI / 2.0 
 				dice_anchor.grow_horizontal = Control.GROW_DIRECTION_END
-				var vec_dir = Vector2(-180,-180)
-				if total > 10: vec_dir += Vector2(0,30)
+				var vec_dir = Vector2(-140,-130)
+				if total >= 10: vec_dir += Vector2(0,30)
 				if amount == 2: vec_dir += Vector2(0,50)
 				if action == "add2": vec_dir += Vector2(0,50)
 				dice_anchor.global_position = board_center + vec_dir
@@ -1575,7 +1686,7 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 	if action == "add2":
 		total += 2
 		addTwo_lbl = Label.new()
-		addTwo_lbl.text = " + 2 "
+		addTwo_lbl.text = "+ 2"
 		addTwo_lbl.add_theme_font_size_override("font_size", 34)
 		addTwo_lbl.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
 		addTwo_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -1585,7 +1696,7 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 		dice_anchor.add_child(addTwo_lbl)
 
 	var result_lbl = Label.new()
-	result_lbl.text = " = " + str(total)
+	result_lbl.text = "= " + str(total)
 	result_lbl.add_theme_font_size_override("font_size", 34)
 	result_lbl.add_theme_color_override("font_color", Color.WHITE)
 	result_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -1660,10 +1771,13 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 	is_rotating = false
 	if is_instance_valid(click_blocker): click_blocker.hide()
 
-	_is_animating_dice = false 
 	if not _pending_sync_data.is_empty():
-		_apply_sync_state(_pending_sync_data)
+		var data_to_apply = _pending_sync_data.duplicate()
 		_pending_sync_data.clear()
+		await _apply_sync_state(data_to_apply) # <--- AWAIT AJOUTÉ
+		
+	_is_animating_dice = false # <--- DÉPLACÉ APRÈS LE AWAIT
+
 
 	return action
 
