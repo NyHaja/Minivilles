@@ -117,14 +117,29 @@ func _ready() -> void:
 		btn_overlay_roll_1.pressed.connect(func():
 			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
 			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
-			if turn_overlay: turn_overlay.hide() # <--- AJOUT ICI
+			if turn_overlay: turn_overlay.hide()
+			
+			# --- NOUVEAU : On bloque TOUT l'écran ---
+			if is_instance_valid(click_blocker):
+				click_blocker.z_index = 4096
+				click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+				click_blocker.show()
+				
 			network_client.request_roll_dice(1)
 		)
+		
 	if btn_overlay_roll_2:
 		btn_overlay_roll_2.pressed.connect(func():
 			if btn_overlay_roll_1: btn_overlay_roll_1.disabled = true
 			if btn_overlay_roll_2: btn_overlay_roll_2.disabled = true
-			if turn_overlay: turn_overlay.hide() # <--- AJOUT ICI
+			if turn_overlay: turn_overlay.hide()
+			
+			# --- NOUVEAU : On bloque TOUT l'écran ---
+			if is_instance_valid(click_blocker):
+				click_blocker.z_index = 4096
+				click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+				click_blocker.show()
+				
 			network_client.request_roll_dice(2)
 		)
 	
@@ -199,6 +214,12 @@ func _disable_result_buttons() -> void:
 	if btn_conserver: btn_conserver.disabled = true
 	if btn_relancer: btn_relancer.disabled = true
 	if btn_add_2: btn_add_2.disabled = true
+	
+	# --- NOUVEAU : On re-bloque l'écran en attendant la réponse ---
+	if is_instance_valid(click_blocker):
+		click_blocker.z_index = 4096
+		click_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+		click_blocker.show()
 
 # Et dans _ready(), remplace les 3 lignes btn_conserver, etc. par :
 	if btn_conserver: btn_conserver.pressed.connect(func(): 
@@ -1502,6 +1523,9 @@ func play_dice_animation_enhanced(amount: int, final_d1: int, final_d2: int = 0,
 		die_2.texture = dice_textures[final_d2 - 1]
 
 	var total = final_d1 + final_d2
+	
+	if is_instance_valid(click_blocker): 
+		click_blocker.hide()
 
 	if not spectator:
 		var my_data = latest_players_data.get(str(my_player_id), {})
