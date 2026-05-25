@@ -62,8 +62,18 @@ func _handle_guest(client: WebSocketPeer, data: Dictionary):
 # FORGOT PASSWORD
 # ─────────────────────────────────────────
 func _handle_forgot_password(client: WebSocketPeer, data: Dictionary):
-	var payload = { "email": data.get("email", "") }
-	$"../FlaskManager".send("forgot_password", "/forgot_password", payload, client)
+	var payload = { "nickname": data.get("nickname", "") }
+	$"../FlaskManager".send("guest_player", "/guest/register", payload, client)
+	# --- CORRECTION OUBLIÉE : On lit "nickname" (le mot envoyé par le client) ---
+	var pseudo = data.get("nickname", data.get("username", "Invité"))
+	
+	print("[DEBUG SERVER] auth_handler a reçu le pseudo : ", pseudo)
+	
+	var payload = {
+		"username": pseudo
+	}
+	
+	$"../FlaskManager".send("guest_player", "/guest/register", payload, client, {"username": pseudo})
 
 # ─────────────────────────────────────────
 # VERIFY RESET CODE

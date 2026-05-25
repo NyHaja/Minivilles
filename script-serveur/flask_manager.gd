@@ -113,17 +113,30 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 	elif action_name == "guest_player":
 		if flask_response.get("status") == "success":
 			var guest_id = flask_response.get("guest_id")
-			var nickname = flask_response.get("nickname", "")
+			
+			# On récupère le pseudo depuis la réponse Flask ou depuis l'extra (envoyé par auth_handler)
+			var nickname = flask_response.get("nickname")
+			if nickname == null or str(nickname) == "<null>" or nickname == "":
+				nickname = flask_response.get("username")
+			if nickname == null or str(nickname) == "<null>" or nickname == "":
+				nickname = extra.get("username", "Invité")
+			if nickname == null or str(nickname) == "<null>" or nickname == "":
+				nickname = "Invité"
+				
+			# On force la conversion en String propre
+			var final_nickname = str(nickname)
 			
 			serveur.guest_sessions[client] = guest_id
-			serveur.guest_nicknames[client] = nickname
-			print("[FlaslManager] Guest enregistré : ", nickname, " (id : ", guest_id, ")")
+			serveur.guest_nicknames[client] = final_nickname
+			
+			print("[FlaskManager] Guest enregistré : ", final_nickname, " (id : ", guest_id, ")")
 			
 			serveur.send_to_client(client, {
 				"action_reply": "guest_player",
 				"status": "success",
 				"guest_id": guest_id,
-				"nickname": nickname
+				"nickname": final_nickname,
+				"username": final_nickname
 			})
 		else:
 			serveur.send_to_client(client, {
@@ -195,17 +208,30 @@ func _on_response(result, response_code, headers, body, client: WebSocketPeer, h
 			serveur.lobbies[lobby_id]["etat"]    = "EN_JEU"
 
 			var ordre_joueurs = []
-			var game_players: Array = []
-			
+			var game_players: Array = []	
+
 			for joueur in serveur.lobbies[lobby_id]["joueurs"]:
 				var p_id = serveur.active_sessions.get(joueur, null)
 				var g_id = serveur.guest_sessions.get(joueur, null)
 				var id = p_id if p_id != null else g_id
-				var nickname = serveur.active_nicknames.get(joueur, str(p_id))
+				
+				# --- LECTURE SÉCURISÉE DU PSEUDO ---
+				var final_nickname = "Invité"
+				if p_id != null:
+					final_nickname = str(serveur.active_nicknames.get(joueur, "Joueur " + str(p_id)))
+				elif g_id != null:
+					var stored_nick = serveur.guest_nicknames.get(joueur, "Invité")
+					if stored_nick == null or str(stored_nick).strip_edges() == "" or str(stored_nick) == "<null>":
+						final_nickname = "Invité " + str(g_id)
+					else:
+						final_nickname = str(stored_nick)
+				
 				ordre_joueurs.append(str(id))
 
-				var new_player = Player.new(nickname, int(float(str(id))), 3)
+				# --- Création du joueur sans variables fantômes ---
+				var new_player = Player.new(final_nickname, int(float(str(id))), 3)
 				game_players.append(new_player)
+			
 
 			serveur.broadcast_lobby(lobby_id, {
 				"action_reply": "create_game",

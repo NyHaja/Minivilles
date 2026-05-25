@@ -110,7 +110,11 @@ func _on_mouse_entered() -> void:
 	mouse_over = true
 	
 	if hover_tween: hover_tween.kill()
-	z_index = 10
+	
+	# 👇 CORRECTION ICI : On force le passage au premier plan absolu
+	z_as_relative = false
+	z_index = 4096
+	
 	hover_tween = create_tween().set_parallel(true)
 	
 	var elevation_carte = 20.0
@@ -119,7 +123,7 @@ func _on_mouse_entered() -> void:
 	hover_tween.tween_property(visual, "scale", Vector2(1.1, 1.1), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(visual, "position:y", -elevation_carte, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
-	# 2. HALO (CORRECTION : On anime QUE la transparence, il suit la carte tout seul !)
+	# 2. HALO
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 1.0, anim_speed)
 		
@@ -137,36 +141,26 @@ func _on_mouse_entered() -> void:
 		var t_center = t_size / 2.0
 		var v_center = v_size / 2.0
 		
-		# On place le pivot exactement au centre de la bulle
 		tooltip.pivot_offset = t_center
-
-		# On calcule la taille finale de la bulle une fois agrandie
 		var scaled_t_y = t_size.y * tooltip_scale_target.y
 		var scaled_t_x = t_size.x * tooltip_scale_target.x
-
-		# Le centre horizontal est toujours celui de la carte
 		var desired_pivot_x = v_center.x
 		var desired_pivot_y = 0.0
 
 		match current_tooltip_dir:
 			"top":
 				tooltip.rotation_degrees = 0
-				# Bulle droite : la hauteur visuelle est l'axe Y
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
 			"bottom":
 				tooltip.rotation_degrees = 180
-				# Bulle droite : la hauteur visuelle est l'axe Y
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_y / 2.0)
 			"left":
 				tooltip.rotation_degrees = -90
-				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
 			"right":
 				tooltip.rotation_degrees = 90
-				# Bulle tournée : la hauteur visuelle est devenue l'axe X !
 				desired_pivot_y = -elevation_carte - tooltip_distance - (scaled_t_x / 2.0)
 
-		# On applique la position calculée
 		tooltip.position = Vector2(desired_pivot_x, desired_pivot_y) - t_center
 		
 		hover_tween.tween_property(tooltip, "modulate:a", 1.0, anim_speed)
@@ -177,14 +171,17 @@ func _on_mouse_exited() -> void:
 	mouse_over = false
 	
 	if hover_tween: hover_tween.kill()
-	z_index = 0
 	hover_tween = create_tween().set_parallel(true)
+	
+	# 👇 CORRECTION ICI : On enlève le z_index tout de suite pour ne pas bloquer les autres cartes
+	z_as_relative = true
+	z_index = 0
 	
 	# 1. CARTE
 	hover_tween.tween_property(visual, "scale", Vector2(1.0, 1.0), anim_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(visual, "position:y", 0.0, anim_speed).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
-	# 2. HALO (Retour à zéro transparence)
+	# 2. HALO
 	if selection_glow:
 		hover_tween.tween_property(selection_glow, "modulate:a", 0.0, anim_speed)
 		
@@ -197,34 +194,56 @@ func _on_mouse_exited() -> void:
 		if not mouse_over: tooltip.hide()
 
 func setup_card(card_data, dir: String = "top") -> void:
-	type_couleur_carte = card_data.get_color() # <-- LIGNE À AJOUTER
+	type_couleur_carte = card_data.get_color()
 	self.card_data = card_data
 	var card_name = card_data.get_name()
 	var card_color = card_data.get_color()
 	var clean_name = get_clean_file_name(card_name, card_color)
 
+	# --- 1. CHARGEMENT SÉCURISÉ DE L'IMAGE DE LA CARTE ---
 	var path_basis = "res://assets/Cards/" + get_lang_folder() + "/" + "Establishments/" + clean_name + "_1.png"
-	var tex = load(path_basis)
-	var v = get_node_or_null("Visual") if not is_node_ready() else visual
-	if tex and v:
-		v.texture_normal = tex
-
-	var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
-	var tip_tex = load(tip_path)
-	if tip_tex:
-		tooltip.texture = tip_tex
-	else:
-		var placeholder = "res://assets/Tooltips/tooltip_marche_de_fruits_et_legumes.png"
-		var placeholder_tex = load(placeholder)
-		if placeholder_tex:
-			tooltip.texture = placeholder_tex
-		else:
-			tooltip.texture = null # S'assure que le tooltip reste désactivé s'il n'y a pas d'image
-
-	current_tooltip_dir = dir
+	var tex_carte = load(path_basis) 
 	
-	if tooltip.texture:
-		tooltip.pivot_offset = tooltip.size / 2.0
+	var visual_node = get_node_or_null("Visual") 
+	if is_instance_valid(visual_node) and tex_carte != null:
+		if visual_node is TextureButton:
+			visual_node.texture_normal = tex_carte
+		elif visual_node is TextureRect:
+			visual_node.texture = tex_carte
+
+	# --- 2. SÉCURITÉ POUR LE CHARGEMENT DU TOOLTIP ---
+	# On récupère la variable tooltip existante (probablement un @onready) ou le noeud directement
+	var tooltip_node = get("tooltip") 
+	if tooltip_node == null:
+		tooltip_node = get_node_or_null("Tooltip")
+		
+	# Si le noeud n'est pas encore prêt dans la scène, on attend une frame
+	if tooltip_node == null:
+		if not is_node_ready():
+			await ready
+		tooltip_node = get("tooltip")
+		if tooltip_node == null:
+			tooltip_node = get_node_or_null("Tooltip")
+
+	# Si on a bien récupéré le Tooltip, on lui applique l'image
+	if is_instance_valid(tooltip_node):
+		var tip_path = "res://assets/Tooltips/" + get_lang_folder() + "/" + "tooltip_" + clean_name + ".png"
+		var tip_tex = load(tip_path)
+		
+		if tip_tex:
+			tooltip_node.texture = tip_tex
+		else:
+			var placeholder = "res://assets/Tooltips/tooltip_marche_de_fruits_et_legumes.png"
+			var placeholder_tex = load(placeholder)
+			if placeholder_tex:
+				tooltip_node.texture = placeholder_tex
+			else:
+				tooltip_node.texture = null 
+
+		current_tooltip_dir = dir
+		
+		if tooltip_node.texture:
+			tooltip_node.pivot_offset = tooltip_node.size / 2.0
 
 func get_clean_file_name(card_name: String, color: int = -1) -> String:
 	var prefix = ""
@@ -282,15 +301,17 @@ func _get_activation_glow_color() -> Color:
 		_: return Color(1.0, 1.0, 1.0, 1.0)
 
 func animer_montee() -> Tween:
-	z_index = 50 
-	
+	# 👇 CORRECTION ICI
+	z_as_relative = false
+	z_index = 4096
+
 	var style = selection_glow.get_theme_stylebox("panel")
 	style.shadow_color = _get_activation_glow_color()
-	
+
 	var tween = get_tree().create_tween().set_parallel(true)
 	tween.tween_property(visual, "position:y", -35.0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(selection_glow, "modulate:a", 1.0, 0.3)
-	
+
 	return tween
 
 func animer_descente() -> Tween:
@@ -301,7 +322,9 @@ func animer_descente() -> Tween:
 	# Nettoyage à la toute fin de la descente
 	tween.chain().tween_callback(func():
 		var style = selection_glow.get_theme_stylebox("panel")
-		style.shadow_color = Color(1.0, 1.0, 1.0, 0.8) # Remet le halo blanc pour le hover
+		style.shadow_color = Color(1.0, 1.0, 1.0, 0.8)
+		# 👇 CORRECTION ICI
+		z_as_relative = true
 		z_index = 0
 	)
 	

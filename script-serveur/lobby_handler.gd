@@ -292,6 +292,7 @@ func _handle_start(client: WebSocketPeer, data: Dictionary):
 
 	# Mark as in-game immediately to block any concurrent second call
 	lobby["etat"] = "EN_JEU"
+	lobby["timer_actif"] = false
 	print("[LOBBY] Partie lancée dans le lobby ", lobby_id)
 
 	$"../FlaskManager".send("create_game", "/game/create", {

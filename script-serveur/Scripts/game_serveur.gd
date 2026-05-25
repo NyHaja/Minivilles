@@ -15,6 +15,8 @@ var carte_adversaire_pour_echange = null
 var carte_choisie_pour_don = null
 var adversaire_choisi_pour_don = null
 var monument_choisi_pour_demolition: int = -1
+var pending_activations: Array = []
+var turn_phase: String = "waiting_for_roll"
 
 var last_d1: int = 0
 var last_d2: int = 0
@@ -38,17 +40,27 @@ func init_game(l_id: String, initial_players: Array, goldInitAmount: int = 3):
 	_broadcast_turn_start()
 
 func handle_client_message(player_id, data: Dictionary):
+	print("[DEBUG] Serveur a reçu : ", data) 
+	if data.has("username"): print("[DEBUG] Pseudo : ", data["username"])
+		
 	var active_player = players[currentPlayerIndex]
-	
 	print("[GameServer] Received action '", data.get("game_action", "unknown"), "' from network ID: ", player_id)
-	
-	if int(float(active_player.id)) != int(float(player_id)):
-		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", player_id)
+
+	# --- CORRECTION GUEST : Système de secours si le routeur renvoie null ---
+	var eff_player_id = player_id
+	if eff_player_id == null:
+		if data.has("guest_id"): eff_player_id = data["guest_id"]
+		elif data.has("player_id"): eff_player_id = data["player_id"]
+		
+	if eff_player_id != null and str(active_player.id) != str(eff_player_id):
+		print("[GameServer] REJECTED: Active is ", active_player.id, " but request came from ", eff_player_id)
 		_broadcast_to_lobby({
 			"action_reply": "debug_error",
-			"message": "REJECTED: active_player=" + str(active_player.id) + " but sender=" + str(player_id)
+			"message": "REJECTED: active_player=" + str(active_player.id) + " but sender=" + str(eff_player_id)
 		})
 		return
+	elif eff_player_id == null:
+		print("[GameServer] WARNING: Action accepted with null ID (Guest fallback)")
 
 	print("[GameServer] ACCEPTED: Processing action...")
 		
@@ -65,8 +77,17 @@ func handle_client_message(player_id, data: Dictionary):
 			_server_skip_phase()
 		"purple_card_choice":
 			player_choice_received.emit(data)
+		"ui_interaction":
+			_server_ui_interaction(active_player, data)
+
 
 func _server_dice_phase(amount: int):
+	if turn_phase != "waiting_for_roll": 
+		print("[GameServer] REJETÉ : Ce n'est pas le moment de lancer les dés.")
+		return
+		
+	turn_phase = "waiting_for_resolution" # <-- On passe à l'attente du choix (Garder/Relancer)
+	
 	has_constructed_this_turn = false
 	takes_bonus_turn = false
 	
@@ -86,13 +107,19 @@ func _server_dice_phase(amount: int):
 	})
 
 func _server_resolve_dice(modifier: String, amount_rolled: int):
+	if turn_phase != "waiting_for_resolution": return
+	
 	var active_player = players[currentPlayerIndex]
 	
 	if modifier == "reroll" and active_player.monumentIsActive(Monument.MONUMENT_ID.Radio):
 		print("[GameServer] Player used Radio Tower to reroll!")
+		turn_phase = "waiting_for_roll" # On l'autorise à relancer
 		_server_dice_phase(amount_rolled)
 		return 
-		
+
+	# --- NOUVEAU : On verrouille le tour pendant le calcul des effets ---
+	turn_phase = "processing_effects" 
+
 	current_roll_value = last_d1 + last_d2
 	
 	if modifier == "add2" and active_player.monumentIsActive(Monument.MONUMENT_ID.Port):
@@ -110,10 +137,18 @@ func _server_resolve_dice(modifier: String, amount_rolled: int):
 		"final_value": current_roll_value
 	})
 	
-	_execute_effect_phase(current_roll_value)
+	# ⚠️ CRUCIAL : On "await" cette fonction pour bloquer le serveur le temps que 
+	# les popups de cartes violettes soient validées par les joueurs.
+	await _execute_effect_phase(current_roll_value)
+	
+	# Une fois tous les effets terminés, le joueur a enfin le droit d'acheter ou de passer
+	turn_phase = "waiting_for_action"
+
 
 func _execute_effect_phase(dice_value: int):
 	var current_player = players[currentPlayerIndex]
+
+	pending_activations.clear()
 	
 	for player in _get_players_counter_clockwise(current_player):
 		player.activateEffect(CardColor.Type.RED, self, current_player) 
@@ -143,10 +178,12 @@ func request_player_choice(action_type: String, metadata: Dictionary = {}) -> Di
 	return response
 
 func _server_buy_phase(card_id: int):
+	if turn_phase != "waiting_for_action": return
 	var active_player = players[currentPlayerIndex]
 	var card_to_buy = CardFactory.get_card(card_id)
 	
 	if card_to_buy == null or not shop.available(card_id):
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 		return 
 		
 	if active_player.buyCard(card_to_buy):
@@ -154,11 +191,16 @@ func _server_buy_phase(card_id: int):
 		has_constructed_this_turn = true
 		_broadcast_sync_state()
 		_advance_turn()
+	else:
+		# --- CORRECTION : On débloque le client si l'achat échoue ---
+		_broadcast_to_lobby({"action_reply": "buy_error"}) 
 
 func _server_build_phase(monument_id: int):
+	if turn_phase != "waiting_for_action": return
 	var active_player = players[currentPlayerIndex]
 	
 	if active_player.monumentIsActive(monument_id):
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 		return 
 		
 	var monument_data = _get_monument_data(monument_id)
@@ -178,8 +220,12 @@ func _server_build_phase(monument_id: int):
 			_record_match_history(active_player)
 		else:
 			_advance_turn()
+	else:
+		# --- CORRECTION : On débloque le client si la construction échoue ---
+		_broadcast_to_lobby({"action_reply": "buy_error"})
 
 func _server_skip_phase():
+	if turn_phase != "waiting_for_action": return
 	var active_player = players[currentPlayerIndex]
 	
 	if not has_constructed_this_turn:
@@ -198,6 +244,7 @@ func _advance_turn():
 	else:
 		currentPlayerIndex = (currentPlayerIndex + 1) % players.size()
 		
+	turn_phase = "waiting_for_roll" # <-- AJOUT : Prêt pour le lancer du nouveau joueur !
 	_broadcast_turn_start()
 
 func _broadcast_turn_start():
@@ -226,8 +273,12 @@ func _broadcast_sync_state():
 	_broadcast_to_lobby({
 		"action_reply": "sync_state",
 		"players": state_data,
-		"shop": shop_data
+		"shop": shop_data,
+		"activations": pending_activations.duplicate()
 	})
+
+	pending_activations.clear()
+
 
 func _broadcast_to_lobby(payload: Dictionary):
 	var serveur = get_parent().get_parent()
@@ -274,3 +325,26 @@ func _get_monument_data(monument_id: int) -> Dictionary:
 		Monument.MONUMENT_ID.Port: return {"name": "Port", "cost": 2}
 		Monument.MONUMENT_ID.Aeroport: return {"name": "Aéroport", "cost": 30}
 		_: return {"name": "Unknown Monument", "cost": 999}
+
+func notifier_activation(joueur, card_id: int, balance_changes: Dictionary = {}):
+	var changes_ids = {}
+	for p in balance_changes:
+		# Assure qu'on stocke l'ID sous forme de chaîne propre
+		var p_id = str(p.id) if (typeof(p) == TYPE_OBJECT and p.get("id") != null) else str(p)
+		changes_ids[p_id] = balance_changes[p]
+
+	var j_id = joueur.id if (typeof(joueur) == TYPE_OBJECT and joueur.get("id") != null) else joueur
+	
+	pending_activations.append({
+		"player_id": j_id,
+		"card_id": card_id,
+		"balance_changes": changes_ids
+	})
+
+func _server_ui_interaction(active_player: Player, data: Dictionary):
+	# Le serveur ne fait que relayer l'action aux autres joueurs
+	var payload = data.duplicate()
+	payload["action_reply"] = "spectator_ui"
+	payload["active_player_id"] = active_player.id
+	
+	_broadcast_to_lobby(payload)

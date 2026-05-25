@@ -5,13 +5,6 @@ extends Control
 func _ready() -> void:
 	NetworkManager.message_recu.connect(_on_message)
 	NetworkManager.connecte.connect(_on_connecte)
-	
-func _on_connecte():
-	NetworkManager.envoyer({
-		"action": "authentification",
-		"email": "jaja@test.com",
-		"password": "jaja123"
-	})
 
 func _on_btn_rejoindre_pressed():
 	var code = $LineEdit.text.strip_edges().to_upper()
