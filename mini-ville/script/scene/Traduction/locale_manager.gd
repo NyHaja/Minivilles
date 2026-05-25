@@ -83,6 +83,7 @@ func _load_translations():
 			"Connexion réussie !": "Connexion réussie !",
 			"Identifiants incorrects.": "Identifiants incorrects.",
 			"Erreur : Scène popup introuvable.": "Erreur : Scène popup introuvable.",
+			"Mode invité": "Mode invité",
 			# --- Popup Inscription & Mdp ---
 			"Mot de passe": "Mot de passe",
 			"Confirmer votre mot de passe": "Confirmer votre mot de passe",
@@ -254,6 +255,9 @@ func _load_translations():
 			"Connexion réussie !": "Login successful!",
 			"Identifiants incorrects.": "Incorrect credentials.",
 			"Erreur : Scène popup introuvable.": "Error: Popup scene not found.",
+			"Mode invité": "Guest mode",
+			"Entrer un pseudo": "Type your username",
+			"Fermer": "Close",
 			# --- Popup Inscription & Mdp ---
 			"Mot de passe": "Password",
 			"Confirmer votre mot de passe": "Confirm your password",
