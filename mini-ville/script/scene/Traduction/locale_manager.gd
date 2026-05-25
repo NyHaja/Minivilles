@@ -122,17 +122,13 @@ func _load_translations():
 			"Passer votre Tour" : "Passer votre Tour",
 			"Types de cartes" : "Types de cartes",
 			"Bleues" : "Blueues",
-			"Établissements primaires.
-			Rapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur" : "Établissements primaires.\nRapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur",
+			"Établissements primaires.\nRapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur" : "Établissements primaires.\nRapportent des pièces à leur propriétaire lors du tour de n'importe quel joueur",
 			"Vertes" : "Vertes",
-			"Commerces.
-			S'activent uniquement durant le tour de leur propriétaire" : "Commerces.\nS'activent uniquement durant le tour de leur propriétaire",
+			"Commerces.\nS'activent uniquement durant le tour de leur propriétaire" : "Commerces.\nS'activent uniquement durant le tour de leur propriétaire",
 			"Rouges" : "Rouges",
-			"Restaurants.
-			Prennent des pièces aux autres joueurs lors de leur tour." : "Restaurants.\nPrennent des pièces aux autres joueurs lors de leur tour.",
+			"Restaurants.\nPrennent des pièces aux autres joueurs lors de leur tour." : "Restaurants.\nPrennent des pièces aux autres joueurs lors de leur tour.",
 			"Violettes" : "Violettes",
-			"Grands projets.
-			Effets puissants et uniques, un seul exemplaire par joueur." : "Grands projets.\nEffets puissants et uniques, un seul exemplaire par joueur.",
+			"Grands projets.\nEffets puissants et uniques, un seul exemplaire par joueur." : "Grands projets.\nEffets puissants et uniques, un seul exemplaire par joueur.",
 			"Les Monuments" : "Les Monuments",
 			"Centre Commercial" : "Centre Commercial",
 			"Tour Radio" : "Tour Radio",

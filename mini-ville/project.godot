@@ -15,7 +15,7 @@ run/main_scene="uid://xg6ijxmum5pm"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0.27327007, 0.41344216, 0.9878225, 1)
 boot_splash/stretch_mode=2
-boot_splash/image="uid://clliqj3yckkti"
+boot_splash/image="uid://dytks2uiq1vuk"
 config/icon="uid://c3brderihwmjs"
 
 [audio]
