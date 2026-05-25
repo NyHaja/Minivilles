@@ -38,11 +38,11 @@ func update_network_shop(shop_data_dict: Dictionary) -> Dictionary:
 
 	var new_ids: Array = []
 	for card_id_str in shop_data_dict:
-		if not card_slot_map.has(int(card_id_str)):
-			new_ids.append(int(card_id_str))
+		if not card_slot_map.has(int(float(str(card_id_str)))):
+			new_ids.append(int(float(str(card_id_str))))
 
 	for card_id_str in shop_data_dict:
-		var card_id = int(card_id_str)
+		var card_id = int(float(str(card_id_str)))
 		if card_slot_map.has(card_id):
 			var slot = card_slot_map[card_id]
 			if slot.has_method("set_badge_count"):
@@ -74,7 +74,8 @@ func update_network_shop(shop_data_dict: Dictionary) -> Dictionary:
 
 		var qty = shop_data_dict.get(str(card_id), 1)
 		var card_visual = _create_card_visual(card_id, card_data, qty)
-		card_visual.modulate.a = 0.0  # hidden until fly-in animation reveals it
+		# Visible par défaut — l'appelant peut mettre modulate.a = 0 s'il veut une animation
+		card_visual.modulate.a = 1.0
 
 		grid_container.add_child(card_visual)
 
@@ -211,7 +212,7 @@ func _on_card_clicked(slot_node: Control, card_id: int):
 	
 	if active_glow:
 		active_glow.modulate.a = 1.0
-		current_glow_tween = get_tree().create_tween().set_loops() 
+		current_glow_tween = get_tree().create_tween().set_loops(0)
 		current_glow_tween.tween_property(active_glow, "modulate:a", 0.4, 0.8).set_trans(Tween.TRANS_SINE)
 		current_glow_tween.tween_property(active_glow, "modulate:a", 1.0, 0.8).set_trans(Tween.TRANS_SINE)
 	

@@ -446,6 +446,14 @@ func positionner_plateaux(animate: bool = true) -> void:
 		margin = 80
 		scale_factor = clamp(screen_size.y / 600.0, 0.3, 2.0)
 
+	# Scale dynamique tablette/PC
+	var board_scale = 1.0
+	if not is_phone:
+		var base_h = 264.0
+		var min_screen = min(screen_size.x, screen_size.y)
+		var max_scale = (min_screen * 0.30) / base_h
+		board_scale = clamp(max_scale, 1.0, 1.3)
+
 	var tween = null
 	
 	if animate:
@@ -477,8 +485,8 @@ func positionner_plateaux(animate: bool = true) -> void:
 			rx = ((screen_size.x / 2.0) - (b_h * scale_factor / 2.0) - margin) * 0.60
 			ry = (screen_size.y / 2.0) - (b_h * scale_factor / 2.0) - margin
 		else:
-			rx = (screen_size.x / 2.0) - (b_h / 2.0) - margin
-			ry = (screen_size.y / 2.0) - (b_h / 2.0) - margin
+			rx = (screen_size.x / 2.0) - (b_h * board_scale / 2.0) - margin
+			ry = (screen_size.y / 2.0) - (b_h * board_scale / 2.0) - margin
 		
 		board.pivot_offset = real_size / 2.0
 
@@ -505,7 +513,7 @@ func positionner_plateaux(animate: bool = true) -> void:
 		if is_phone:
 			board.scale = Vector2(1.0, 1.0) if diff == 0 else Vector2(0.7, 0.7)
 		else:
-			board.scale = Vector2(1.3, 1.3)
+			board.scale = Vector2(board_scale, board_scale)
 
 		if animate:
 			var start_angle = player_angles[p_idx]

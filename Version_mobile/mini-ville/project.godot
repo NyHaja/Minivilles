@@ -15,7 +15,7 @@ run/main_scene="uid://xg6ijxmum5pm"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0.27327007, 0.41344216, 0.9878225, 1)
 boot_splash/stretch_mode=2
-boot_splash/image="uid://clliqj3yckkti"
+boot_splash/image="res://icon_minivilles.webp"
 config/icon="uid://c3brderihwmjs"
 
 [audio]
@@ -24,16 +24,16 @@ buses/default_bus_layout="uid://cjihtogdq8orn"
 
 [autoload]
 
-GameData="*uid://43kqotfp2uyk"
+GameData="*res://script/Class/GameData.gd"
 PlayerData="*res://script/scene/Multijoueur/player_data.gd"
 LocaleManager="*res://script/scene/Traduction/locale_manager.gd"
-LobbyManager="res://script/scene/Multijoueur/lobby_manager.gd"
-SoundManager="*uid://bu5ukwdc2m6d"
-NetworkManager="*uid://dwii3wdl3k8xh"
-Client="*uid://dyh5b0moyfuki"
-LobbyHandler="*uid://capsexgjolf2s"
-Game_Client="*uid://cheb7hhvtqruq"
-GuestHandler="*uid://5pa2db5yqfh"
+LobbyManager="*res://script/scene/Multijoueur/lobby_manager.gd"
+SoundManager="*res://scene/Musique/sound_manager.tscn"
+NetworkManager="*res://Autoload/NetworkManager.gd"
+Client="*res://client.gd"
+LobbyHandler="*res://Autoload/lobby_handler.gd"
+Game_Client="*res://script/Class/game_client.gd"
+GuestHandler="*res://Guest/guest_handler.gd"
 
 [display]
 

@@ -151,7 +151,7 @@ func DicePhase() -> int:
 func rollDice(numberDice: int) -> Array[int]:
 	var res:Array[int] = [0, 0]
 	#res[0] = (randi() %6) + 1
-	res[0] = 6
+	res[0] = 1
 	
 	#if numberDice == 2:
 	res[1] = 2 #(randi() %6) + 1

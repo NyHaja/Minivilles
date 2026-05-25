@@ -28,6 +28,8 @@ var _connecte := false
 var _session_token := ""
 var _joueur_id := -1
 var _est_guest := false
+var _guest_id = -1
+var _guest_nickname := ""
 
 # Variables pour le Heartbeat (Maintien de connexion)
 var _temps_ecoule := 0.0
@@ -116,7 +118,7 @@ func _traiter_message(raw: String):
 	if action == "authentification":
 		if status == "success":
 			_session_token = data.get("access_token", "")
-			_joueur_id = data.get("player_id","")
+			_joueur_id = int(data.get("player_id", -1))
 			_est_guest = false
 			# On émet le signal déclaré en haut
 			auth_finished.emit(true, "Connexion réussie")
@@ -158,14 +160,22 @@ func envoyer(data: Dictionary):
 
 func est_connecte() -> bool: return _connecte
 func get_token() -> String: return _session_token
-func get_joueur_id() -> int: return _joueur_id
 func connecter_guest(): _est_guest = true
 func est_guest()->bool: return _est_guest
+
+func get_joueur_id() -> int:
+	if _est_guest:
+		return _guest_id
+	return _joueur_id
 
 func set_token(token: String):
 	_session_token = token
 	_est_guest = false  # si on a un token, c'est pas un guest
 	
-func set_guest(id: int):
-	_joueur_id = id
+func set_guest(id: int, nickname: String):
+	_guest_id = id
+	_guest_nickname = nickname
 	_est_guest = true
+
+func get_guest_nickname() -> String:
+	return _guest_nickname

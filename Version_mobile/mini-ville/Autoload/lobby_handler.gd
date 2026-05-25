@@ -37,6 +37,7 @@ func creer_lobby(nom: String, max_joueurs: int, dur_index: int = 1):
 	NetworkManager.envoyer({
 		"action": "create_lobby",
 		"token":NetworkManager.get_token(),
+		"username": PlayerData.nom,
 		"nom": nom,
 		"max_joueurs": max_joueurs,
 		"dur_index":   dur_index
@@ -46,8 +47,10 @@ func rejoindre_lobby(code: String):
 	NetworkManager.envoyer({
 		"action": "join_lobby",
 		"token": NetworkManager.get_token(),
-		"lobby_id": code
+		"lobby_id": code,
+		"username": PlayerData.nom
 	})
+	print("[DEBUG] Client envoie le pseudo : ", PlayerData.nom)
 	
 func quitter_lobby():
 	if lobby_id == "":

@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://cmtjjkmo1j4up" path="res://assets/UI/setting_button_hover.png" id="29_scawg"]
 [ext_resource type="Texture2D" uid="uid://c1xgp0wr15ioj" path="res://assets/UI/Règles.png" id="30_gmss7"]
 [ext_resource type="Texture2D" uid="uid://cm3a6fahoq7xs" path="res://assets/UI/rules_button_hover.png" id="31_nak6p"]
-[ext_resource type="PackedScene" path="res://scene/table/ShopPopup.tscn" id="41_gmss7"]
+[ext_resource type="PackedScene" uid="uid://c66immc84oj3p" path="res://scene/table/ShopPopup.tscn" id="41_gmss7"]
 [ext_resource type="Texture2D" uid="uid://dnu4b0datk8ir" path="res://assets/UI/deck.png" id="42_deck1"]
 [ext_resource type="Texture2D" uid="uid://svvrfo5sph4m" path="res://assets/UI/roll_one_die_border.png" id="43_roll1n"]
 [ext_resource type="Texture2D" uid="uid://n05ux5m5dwmg" path="res://assets/UI/roll_one_die_border_hover.png" id="44_roll1h"]
