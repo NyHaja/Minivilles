@@ -1057,6 +1057,12 @@ func _traiter_prochain_message() -> void:
 					animer_erreur_carte_shop(shop_board.last_clicked_slot)
 					
 			"request_purple_choice":
+				# --- AJOUT : BARRAGE VISUEL ---
+				# On force la file d'attente à patienter tant qu'une carte vole, 
+				# qu'un dé roule ou qu'une activation est en cours.
+				while _active_fly_animations > 0 or _is_animating_dice or is_rotating or not file_animations_activations.is_empty():
+					await get_tree().process_frame
+					
 				var choice_type = data.get("choice_type", "")
 				var active_id = int(data.get("active_player_id", -1))
 				
