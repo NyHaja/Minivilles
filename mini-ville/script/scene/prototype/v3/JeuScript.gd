@@ -1,0 +1,661 @@
+extends Node
+class_name Jeu
+
+signal action_selected(choide_data:Array)
+signal dice_amount_chosen(amount: int)
+signal yes_no_answered(result: bool)
+signal player_chosen(target: Player)
+signal trade_completed(trade_data: Array)
+signal give_card_completed(give_data: Array)
+signal demolish_completed(monu_id: int)
+
+var current_player: Player
+var test_shop: Shop
+var game:Game
+
+@onready var shop_container: GridContainer = %ShopContainer
+
+@onready var btn_roll_1: Button = %BtnRoll1
+@onready var btn_roll_2: Button = %BtnRoll2
+@onready var lbl_dice: Label = %LblDice
+
+@onready var acrtive_deck_container: HFlowContainer = %ActiveDeckContainer
+@onready var active_name: Label = %ActiveName
+@onready var lbl_active_gold: Label = %LblActiveGold
+@onready var lbl_active_stats: Label = %LblActiveStats
+
+@onready var player2_deck_container: HFlowContainer = %Player2DeckContainer
+@onready var lbl_p2_name: Label = %Player2Name
+@onready var lbl_p2_gold: Label = %LblP2Gold
+@onready var lbl_p2_stats: Label = %LblP2Stats
+
+@onready var open_monuments: Button = %OpenMonuMenu
+@onready var monument_menu: ColorRect = $MonumentMenu
+@onready var confirm_buy: Button = $MonumentMenu/BuySelected
+@onready var close_menu: Button = $MonumentMenu/Close
+@onready var monument_info: Label = $MonumentMenu/MonuInfo
+
+@onready var victory_screen: ColorRect = $VictoryScreen
+@onready var lbl_winner_name: Label = $VictoryScreen/LblWinnerName
+@onready var btn_quit: Button = $VictoryScreen/ReturnToMenu
+
+@onready var yes_no_panel: ColorRect = %YesNoPanel
+@onready var lbl_question: Label = %LblQuestion
+@onready var btn_yes: Button = %BtnYes
+@onready var btn_no: Button = %BtnNo
+
+@onready var choose_player_panel: ColorRect = $ChoosePlayerPanel
+@onready var player_buttons_container: VBoxContainer = $ChoosePlayerPanel/PlayerButtonsContainer
+@onready var trade_panel: ColorRect = $TradePanel
+@onready var trade_opponents: HBoxContainer = %TradeOpponents
+@onready var trade_their_cards: HFlowContainer = %TradeTheirCards
+@onready var trade_my_cards: HFlowContainer = %TradeMyCards
+@onready var btn_confirm_trade: Button = %ConfirmTrade
+@onready var give_panel: ColorRect = $GiveCardPanel
+@onready var give_my_cards: HFlowContainer = %GiveMyCards
+@onready var give_opponents: HBoxContainer = %GiveOpponents
+@onready var btn_confirm_give: Button = %ConfirmGive
+@onready var demolish_panel: ColorRect = $DemolishPanel
+@onready var demolish_monuments: HBoxContainer = %DemolishMonuments
+@onready var btn_confirm_demolish: Button = %ConfirmDemolish
+
+var trade_target: Player = null
+var trade_their_card_id: int = -1
+var trade_my_card_id: int = -1
+var give_target: Player = null
+var give_card_id: int = -1
+var demolish_monu_id: int = -1
+
+var selected_monument_id: int = -1
+
+#Dé
+var  DiceNUmber :int = 1
+
+
+func _ready() -> void:
+	%Skip.pressed.connect(_on_skip_pressed)
+	open_monuments.pressed.connect(_on_open_monuments_pressed)
+	close_menu.pressed.connect(_on_close_menu_pressed)
+	confirm_buy.pressed.connect(_on_confirm_buy_pressed)
+	btn_quit.pressed.connect(_on_quit_pressed)
+	btn_yes.pressed.connect(_on_yes_pressed)
+	btn_no.pressed.connect(_on_no_pressed)
+	%ConfirmTrade.pressed.connect(_on_confirm_trade_pressed)
+	%ConfirmGive.pressed.connect(_on_confirm_give_pressed)
+	%ConfirmDemolish.pressed.connect(_on_confirm_demolish_pressed)
+	
+	setup_monument_button($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
+	setup_monument_button($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
+	setup_monument_button($MonumentMenu/BuildParcAttraction, Monument.MONUMENT_ID.Parc)
+	setup_monument_button($MonumentMenu/BuildRadio, Monument.MONUMENT_ID.Radio)
+	setup_monument_button($MonumentMenu/BuildAeroport, Monument.MONUMENT_ID.Aeroport)
+	setup_monument_button($MonumentMenu/BuildPort, Monument.MONUMENT_ID.Port)
+	
+	btn_roll_2.disabled = true
+	
+	print("\n=== GAME STARTED ===")
+
+	
+func RefreshBasicInfo(current_game: Game) -> void:
+	self.game = current_game
+	self.current_player = game.getActivePlayer()
+	self.test_shop = game.shop
+	
+	print("It is now ", current_player.username, "'s turn! \n")
+	
+	update_shop_ui()
+	update_deck_ui()
+	update_opponent_ui()
+	updateMonumentColors()
+	print_player_stats()
+	update_names()
+	
+	set_actions_enabled(false) 
+	set_dice_buttons_enabled(true)
+
+
+
+
+func ask_yes_no(question: String) -> bool:
+	lbl_question.text = question
+	yes_no_panel.show()
+	
+	var result = await yes_no_answered
+	
+	yes_no_panel.hide()
+	return result
+
+func _on_yes_pressed() -> void:
+	yes_no_answered.emit(true)
+
+func _on_no_pressed() -> void:
+	yes_no_answered.emit(false)
+
+
+
+
+
+
+func howManyDice() -> int:
+	print("Waiting for ", current_player.username ," to choose dice amount...")
+	btn_roll_1.disabled = false
+	
+	btn_roll_2.disabled = not current_player.monumentIsActive(Monument.MONUMENT_ID.Gare)
+	
+	var amount = await dice_amount_chosen
+	
+	btn_roll_1.disabled = true
+	btn_roll_2.disabled = true
+	
+	return amount
+
+func showResult(d1: int, d2: int) -> void:
+	if d2 == 0:
+		lbl_dice.text = "Rolled: " + str(d1)
+	else:
+		lbl_dice.text = "Rolled: " + str(d1) + " + " + str(d2) + " = " + str(d1 + d2)
+		
+func pause() -> Array:
+	print("Waiting for ", current_player.username, "to take an action...")
+	print_player_stats() 
+	update_opponent_ui()
+	set_actions_enabled(true)
+	var choice = await action_selected
+	set_actions_enabled(false)
+	return choice
+
+func next_round(): #Init les variables
+	current_player = game.getActivePlayer()
+	update_deck_ui()
+	DiceNUmber = 1 # BOUTON 1 DOIT ETRE SELECTIONNER PAR DEFAUT
+	
+
+
+
+
+func waitForDiceRoll() -> int:
+	set_actions_enabled(false)
+	set_dice_buttons_enabled(true)
+	
+	var amount = await dice_amount_chosen
+	
+	set_dice_buttons_enabled(false)
+	return amount
+	
+func set_actions_enabled(can_act: bool) -> void:
+	%Skip.disabled = !can_act
+	open_monuments.disabled = !can_act
+	
+	for btn in shop_container.get_children():
+		btn.disabled = !can_act
+	
+func set_dice_buttons_enabled(can_roll: bool) -> void:
+	btn_roll_1.disabled = !can_roll
+	
+	if can_roll and current_player.monumentIsActive(Monument.MONUMENT_ID.Gare):
+		btn_roll_2.disabled = false
+	else:
+		btn_roll_2.disabled = true
+	
+
+func _on_roll_1_pressed() -> void:
+	dice_amount_chosen.emit(1)
+	
+	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
+	
+func _on_roll_2_pressed() -> void:
+	dice_amount_chosen.emit(2)
+	
+	# TRIGGER EFFECTS A VOIR AVEC CLEMENT
+	
+	
+	
+	
+func setup_monument_button(btn: Button, monu_id: int) -> void:
+	
+	# Red (Not Bought)
+	var red_style = StyleBoxFlat.new()
+	red_style.bg_color = Color(0.6, 0.1, 0.1) 
+	btn.add_theme_stylebox_override("normal", red_style)
+	btn.add_theme_stylebox_override("hover", red_style) 
+	
+	# Green (Bought)
+	var green_style = StyleBoxFlat.new()
+	green_style.bg_color = Color(0.1, 0.6, 0.1) 
+	btn.add_theme_stylebox_override("pressed", green_style)
+	btn.add_theme_stylebox_override("hover_pressed", green_style) 
+	
+	btn.button_pressed = false
+	
+	btn.pressed.connect(_on_monument_selected.bind(monu_id))
+
+
+
+
+func _on_open_monuments_pressed() -> void:
+	selected_monument_id = -1
+	confirm_buy.disabled = true
+	monument_info.text = "Select a monument to view details."
+	monument_menu.show()
+
+func _on_close_menu_pressed() -> void:
+	monument_menu.hide()
+
+func _on_monument_selected(monu_id: int) -> void:
+	selected_monument_id = monu_id
+	confirm_buy.disabled = false
+	
+	var data = game.getMonumentData(monu_id)
+	monument_info.text = data["name"] + "\nCost: " + str(data["cost"]) + " Gold"
+
+func _on_confirm_buy_pressed() -> void:
+	monument_menu.hide()
+	action_selected.emit([Game.CHOICE.Build_MONUMENT, selected_monument_id])
+
+func _on_buy_pressed(card_id: int) -> void:
+	action_selected.emit([game.CHOICE.Build_ESTABLISHMENT, card_id])
+	
+func _on_skip_pressed() -> void:
+	action_selected.emit([game.CHOICE.SKIP, 0])
+
+
+
+
+func _on_add_gold_pressed() -> void:
+	current_player.receiveGold(5)
+	print("\n[+] Added 5 Gold.")
+	print_player_stats()
+
+func _on_remove_gold_pressed() -> void:
+	current_player.loseGold(2)
+	print("\n[-] Lost 2 Gold.")
+	print_player_stats()
+
+
+
+
+func update_shop_ui() -> void:
+	for child in shop_container.get_children():
+		child.queue_free()
+		
+	for slot in test_shop.shop:
+		var btn = Button.new()
+		
+		# MATCH THE DECK CARD SIZE
+		btn.custom_minimum_size = Vector2(100, 140)
+		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		btn.pressed.connect(_on_buy_pressed.bind(slot.id))
+		
+		var card_data = CardFactory.get_card(slot.id)
+		
+		if card_data != null:
+			btn.text = str(card_data.activation) + "\n" + card_data.name + "\nQty: " + str(slot.quantity) + "\n" + str(card_data.cost)
+			
+			var base_color: Color
+			match card_data.color:
+				CardColor.Type.BLUE: base_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: base_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: base_color = Color(0.8, 0.2, 0.2)
+				CardColor.Type.PURPLE: base_color = Color(0.6, 0.2, 0.8)
+				
+			var style_normal = StyleBoxFlat.new()
+			style_normal.bg_color = base_color
+			
+			var style_hover = StyleBoxFlat.new()
+			style_hover.bg_color = base_color.lightened(0.2)
+			
+			var style_pressed = StyleBoxFlat.new()
+			style_pressed.bg_color = base_color.darkened(0.2)
+			
+			btn.add_theme_stylebox_override("normal", style_normal)
+			btn.add_theme_stylebox_override("hover", style_hover)
+			btn.add_theme_stylebox_override("pressed", style_pressed)
+			btn.add_theme_stylebox_override("focus", style_normal)
+			
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			btn.add_theme_color_override("font_hover_color", Color.WHITE)
+			btn.add_theme_color_override("font_pressed_color", Color.WHITE)
+			btn.add_theme_color_override("font_focus_color", Color.WHITE)
+		
+		shop_container.add_child(btn)
+		
+func update_deck_ui() -> void:
+	for child in acrtive_deck_container.get_children():
+		acrtive_deck_container.remove_child(child)
+		child.queue_free()
+		
+	for instance in current_player.deck:
+		if typeof(instance) != TYPE_ARRAY:
+			continue
+		
+		var card_id = instance[0]
+		var quantity = instance[1]
+		
+		var card_data = CardFactory.get_card(card_id)
+		
+		if card_data != null:
+			for i in range(quantity):
+				var card_visual = Button.new()
+				card_visual.text = str(card_data.activation) + "\n" + card_data.name
+				
+				card_visual.custom_minimum_size = Vector2(100, 140)
+				
+				card_visual.disabled = true
+				card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				
+				var style = StyleBoxFlat.new()
+				
+				match card_data.color:
+					CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+					CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+					CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+					CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					
+				card_visual.add_theme_stylebox_override("disabled", style)
+				card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
+				
+				acrtive_deck_container.add_child(card_visual)
+				
+	
+func update_names() -> void:
+	active_name.text = current_player.username
+	
+	
+func updateMonumentColors() -> void:
+	check_and_color_monument($MonumentMenu/BuildGare, Monument.MONUMENT_ID.Gare)
+	check_and_color_monument($MonumentMenu/BuildCentreCommercial, Monument.MONUMENT_ID.Centre_Commercial)
+	check_and_color_monument($MonumentMenu/BuildParcAttraction, Monument.MONUMENT_ID.Parc)
+	check_and_color_monument($MonumentMenu/BuildRadio, Monument.MONUMENT_ID.Radio)
+	check_and_color_monument($MonumentMenu/BuildAeroport, Monument.MONUMENT_ID.Aeroport)
+	check_and_color_monument($MonumentMenu/BuildPort, Monument.MONUMENT_ID.Port)
+
+	
+func check_and_color_monument(btn: Button, monu_id: int) -> void:
+	var style = StyleBoxFlat.new()
+	
+	if current_player.monumentIsActive(monu_id):
+		style.bg_color = Color(0.1, 0.6, 0.1)
+	else:
+		style.bg_color = Color(0.6, 0.1, 0.1)
+		
+	btn.add_theme_stylebox_override("normal", style)
+	btn.add_theme_stylebox_override("hover", style)
+	btn.add_theme_stylebox_override("pressed", style)
+
+func update_opponent_ui() -> void:
+	for child in player2_deck_container.get_children():
+		child.queue_free()
+	
+	for player in game.playerArray:
+		if player == current_player:
+			continue
+			
+		lbl_p2_name.text = player.username
+		lbl_p2_gold.text = "Gold: " + str(player.balance)
+		lbl_p2_stats.text = "Establishments: " + str(player.establishmentCount) + "\nMonuments: " + str(player.monumentCount)
+		
+		for instance in player.deck:
+			var card_id = instance[0]
+			var quantity = instance[1]
+			var card_data = CardFactory.get_card(card_id)
+			
+			if card_data != null:
+				for i in range(quantity):
+					var card_visual = Button.new()
+					card_visual.text = str(card_data.activation) + "\n" + card_data.name
+					
+					card_visual.custom_minimum_size = Vector2(60, 90)
+					card_visual.add_theme_font_size_override("font_size", 10) 
+					card_visual.disabled = true
+					card_visual.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					
+					var style = StyleBoxFlat.new()
+					match card_data.color:
+						CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+						CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+						CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+						CardColor.Type.PURPLE: style.bg_color = Color(0.6, 0.2, 0.8)
+					
+					card_visual.add_theme_stylebox_override("disabled", style)
+					card_visual.add_theme_color_override("font_disabled_color", Color.WHITE)
+					
+					player2_deck_container.add_child(card_visual)
+
+
+
+
+func ask_choose_player(owner: Player, all_players: Array) -> Player:
+	choose_player_panel.show()
+	
+	for child in player_buttons_container.get_children():
+		child.queue_free()
+
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username + " (" + str(p.balance) + " Gold)"
+			btn.custom_minimum_size = Vector2(200, 60)
+			
+			btn.pressed.connect(func(): _on_player_chosen(p))
+			
+			player_buttons_container.add_child(btn)
+			
+	var chosen_target = await player_chosen
+	
+	choose_player_panel.hide()
+	return chosen_target
+
+func _on_player_chosen(target: Player) -> void:
+	player_chosen.emit(target)
+
+func ask_trade_cards(owner: Player, all_players: Array) -> Array:
+	trade_panel.show()
+	btn_confirm_trade.disabled = true
+	btn_confirm_trade.text = "Select cards to trade..."
+	trade_target = null
+	trade_their_card_id = -1
+	trade_my_card_id = -1
+	
+	for c in trade_opponents.get_children(): c.queue_free()
+	for c in trade_their_cards.get_children(): c.queue_free()
+	for c in trade_my_cards.get_children(): c.queue_free()
+	
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username
+			btn.custom_minimum_size = Vector2(120, 40)
+			btn.pressed.connect(func(): _on_trade_opponent_selected(p))
+			trade_opponents.add_child(btn)
+			
+	_populate_trade_deck(owner, trade_my_cards, true)
+	
+	var result = await trade_completed
+	trade_panel.hide()
+	return result
+
+func _on_trade_opponent_selected(target: Player) -> void:
+	trade_target = target
+	for c in trade_their_cards.get_children(): c.queue_free()
+	_populate_trade_deck(target, trade_their_cards, false)
+	_check_trade_valid()
+
+func _populate_trade_deck(player: Player, container: Container, is_mine: bool) -> void:
+	for instance in player.deck:
+		if typeof(instance) != TYPE_ARRAY: continue
+		var card_id = instance[0]
+		var card = CardFactory.get_card(card_id)
+		
+		if card != null and card.color != CardColor.Type.PURPLE:
+			var btn = Button.new()
+			btn.text = card.name
+			btn.custom_minimum_size = Vector2(80, 110)
+			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			
+			var style = StyleBoxFlat.new()
+			match card.color:
+				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", style)
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			
+			btn.pressed.connect(func():
+				if is_mine: trade_my_card_id = card_id
+				else: trade_their_card_id = card_id
+				_check_trade_valid()
+				for child in container.get_children():
+					if child == btn:
+						child.modulate = Color(1.0, 1.0, 1.0)
+					else:
+						child.modulate = Color(0.4, 0.4, 0.4)
+			)
+			container.add_child(btn)
+
+func _check_trade_valid() -> void:
+	# Only unlock the confirm button if all 3 choices are made!
+	if trade_target != null and trade_their_card_id != -1 and trade_my_card_id != -1:
+		btn_confirm_trade.disabled = false
+		btn_confirm_trade.text = "Confirm Trade!"
+
+func _on_confirm_trade_pressed() -> void:
+	trade_completed.emit([trade_my_card_id, trade_target, trade_their_card_id])
+
+func ask_give_card(owner: Player, all_players: Array) -> Array:
+	give_panel.show()
+	btn_confirm_give.disabled = true
+	btn_confirm_give.text = "Select a card and an opponent..."
+	give_target = null
+	give_card_id = -1
+	
+	for c in give_my_cards.get_children(): c.queue_free()
+	for c in give_opponents.get_children(): c.queue_free()
+	
+	for instance in owner.deck:
+		if typeof(instance) != TYPE_ARRAY: continue
+		var card_id = instance[0]
+		var card = CardFactory.get_card(card_id)
+		
+		if card != null and card.color != CardColor.Type.PURPLE:
+			var btn = Button.new()
+			btn.text = card.name
+			btn.custom_minimum_size = Vector2(80, 110)
+			btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			
+			var style = StyleBoxFlat.new()
+			match card.color:
+				CardColor.Type.BLUE: style.bg_color = Color(0.2, 0.4, 0.8)
+				CardColor.Type.GREEN: style.bg_color = Color(0.2, 0.6, 0.2)
+				CardColor.Type.RED: style.bg_color = Color(0.8, 0.2, 0.2)
+			btn.add_theme_stylebox_override("normal", style)
+			btn.add_theme_stylebox_override("hover", style)
+			btn.add_theme_color_override("font_color", Color.WHITE)
+			
+			btn.pressed.connect(func():
+				give_card_id = card_id
+				_check_give_valid()
+				for child in give_my_cards.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			give_my_cards.add_child(btn)
+
+	for p in all_players:
+		if p != owner:
+			var btn = Button.new()
+			btn.text = p.username
+			btn.custom_minimum_size = Vector2(120, 40)
+			
+			btn.pressed.connect(func():
+				give_target = p
+				_check_give_valid()
+				for child in give_opponents.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			give_opponents.add_child(btn)
+
+	var result = await give_card_completed
+	give_panel.hide()
+	return result
+
+func _check_give_valid() -> void:
+	if give_target != null and give_card_id != -1:
+		btn_confirm_give.disabled = false
+		btn_confirm_give.text = "Confirm Gift!"
+
+func _on_confirm_give_pressed() -> void:
+	give_card_completed.emit([give_card_id, give_target])
+
+func ask_demolish_monument(owner: Player) -> int:
+	demolish_panel.show()
+	btn_confirm_demolish.disabled = true
+	btn_confirm_demolish.text = "Select a monument..."
+	demolish_monu_id = -1
+	
+	for c in demolish_monuments.get_children(): c.queue_free()
+	
+	var has_built_monuments = false
+	
+	for monu_id in owner.monumentArray:
+		if owner.monumentArray[monu_id] == true:
+			has_built_monuments = true
+			
+			var btn = Button.new()
+			var monu_data = game.getMonumentData(monu_id)
+			btn.text = monu_data["name"]
+			btn.custom_minimum_size = Vector2(120, 80)
+			
+			var style_normal = StyleBoxFlat.new()
+			style_normal.bg_color = Color(0.8, 0.2, 0.2)
+			var style_hover = StyleBoxFlat.new()
+			style_hover.bg_color = Color(0.8, 0.2, 0.2).lightened(0.2)
+			btn.add_theme_stylebox_override("normal", style_normal)
+			btn.add_theme_stylebox_override("hover", style_hover)
+			
+			btn.pressed.connect(func():
+				demolish_monu_id = monu_id
+				btn_confirm_demolish.disabled = false
+				btn_confirm_demolish.text = "Demolish " + monu_data["name"] + "!"
+				
+				for child in demolish_monuments.get_children():
+					child.modulate = Color(1.0, 1.0, 1.0) if child == btn else Color(0.4, 0.4, 0.4)
+			)
+			demolish_monuments.add_child(btn)
+			
+	if not has_built_monuments:
+		print("No monuments built to demolish! Skipping effect.")
+		demolish_panel.hide()
+		return -1
+
+	var result = await demolish_completed
+	demolish_panel.hide()
+	return result
+
+func _on_confirm_demolish_pressed() -> void:
+	demolish_completed.emit(demolish_monu_id)
+
+
+
+
+func show_victory_screen(winner_name: String) -> void:
+	set_actions_enabled(false)
+	set_dice_buttons_enabled(false)
+	
+	lbl_winner_name.text = "🏆 " + winner_name + " WINS! 🏆\nAll 5 Monuments Built!"
+	victory_screen.show()
+	
+func _on_quit_pressed() -> void:
+	get_tree().change_scene_to_file("res://MainMenu.tscn")
+
+
+func print_player_stats() -> void:
+	lbl_active_gold.text = "Gold: " + str(current_player.balance)
+	lbl_active_stats.text = "Establishments: " + str(current_player.establishmentCount) + "\nMonuments: " + str(current_player.monumentCount)
+	
+	print("--- PLAYER STATS ---")
+	print("Current Player: ", current_player.username)
+	print("Gold: ", current_player.balance)
+	print("Establishments: ", current_player.establishmentCount)
+	print("Monuments: ", current_player.monumentCount)
+	print("Deck Array: ", current_player.deck)
+	print("--------------------")
