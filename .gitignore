@@ -1,0 +1,10 @@
+# Builds Android
+**/android/build/
+**/android/.gradle/
+
+#Binaires compilés
+*.apk
+*.exe
+
+# Godot - fichiers temporaires
+.godot/
